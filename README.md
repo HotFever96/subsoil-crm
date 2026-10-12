@@ -1,36 +1,37 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GEONEDRA — Корпоративная CRM-система для недропользования РФ
 
-## Getting Started
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FHotFever96%2Fsubsoil-crm&env=OPENROUTER_API_KEY,NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY)
 
-First, run the development server:
+Интеллектуальный комплекс управления лицензиями, смарт-перепиской с государственными органами и автоматизированной генерацией проектной документации по недропользованию (ТПР ОПИ, ПРГР, проекты ООС и рекультивации по Приказу Минприроды № 449/08 и Постановлению Правительства РФ № 800).
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Мгновенный деплой на Vercel в 1 клик
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Нажмите на кнопку выше или перейдите по ссылке для импорта в Vercel:
+👉 **[Развернуть GEONEDRA на Vercel](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FHotFever96%2Fsubsoil-crm&env=OPENROUTER_API_KEY,NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY)**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Переменные окружения (Environment Variables):
+- `OPENROUTER_API_KEY`: API ключ OpenRouter (для работы Claude 3.5 Sonnet). *Если ключ не указан, активируется встроенный оффлайн-движок юридической и инженерной логики.*
+- `NEXT_PUBLIC_SUPABASE_URL`: URL вашего проекта Supabase.
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Анонимный ключ Supabase.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🏛 Модули системы
 
-To learn more about Next.js, take a look at the following resources:
+1. **Деловая переписка (Smart Mail • Human-in-the-Loop):**
+   - Мониторинг входящих депеш от Роснедр, Росприроднадзора, Ростехнадзора.
+   - Двухоконный интерфейс с предпросмотром запроса и юридического ответа ИИ со ссылками на ст. 20, 21, 22 Закона РФ «О недрах».
+   - Статусы визирования, редактирование текста и отправка.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2. **Правовой консалтинг (AI Legal Expert):**
+   - Интеллектуальный советник по недропользованию РФ на базе **Claude 3.5 Sonnet**.
+   - Анализ судебных рисков, актуальная редакция НПА РФ (2026).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+3. **Проектирование (Multi-Agent Project Studio):**
+   - **Главный инженер/технолог:** расчет параметров забоя, уступов, техники и баланса вскрыши.
+   - **Юрист-недропользователь:** нормативная выверка терминов, горный отвод, Приказ Минприроды № 449/08.
+   - **Главный эколог:** расчет СЗЗ, пылеподавления и двухэтапной рекультивации нарушенных земель по ПП РФ № 800.
+   - **Экспорт в DOCX:** формирование официального тома проекта с титулом Минприроды РФ и отдельной выписки подразделов.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+4. **Реестр лицензий:**
+   - Мониторинг участков недр, сроков действия и статусов выполнения лицензионных обязательств.
