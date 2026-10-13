@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Download,
   RotateCw,
@@ -11,18 +11,52 @@ import { ProjectCategory, ProjectSubSection, MiningProjectMetadata, SubAgentRole
 import { DEFAULT_MINING_PROJECT, INITIAL_PROJECT_CATEGORIES } from "@/lib/mock-project-tree";
 import { SubAgentWorkspace } from "./SubAgentWorkspace";
 import { exportProjectToDocx } from "@/lib/docx-export";
+import { useAuth } from "@/lib/auth-context";
 
 export const ProjectStudio: React.FC = () => {
+  const { user } = useAuth();
+  const currentUsername = user?.username ? user.username.trim().toLowerCase() : "";
+  const storageKey = `geo_ai_project_categories_${currentUsername || "guest"}_v2`;
+
   const [metadata, setMetadata] = useState<MiningProjectMetadata>(DEFAULT_MINING_PROJECT);
   const [categories, setCategories] = useState<ProjectCategory[]>(INITIAL_PROJECT_CATEGORIES);
-  const [activeSubSectionId, setActiveSubSectionId] = useState<string>("sub-2-2");
+  const [activeSubSectionId, setActiveSubSectionId] = useState<string>("sub-1-1");
   const [openCategoryIds, setOpenCategoryIds] = useState<string[]>(["cat-1", "cat-2", "cat-3", "cat-4", "cat-5"]);
   const [isExporting, setIsExporting] = useState(false);
   const [viewMode, setViewMode] = useState<"INTERACTIVE" | "FULL_PREVIEW">("INTERACTIVE");
 
+  // Load user-saved categories or initial clean tree
+  useEffect(() => {
+    if (!currentUsername) {
+      setCategories(INITIAL_PROJECT_CATEGORIES);
+      return;
+    }
+    try {
+      localStorage.removeItem(`geo_ai_project_categories_${currentUsername}_v1`);
+      const saved = localStorage.getItem(storageKey);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setCategories(parsed);
+          return;
+        }
+      }
+    } catch {}
+    setCategories(INITIAL_PROJECT_CATEGORIES);
+  }, [currentUsername, storageKey]);
+
+  const saveCategories = (newCategories: ProjectCategory[]) => {
+    setCategories(newCategories);
+    if (currentUsername) {
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(newCategories));
+      } catch {}
+    }
+  };
+
   const allSubsections = categories.flatMap((c) => c.subsections);
   const approvedCount = allSubsections.filter((s) => s.status === "APPROVED").length;
-  const progressPercent = Math.round((approvedCount / allSubsections.length) * 100);
+  const progressPercent = allSubsections.length > 0 ? Math.round((approvedCount / allSubsections.length) * 100) : 0;
 
   const activeSubSection = allSubsections.find((s) => s.id === activeSubSectionId) || allSubsections[0];
 
@@ -33,23 +67,21 @@ export const ProjectStudio: React.FC = () => {
   };
 
   const handleUpdateSubSection = (updated: ProjectSubSection) => {
-    setCategories((prev) =>
-      prev.map((cat) => ({
-        ...cat,
-        subsections: cat.subsections.map((sub) => (sub.id === updated.id ? updated : sub)),
-      }))
-    );
+    const updatedCategories = categories.map((cat) => ({
+      ...cat,
+      subsections: cat.subsections.map((sub) => (sub.id === updated.id ? updated : sub)),
+    }));
+    saveCategories(updatedCategories);
   };
 
   const handleApproveSubSection = (id: string) => {
-    setCategories((prev) =>
-      prev.map((cat) => ({
-        ...cat,
-        subsections: cat.subsections.map((sub) =>
-          sub.id === id ? { ...sub, status: "APPROVED" as SectionStatus } : sub
-        ),
-      }))
-    );
+    const updatedCategories = categories.map((cat) => ({
+      ...cat,
+      subsections: cat.subsections.map((sub) =>
+        sub.id === id ? { ...sub, status: "APPROVED" as SectionStatus } : sub
+      ),
+    }));
+    saveCategories(updatedCategories);
   };
 
   const handleFullDocxExport = async () => {
@@ -83,7 +115,9 @@ export const ProjectStudio: React.FC = () => {
             {metadata.title}
           </h1>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-            {metadata.depositName} • {metadata.licenseCode} • {metadata.holderCompany}
+            {metadata.depositName && metadata.depositName !== "—"
+              ? `${metadata.depositName} • ${metadata.licenseCode} • ${metadata.holderCompany}`
+              : "Новый проект • данные месторождения и лицензии ожидают ввода"}
           </p>
         </div>
 

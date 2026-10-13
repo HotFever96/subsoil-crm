@@ -32,7 +32,7 @@ const WEEKDAY_NAMES = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
 export const CalendarModule: React.FC = () => {
   const { user } = useAuth();
   const currentUsername = user?.username ? user.username.trim().toLowerCase() : "";
-  const storageKey = `geo_ai_calendar_events_${currentUsername || "guest"}_v3`;
+  const storageKey = `geo_ai_calendar_events_${currentUsername || "guest"}_v4`;
 
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [viewMode, setViewMode] = useState<CalendarViewMode>("month");
@@ -57,6 +57,13 @@ export const CalendarModule: React.FC = () => {
       setEvents([]);
       return;
     }
+
+    // Clear legacy test/mock data caches from previous versions
+    try {
+      localStorage.removeItem(`geo_ai_calendar_events_${currentUsername}_v1`);
+      localStorage.removeItem(`geo_ai_calendar_events_${currentUsername}_v2`);
+      localStorage.removeItem(`geo_ai_calendar_events_${currentUsername}_v3`);
+    } catch {}
 
     let loadedEvents: CalendarEvent[] = [];
     try {

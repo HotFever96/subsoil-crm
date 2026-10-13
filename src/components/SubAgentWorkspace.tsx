@@ -172,9 +172,23 @@ export const SubAgentWorkspace: React.FC<SubAgentWorkspaceProps> = ({
               rows={22}
               className="w-full flex-1 p-4 rounded-xl bg-slate-50 dark:bg-[#181d24] border border-slate-300 dark:border-white/[0.15] text-xs sm:text-sm text-slate-900 dark:text-slate-100 leading-relaxed focus:outline-none focus:border-sky-500 resize-none"
             />
-          ) : (
+          ) : editableContent ? (
             <div className="p-6 rounded-xl bg-slate-50 dark:bg-[#181d24] border border-slate-200/80 dark:border-white/[0.06] text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">
               {editableContent}
+            </div>
+          ) : (
+            <div className="p-12 text-center rounded-xl bg-slate-50/50 dark:bg-[#181d24]/50 border border-dashed border-slate-300 dark:border-white/[0.1] flex flex-col items-center justify-center space-y-3">
+              <div className="w-10 h-10 rounded-full bg-sky-500/10 text-sky-500 flex items-center justify-center">
+                <Edit3 className="w-5 h-5" />
+              </div>
+              <div className="max-w-md">
+                <h4 className="text-sm font-semibold text-slate-800 dark:text-slate-200">
+                  Раздел ожидает заполнения
+                </h4>
+                <p className="text-xs text-slate-400 mt-1">
+                  Нажмите «Редактировать» для ввода текста вручную или отправьте задание профильному специалисту в правой панели.
+                </p>
+              </div>
             </div>
           )}
         </div>

@@ -22,7 +22,7 @@ export default function Home() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const currentUsername = user?.username ? user.username.trim().toLowerCase() : "";
-  const mailStorageKey = `geo_ai_mails_${currentUsername || "guest"}_v2`;
+  const mailStorageKey = `geo_ai_mails_${currentUsername || "guest"}_v4`;
 
   const [mails, setMails] = useState<MailItem[]>(() => getUserInitialMails(currentUsername));
 
@@ -33,12 +33,19 @@ export default function Home() {
       return;
     }
 
+    // Clear legacy test/mock data caches from previous versions
+    try {
+      localStorage.removeItem(`geo_ai_mails_${currentUsername}_v1`);
+      localStorage.removeItem(`geo_ai_mails_${currentUsername}_v2`);
+      localStorage.removeItem(`geo_ai_mails_${currentUsername}_v3`);
+    } catch {}
+
     let loadedMails = getUserInitialMails(currentUsername);
     try {
       const saved = localStorage.getItem(mailStorageKey);
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
+        if (Array.isArray(parsed)) {
           loadedMails = parsed;
         }
       } else {

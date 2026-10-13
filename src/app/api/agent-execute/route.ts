@@ -31,14 +31,14 @@ export async function POST(req: NextRequest) {
 Не добавляй никакого текста вне JSON-блока.`;
 
     const userPrompt = `Объект проектирования:
-- Проект: "${projectMetadata?.title || "Технический проект разработки месторождения ОПИ"}"
-- Лицензия: ${projectMetadata?.licenseCode || "МСК 02841 ТЭ"}
-- Месторождение: ${projectMetadata?.depositName || "Березовское-3"}
-- Вид ископаемого: ${projectMetadata?.mineralType || "Песчано-гравийные породы"}
-- Площадь участка: ${projectMetadata?.subsoilPlotAreaHa || 24.8} га
-- Годовая производительность: ${projectMetadata?.annualCapacityThousandM3 || 250} тыс. м³
-- Глубина карьера: ${projectMetadata?.quarryDepthM || 18.5} м
-- Уровень грунтовых вод: ${projectMetadata?.groundwaterLevelM || 22.0} м
+- Проект: "${projectMetadata?.title || "Технический проект разработки месторождения"}"
+- Лицензия: ${projectMetadata?.licenseCode && projectMetadata.licenseCode !== "—" ? projectMetadata.licenseCode : "Уточняется"}
+- Месторождение: ${projectMetadata?.depositName && projectMetadata.depositName !== "—" ? projectMetadata.depositName : "Уточняется"}
+- Вид ископаемого: ${projectMetadata?.mineralType && projectMetadata.mineralType !== "—" ? projectMetadata.mineralType : "Уточняется"}
+- Площадь участка: ${projectMetadata?.subsoilPlotAreaHa ? `${projectMetadata.subsoilPlotAreaHa} га` : "Уточняется"}
+- Годовая производительность: ${projectMetadata?.annualCapacityThousandM3 ? `${projectMetadata.annualCapacityThousandM3} тыс. м³` : "Уточняется"}
+- Глубина карьера: ${projectMetadata?.quarryDepthM ? `${projectMetadata.quarryDepthM} м` : "Уточняется"}
+- Уровень грунтовых вод: ${projectMetadata?.groundwaterLevelM ? `${projectMetadata.groundwaterLevelM} м` : "Уточняется"}
 
 Текущий подраздел:
 Код: ${subSectionCode}

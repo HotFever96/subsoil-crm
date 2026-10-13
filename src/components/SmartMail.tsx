@@ -443,8 +443,16 @@ export const SmartMail: React.FC<SmartMailProps> = ({ mails: initialMails, onApp
           </div>
         </div>
       ) : (
-        <div className="flex-1 flex items-center justify-center text-xs text-slate-400">
-          Выберите письмо для просмотра
+        <div className="flex-1 flex flex-col items-center justify-center p-8 text-center text-slate-400 bg-white dark:bg-[#12161c]">
+          <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-white/[0.04] flex items-center justify-center text-slate-400 mb-3">
+            <Inbox className="w-6 h-6" />
+          </div>
+          <p className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+            Письмо не выбрано
+          </p>
+          <p className="text-xs text-slate-400 max-w-sm">
+            Выберите письмо из списка слева или создайте новое официальное обращение, нажав «+ Написать».
+          </p>
         </div>
       )}
 
