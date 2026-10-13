@@ -10,8 +10,11 @@ import {
   Moon,
   Layers,
   X,
+  LogOut,
+  User,
 } from "lucide-react";
 import { useTheme } from "@/lib/theme-context";
+import { useAuth } from "@/lib/auth-context";
 
 export type NavTab = "ai-chat" | "smart-mail" | "project-studio";
 
@@ -27,6 +30,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   pendingMailsCount = 2,
 }) => {
   const { theme, toggleTheme } = useTheme();
+  const { user, logout } = useAuth();
   const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   const navItems = [
@@ -98,36 +102,63 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </nav>
         </div>
 
-        {/* Footer: Settings & Theme Switcher (No fake cards) */}
-        <div className="p-3 border-t border-slate-200 dark:border-white/[0.08] space-y-1">
-          <button
-            onClick={() => setShowSettingsModal(true)}
-            className="w-full text-left px-3 py-2 rounded-lg text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-white/[0.04] transition-colors flex items-center space-x-3"
-          >
-            <Settings className="w-4 h-4 text-slate-400" />
-            <span>Настройки</span>
-          </button>
-
-          <button
-            onClick={toggleTheme}
-            className="w-full text-left px-3 py-2 rounded-lg text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-white/[0.04] transition-colors flex items-center justify-between"
-          >
-            <div className="flex items-center space-x-3">
-              {theme === "dark" ? (
-                <Moon className="w-4 h-4 text-slate-400" />
-              ) : (
-                <Sun className="w-4 h-4 text-amber-500" />
-              )}
-              <span>{theme === "dark" ? "Темная тема" : "Светлая тема"}</span>
+        {/* Footer: Current User Profile, Settings, Theme & Logout */}
+        <div className="p-3 border-t border-slate-200 dark:border-white/[0.08] space-y-2">
+          {/* User Profile Info + Logout */}
+          <div className="px-3 py-2 rounded-lg bg-slate-200/60 dark:bg-white/[0.04] flex items-center justify-between">
+            <div className="flex items-center space-x-2.5 min-w-0">
+              <div className="w-7 h-7 rounded-full bg-slate-300 dark:bg-slate-700 flex items-center justify-center text-slate-700 dark:text-slate-200 shrink-0">
+                <User className="w-3.5 h-3.5" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-xs font-medium text-slate-900 dark:text-slate-100 truncate">
+                  {user?.name || "Пользователь"}
+                </div>
+                <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
+                  {user?.role === "admin" ? "Администратор" : "Клиент"}
+                </div>
+              </div>
             </div>
-            <span className="text-[11px] text-slate-400 uppercase tracking-wider font-mono">
-              {theme === "dark" ? "Dark" : "Light"}
-            </span>
-          </button>
+
+            <button
+              onClick={logout}
+              className="p-1.5 rounded-md text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 transition-colors"
+              title="Выйти из системы"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          <div className="space-y-0.5">
+            <button
+              onClick={() => setShowSettingsModal(true)}
+              className="w-full text-left px-3 py-1.5 rounded-lg text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-white/[0.04] transition-colors flex items-center space-x-2.5"
+            >
+              <Settings className="w-3.5 h-3.5 text-slate-400" />
+              <span>Настройки</span>
+            </button>
+
+            <button
+              onClick={toggleTheme}
+              className="w-full text-left px-3 py-1.5 rounded-lg text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-white/[0.04] transition-colors flex items-center justify-between"
+            >
+              <div className="flex items-center space-x-2.5">
+                {theme === "dark" ? (
+                  <Moon className="w-3.5 h-3.5 text-slate-400" />
+                ) : (
+                  <Sun className="w-3.5 h-3.5 text-amber-500" />
+                )}
+                <span>{theme === "dark" ? "Темная тема" : "Светлая тема"}</span>
+              </div>
+              <span className="text-[10px] text-slate-400 uppercase tracking-wider font-mono">
+                {theme === "dark" ? "Dark" : "Light"}
+              </span>
+            </button>
+          </div>
         </div>
       </aside>
 
-      {/* Clean Settings Modal */}
+      {/* Settings Modal */}
       {showSettingsModal && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="w-full max-w-md bg-white dark:bg-[#181d24] border border-slate-200 dark:border-white/[0.08] rounded-xl p-5 shadow-2xl space-y-4">
@@ -146,7 +177,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <div className="space-y-3 text-xs text-slate-600 dark:text-slate-300">
               <div>
                 <label className="block text-slate-500 dark:text-slate-400 mb-1">
-                  Подключение к ИИ-ядру (OpenRouter):
+                  Подключение к ИИ (OpenRouter API):
                 </label>
                 <input
                   type="password"
@@ -158,7 +189,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
               <div>
                 <label className="block text-slate-500 dark:text-slate-400 mb-1">
-                  Адрес Supabase:
+                  Адрес базы Supabase:
                 </label>
                 <input
                   type="text"
@@ -174,7 +205,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 onClick={() => setShowSettingsModal(false)}
                 className="px-4 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-medium text-xs transition-colors"
               >
-                Готово
+                Сохранить
               </button>
             </div>
           </div>

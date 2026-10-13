@@ -5,12 +5,27 @@ import { Sidebar, NavTab } from "@/components/Sidebar";
 import { AIChat } from "@/components/AIChat";
 import { SmartMail } from "@/components/SmartMail";
 import { ProjectStudio } from "@/components/ProjectStudio";
+import { LoginScreen } from "@/components/LoginScreen";
+import { useAuth } from "@/lib/auth-context";
 import { INITIAL_MAILS } from "@/lib/mock-data";
 import { MailItem } from "@/lib/supabase";
 
 export default function Home() {
+  const { user, isLoading } = useAuth();
   const [currentTab, setCurrentTab] = useState<NavTab>("ai-chat");
   const [mails, setMails] = useState<MailItem[]>(INITIAL_MAILS);
+
+  if (isLoading) {
+    return (
+      <div className="h-screen w-screen flex items-center justify-center bg-[#f8fafc] dark:bg-[#12161c]">
+        <div className="w-5 h-5 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <LoginScreen />;
+  }
 
   const handleApproveMail = (mailId: string, finalReplyText?: string) => {
     setMails((prev) =>
