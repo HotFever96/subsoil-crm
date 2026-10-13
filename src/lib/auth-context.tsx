@@ -17,12 +17,12 @@ interface AuthContextType {
 
 const ACCOUNTS: Record<string, { password: string; name: string; role: "admin" | "client" }> = {
   admin: {
-    password: "admin",
+    password: "Geonedra2026!",
     name: "Администратор",
     role: "admin",
   },
   antonv: {
-    password: "123",
+    password: "Quarry2026_ans",
     name: "Антон В.",
     role: "client",
   },
@@ -56,7 +56,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const cleanPass = pass.trim();
 
     const account = ACCOUNTS[cleanUser];
-    if (account && (account.password === cleanPass || cleanPass === "admin" || cleanPass === "123")) {
+    if (account && account.password === cleanPass) {
       const authUser: AuthUser = {
         username: cleanUser,
         name: account.name,

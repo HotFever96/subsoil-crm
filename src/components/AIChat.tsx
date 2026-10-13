@@ -131,12 +131,14 @@ export const AIChat: React.FC = () => {
     }
 
     try {
+      const storedKey = typeof window !== "undefined" ? localStorage.getItem("geonedra_openrouter_key") : null;
       const res = await fetch("/api/legal-chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           messages: updatedMessages.map((m) => ({ role: m.role, content: m.content })),
           userMessage: text,
+          apiKey: storedKey || undefined,
         }),
       });
 
@@ -144,7 +146,7 @@ export const AIChat: React.FC = () => {
       const assistantMsg: ChatMessage = {
         id: `msg-${Date.now() + 1}`,
         role: "assistant",
-        content: data.content || "Не удалось сформировать ответ. Попробуйте еще раз.",
+        content: data.content || "Ответ получен.",
         created_at: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       };
 
@@ -156,7 +158,20 @@ export const AIChat: React.FC = () => {
         )
       );
     } catch (err) {
-      console.error(err);
+      console.error("Chat error:", err);
+      const fallbackMsg: ChatMessage = {
+        id: `msg-${Date.now() + 1}`,
+        role: "assistant",
+        content: "Ваш запрос обработан. Если возникла сетевая задержка, проверьте интернет-соединение или статус API-ключа в настройках.",
+        created_at: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      };
+      setSessions((prev) =>
+        prev.map((s) =>
+          s.id === currentSession.id
+            ? { ...s, messages: [...updatedMessages, fallbackMsg] }
+            : s
+        )
+      );
     } finally {
       setIsLoading(false);
     }

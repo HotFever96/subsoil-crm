@@ -180,10 +180,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   Подключение к ИИ (OpenRouter API):
                 </label>
                 <input
+                  id="openrouter-key-input"
                   type="password"
                   placeholder="sk-or-v1-..."
                   className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-[#12161c] border border-slate-200 dark:border-white/[0.08] text-slate-900 dark:text-slate-100 focus:outline-none focus:border-amber-500/50"
-                  defaultValue=""
+                  defaultValue={typeof window !== "undefined" ? localStorage.getItem("geonedra_openrouter_key") || "" : ""}
                 />
               </div>
 
@@ -202,7 +203,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
             <div className="flex justify-end pt-2">
               <button
-                onClick={() => setShowSettingsModal(false)}
+                onClick={() => {
+                  const input = document.getElementById("openrouter-key-input") as HTMLInputElement | null;
+                  if (input && typeof window !== "undefined") {
+                    localStorage.setItem("geonedra_openrouter_key", input.value.trim());
+                  }
+                  setShowSettingsModal(false);
+                }}
                 className="px-4 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-medium text-xs transition-colors"
               >
                 Сохранить
