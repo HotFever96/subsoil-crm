@@ -26,7 +26,7 @@ export const LoginScreen: React.FC = () => {
     <div className="min-h-screen w-screen flex items-center justify-center bg-[#f8fafc] dark:bg-[#0c1015] px-4 transition-colors relative bg-[radial-gradient(ellipse_70%_50%_at_50%_40%,rgba(14,165,233,0.1),transparent_70%)]">
       <div className="w-full max-w-sm bg-white dark:bg-[#131821] border border-slate-200 dark:border-white/[0.08] rounded-2xl p-8 shadow-xl shadow-sky-950/5 dark:shadow-2xl space-y-6">
         {/* Brand */}
-        <div className="text-center space-y-3">
+        <div className="text-center pb-1">
           <div className="flex justify-center">
             <img
               src={theme === "dark" ? "/geo-ai-logo-dark.png" : "/geo-ai-logo-light.png"}
@@ -34,9 +34,6 @@ export const LoginScreen: React.FC = () => {
               className="h-9 w-auto max-w-[200px] object-contain transition-all"
             />
           </div>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            Вход в корпоративную систему недропользования
-          </p>
         </div>
 
         {/* Error message */}

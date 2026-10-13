@@ -63,37 +63,32 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <>
-      <aside className="w-64 border-r border-slate-200 dark:border-white/[0.08] bg-[#f8fafc] dark:bg-[#090d12] flex flex-col justify-between shrink-0 select-none transition-colors h-full">
+      <aside className="w-72 border-r border-slate-200 dark:border-white/[0.08] bg-[#f8fafc] dark:bg-[#090d12] flex flex-col justify-between shrink-0 select-none transition-all h-full">
         <div className="flex flex-col flex-1 min-h-0">
           {/* Brand Header with adapted wide horizontal user logo */}
           <div className="px-5 py-4 border-b border-slate-200 dark:border-white/[0.08] flex items-center justify-between">
             <img
               src={theme === "dark" ? "/geo-ai-logo-dark.png" : "/geo-ai-logo-light.png"}
               alt="Geo AI"
-              className="h-8 w-auto max-w-[210px] object-contain transition-all"
+              className="h-8 w-auto max-w-[220px] object-contain transition-all"
             />
           </div>
 
-          {/* New Chat Button (Prominent like ChatGPT / Gemini) */}
-          <div className="p-3">
+          {/* New Chat Button (Clean, modern, harmonious with nav items) */}
+          <div className="px-3 pt-3 pb-1">
             <button
               onClick={handleNewChatClick}
-              className="w-full py-2.5 px-3 rounded-xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-[#131821] hover:bg-slate-100 dark:hover:bg-white/[0.06] text-xs font-medium text-slate-800 dark:text-slate-100 flex items-center justify-between transition-all shadow-2xs group cursor-pointer"
+              className="w-full text-left px-3 py-2.5 rounded-xl text-xs font-medium transition-all flex items-center space-x-3 cursor-pointer bg-white dark:bg-[#131821] hover:bg-slate-100 dark:hover:bg-white/[0.06] text-slate-800 dark:text-slate-100 border border-slate-200/90 dark:border-white/[0.08] shadow-2xs group"
             >
-              <div className="flex items-center space-x-2.5">
-                <div className="w-5 h-5 rounded-md bg-sky-500/10 flex items-center justify-center text-sky-500 group-hover:scale-105 transition-transform">
-                  <Plus className="w-3.5 h-3.5" />
-                </div>
-                <span>Новый чат</span>
+              <div className="w-5 h-5 rounded-lg bg-sky-500/10 dark:bg-sky-500/15 flex items-center justify-center text-sky-500 shrink-0 group-hover:scale-110 transition-transform">
+                <Plus className="w-3.5 h-3.5" />
               </div>
-              <span className="text-[10px] text-slate-400 font-mono px-1.5 py-0.5 rounded bg-slate-100 dark:bg-white/[0.06]">
-                ⌘N
-              </span>
+              <span className="font-medium text-slate-800 dark:text-slate-100">Новый чат</span>
             </button>
           </div>
 
           {/* Navigation Section */}
-          <nav className="px-3 pb-2 space-y-1">
+          <nav className="px-3 pt-1 pb-2 space-y-1">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = currentTab === item.id;
@@ -101,13 +96,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <button
                   key={item.id}
                   onClick={() => onSelectTab(item.id)}
-                  className={`w-full text-left px-3 py-2 rounded-lg text-xs font-medium transition-all flex items-center justify-between cursor-pointer ${
+                  className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-medium transition-all flex items-center justify-between cursor-pointer ${
                     isActive
                       ? "bg-slate-200/80 dark:bg-white/[0.08] text-slate-900 dark:text-slate-100 shadow-2xs"
                       : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/40 dark:hover:bg-white/[0.04]"
                   }`}
                 >
-                  <div className="flex items-center space-x-2.5 min-w-0">
+                  <div className="flex items-center space-x-3 min-w-0">
                     <Icon className={`w-4 h-4 shrink-0 ${isActive ? "text-sky-500 dark:text-sky-400" : "text-slate-400 dark:text-slate-500"}`} />
                     <span className="truncate">{item.label}</span>
                   </div>
@@ -141,13 +136,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       selectSession(sess.id);
                       onSelectTab("ai-chat");
                     }}
-                    className={`group w-full px-2.5 py-2 rounded-lg text-xs cursor-pointer flex items-center justify-between transition-colors ${
+                    className={`group w-full px-2.5 py-2 rounded-xl text-xs cursor-pointer flex items-center justify-between transition-colors ${
                       isActive
                         ? "bg-slate-200/90 dark:bg-white/[0.08] text-slate-950 dark:text-slate-100 font-medium shadow-2xs"
                         : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/40 dark:hover:bg-white/[0.04]"
                     }`}
                   >
-                    <div className="flex items-center space-x-2 min-w-0 pr-1">
+                    <div className="flex items-center space-x-2.5 min-w-0 pr-1">
                       <MessageSquare className={`w-3.5 h-3.5 shrink-0 ${isActive ? "text-sky-500" : "text-slate-400"}`} />
                       <span className="truncate text-xs">{sess.title}</span>
                     </div>
@@ -174,7 +169,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* Footer: User Profile, Settings, Theme & Logout */}
         <div className="p-3 border-t border-slate-200 dark:border-white/[0.08] space-y-2 shrink-0">
           {/* User Profile Info + Logout */}
-          <div className="px-3 py-2 rounded-lg bg-slate-200/60 dark:bg-white/[0.04] flex items-center justify-between">
+          <div className="px-3 py-2 rounded-xl bg-slate-200/60 dark:bg-white/[0.04] flex items-center justify-between">
             <div className="flex items-center space-x-2.5 min-w-0">
               <div className="w-7 h-7 rounded-full bg-slate-300 dark:bg-slate-700 flex items-center justify-center text-slate-700 dark:text-slate-200 shrink-0">
                 <User className="w-3.5 h-3.5" />
@@ -230,7 +225,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Settings Modal */}
       {showSettingsModal && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="w-full max-w-md bg-white dark:bg-[#131821] border border-slate-200 dark:border-white/[0.08] rounded-xl p-5 shadow-2xl space-y-4">
+          <div className="w-full max-w-md bg-white dark:bg-[#131821] border border-slate-200 dark:border-white/[0.08] rounded-2xl p-5 shadow-2xl space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/[0.08] pb-3">
               <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
                 Настройки системы
