@@ -170,7 +170,7 @@ export const SubAgentWorkspace: React.FC<SubAgentWorkspaceProps> = ({
               value={editableContent}
               onChange={(e) => setEditableContent(e.target.value)}
               rows={22}
-              className="w-full flex-1 p-4 rounded-xl bg-slate-50 dark:bg-[#181d24] border border-slate-300 dark:border-white/[0.15] text-xs sm:text-sm text-slate-900 dark:text-slate-100 leading-relaxed focus:outline-none focus:border-amber-500 resize-none"
+              className="w-full flex-1 p-4 rounded-xl bg-slate-50 dark:bg-[#181d24] border border-slate-300 dark:border-white/[0.15] text-xs sm:text-sm text-slate-900 dark:text-slate-100 leading-relaxed focus:outline-none focus:border-sky-500 resize-none"
             />
           ) : (
             <div className="p-6 rounded-xl bg-slate-50 dark:bg-[#181d24] border border-slate-200/80 dark:border-white/[0.06] text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">
@@ -183,7 +183,7 @@ export const SubAgentWorkspace: React.FC<SubAgentWorkspaceProps> = ({
         <div className="w-80 border-l border-slate-200 dark:border-white/[0.08] bg-slate-50/60 dark:bg-[#0e1217] flex flex-col justify-between overflow-y-auto shrink-0">
           <div className="p-5 border-b border-slate-200 dark:border-white/[0.08] space-y-4">
             <div className="flex items-center space-x-2.5">
-              <div className="w-7 h-7 rounded-lg bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-amber-500 text-xs font-semibold shrink-0">
+              <div className="w-7 h-7 rounded-lg bg-sky-500/10 border border-sky-500/25 flex items-center justify-center text-sky-500 text-xs font-semibold shrink-0">
                 {subsection.responsibleAgent === "ENGINEER" ? "ГИ" : subsection.responsibleAgent === "LEGAL" ? "ЮР" : "ЭК"}
               </div>
               <div className="min-w-0">
@@ -231,7 +231,7 @@ export const SubAgentWorkspace: React.FC<SubAgentWorkspaceProps> = ({
               onChange={(e) => setInstruction(e.target.value)}
               placeholder="Задание специалисту (например: скорректировать расчет уступов)..."
               rows={3}
-              className="w-full p-2.5 rounded-lg bg-slate-50 dark:bg-[#12161c] border border-slate-200 dark:border-white/[0.1] text-xs text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:border-amber-500 resize-none"
+              className="w-full p-2.5 rounded-lg bg-slate-50 dark:bg-[#12161c] border border-slate-200 dark:border-white/[0.1] text-xs text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:border-sky-500 resize-none"
             />
             <button
               onClick={() => handleExecutePrompt()}

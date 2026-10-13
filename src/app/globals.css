@@ -13,24 +13,24 @@
     --text-primary: #0f172a;
     --text-secondary: #475569;
     --text-muted: #94a3b8;
-    --accent: #b48118;
-    --accent-hover: #966b13;
-    --accent-soft: rgba(180, 129, 24, 0.1);
+    --accent: #0284c7;
+    --accent-hover: #0369a1;
+    --accent-soft: rgba(2, 132, 199, 0.08);
   }
 
   .dark {
-    --bg-main: #12161c;
-    --bg-surface: #181d24;
-    --bg-sidebar: #0e1217;
-    --bg-card: #191f27;
+    --bg-main: #0c1015;
+    --bg-surface: #131821;
+    --bg-sidebar: #090d12;
+    --bg-card: #151b24;
     --border-subtle: rgba(255, 255, 255, 0.08);
     --border-focus: rgba(255, 255, 255, 0.16);
     --text-primary: #f1f5f9;
     --text-secondary: #94a3b8;
     --text-muted: #64748b;
-    --accent: #c59b27;
-    --accent-hover: #dbb038;
-    --accent-soft: rgba(197, 155, 39, 0.12);
+    --accent: #38bdf8;
+    --accent-hover: #0ea5e9;
+    --accent-soft: rgba(56, 189, 248, 0.12);
   }
 }
 
@@ -60,5 +60,5 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(148, 163, 184, 0.35);
+  background: rgba(148, 163, 184, 0.4);
 }

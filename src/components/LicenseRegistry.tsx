@@ -27,7 +27,7 @@ export const LicenseRegistry: React.FC = () => {
       case "ACTIVE":
         return "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
       case "UNDER_REVIEW":
-        return "bg-amber-500/10 text-amber-400 border-amber-500/20";
+        return "bg-sky-500/10 text-sky-400 border-sky-500/20";
       case "SUSPENDED":
         return "bg-rose-500/10 text-rose-400 border-rose-500/20";
       default:
@@ -63,7 +63,7 @@ export const LicenseRegistry: React.FC = () => {
 
         <button
           onClick={() => alert("Форма внесения новой лицензии...")}
-          className="px-3.5 py-1.5 rounded-lg text-xs font-medium bg-amber-500 hover:bg-amber-400 text-slate-950 transition-colors flex items-center space-x-1"
+          className="px-3.5 py-1.5 rounded-lg text-xs font-medium bg-sky-500 hover:bg-sky-400 text-slate-950 transition-colors flex items-center space-x-1"
         >
           <Plus className="w-3.5 h-3.5" />
           <span>Добавить лицензию</span>
@@ -79,7 +79,7 @@ export const LicenseRegistry: React.FC = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Поиск по номеру, участку или предприятию..."
-            className="w-full pl-9 pr-3 py-1.5 rounded-lg bg-[#0e1522] border border-slate-800 text-xs text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-amber-500/60"
+            className="w-full pl-9 pr-3 py-1.5 rounded-lg bg-[#0e1522] border border-slate-800 text-xs text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-sky-500/60"
           />
         </div>
 
@@ -90,7 +90,7 @@ export const LicenseRegistry: React.FC = () => {
               onClick={() => setStatusFilter(st)}
               className={`px-2.5 py-1 rounded-md text-xs transition-colors ${
                 statusFilter === st
-                  ? "bg-slate-800 text-amber-300 font-medium"
+                  ? "bg-slate-800 text-sky-300 font-medium"
                   : "text-slate-400 hover:text-slate-200"
               }`}
             >
@@ -111,7 +111,7 @@ export const LicenseRegistry: React.FC = () => {
               <div className="flex items-start justify-between">
                 <div>
                   <div className="flex items-center space-x-2 mb-1">
-                    <span className="font-mono text-xs font-semibold text-amber-400">
+                    <span className="font-mono text-xs font-semibold text-sky-400">
                       {lic.code}
                     </span>
                     <span

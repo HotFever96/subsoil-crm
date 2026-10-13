@@ -18,7 +18,7 @@ export default function Home() {
   if (isLoading) {
     return (
       <div className="h-screen w-screen flex items-center justify-center bg-[#f8fafc] dark:bg-[#12161c]">
-        <div className="w-5 h-5 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" />
+        <div className="w-5 h-5 border-2 border-sky-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }

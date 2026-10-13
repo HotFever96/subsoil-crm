@@ -65,7 +65,7 @@ export const MarkdownView: React.FC<MarkdownViewProps> = ({ content, className =
         tokens.push(
           <code
             key={`c-${keyIdx++}`}
-            className="px-1.5 py-0.5 rounded bg-slate-200/70 dark:bg-white/[0.08] text-amber-600 dark:text-amber-400 font-mono text-[13px]"
+            className="px-1.5 py-0.5 rounded bg-slate-200/70 dark:bg-white/[0.08] text-sky-600 dark:text-sky-400 font-mono text-[13px]"
           >
             {inlineMatch[3]}
           </code>
@@ -179,7 +179,7 @@ export const MarkdownView: React.FC<MarkdownViewProps> = ({ content, className =
         elements.push(
           <blockquote
             key={`bq-${idx}`}
-            className="border-l-2 border-amber-500/60 pl-3 my-2 italic text-slate-600 dark:text-slate-300"
+            className="border-l-2 border-sky-500/60 pl-3 my-2 italic text-slate-600 dark:text-slate-300"
           >
             {renderInlineFormatted(line.slice(2))}
           </blockquote>

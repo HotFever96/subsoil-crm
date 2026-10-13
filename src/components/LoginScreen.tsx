@@ -1,11 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { Layers, ArrowRight, Lock, User, AlertCircle } from "lucide-react";
+import { ArrowRight, Lock, User, AlertCircle } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
+import { useTheme } from "@/lib/theme-context";
 
 export const LoginScreen: React.FC = () => {
   const { login } = useAuth();
+  const { theme } = useTheme();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -21,26 +23,25 @@ export const LoginScreen: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-screen flex items-center justify-center bg-[#f8fafc] dark:bg-[#12161c] px-4 transition-colors">
-      <div className="w-full max-w-sm bg-white dark:bg-[#181d24] border border-slate-200 dark:border-white/[0.08] rounded-2xl p-8 shadow-xl space-y-6">
+    <div className="min-h-screen w-screen flex items-center justify-center bg-[#f8fafc] dark:bg-[#0c1015] px-4 transition-colors relative bg-[radial-gradient(ellipse_70%_50%_at_50%_40%,rgba(14,165,233,0.1),transparent_70%)]">
+      <div className="w-full max-w-sm bg-white dark:bg-[#131821] border border-slate-200 dark:border-white/[0.08] rounded-2xl p-8 shadow-xl shadow-sky-950/5 dark:shadow-2xl space-y-6">
         {/* Brand */}
-        <div className="text-center space-y-2">
-          <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-amber-500 mx-auto">
-            <Layers className="w-5 h-5" />
+        <div className="text-center space-y-3">
+          <div className="flex justify-center">
+            <img
+              src={theme === "dark" ? "/geo-ai-logo-dark.png" : "/geo-ai-logo-light.png"}
+              alt="Geo AI"
+              className="h-9 w-auto max-w-[200px] object-contain transition-all"
+            />
           </div>
-          <div>
-            <h1 className="text-lg font-semibold text-slate-900 dark:text-slate-100 tracking-tight">
-              GEONEDRA
-            </h1>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              Вход в корпоративную систему
-            </p>
-          </div>
+          <p className="text-xs text-slate-500 dark:text-slate-400">
+            Вход в корпоративную систему недропользования
+          </p>
         </div>
 
         {/* Error message */}
         {error && (
-          <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs flex items-start space-x-2">
+          <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs flex items-start space-x-2">
             <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
             <span>{error}</span>
           </div>
@@ -61,7 +62,7 @@ export const LoginScreen: React.FC = () => {
                 placeholder="Логин"
                 autoComplete="username"
                 required
-                className="w-full pl-9 pr-3 py-2 rounded-lg bg-slate-50 dark:bg-[#12161c] border border-slate-200 dark:border-white/[0.08] text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:border-amber-500"
+                className="w-full pl-9 pr-3 py-2 rounded-xl bg-slate-50 dark:bg-[#0c1015] border border-slate-200 dark:border-white/[0.08] text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/15"
               />
             </div>
           </div>
@@ -79,14 +80,14 @@ export const LoginScreen: React.FC = () => {
                 placeholder="Пароль"
                 autoComplete="current-password"
                 required
-                className="w-full pl-9 pr-3 py-2 rounded-lg bg-slate-50 dark:bg-[#12161c] border border-slate-200 dark:border-white/[0.08] text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:border-amber-500"
+                className="w-full pl-9 pr-3 py-2 rounded-xl bg-slate-50 dark:bg-[#0c1015] border border-slate-200 dark:border-white/[0.08] text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/15"
               />
             </div>
           </div>
 
           <button
             type="submit"
-            className="w-full py-2.5 rounded-lg bg-slate-900 dark:bg-white hover:bg-slate-800 dark:hover:bg-slate-100 text-white dark:text-slate-900 font-medium text-xs flex items-center justify-center space-x-1.5 transition-colors shadow-xs"
+            className="w-full py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-white font-medium text-xs flex items-center justify-center space-x-1.5 transition-all shadow-md shadow-sky-500/20 cursor-pointer"
           >
             <span>Войти</span>
             <ArrowRight className="w-3.5 h-3.5" />

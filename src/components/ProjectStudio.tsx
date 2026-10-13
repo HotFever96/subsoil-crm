@@ -68,7 +68,7 @@ export const ProjectStudio: React.FC = () => {
       case "APPROVED":
         return <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" title="Утверждено" />;
       case "AI_DRAFT":
-        return <span className="w-2 h-2 rounded-full bg-amber-500 shrink-0" title="Черновик ИИ" />;
+        return <span className="w-2 h-2 rounded-full bg-sky-500 shrink-0" title="Черновик ИИ" />;
       case "NEEDS_DATA":
         return <span className="w-2 h-2 rounded-full bg-rose-500 shrink-0" title="Требует данных" />;
     }

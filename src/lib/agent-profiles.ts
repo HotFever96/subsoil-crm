@@ -15,7 +15,7 @@ export const AGENT_PROFILES: Record<SubAgentRole, AgentProfile> = {
     role: "ENGINEER",
     title: "Главный горный инженер",
     badge: "Горно-технический блок",
-    avatarColor: "from-amber-600 to-amber-900",
+    avatarColor: "from-sky-600 to-sky-900",
     description: "Расчет элементов системы разработки, геометрических параметров уступов, устойчивости откосов, выбор карьерной техники и расчет баланса вскрыши/добычи по ОПИ.",
     normativeCompetencies: [
       "ФНиП «Правила безопасности при ведении горных работ и переработке твердых полезных ископаемых»",

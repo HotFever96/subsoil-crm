@@ -139,7 +139,6 @@ export const AIChat: React.FC = () => {
         if (event.error === "not-allowed" || event.error === "service-not-allowed") {
           setSpeechError("Доступ к микрофону заблокирован. Пожалуйста, разрешите доступ в настройках браузера.");
         } else if (event.error === "no-speech") {
-          // No speech detected, wait or continue
           return;
         } else {
           setSpeechError(`Ошибка распознавания речи: ${event.error}`);
@@ -226,7 +225,6 @@ export const AIChat: React.FC = () => {
   };
 
   const handleSend = async (textToSend?: string) => {
-    // If voice recognition was active, stop it gracefully
     if (isListening && recognitionRef.current) {
       try {
         recognitionRef.current.stop();
@@ -239,7 +237,6 @@ export const AIChat: React.FC = () => {
     const text = (textToSend !== undefined ? textToSend : inputPrompt).trim();
     if ((!text && attachedFiles.length === 0) || isLoading || !activeSession) return;
 
-    // Attachments metadata for persistence and rendering
     const msgAttachments = attachedFiles.map((f) => ({
       name: f.name,
       type: f.type,
@@ -264,7 +261,6 @@ export const AIChat: React.FC = () => {
     const currentMessages = activeSession.messages || [];
     const updatedMessages = [...currentMessages, userMsg];
 
-    // Persist immediately in context & localStorage
     setSessionMessages(activeSession.id, updatedMessages, newTitle);
 
     const imagesPayload = attachedFiles
@@ -345,7 +341,7 @@ export const AIChat: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full overflow-hidden bg-white dark:bg-[#12161c] transition-colors relative">
+    <div className="flex-1 flex flex-col h-full overflow-hidden bg-white dark:bg-[#0c1015] transition-colors relative">
       {/* Hidden file input */}
       <input
         ref={fileInputRef}
@@ -356,58 +352,58 @@ export const AIChat: React.FC = () => {
         className="hidden"
       />
 
-      {/* Gentle speech error notice if any */}
+      {/* Gentle speech error notice */}
       {speechError && (
-        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50 flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-600 dark:text-rose-400 text-xs shadow-lg backdrop-blur-xs transition-all">
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50 flex items-center space-x-2 px-4 py-2.5 rounded-full bg-rose-500/10 border border-rose-500/30 text-rose-600 dark:text-rose-400 text-xs shadow-lg backdrop-blur-xs transition-all">
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{speechError}</span>
           <button
             onClick={() => setSpeechError(null)}
-            className="p-0.5 rounded hover:bg-rose-500/20 text-rose-500 ml-1 cursor-pointer"
+            className="p-0.5 rounded-full hover:bg-rose-500/20 text-rose-500 ml-1 cursor-pointer"
           >
             <X className="w-3.5 h-3.5" />
           </button>
         </div>
       )}
 
-      {/* CASE 1: EMPTY / NEW CHAT STATE (ChatGPT / Gemini style: Screenshot 2 & 3) */}
+      {/* CASE 1: EMPTY / NEW CHAT STATE (Gemini / ChatGPT aesthetic with glowing ambient gradient) */}
       {!hasUserMessages ? (
-        <div className="flex-1 flex flex-col items-center justify-center px-4 overflow-y-auto">
-          <div className="w-full max-w-2xl flex flex-col items-center text-center -mt-8">
-            <h1 className="text-3xl font-medium tracking-tight text-slate-800 dark:text-slate-100 mb-8 select-none">
+        <div className="flex-1 flex flex-col items-center justify-center px-4 overflow-y-auto relative bg-[radial-gradient(ellipse_70%_50%_at_50%_35%,rgba(14,165,233,0.09),transparent_75%)] dark:bg-[radial-gradient(ellipse_75%_55%_at_50%_35%,rgba(14,165,233,0.12),transparent_75%)]">
+          <div className="w-full max-w-xl flex flex-col items-center text-center -mt-6">
+            <h1 className="text-3xl sm:text-4xl font-medium tracking-tight text-slate-800 dark:text-slate-100 mb-8 select-none">
               Чем я могу помочь сегодня?
             </h1>
 
-            {/* Central Floating Input Box */}
-            <div className={`w-full relative rounded-2xl bg-slate-50 dark:bg-[#181d24] border transition-all text-left ${
+            {/* Central Narrower Rounded Pill Input Box (Gemini / ChatGPT Screen 3 style) */}
+            <div className={`w-full relative rounded-3xl bg-slate-50/90 dark:bg-[#131821]/90 backdrop-blur-md border transition-all text-left shadow-lg shadow-sky-950/5 dark:shadow-2xl dark:shadow-sky-950/20 ${
               isListening
-                ? "border-rose-500/60 ring-2 ring-rose-500/20 shadow-md shadow-rose-500/10"
-                : "border-slate-200 dark:border-white/[0.1] shadow-md shadow-slate-200/50 dark:shadow-none focus-within:border-amber-500/50"
+                ? "border-rose-500/70 ring-4 ring-rose-500/20"
+                : "border-slate-200/90 dark:border-white/[0.1] focus-within:border-sky-500/60 focus-within:ring-4 focus-within:ring-sky-500/10"
             }`}>
-              {/* Voice recording live badge indicator */}
+              {/* Voice recording live indicator */}
               {isListening && (
-                <div className="px-4 pt-2.5 flex items-center space-x-2 text-xs font-medium text-rose-500 animate-pulse">
+                <div className="px-5 pt-3 flex items-center space-x-2 text-xs font-medium text-rose-500 animate-pulse">
                   <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
-                  <span>Идет запись голоса (ru-RU)... Говорите или нажмите на микрофон для завершения</span>
+                  <span>Идет запись голоса (ru-RU)... Говорите в микрофон</span>
                 </div>
               )}
 
               {/* Attached files chips inside input box */}
               {attachedFiles.length > 0 && (
-                <div className="px-4 pt-3 flex flex-wrap gap-2">
+                <div className="px-5 pt-3 flex flex-wrap gap-2">
                   {attachedFiles.map((file) => (
                     <div
                       key={file.id}
-                      className="group relative flex items-center space-x-2 rounded-lg bg-white dark:bg-[#202730] border border-slate-200 dark:border-white/[0.1] px-2.5 py-1.5 text-xs text-slate-800 dark:text-slate-200 shadow-2xs"
+                      className="group relative flex items-center space-x-2 rounded-xl bg-white dark:bg-[#1a212d] border border-slate-200 dark:border-white/[0.1] px-2.5 py-1.5 text-xs text-slate-800 dark:text-slate-200 shadow-2xs"
                     >
                       {file.type === "image" && file.previewUrl ? (
                         <img
                           src={file.previewUrl}
                           alt={file.name}
-                          className="w-7 h-7 object-cover rounded"
+                          className="w-7 h-7 object-cover rounded-lg"
                         />
                       ) : (
-                        <FileText className="w-4 h-4 text-amber-500 shrink-0" />
+                        <FileText className="w-4 h-4 text-sky-500 shrink-0" />
                       )}
                       <div className="flex flex-col min-w-0 pr-4">
                         <span className="truncate max-w-[130px] font-medium">{file.name}</span>
@@ -416,7 +412,7 @@ export const AIChat: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => removeAttachment(file.id)}
-                        className="absolute right-1 top-1 text-slate-400 hover:text-rose-500 p-0.5 rounded transition-colors cursor-pointer"
+                        className="absolute right-1 top-1 text-slate-400 hover:text-rose-500 p-0.5 rounded-full transition-colors cursor-pointer"
                         title="Удалить"
                       >
                         <X className="w-3.5 h-3.5" />
@@ -432,17 +428,17 @@ export const AIChat: React.FC = () => {
                 onChange={handleInput}
                 onKeyDown={handleKeyDown}
                 onPaste={handlePaste}
-                placeholder={isListening ? "Слушаю вас..." : "Спросите что-нибудь, прикрепите файлы или вставьте изображение..."}
+                placeholder={isListening ? "Слушаю вас..." : "Спросите что-нибудь или надиктуйте запрос..."}
                 rows={2}
-                className="w-full pt-4 pb-12 px-4 bg-transparent text-[15px] text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none resize-none max-h-48 leading-relaxed"
+                className="w-full pt-4 pb-12 px-5 bg-transparent text-[15px] text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none resize-none max-h-48 leading-relaxed"
               />
 
-              <div className="absolute left-3 right-3 bottom-2.5 flex items-center justify-between pointer-events-none">
+              <div className="absolute left-3.5 right-3.5 bottom-2.5 flex items-center justify-between pointer-events-none">
                 <div className="flex items-center space-x-1 pointer-events-auto">
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="p-2 rounded-xl text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-white/[0.06] transition-colors flex items-center space-x-1 cursor-pointer"
+                    className="p-2 rounded-full text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-white/[0.06] transition-colors flex items-center space-x-1 cursor-pointer"
                     title="Прикрепить файл или фото"
                   >
                     <Paperclip className="w-4 h-4" />
@@ -454,10 +450,10 @@ export const AIChat: React.FC = () => {
                   <button
                     type="button"
                     onClick={toggleVoiceInput}
-                    className={`p-2 rounded-xl transition-all cursor-pointer ${
+                    className={`p-2 rounded-full transition-all cursor-pointer ${
                       isListening
                         ? "bg-rose-500 text-white animate-pulse shadow-md shadow-rose-500/25 ring-2 ring-rose-400/50"
-                        : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-white/[0.06]"
+                        : "text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-white/[0.06]"
                     }`}
                     title={isListening ? "Остановить запись голоса" : "Голосовой ввод (Speech-to-Text ru-RU)"}
                   >
@@ -468,10 +464,10 @@ export const AIChat: React.FC = () => {
                     type="button"
                     onClick={() => handleSend()}
                     disabled={(!inputPrompt.trim() && attachedFiles.length === 0) || isLoading}
-                    className={`p-2 rounded-xl transition-all cursor-pointer ${
+                    className={`p-2 rounded-full transition-all cursor-pointer ${
                       (inputPrompt.trim() || attachedFiles.length > 0) && !isLoading
-                        ? "bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:opacity-90 shadow-2xs"
-                        : "bg-slate-200 dark:bg-white/[0.1] text-slate-400 cursor-not-allowed"
+                        ? "bg-slate-900 dark:bg-sky-500 text-white dark:text-slate-950 hover:opacity-90 shadow-2xs"
+                        : "bg-slate-200 dark:bg-white/[0.08] text-slate-400 dark:text-slate-600 cursor-not-allowed"
                     }`}
                     title="Отправить"
                   >
@@ -481,15 +477,15 @@ export const AIChat: React.FC = () => {
               </div>
             </div>
 
-            {/* Quick Pills (Prompt Suggestions ONLY on new chat, matching ChatGPT Screen 3) */}
-            <div className="flex flex-wrap items-center justify-center gap-2 mt-5 max-w-2xl">
+            {/* Quick Pills (Pure rounded-full capsules, Screen 3 Gemini style) */}
+            <div className="flex flex-wrap items-center justify-center gap-2 mt-5 max-w-xl">
               <button
                 type="button"
                 onClick={() => setWebSearchEnabled((prev) => !prev)}
-                className={`flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs border transition-all cursor-pointer shadow-2xs ${
+                className={`flex items-center space-x-2 px-4 py-2 rounded-full text-xs border transition-all cursor-pointer shadow-2xs ${
                   webSearchEnabled
-                    ? "bg-sky-500/15 border-sky-500/40 text-sky-600 dark:text-sky-400 font-medium"
-                    : "bg-white dark:bg-[#181d24] border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-white/[0.2]"
+                    ? "bg-sky-500/15 border-sky-500/50 text-sky-600 dark:text-sky-400 font-medium"
+                    : "bg-white/80 dark:bg-[#131821]/80 backdrop-blur-xs border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 hover:border-sky-500/40 hover:text-sky-600 dark:hover:text-sky-400"
                 }`}
               >
                 <Globe className="w-3.5 h-3.5 text-sky-500" />
@@ -499,33 +495,33 @@ export const AIChat: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setStyleMode((prev) => (prev === "brief" ? "normal" : "brief"))}
-                className={`flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs border transition-all cursor-pointer shadow-2xs ${
+                className={`flex items-center space-x-2 px-4 py-2 rounded-full text-xs border transition-all cursor-pointer shadow-2xs ${
                   styleMode === "brief"
-                    ? "bg-amber-500/15 border-amber-500/40 text-amber-600 dark:text-amber-400 font-medium"
-                    : "bg-white dark:bg-[#181d24] border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-white/[0.2]"
+                    ? "bg-sky-500/15 border-sky-500/50 text-sky-600 dark:text-sky-400 font-medium"
+                    : "bg-white/80 dark:bg-[#131821]/80 backdrop-blur-xs border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 hover:border-sky-500/40 hover:text-sky-600 dark:hover:text-sky-400"
                 }`}
               >
-                <Zap className="w-3.5 h-3.5 text-amber-500" />
+                <Zap className="w-3.5 h-3.5 text-sky-500" />
                 <span>Краткий ответ</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setStyleMode((prev) => (prev === "detailed" ? "normal" : "detailed"))}
-                className={`flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs border transition-all cursor-pointer shadow-2xs ${
+                className={`flex items-center space-x-2 px-4 py-2 rounded-full text-xs border transition-all cursor-pointer shadow-2xs ${
                   styleMode === "detailed"
-                    ? "bg-amber-500/15 border-amber-500/40 text-amber-600 dark:text-amber-400 font-medium"
-                    : "bg-white dark:bg-[#181d24] border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-white/[0.2]"
+                    ? "bg-sky-500/15 border-sky-500/50 text-sky-600 dark:text-sky-400 font-medium"
+                    : "bg-white/80 dark:bg-[#131821]/80 backdrop-blur-xs border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 hover:border-sky-500/40 hover:text-sky-600 dark:hover:text-sky-400"
                 }`}
               >
-                <BookOpen className="w-3.5 h-3.5 text-amber-500" />
+                <BookOpen className="w-3.5 h-3.5 text-sky-500" />
                 <span>Развернутый анализ</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs border bg-white dark:bg-[#181d24] border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-white/[0.2] shadow-2xs transition-all cursor-pointer"
+                className="flex items-center space-x-2 px-4 py-2 rounded-full text-xs border bg-white/80 dark:bg-[#131821]/80 backdrop-blur-xs border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 hover:border-sky-500/40 hover:text-sky-600 dark:hover:text-sky-400 shadow-2xs transition-all cursor-pointer"
               >
                 <Paperclip className="w-3.5 h-3.5 text-slate-400" />
                 <span>Анализ файлов и фото</span>
@@ -534,7 +530,7 @@ export const AIChat: React.FC = () => {
           </div>
         </div>
       ) : (
-        /* CASE 2: ACTIVE DIALOGUE (Centered stream + floating bottom bar, Screenshot 1) */
+        /* CASE 2: ACTIVE DIALOGUE (Centered stream + floating bottom bar) */
         <div className="flex-1 flex flex-col h-full overflow-hidden">
           {/* Scrollable messages container */}
           <div className="flex-1 overflow-y-auto">
@@ -549,7 +545,7 @@ export const AIChat: React.FC = () => {
                     }`}
                   >
                     {isAssistant && (
-                      <div className="w-8 h-8 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-500 flex items-center justify-center shrink-0 mt-1">
+                      <div className="w-8 h-8 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-500 dark:text-sky-400 flex items-center justify-center shrink-0 mt-1">
                         <Bot className="w-4 h-4" />
                       </div>
                     )}
@@ -558,7 +554,7 @@ export const AIChat: React.FC = () => {
                       className={`group relative rounded-2xl px-4 py-3.5 max-w-2xl text-[15px] leading-relaxed ${
                         isAssistant
                           ? "bg-transparent text-slate-900 dark:text-slate-100 w-full"
-                          : "bg-slate-900 dark:bg-slate-800 text-white dark:text-slate-100"
+                          : "bg-slate-900 dark:bg-[#18212e] border border-transparent dark:border-white/[0.06] text-white dark:text-slate-100"
                       }`}
                     >
                       {/* Attached files preview in user message */}
@@ -573,11 +569,11 @@ export const AIChat: React.FC = () => {
                                 <img
                                   src={att.previewUrl}
                                   alt={att.name}
-                                  className="w-14 h-14 object-cover rounded"
+                                  className="w-14 h-14 object-cover rounded-lg"
                                 />
                               ) : (
                                 <>
-                                  <FileText className="w-3.5 h-3.5 text-amber-400" />
+                                  <FileText className="w-3.5 h-3.5 text-sky-400" />
                                   <span className="max-w-[160px] truncate">{att.name}</span>
                                 </>
                               )}
@@ -594,7 +590,7 @@ export const AIChat: React.FC = () => {
                         </div>
                       )}
 
-                      {/* Action buttons under assistant message (like Screenshot 1) */}
+                      {/* Action buttons under assistant message */}
                       {isAssistant && (
                         <div className="mt-3 pt-1 flex items-center space-x-2 text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity">
                           <button
@@ -642,11 +638,11 @@ export const AIChat: React.FC = () => {
 
               {isLoading && (
                 <div className="flex space-x-4 justify-start">
-                  <div className="w-8 h-8 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-500 flex items-center justify-center shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-500 dark:text-sky-400 flex items-center justify-center shrink-0">
                     <Bot className="w-4 h-4" />
                   </div>
-                  <div className="rounded-2xl px-4 py-3 bg-slate-100 dark:bg-[#181d24] border border-slate-200/60 dark:border-white/[0.06] text-xs text-slate-400 flex items-center space-x-2">
-                    <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+                  <div className="rounded-2xl px-4 py-3 bg-slate-100 dark:bg-[#131821] border border-slate-200/60 dark:border-white/[0.06] text-xs text-slate-400 flex items-center space-x-2">
+                    <div className="w-2 h-2 rounded-full bg-sky-500 animate-pulse" />
                     <span>ИИ формирует ответ...</span>
                   </div>
                 </div>
@@ -658,14 +654,14 @@ export const AIChat: React.FC = () => {
 
           {/* Floating Center Bottom Input Box */}
           <div className="w-full max-w-3xl mx-auto px-4 pb-4 pt-1">
-            <div className={`relative rounded-2xl bg-slate-100 dark:bg-[#181d24] border transition-colors ${
+            <div className={`relative rounded-3xl bg-slate-100/90 dark:bg-[#131821]/90 backdrop-blur-md border transition-colors ${
               isListening
-                ? "border-rose-500/60 ring-2 ring-rose-500/20 shadow-md shadow-rose-500/10"
-                : "border-slate-200 dark:border-white/[0.1] shadow-2xs focus-within:border-amber-500/50"
+                ? "border-rose-500/70 ring-4 ring-rose-500/20 shadow-md shadow-rose-500/10"
+                : "border-slate-200 dark:border-white/[0.1] shadow-2xs focus-within:border-sky-500/60 focus-within:ring-4 focus-within:ring-sky-500/10"
             }`}>
-              {/* Voice recording live badge indicator */}
+              {/* Voice recording live indicator */}
               {isListening && (
-                <div className="px-3 pt-2 flex items-center space-x-2 text-xs font-medium text-rose-500 animate-pulse">
+                <div className="px-4 pt-2.5 flex items-center space-x-2 text-xs font-medium text-rose-500 animate-pulse">
                   <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
                   <span>Идет запись голоса... Говорите в микрофон</span>
                 </div>
@@ -673,20 +669,20 @@ export const AIChat: React.FC = () => {
 
               {/* Attached files preview inside input */}
               {attachedFiles.length > 0 && (
-                <div className="px-3 pt-3 flex flex-wrap gap-2">
+                <div className="px-4 pt-3 flex flex-wrap gap-2">
                   {attachedFiles.map((file) => (
                     <div
                       key={file.id}
-                      className="group relative flex items-center space-x-2 rounded-lg bg-white dark:bg-[#202730] border border-slate-200 dark:border-white/[0.1] px-2.5 py-1.5 text-xs text-slate-800 dark:text-slate-200 shadow-2xs"
+                      className="group relative flex items-center space-x-2 rounded-xl bg-white dark:bg-[#1a212d] border border-slate-200 dark:border-white/[0.1] px-2.5 py-1.5 text-xs text-slate-800 dark:text-slate-200 shadow-2xs"
                     >
                       {file.type === "image" && file.previewUrl ? (
                         <img
                           src={file.previewUrl}
                           alt={file.name}
-                          className="w-7 h-7 object-cover rounded"
+                          className="w-7 h-7 object-cover rounded-lg"
                         />
                       ) : (
-                        <FileText className="w-4 h-4 text-amber-500 shrink-0" />
+                        <FileText className="w-4 h-4 text-sky-500 shrink-0" />
                       )}
                       <div className="flex flex-col min-w-0 pr-4">
                         <span className="truncate max-w-[130px] font-medium">{file.name}</span>
@@ -695,7 +691,7 @@ export const AIChat: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => removeAttachment(file.id)}
-                        className="absolute right-1 top-1 text-slate-400 hover:text-rose-500 p-0.5 rounded transition-colors cursor-pointer"
+                        className="absolute right-1 top-1 text-slate-400 hover:text-rose-500 p-0.5 rounded-full transition-colors cursor-pointer"
                         title="Удалить"
                       >
                         <X className="w-3.5 h-3.5" />
@@ -713,26 +709,26 @@ export const AIChat: React.FC = () => {
                 onPaste={handlePaste}
                 placeholder={isListening ? "Слушаю вас..." : "Спросите что-нибудь (код, текст, анализ, бизнес)..."}
                 rows={1}
-                className="w-full pt-3.5 pb-11 px-4 bg-transparent text-[15px] text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none resize-none max-h-48 leading-relaxed"
+                className="w-full pt-3.5 pb-11 px-5 bg-transparent text-[15px] text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none resize-none max-h-48 leading-relaxed"
               />
 
-              <div className="absolute left-3 right-3 bottom-2 flex items-center justify-between pointer-events-none">
+              <div className="absolute left-3.5 right-3.5 bottom-2.5 flex items-center justify-between pointer-events-none">
                 <div className="flex items-center space-x-1 pointer-events-auto">
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
+                    className="p-1.5 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
                     title="Прикрепить файл или фото"
                   >
                     <Paperclip className="w-4 h-4" />
                   </button>
                   {webSearchEnabled && (
-                    <span className="text-[11px] px-2 py-0.5 rounded-md bg-sky-500/10 text-sky-500 font-medium">
+                    <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-sky-500/10 text-sky-500 font-medium">
                       Поиск в сети
                     </span>
                   )}
                   {styleMode === "brief" && (
-                    <span className="text-[11px] px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-500 font-medium">
+                    <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-sky-500/10 text-sky-500 font-medium">
                       Кратко
                     </span>
                   )}
@@ -743,7 +739,7 @@ export const AIChat: React.FC = () => {
                   <button
                     type="button"
                     onClick={toggleVoiceInput}
-                    className={`p-1.5 rounded-lg transition-all cursor-pointer ${
+                    className={`p-1.5 rounded-full transition-all cursor-pointer ${
                       isListening
                         ? "bg-rose-500 text-white animate-pulse shadow-md shadow-rose-500/25 ring-2 ring-rose-400/50"
                         : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-white/[0.06]"
@@ -757,10 +753,10 @@ export const AIChat: React.FC = () => {
                     type="button"
                     onClick={() => handleSend()}
                     disabled={(!inputPrompt.trim() && attachedFiles.length === 0) || isLoading}
-                    className={`p-1.5 rounded-lg transition-all cursor-pointer ${
+                    className={`p-1.5 rounded-full transition-all cursor-pointer ${
                       (inputPrompt.trim() || attachedFiles.length > 0) && !isLoading
-                        ? "bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:opacity-90"
-                        : "bg-slate-200 dark:bg-white/[0.1] text-slate-400 cursor-not-allowed"
+                        ? "bg-slate-900 dark:bg-sky-500 text-white dark:text-slate-950 hover:opacity-90"
+                        : "bg-slate-200 dark:bg-white/[0.08] text-slate-400 dark:text-slate-600 cursor-not-allowed"
                     }`}
                     title="Отправить"
                   >

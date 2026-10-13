@@ -125,7 +125,7 @@ export const LegalExpert: React.FC = () => {
                         {isAssistant && (
                           <button
                             onClick={() => handleCopy(msg.id, msg.content)}
-                            className="hover:text-amber-300 transition-colors"
+                            className="hover:text-sky-300 transition-colors"
                             title="Копировать"
                           >
                             {copiedId === msg.id ? (
@@ -167,7 +167,7 @@ export const LegalExpert: React.FC = () => {
             {isLoading && (
               <div className="flex justify-start max-w-xl">
                 <div className="rounded-xl p-3.5 bg-[#0e1522] border border-slate-800 flex items-center space-x-2.5 text-slate-400 text-xs">
-                  <div className="w-3.5 h-3.5 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
+                  <div className="w-3.5 h-3.5 border-2 border-sky-400 border-t-transparent rounded-full animate-spin" />
                   <span>Формирование правового анализа...</span>
                 </div>
               </div>
@@ -204,13 +204,13 @@ export const LegalExpert: React.FC = () => {
                 }}
                 placeholder="Задайте вопрос по праву недропользования..."
                 rows={2}
-                className="flex-1 px-3.5 py-2.5 rounded-lg bg-[#0a0f18] border border-slate-800 text-xs sm:text-sm text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-amber-500/60 resize-none"
+                className="flex-1 px-3.5 py-2.5 rounded-lg bg-[#0a0f18] border border-slate-800 text-xs sm:text-sm text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-sky-500/60 resize-none"
               />
 
               <button
                 onClick={() => handleSend()}
                 disabled={isLoading || !inputPrompt.trim()}
-                className="px-4 py-3 rounded-lg bg-amber-500 text-slate-950 font-medium hover:bg-amber-400 transition-colors disabled:opacity-40"
+                className="px-4 py-3 rounded-lg bg-sky-500 text-slate-950 font-medium hover:bg-sky-400 transition-colors disabled:opacity-40"
               >
                 <Send className="w-4 h-4" />
               </button>
@@ -223,7 +223,7 @@ export const LegalExpert: React.FC = () => {
           <div className="space-y-4">
             <div>
               <h3 className="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2.5 flex items-center space-x-1.5">
-                <BookOpen className="w-3.5 h-3.5 text-amber-400" />
+                <BookOpen className="w-3.5 h-3.5 text-sky-400" />
                 <span>Нормативные акты</span>
               </h3>
               <div className="space-y-1.5 text-xs">
