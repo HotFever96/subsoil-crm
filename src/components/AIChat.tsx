@@ -16,6 +16,9 @@ import {
   ThumbsUp,
   ThumbsDown,
   RotateCw,
+  Mic,
+  MicOff,
+  AlertCircle,
 } from "lucide-react";
 import { ChatMessage } from "@/lib/supabase";
 import { MarkdownView } from "@/components/MarkdownView";
@@ -37,6 +40,12 @@ export const AIChat: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
+  // Voice Speech-to-Text State
+  const [isListening, setIsListening] = useState(false);
+  const [speechError, setSpeechError] = useState<string | null>(null);
+  const recognitionRef = useRef<any>(null);
+  const baseTextRef = useRef<string>("");
+
   // Quick mode toggles
   const [styleMode, setStyleMode] = useState<"normal" | "brief" | "detailed">("normal");
   const [webSearchEnabled, setWebSearchEnabled] = useState(false);
@@ -55,6 +64,103 @@ export const AIChat: React.FC = () => {
       chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [activeSession?.messages, isLoading, hasUserMessages]);
+
+  // Clean up speech recognition on unmount
+  useEffect(() => {
+    return () => {
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.abort();
+        } catch {
+          // ignore
+        }
+      }
+    };
+  }, []);
+
+  // Voice input toggle (Speech-to-Text with ru-RU)
+  const toggleVoiceInput = () => {
+    if (typeof window === "undefined") return;
+
+    if (isListening) {
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.stop();
+        } catch {
+          // ignore
+        }
+      }
+      setIsListening(false);
+      return;
+    }
+
+    const SpeechRecognitionClass =
+      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+
+    if (!SpeechRecognitionClass) {
+      setSpeechError("Голосовой ввод не поддерживается данным браузером. Рекомендуется использовать Chrome, Edge или Safari.");
+      setTimeout(() => setSpeechError(null), 5000);
+      return;
+    }
+
+    try {
+      const recognition = new SpeechRecognitionClass();
+      recognition.lang = "ru-RU";
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.maxAlternatives = 1;
+
+      baseTextRef.current = inputPrompt.trim();
+
+      recognition.onstart = () => {
+        setIsListening(true);
+        setSpeechError(null);
+      };
+
+      recognition.onresult = (event: any) => {
+        let transcript = "";
+        for (let i = 0; i < event.results.length; i++) {
+          transcript += event.results[i][0].transcript;
+        }
+        const fullText = baseTextRef.current
+          ? `${baseTextRef.current} ${transcript.trim()}`
+          : transcript.trim();
+
+        setInputPrompt(fullText);
+
+        if (textareaRef.current) {
+          textareaRef.current.style.height = "auto";
+          textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 220)}px`;
+        }
+      };
+
+      recognition.onerror = (event: any) => {
+        console.warn("Speech recognition error:", event.error);
+        if (event.error === "not-allowed" || event.error === "service-not-allowed") {
+          setSpeechError("Доступ к микрофону заблокирован. Пожалуйста, разрешите доступ в настройках браузера.");
+        } else if (event.error === "no-speech") {
+          // No speech detected, wait or continue
+          return;
+        } else {
+          setSpeechError(`Ошибка распознавания речи: ${event.error}`);
+        }
+        setIsListening(false);
+        setTimeout(() => setSpeechError(null), 5000);
+      };
+
+      recognition.onend = () => {
+        setIsListening(false);
+      };
+
+      recognitionRef.current = recognition;
+      recognition.start();
+    } catch (err) {
+      console.error("Speech recognition startup error:", err);
+      setSpeechError("Не удалось запустить микрофон. Проверьте разрешения браузера.");
+      setIsListening(false);
+      setTimeout(() => setSpeechError(null), 5000);
+    }
+  };
 
   // Process uploaded files (images or text)
   const processFiles = (files: FileList | File[]) => {
@@ -120,6 +226,16 @@ export const AIChat: React.FC = () => {
   };
 
   const handleSend = async (textToSend?: string) => {
+    // If voice recognition was active, stop it gracefully
+    if (isListening && recognitionRef.current) {
+      try {
+        recognitionRef.current.stop();
+      } catch {
+        // ignore
+      }
+      setIsListening(false);
+    }
+
     const text = (textToSend !== undefined ? textToSend : inputPrompt).trim();
     if ((!text && attachedFiles.length === 0) || isLoading || !activeSession) return;
 
@@ -240,6 +356,20 @@ export const AIChat: React.FC = () => {
         className="hidden"
       />
 
+      {/* Gentle speech error notice if any */}
+      {speechError && (
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50 flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-600 dark:text-rose-400 text-xs shadow-lg backdrop-blur-xs transition-all">
+          <AlertCircle className="w-4 h-4 shrink-0" />
+          <span>{speechError}</span>
+          <button
+            onClick={() => setSpeechError(null)}
+            className="p-0.5 rounded hover:bg-rose-500/20 text-rose-500 ml-1 cursor-pointer"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
+
       {/* CASE 1: EMPTY / NEW CHAT STATE (ChatGPT / Gemini style: Screenshot 2 & 3) */}
       {!hasUserMessages ? (
         <div className="flex-1 flex flex-col items-center justify-center px-4 overflow-y-auto">
@@ -249,7 +379,19 @@ export const AIChat: React.FC = () => {
             </h1>
 
             {/* Central Floating Input Box */}
-            <div className="w-full relative rounded-2xl bg-slate-50 dark:bg-[#181d24] border border-slate-200 dark:border-white/[0.1] shadow-md shadow-slate-200/50 dark:shadow-none focus-within:border-amber-500/50 transition-all text-left">
+            <div className={`w-full relative rounded-2xl bg-slate-50 dark:bg-[#181d24] border transition-all text-left ${
+              isListening
+                ? "border-rose-500/60 ring-2 ring-rose-500/20 shadow-md shadow-rose-500/10"
+                : "border-slate-200 dark:border-white/[0.1] shadow-md shadow-slate-200/50 dark:shadow-none focus-within:border-amber-500/50"
+            }`}>
+              {/* Voice recording live badge indicator */}
+              {isListening && (
+                <div className="px-4 pt-2.5 flex items-center space-x-2 text-xs font-medium text-rose-500 animate-pulse">
+                  <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
+                  <span>Идет запись голоса (ru-RU)... Говорите или нажмите на микрофон для завершения</span>
+                </div>
+              )}
+
               {/* Attached files chips inside input box */}
               {attachedFiles.length > 0 && (
                 <div className="px-4 pt-3 flex flex-wrap gap-2">
@@ -290,7 +432,7 @@ export const AIChat: React.FC = () => {
                 onChange={handleInput}
                 onKeyDown={handleKeyDown}
                 onPaste={handlePaste}
-                placeholder="Спросите что-нибудь, прикрепите файлы или вставьте изображение..."
+                placeholder={isListening ? "Слушаю вас..." : "Спросите что-нибудь, прикрепите файлы или вставьте изображение..."}
                 rows={2}
                 className="w-full pt-4 pb-12 px-4 bg-transparent text-[15px] text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none resize-none max-h-48 leading-relaxed"
               />
@@ -308,6 +450,20 @@ export const AIChat: React.FC = () => {
                 </div>
 
                 <div className="pointer-events-auto flex items-center space-x-2">
+                  {/* Microphone Button (Speech-to-Text) */}
+                  <button
+                    type="button"
+                    onClick={toggleVoiceInput}
+                    className={`p-2 rounded-xl transition-all cursor-pointer ${
+                      isListening
+                        ? "bg-rose-500 text-white animate-pulse shadow-md shadow-rose-500/25 ring-2 ring-rose-400/50"
+                        : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-white/[0.06]"
+                    }`}
+                    title={isListening ? "Остановить запись голоса" : "Голосовой ввод (Speech-to-Text ru-RU)"}
+                  >
+                    {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+                  </button>
+
                   <button
                     type="button"
                     onClick={() => handleSend()}
@@ -500,9 +656,21 @@ export const AIChat: React.FC = () => {
             </div>
           </div>
 
-          {/* Floating Center Bottom Input Box (Clean, without clutter pills above it) */}
+          {/* Floating Center Bottom Input Box */}
           <div className="w-full max-w-3xl mx-auto px-4 pb-4 pt-1">
-            <div className="relative rounded-2xl bg-slate-100 dark:bg-[#181d24] border border-slate-200 dark:border-white/[0.1] shadow-2xs focus-within:border-amber-500/50 transition-colors">
+            <div className={`relative rounded-2xl bg-slate-100 dark:bg-[#181d24] border transition-colors ${
+              isListening
+                ? "border-rose-500/60 ring-2 ring-rose-500/20 shadow-md shadow-rose-500/10"
+                : "border-slate-200 dark:border-white/[0.1] shadow-2xs focus-within:border-amber-500/50"
+            }`}>
+              {/* Voice recording live badge indicator */}
+              {isListening && (
+                <div className="px-3 pt-2 flex items-center space-x-2 text-xs font-medium text-rose-500 animate-pulse">
+                  <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
+                  <span>Идет запись голоса... Говорите в микрофон</span>
+                </div>
+              )}
+
               {/* Attached files preview inside input */}
               {attachedFiles.length > 0 && (
                 <div className="px-3 pt-3 flex flex-wrap gap-2">
@@ -543,7 +711,7 @@ export const AIChat: React.FC = () => {
                 onChange={handleInput}
                 onKeyDown={handleKeyDown}
                 onPaste={handlePaste}
-                placeholder="Спросите что-нибудь (код, текст, анализ, бизнес)..."
+                placeholder={isListening ? "Слушаю вас..." : "Спросите что-нибудь (код, текст, анализ, бизнес)..."}
                 rows={1}
                 className="w-full pt-3.5 pb-11 px-4 bg-transparent text-[15px] text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none resize-none max-h-48 leading-relaxed"
               />
@@ -570,7 +738,21 @@ export const AIChat: React.FC = () => {
                   )}
                 </div>
 
-                <div className="pointer-events-auto">
+                <div className="pointer-events-auto flex items-center space-x-1.5">
+                  {/* Microphone Button (Speech-to-Text) */}
+                  <button
+                    type="button"
+                    onClick={toggleVoiceInput}
+                    className={`p-1.5 rounded-lg transition-all cursor-pointer ${
+                      isListening
+                        ? "bg-rose-500 text-white animate-pulse shadow-md shadow-rose-500/25 ring-2 ring-rose-400/50"
+                        : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-white/[0.06]"
+                    }`}
+                    title={isListening ? "Остановить запись голоса" : "Голосовой ввод (Speech-to-Text ru-RU)"}
+                  >
+                    {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+                  </button>
+
                   <button
                     type="button"
                     onClick={() => handleSend()}
