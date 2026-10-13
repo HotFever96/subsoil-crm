@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { Check, Copy } from "lucide-react";
+import { Check, Copy, FileSpreadsheet, Download } from "lucide-react";
+import { FileArtifactCard } from "@/components/FileArtifactCard";
+import { exportToExcel } from "@/lib/file-generator";
 
 interface MarkdownViewProps {
   content: string;
@@ -19,7 +21,7 @@ export const MarkdownView: React.FC<MarkdownViewProps> = ({ content, className =
 
   // Split by code blocks first
   const parts: Array<{ type: "code" | "text"; content: string; lang?: string }> = [];
-  const codeBlockRegex = /```([a-zA-Z0-9_\-#+]*)\n([\s\S]*?)```/g;
+  const codeBlockRegex = /```([a-zA-Z0-9_\-:#+]*)\n([\s\S]*?)```/g;
   let lastIndex = 0;
   let match: RegExpExecArray | null;
 
@@ -40,12 +42,10 @@ export const MarkdownView: React.FC<MarkdownViewProps> = ({ content, className =
   }
 
   const renderInlineFormatted = (text: string) => {
-    // Render inline formatting: **bold**, `code`, links
     const tokens: React.ReactNode[] = [];
     let remaining = text;
     let keyIdx = 0;
 
-    // Regex for bold or inline code
     const inlineRegex = /(\*\*([^*]+)\*\*|`([^`]+)`)/g;
     let inlineLastIdx = 0;
     let inlineMatch: RegExpExecArray | null;
@@ -86,6 +86,96 @@ export const MarkdownView: React.FC<MarkdownViewProps> = ({ content, className =
     const lines = text.split("\n");
     const elements: React.ReactNode[] = [];
     let currentList: { type: "ul" | "ol"; items: string[] } | null = null;
+    let tableBuffer: string[] = [];
+
+    const flushTable = () => {
+      if (tableBuffer.length < 2) {
+        // Not a valid table, render as normal paragraphs
+        tableBuffer.forEach((l, i) => {
+          elements.push(
+            <p key={`p-fallback-${elements.length}-${i}`} className="my-1.5 leading-relaxed text-slate-800 dark:text-slate-200">
+              {renderInlineFormatted(l)}
+            </p>
+          );
+        });
+        tableBuffer = [];
+        return;
+      }
+
+      // Parse markdown table
+      const headerLine = tableBuffer[0].trim();
+      const headers = headerLine
+        .slice(1, -1)
+        .split("|")
+        .map((h) => h.trim());
+
+      const dataRows = tableBuffer.slice(2).map((rowLine) =>
+        rowLine
+          .trim()
+          .slice(1, -1)
+          .split("|")
+          .map((c) => c.trim())
+      );
+
+      const handleDownloadTableExcel = () => {
+        exportToExcel({
+          filename: `Таблица_${new Date().toISOString().slice(0, 10)}.xlsx`,
+          sheets: [
+            {
+              name: "Таблица",
+              headers,
+              rows: dataRows,
+            },
+          ],
+        });
+      };
+
+      elements.push(
+        <div key={`table-${elements.length}`} className="my-3 space-y-1.5">
+          <div className="flex items-center justify-between text-xs text-slate-400 px-1">
+            <span className="font-medium text-slate-500 dark:text-slate-400 flex items-center space-x-1">
+              <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-500" />
+              <span>Таблица ({dataRows.length} строк)</span>
+            </span>
+            <button
+              type="button"
+              onClick={handleDownloadTableExcel}
+              className="flex items-center space-x-1 text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 dark:hover:text-emerald-300 transition-colors font-medium cursor-pointer"
+            >
+              <Download className="w-3 h-3" />
+              <span>Скачать в Excel (.xlsx)</span>
+            </button>
+          </div>
+
+          <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-white/[0.08] shadow-2xs">
+            <table className="w-full text-xs text-left border-collapse">
+              <thead className="bg-slate-100 dark:bg-white/[0.04] text-slate-800 dark:text-slate-200 border-b border-slate-200 dark:border-white/[0.08]">
+                <tr>
+                  {headers.map((h, i) => (
+                    <th key={i} className="py-2.5 px-3 font-semibold border-r border-slate-200 dark:border-white/[0.08] last:border-r-0 whitespace-nowrap">
+                      {renderInlineFormatted(h)}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-200 dark:divide-white/[0.06] text-slate-800 dark:text-slate-200">
+                {dataRows.map((row, rIdx) => (
+                  <tr key={rIdx} className="hover:bg-slate-50 dark:hover:bg-white/[0.02]">
+                    {row.map((cell, cIdx) => (
+                      <td key={cIdx} className="py-2 px-3 border-r border-slate-200 dark:border-white/[0.08] last:border-r-0 whitespace-nowrap">
+                        {renderInlineFormatted(cell)}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      );
+
+      tableBuffer = [];
+    };
 
     const flushList = () => {
       if (!currentList) return;
@@ -113,8 +203,18 @@ export const MarkdownView: React.FC<MarkdownViewProps> = ({ content, className =
       currentList = null;
     };
 
-    lines.forEach((rawLine, idx) => {
+    for (let idx = 0; idx < lines.length; idx++) {
+      const rawLine = lines[idx];
       const line = rawLine.trim();
+
+      // Check if line is part of a markdown table (| ... |)
+      if (line.startsWith("|") && line.endsWith("|")) {
+        flushList();
+        tableBuffer.push(line);
+        continue;
+      } else if (tableBuffer.length > 0) {
+        flushTable();
+      }
 
       // Heading 1 (# )
       if (line.startsWith("# ")) {
@@ -124,7 +224,7 @@ export const MarkdownView: React.FC<MarkdownViewProps> = ({ content, className =
             {renderInlineFormatted(line.slice(2))}
           </h1>
         );
-        return;
+        continue;
       }
 
       // Heading 2 (## )
@@ -135,7 +235,7 @@ export const MarkdownView: React.FC<MarkdownViewProps> = ({ content, className =
             {renderInlineFormatted(line.slice(3))}
           </h2>
         );
-        return;
+        continue;
       }
 
       // Heading 3 (### )
@@ -146,7 +246,7 @@ export const MarkdownView: React.FC<MarkdownViewProps> = ({ content, className =
             {renderInlineFormatted(line.slice(4))}
           </h3>
         );
-        return;
+        continue;
       }
 
       // Unordered list item (- or *)
@@ -158,7 +258,7 @@ export const MarkdownView: React.FC<MarkdownViewProps> = ({ content, className =
           flushList();
           currentList = { type: "ul", items: [itemText] };
         }
-        return;
+        continue;
       }
 
       // Ordered list item (1. 2. etc)
@@ -170,7 +270,7 @@ export const MarkdownView: React.FC<MarkdownViewProps> = ({ content, className =
           flushList();
           currentList = { type: "ol", items: [itemText] };
         }
-        return;
+        continue;
       }
 
       // Blockquote (> )
@@ -184,13 +284,13 @@ export const MarkdownView: React.FC<MarkdownViewProps> = ({ content, className =
             {renderInlineFormatted(line.slice(2))}
           </blockquote>
         );
-        return;
+        continue;
       }
 
       // Empty line
       if (!line) {
         flushList();
-        return;
+        continue;
       }
 
       // Regular paragraph line
@@ -200,9 +300,12 @@ export const MarkdownView: React.FC<MarkdownViewProps> = ({ content, className =
           {renderInlineFormatted(line)}
         </p>
       );
-    });
+    }
 
     flushList();
+    if (tableBuffer.length > 0) {
+      flushTable();
+    }
 
     return <div key={`block-${blockIndex}`}>{elements}</div>;
   };
@@ -213,6 +316,38 @@ export const MarkdownView: React.FC<MarkdownViewProps> = ({ content, className =
     <div className={`space-y-3 leading-relaxed text-sm ${className}`}>
       {parts.map((part, pIdx) => {
         if (part.type === "code") {
+          const lang = (part.lang || "").toLowerCase();
+
+          // Check for file artifacts
+          if (
+            lang.startsWith("file:") ||
+            lang === "excel" ||
+            lang === "presentation" ||
+            lang === "document"
+          ) {
+            try {
+              const cleanType = lang.replace("file:", "").trim();
+              const parsed = JSON.parse(part.content);
+              if (cleanType === "excel" || cleanType === "xlsx") {
+                return <FileArtifactCard key={`art-${pIdx}`} type="excel" excelData={parsed} />;
+              }
+              if (cleanType === "presentation" || cleanType === "pptx") {
+                return (
+                  <FileArtifactCard
+                    key={`art-${pIdx}`}
+                    type="presentation"
+                    presentationData={parsed}
+                  />
+                );
+              }
+              if (cleanType === "document" || cleanType === "pdf" || cleanType === "docx") {
+                return <FileArtifactCard key={`art-${pIdx}`} type="document" documentData={parsed} />;
+              }
+            } catch (err) {
+              // fallback to regular code block
+            }
+          }
+
           const codeIdx = codeBlockCounter++;
           const isCopied = copiedCodeIdx === codeIdx;
           return (
@@ -225,7 +360,7 @@ export const MarkdownView: React.FC<MarkdownViewProps> = ({ content, className =
                 <button
                   type="button"
                   onClick={() => handleCopyCode(part.content, codeIdx)}
-                  className="flex items-center space-x-1 hover:text-white transition-colors"
+                  className="flex items-center space-x-1 hover:text-white transition-colors cursor-pointer"
                   title="Копировать код"
                 >
                   {isCopied ? (

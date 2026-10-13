@@ -60,7 +60,7 @@ export interface ChatMessage {
   }[];
   attachments?: {
     name: string;
-    type: "image" | "text";
+    type: "image" | "pdf" | "excel" | "word" | "text" | string;
     previewUrl?: string;
   }[];
 }
