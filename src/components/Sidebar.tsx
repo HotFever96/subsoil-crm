@@ -320,6 +320,27 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   Если у модели нет свободных серверов, система автоматически переключится на резервные.
                 </p>
               </div>
+
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#0c1015] border border-slate-200 dark:border-white/[0.08] flex items-center justify-between">
+                <div>
+                  <div className="font-medium text-slate-800 dark:text-slate-200">
+                    Почтовые ящики (Мульти-IMAP)
+                  </div>
+                  <div className="text-[11px] text-slate-400 mt-0.5">
+                    Управление подключениями IMAP/SMTP для недропользования
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowSettingsModal(false);
+                    onSelectTab("smart-mail");
+                  }}
+                  className="px-3 py-1.5 rounded-lg bg-sky-500/10 text-sky-600 dark:text-sky-400 hover:bg-sky-500/20 text-xs font-medium transition-colors cursor-pointer shrink-0 ml-2"
+                >
+                  В Умную почту
+                </button>
+              </div>
             </div>
 
             <div className="flex justify-end pt-2">

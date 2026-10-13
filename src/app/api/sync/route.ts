@@ -23,6 +23,7 @@ export async function POST(req: NextRequest) {
         rows: [],
         events: [],
         mails: [],
+        mailboxes: [],
       });
     }
 
@@ -198,6 +199,8 @@ export async function POST(req: NextRequest) {
             username,
             folder: mail.folder || "INBOX",
             status: mail.status,
+            mailbox_id: mail.mailbox_id || "",
+            mailbox_name: mail.mailbox_name || "",
           },
         }),
       });
@@ -214,6 +217,70 @@ export async function POST(req: NextRequest) {
       const { mailId } = payload;
       const res = await fetch(
         `${SUPABASE_URL}/rest/v1/chat_messages?id=eq.${encodeURIComponent(mailId)}&citations->>username=eq.${encodeURIComponent(username)}`,
+        {
+          method: "DELETE",
+          headers,
+        }
+      );
+      return NextResponse.json({ success: res.ok });
+    }
+
+    // 10. Get user-specific mailbox accounts (Multi-IMAP)
+    if (action === "get_mailboxes") {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/chat_messages?select=*&role=eq.system&citations->>type=eq.mailbox_account&citations->>username=eq.${encodeURIComponent(username)}&order=created_at.asc`,
+        { headers }
+      );
+      if (!res.ok) {
+        throw new Error(`Supabase mailboxes query failed: ${res.statusText}`);
+      }
+      const rows = await res.json();
+      const mailboxes = rows
+        .map((r: any) => {
+          try {
+            return typeof r.content === "string" ? JSON.parse(r.content) : r.content;
+          } catch {
+            return null;
+          }
+        })
+        .filter(Boolean);
+      return NextResponse.json({ success: true, mailboxes });
+    }
+
+    // 11. Save/Upsert user-specific mailbox account
+    if (action === "save_mailbox") {
+      const { mailbox } = payload;
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/chat_messages`, {
+        method: "POST",
+        headers: {
+          ...headers,
+          Prefer: "resolution=merge-duplicates,return=representation",
+        },
+        body: JSON.stringify({
+          id: mailbox.id,
+          role: "system",
+          content: JSON.stringify(mailbox),
+          citations: {
+            type: "mailbox_account",
+            username,
+            name: mailbox.name,
+            email: mailbox.email,
+          },
+        }),
+      });
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(`Failed to save mailbox: ${errText}`);
+      }
+      const data = await res.json();
+      return NextResponse.json({ success: true, data });
+    }
+
+    // 12. Delete user-specific mailbox account
+    if (action === "delete_mailbox") {
+      const { mailboxId } = payload;
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/chat_messages?id=eq.${encodeURIComponent(mailboxId)}&citations->>username=eq.${encodeURIComponent(username)}`,
         {
           method: "DELETE",
           headers,

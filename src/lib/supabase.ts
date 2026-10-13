@@ -23,9 +23,26 @@ export interface SubsoilLicense {
   curator: string;
 }
 
+export interface MailboxAccount {
+  id: string;
+  name: string; // Метка ящика: "Карьер-1", "Минприроды", "Официальная почта"
+  email: string; // "career1@company.ru"
+  imap_host: string; // "imap.yandex.ru"
+  imap_port: number; // 993
+  imap_secure: boolean; // true
+  smtp_host: string; // "smtp.yandex.ru"
+  smtp_port: number; // 465
+  smtp_secure: boolean; // true
+  password?: string; // Пароль приложения
+  badge_color?: "sky" | "emerald" | "amber" | "violet" | "rose" | "teal" | string;
+  created_at?: string;
+}
+
 export interface MailItem {
   id: string;
   folder?: "INBOX" | "SENT" | "DRAFTS";
+  mailbox_id?: string; // Связанный ящик (ID)
+  mailbox_name?: string; // Метка ящика ("Карьер-1", "Минприроды")
   incoming_number: string;
   date: string;
   agency: string; // e.g., "Роснедра", "Росприроднадзор", "Центрнедра"
@@ -37,6 +54,8 @@ export interface MailItem {
   incoming_content: string;
   license_id?: string;
   license_code?: string;
+  sender_email?: string;
+  recipient_email?: string;
   ai_draft?: {
     title: string;
     legal_basis: string[];
