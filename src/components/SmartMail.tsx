@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Inbox,
   Send,
@@ -21,10 +21,15 @@ type MailFolder = "INBOX" | "SENT" | "DRAFTS";
 interface SmartMailProps {
   mails: MailItem[];
   onApproveMail: (mailId: string, finalReplyText?: string) => void;
+  onUpdateMails?: (updatedMails: MailItem[]) => void;
 }
 
-export const SmartMail: React.FC<SmartMailProps> = ({ mails: initialMails, onApproveMail }) => {
+export const SmartMail: React.FC<SmartMailProps> = ({ mails: initialMails, onApproveMail, onUpdateMails }) => {
   const [mails, setMails] = useState<MailItem[]>(initialMails);
+
+  useEffect(() => {
+    setMails(initialMails);
+  }, [initialMails]);
   const [currentFolder, setCurrentFolder] = useState<MailFolder>("INBOX");
   const [selectedMailId, setSelectedMailId] = useState<string>("");
   const [isEditing, setIsEditing] = useState(false);
@@ -65,20 +70,20 @@ export const SmartMail: React.FC<SmartMailProps> = ({ mails: initialMails, onApp
     const finalBody = isEditing ? editedReply : currentMail.ai_draft?.reply_body || "";
     
     // Update mail status and create an entry in SENT if it was in INBOX or DRAFTS
-    setMails((prev) =>
-      prev.map((m) => {
-        if (m.id === currentMail.id) {
-          return {
-            ...m,
-            status: "APPROVED",
-            ai_draft: m.ai_draft ? { ...m.ai_draft, reply_body: finalBody } : undefined,
-          };
-        }
-        return m;
-      })
-    );
+    const updated = mails.map((m) => {
+      if (m.id === currentMail.id) {
+        return {
+          ...m,
+          status: "APPROVED" as const,
+          ai_draft: m.ai_draft ? { ...m.ai_draft, reply_body: finalBody } : undefined,
+        };
+      }
+      return m;
+    });
 
+    setMails(updated);
     onApproveMail(currentMail.id, finalBody);
+    onUpdateMails?.(updated);
     setIsEditing(false);
   };
 
@@ -87,20 +92,21 @@ export const SmartMail: React.FC<SmartMailProps> = ({ mails: initialMails, onApp
     const finalBody = isEditing ? editedReply : currentMail.ai_draft?.reply_body || currentMail.incoming_content;
     
     // Move draft to SENT
-    setMails((prev) =>
-      prev.map((m) => {
-        if (m.id === currentMail.id) {
-          return {
-            ...m,
-            folder: "SENT",
-            status: "SENT",
-            incoming_content: finalBody,
-            date: new Date().toLocaleDateString("ru-RU"),
-          };
-        }
-        return m;
-      })
-    );
+    const updated = mails.map((m) => {
+      if (m.id === currentMail.id) {
+        return {
+          ...m,
+          folder: "SENT" as const,
+          status: "SENT" as const,
+          incoming_content: finalBody,
+          date: new Date().toLocaleDateString("ru-RU"),
+        };
+      }
+      return m;
+    });
+
+    setMails(updated);
+    onUpdateMails?.(updated);
     setIsEditing(false);
   };
 
@@ -146,7 +152,9 @@ export const SmartMail: React.FC<SmartMailProps> = ({ mails: initialMails, onApp
       license_code: "МСК 02841 ТЭ",
     };
 
-    setMails([newDraft, ...mails]);
+    const updated = [newDraft, ...mails];
+    setMails(updated);
+    onUpdateMails?.(updated);
     setCurrentFolder("DRAFTS");
     setSelectedMailId(newDraft.id);
     setShowComposeModal(false);

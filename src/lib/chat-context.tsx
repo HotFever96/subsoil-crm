@@ -2,6 +2,8 @@
 
 import React, { createContext, useContext, useState, useEffect, useRef } from "react";
 import { ChatMessage } from "@/lib/supabase";
+import { useAuth } from "@/lib/auth-context";
+import { getUserWelcomeMsg } from "@/lib/mock-data";
 
 export interface ChatSession {
   id: string;
@@ -23,47 +25,55 @@ interface ChatContextType {
   isSyncing: boolean;
 }
 
-const STORAGE_SESSIONS_KEY = "geo_ai_chat_sessions_v3";
-const STORAGE_ACTIVE_ID_KEY = "geo_ai_active_session_id_v3";
+const getStorageSessionsKey = (u: string) => `geo_ai_chat_sessions_${u || "guest"}_v4`;
+const getStorageActiveIdKey = (u: string) => `geo_ai_active_session_id_${u || "guest"}_v4`;
 
-const DEFAULT_WELCOME_MSG: ChatMessage = {
-  id: "welcome-1",
-  role: "assistant",
-  content: "Здравствуйте! Чем я могу помочь сегодня? Могу проанализировать документы, написать или оптимизировать код, составить прогноз, подготовить проект или ответить на любые вопросы.",
-  created_at: "10:00",
-};
-
-const STATIC_DEFAULT_SESSION: ChatSession = {
-  id: "session-default",
+const STATIC_FALLBACK_SESSION: ChatSession = {
+  id: "session-fallback",
   title: "Новый чат",
   createdAt: "Сегодня",
   updatedAt: 0,
-  messages: [DEFAULT_WELCOME_MSG],
+  messages: [],
 };
 
-const createNewSessionInstance = (): ChatSession => ({
-  id: `session-${Date.now()}`,
+const createInitialUserSession = (username: string, name?: string): ChatSession => ({
+  id: `session-init-${username || "default"}`,
   title: "Новый чат",
   createdAt: "Сегодня",
-  updatedAt: Date.now(),
-  messages: [DEFAULT_WELCOME_MSG],
+  updatedAt: 0,
+  messages: [getUserWelcomeMsg(username, name)],
 });
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
 
 export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [sessions, setSessions] = useState<ChatSession[]>([STATIC_DEFAULT_SESSION]);
-  const [activeSessionId, setActiveSessionId] = useState<string>("session-default");
+  const { user } = useAuth();
+  const currentUsername = user?.username ? user.username.trim().toLowerCase() : "";
+
+  const [sessions, setSessions] = useState<ChatSession[]>([]);
+  const [activeSessionId, setActiveSessionId] = useState<string>("");
   const [isInitialized, setIsInitialized] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const syncedMsgIds = useRef<Set<string>>(new Set());
 
-  // 1. Initial Load: LocalStorage immediately + Supabase async
+  // 1. Re-initialize chat sessions whenever the active authenticated user changes
   useEffect(() => {
+    if (!currentUsername) {
+      setSessions([]);
+      setActiveSessionId("");
+      setIsInitialized(false);
+      syncedMsgIds.current = new Set();
+      return;
+    }
+
+    syncedMsgIds.current = new Set();
     let currentSessions: ChatSession[] = [];
+    const sessionsKey = getStorageSessionsKey(currentUsername);
+    const activeIdKey = getStorageActiveIdKey(currentUsername);
+
     try {
-      const savedSessions = localStorage.getItem(STORAGE_SESSIONS_KEY);
-      const savedActiveId = localStorage.getItem(STORAGE_ACTIVE_ID_KEY);
+      const savedSessions = localStorage.getItem(sessionsKey);
+      const savedActiveId = localStorage.getItem(activeIdKey);
 
       if (savedSessions) {
         const parsed = JSON.parse(savedSessions);
@@ -79,10 +89,14 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     if (currentSessions.length === 0) {
-      const initial = createNewSessionInstance();
+      const initial = createInitialUserSession(currentUsername, user?.name);
       currentSessions = [initial];
       setSessions([initial]);
       setActiveSessionId(initial.id);
+      try {
+        localStorage.setItem(sessionsKey, JSON.stringify([initial]));
+        localStorage.setItem(activeIdKey, initial.id);
+      } catch {}
     }
     setIsInitialized(true);
 
@@ -91,14 +105,14 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
       s.messages.forEach((m) => syncedMsgIds.current.add(m.id));
     });
 
-    // Fetch cloud messages from Supabase
+    // Fetch cloud messages strictly for this authenticated user from Supabase
     const fetchFromSupabase = async () => {
       try {
         setIsSyncing(true);
         const res = await fetch("/api/sync", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ action: "get_chats" }),
+          body: JSON.stringify({ action: "get_chats", username: currentUsername }),
         });
         if (!res.ok) return;
         const data = await res.json();
@@ -119,18 +133,20 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
             syncedMsgIds.current.add(row.id);
 
             if (!sessionMap.has(sessId)) {
-              sessionMap.set(sessId, { title: sessTitle, messages: [DEFAULT_WELCOME_MSG] });
+              sessionMap.set(sessId, {
+                title: sessTitle,
+                messages: [getUserWelcomeMsg(currentUsername, user?.name)],
+              });
             }
             sessionMap.get(sessId)!.messages.push(msg);
           });
 
-          // Merge cloud sessions with local sessions
+          // Merge cloud sessions with local user sessions
           setSessions((prev) => {
             const merged = [...prev];
             sessionMap.forEach((val, sessId) => {
               const existingIdx = merged.findIndex((s) => s.id === sessId);
               if (existingIdx >= 0) {
-                // Ensure messages from cloud are included
                 const existingMsgIds = new Set(merged[existingIdx].messages.map((m) => m.id));
                 const newMsgs = val.messages.filter((m) => !existingMsgIds.has(m.id));
                 if (newMsgs.length > 0) {
@@ -160,23 +176,23 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     fetchFromSupabase();
-  }, []);
+  }, [currentUsername]);
 
-  // 2. Persist to localStorage whenever state changes
+  // 2. Persist to user-scoped localStorage whenever state changes
   useEffect(() => {
-    if (!isInitialized) return;
+    if (!isInitialized || !currentUsername || sessions.length === 0) return;
     try {
-      localStorage.setItem(STORAGE_SESSIONS_KEY, JSON.stringify(sessions));
+      localStorage.setItem(getStorageSessionsKey(currentUsername), JSON.stringify(sessions));
       if (activeSessionId) {
-        localStorage.setItem(STORAGE_ACTIVE_ID_KEY, activeSessionId);
+        localStorage.setItem(getStorageActiveIdKey(currentUsername), activeSessionId);
       }
     } catch (e) {
       console.error("Failed to save chat sessions to localStorage:", e);
     }
-  }, [sessions, activeSessionId, isInitialized]);
+  }, [sessions, activeSessionId, isInitialized, currentUsername]);
 
   const createNewChat = (): string => {
-    const newSession = createNewSessionInstance();
+    const newSession = createInitialUserSession(currentUsername, user?.name);
     setSessions((prev) => [newSession, ...prev]);
     setActiveSessionId(newSession.id);
     return newSession.id;
@@ -190,7 +206,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setSessions((prev) => {
       const remaining = prev.filter((s) => s.id !== id);
       if (remaining.length === 0) {
-        const brandNew = createNewSessionInstance();
+        const brandNew = createInitialUserSession(currentUsername, user?.name);
         setActiveSessionId(brandNew.id);
         return [brandNew];
       }
@@ -200,12 +216,17 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return remaining;
     });
 
-    // Delete in Supabase
-    fetch("/api/sync", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "delete_chat_session", payload: { sessionId: id } }),
-    }).catch(() => {});
+    // Delete in Supabase strictly for this user
+    if (currentUsername) {
+      fetch("/api/sync", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "delete_chat_session",
+          payload: { sessionId: id, username: currentUsername },
+        }),
+      }).catch(() => {});
+    }
   };
 
   const setSessionMessages = (sessionId: string, messages: ChatMessage[], newTitle?: string) => {
@@ -224,39 +245,44 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
       })
     );
 
-    // Find any new unsynced messages and sync them to Supabase
+    // Find any new unsynced messages and sync them to Supabase tagged with username
     const targetSession = sessions.find((s) => s.id === sessionId);
     const sessionTitle = newTitle || targetSession?.title || "Диалог с ИИ";
 
-    messages.forEach((msg) => {
-      if (msg.role !== "system" && !syncedMsgIds.current.has(msg.id)) {
-        syncedMsgIds.current.add(msg.id);
-        fetch("/api/sync", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            action: "save_chat_message",
-            payload: {
-              id: msg.id,
-              role: msg.role,
-              content: msg.content,
-              sessionId,
-              sessionTitle,
-              attachments: msg.attachments,
-            },
-          }),
-        }).catch((err) => console.warn("Supabase message sync error:", err));
-      }
-    });
+    if (currentUsername) {
+      messages.forEach((msg) => {
+        if (msg.role !== "system" && !syncedMsgIds.current.has(msg.id)) {
+          syncedMsgIds.current.add(msg.id);
+          fetch("/api/sync", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              action: "save_chat_message",
+              payload: {
+                id: msg.id,
+                role: msg.role,
+                content: msg.content,
+                sessionId,
+                sessionTitle,
+                attachments: msg.attachments,
+                username: currentUsername,
+              },
+            }),
+          }).catch((err) => console.warn("Supabase message sync error:", err));
+        }
+      });
+    }
   };
 
   const clearAllChats = () => {
-    const fresh = createNewSessionInstance();
+    const fresh = createInitialUserSession(currentUsername, user?.name);
     setSessions([fresh]);
     setActiveSessionId(fresh.id);
   };
 
-  const activeSession = sessions.find((s) => s.id === activeSessionId) || sessions[0] || STATIC_DEFAULT_SESSION;
+  const activeSession =
+    sessions.find((s) => s.id === activeSessionId) ||
+    STATIC_FALLBACK_SESSION;
 
   return (
     <ChatContext.Provider

@@ -17,6 +17,8 @@ import {
   List,
 } from "lucide-react";
 import { CalendarEvent } from "@/lib/supabase";
+import { useAuth } from "@/lib/auth-context";
+import { getUserInitialEvents } from "@/lib/mock-data";
 
 type CalendarViewMode = "month" | "week" | "day";
 
@@ -82,7 +84,11 @@ const MONTH_NAMES = [
 const WEEKDAY_NAMES = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
 
 export const CalendarModule: React.FC = () => {
-  const [events, setEvents] = useState<CalendarEvent[]>(INITIAL_EVENTS);
+  const { user } = useAuth();
+  const currentUsername = user?.username ? user.username.trim().toLowerCase() : "";
+  const storageKey = `geo_ai_calendar_events_${currentUsername || "guest"}_v2`;
+
+  const [events, setEvents] = useState<CalendarEvent[]>(() => getUserInitialEvents(currentUsername));
   const [viewMode, setViewMode] = useState<CalendarViewMode>("month");
   const [currentDate, setCurrentDate] = useState<Date>(new Date(2026, 9, 13)); // October 2026
   const [selectedDate, setSelectedDate] = useState<string>("2026-10-13");
@@ -99,25 +105,34 @@ export const CalendarModule: React.FC = () => {
   const [formTag, setFormTag] = useState<CalendarEvent["tag"]>("Дедлайн");
   const [formPriority, setFormPriority] = useState<CalendarEvent["priority"]>("HIGH");
 
-  // 1. Initial Load: LocalStorage + Supabase Cloud Fetch
+  // 1. Initial Load & reload when active user changes: LocalStorage + Supabase Cloud Fetch
   useEffect(() => {
+    if (!currentUsername) {
+      setEvents([]);
+      return;
+    }
+
+    let loadedEvents: CalendarEvent[] = getUserInitialEvents(currentUsername);
     try {
-      const saved = localStorage.getItem(STORAGE_CALENDAR_KEY);
+      const saved = localStorage.getItem(storageKey);
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          setEvents(parsed);
+          loadedEvents = parsed;
         }
+      } else {
+        localStorage.setItem(storageKey, JSON.stringify(loadedEvents));
       }
     } catch (e) {
       console.warn("Failed to load calendar from localStorage:", e);
     }
+    setEvents(loadedEvents);
 
-    // Cloud fetch from Supabase
+    // Cloud fetch from Supabase strictly for currentUsername
     fetch("/api/sync", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "get_calendar_events" }),
+      body: JSON.stringify({ action: "get_calendar_events", username: currentUsername }),
     })
       .then((r) => r.json())
       .then((data) => {
@@ -128,19 +143,22 @@ export const CalendarModule: React.FC = () => {
               idMap.set(cloudEvt.id, cloudEvt);
             });
             const merged = Array.from(idMap.values());
-            localStorage.setItem(STORAGE_CALENDAR_KEY, JSON.stringify(merged));
+            try {
+              localStorage.setItem(storageKey, JSON.stringify(merged));
+            } catch {}
             return merged;
           });
         }
       })
       .catch((err) => console.warn("Supabase calendar sync error:", err));
-  }, []);
+  }, [currentUsername, storageKey]);
 
-  // 2. Save changes to LocalStorage
+  // 2. Save changes to user-scoped LocalStorage
   const persistEvents = (updated: CalendarEvent[]) => {
     setEvents(updated);
+    if (!currentUsername) return;
     try {
-      localStorage.setItem(STORAGE_CALENDAR_KEY, JSON.stringify(updated));
+      localStorage.setItem(storageKey, JSON.stringify(updated));
     } catch (e) {
       console.error("Failed to save calendar to localStorage:", e);
     }
@@ -194,15 +212,17 @@ export const CalendarModule: React.FC = () => {
     persistEvents(updated);
     setIsModalOpen(false);
 
-    // Sync to Supabase
-    fetch("/api/sync", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        action: "save_calendar_event",
-        payload: { event: eventToSave },
-      }),
-    }).catch((err) => console.warn("Supabase save event error:", err));
+    // Sync to Supabase strictly for current user
+    if (currentUsername) {
+      fetch("/api/sync", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "save_calendar_event",
+          payload: { event: eventToSave, username: currentUsername },
+        }),
+      }).catch((err) => console.warn("Supabase save event error:", err));
+    }
   };
 
   // Delete Event
@@ -211,15 +231,17 @@ export const CalendarModule: React.FC = () => {
     persistEvents(updated);
     setIsModalOpen(false);
 
-    // Delete in Supabase
-    fetch("/api/sync", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        action: "delete_calendar_event",
-        payload: { eventId: id },
-      }),
-    }).catch((err) => console.warn("Supabase delete event error:", err));
+    // Delete in Supabase strictly for current user
+    if (currentUsername) {
+      fetch("/api/sync", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "delete_calendar_event",
+          payload: { eventId: id, username: currentUsername },
+        }),
+      }).catch((err) => console.warn("Supabase delete event error:", err));
+    }
   };
 
   // Date Navigation

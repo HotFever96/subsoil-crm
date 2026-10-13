@@ -9,7 +9,7 @@ import { CalendarModule } from "@/components/CalendarModule";
 import { LoginScreen } from "@/components/LoginScreen";
 import { useAuth } from "@/lib/auth-context";
 import { useTheme } from "@/lib/theme-context";
-import { INITIAL_MAILS } from "@/lib/mock-data";
+import { getUserInitialMails } from "@/lib/mock-data";
 import { MailItem } from "@/lib/supabase";
 import { Menu, Plus } from "lucide-react";
 import { useChat } from "@/lib/chat-context";
@@ -19,39 +19,117 @@ export default function Home() {
   const { theme } = useTheme();
   const { createNewChat } = useChat();
   const [currentTab, setCurrentTab] = useState<NavTab>("ai-chat");
-  const [mails, setMails] = useState<MailItem[]>(INITIAL_MAILS);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  if (isLoading) {
-    return (
-      <div className="h-screen w-screen flex items-center justify-center bg-[#f8fafc] dark:bg-[#0c1015]">
-        <div className="w-6 h-6 border-2 border-sky-500 border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
+  const currentUsername = user?.username ? user.username.trim().toLowerCase() : "";
+  const mailStorageKey = `geo_ai_mails_${currentUsername || "guest"}_v2`;
 
-  if (!user) {
-    return <LoginScreen />;
-  }
+  const [mails, setMails] = useState<MailItem[]>(() => getUserInitialMails(currentUsername));
+
+  // Reload mails whenever active user changes
+  React.useEffect(() => {
+    if (!currentUsername) {
+      setMails([]);
+      return;
+    }
+
+    let loadedMails = getUserInitialMails(currentUsername);
+    try {
+      const saved = localStorage.getItem(mailStorageKey);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          loadedMails = parsed;
+        }
+      } else {
+        localStorage.setItem(mailStorageKey, JSON.stringify(loadedMails));
+      }
+    } catch (e) {
+      console.warn("Failed to load mails from localStorage:", e);
+    }
+    setMails(loadedMails);
+
+    // Fetch cloud mails strictly for this authenticated user
+    fetch("/api/sync", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "get_mails", username: currentUsername }),
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.success && Array.isArray(data.mails) && data.mails.length > 0) {
+          setMails((prev) => {
+            const idMap = new Map(prev.map((m) => [m.id, m]));
+            data.mails.forEach((cloudMail: MailItem) => {
+              idMap.set(cloudMail.id, cloudMail);
+            });
+            const merged = Array.from(idMap.values());
+            try {
+              localStorage.setItem(mailStorageKey, JSON.stringify(merged));
+            } catch {}
+            return merged;
+          });
+        }
+      })
+      .catch((err) => console.warn("Supabase mails sync error:", err));
+  }, [currentUsername, mailStorageKey]);
+
+  const persistMails = (updated: MailItem[]) => {
+    setMails(updated);
+    if (!currentUsername) return;
+    try {
+      localStorage.setItem(mailStorageKey, JSON.stringify(updated));
+    } catch (e) {
+      console.error("Failed to save mails to localStorage:", e);
+    }
+  };
 
   const handleApproveMail = (mailId: string, finalReplyText?: string) => {
-    setMails((prev) =>
-      prev.map((m) => {
-        if (m.id === mailId) {
-          return {
-            ...m,
-            status: "APPROVED",
-            ai_draft: m.ai_draft
-              ? {
-                  ...m.ai_draft,
-                  reply_body: finalReplyText || m.ai_draft.reply_body,
-                }
-              : undefined,
-          };
+    const updated = mails.map((m) => {
+      if (m.id === mailId) {
+        const approvedItem: MailItem = {
+          ...m,
+          status: "APPROVED",
+          ai_draft: m.ai_draft
+            ? {
+                ...m.ai_draft,
+                reply_body: finalReplyText || m.ai_draft.reply_body,
+              }
+            : undefined,
+        };
+        // Sync to Supabase strictly for current user
+        if (currentUsername) {
+          fetch("/api/sync", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              action: "save_mail",
+              payload: { mail: approvedItem, username: currentUsername },
+            }),
+          }).catch(() => {});
         }
-        return m;
-      })
-    );
+        return approvedItem;
+      }
+      return m;
+    });
+
+    persistMails(updated);
+  };
+
+  const handleUpdateMails = (updatedMails: MailItem[]) => {
+    persistMails(updatedMails);
+    if (currentUsername) {
+      updatedMails.forEach((m) => {
+        fetch("/api/sync", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "save_mail",
+            payload: { mail: m, username: currentUsername },
+          }),
+        }).catch(() => {});
+      });
+    }
   };
 
   const pendingCount = mails.filter((m) => m.status === "PENDING_APPROVAL").length;
@@ -70,6 +148,18 @@ export default function Home() {
         return "Geo AI";
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="h-screen w-screen flex items-center justify-center bg-[#f8fafc] dark:bg-[#0c1015]">
+        <div className="w-6 h-6 border-2 border-sky-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <LoginScreen />;
+  }
 
   return (
     <div className="flex flex-col md:flex-row h-screen w-screen overflow-hidden bg-white dark:bg-[#0c1015] text-slate-900 dark:text-slate-100 transition-colors">
@@ -121,7 +211,11 @@ export default function Home() {
         {currentTab === "ai-chat" && <AIChat />}
 
         {currentTab === "smart-mail" && (
-          <SmartMail mails={mails} onApproveMail={handleApproveMail} />
+          <SmartMail
+            mails={mails}
+            onApproveMail={handleApproveMail}
+            onUpdateMails={handleUpdateMails}
+          />
         )}
 
         {currentTab === "calendar" && <CalendarModule />}
