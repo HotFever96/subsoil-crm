@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "GEONEDRA | Subsoil Governance OS",
+  title: "Geo AI | Интеллектуальная система недропользования",
   description: "B2B CRM-система для управления недропользованием, деловой перепиской и проектной документацией",
 };
 
@@ -25,8 +25,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ru" className={`${geistSans.variable} ${geistMono.variable} dark h-full`}>
-      <body className="min-h-screen antialiased selection:bg-amber-500/20 selection:text-amber-300">
+    <html lang="ru" className={`${geistSans.variable} ${geistMono.variable} h-full`}>
+      <body className="min-h-screen antialiased selection:bg-amber-500/20 selection:text-amber-500">
         <ThemeProvider>
           <AuthProvider>
             {children}

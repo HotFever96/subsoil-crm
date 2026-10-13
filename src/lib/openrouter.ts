@@ -24,7 +24,7 @@ export async function callOpenRouter(payload: OpenRouterRequestPayload, userApiK
     headers: {
       "Authorization": `Bearer ${apiKey.trim()}`,
       "HTTP-Referer": process.env.NEXT_PUBLIC_SITE_URL || "https://geonedra.crm",
-      "X-Title": "GEONEDRA CRM",
+      "X-Title": "Geo AI CRM",
       "Content-Type": "application/json",
     },
     body: JSON.stringify({

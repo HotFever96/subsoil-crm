@@ -182,12 +182,17 @@ export const SubAgentWorkspace: React.FC<SubAgentWorkspaceProps> = ({
         {/* Right Subagent Panel */}
         <div className="w-80 border-l border-slate-200 dark:border-white/[0.08] bg-slate-50/60 dark:bg-[#0e1217] flex flex-col justify-between overflow-y-auto shrink-0">
           <div className="p-5 border-b border-slate-200 dark:border-white/[0.08] space-y-4">
-            <div>
-              <div className="text-xs font-semibold text-slate-900 dark:text-slate-200">
-                {agent.title}
+            <div className="flex items-center space-x-2.5">
+              <div className="w-7 h-7 rounded-lg bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-amber-500 text-xs font-semibold shrink-0">
+                {subsection.responsibleAgent === "ENGINEER" ? "ГИ" : subsection.responsibleAgent === "LEGAL" ? "ЮР" : "ЭК"}
               </div>
-              <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                {agent.name}
+              <div className="min-w-0">
+                <div className="text-xs font-semibold text-slate-900 dark:text-slate-100 truncate">
+                  {agent.title}
+                </div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                  {agent.badge}
+                </div>
               </div>
             </div>
 

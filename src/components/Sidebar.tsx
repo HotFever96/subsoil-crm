@@ -57,16 +57,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <aside className="w-64 border-r border-slate-200 dark:border-white/[0.08] bg-[#f8fafc] dark:bg-[#0e1217] flex flex-col justify-between shrink-0 select-none transition-colors">
         <div>
           {/* Brand Header */}
-          <div className="px-5 py-5 border-b border-slate-200 dark:border-white/[0.08] flex items-center space-x-3">
+          <div className="px-5 py-4 border-b border-slate-200 dark:border-white/[0.08] flex items-center space-x-3">
             <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-amber-500 shrink-0">
               <Layers className="w-4 h-4" />
             </div>
             <div className="min-w-0">
-              <div className="font-semibold text-sm text-slate-900 dark:text-slate-100 tracking-tight leading-tight">
-                GEONEDRA
-              </div>
-              <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
-                Subsoil Governance OS
+              <div className="font-semibold text-sm text-slate-900 dark:text-slate-100 tracking-tight">
+                Geo AI
               </div>
             </div>
           </div>

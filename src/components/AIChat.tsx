@@ -13,6 +13,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { ChatMessage } from "@/lib/supabase";
+import { MarkdownView } from "@/components/MarkdownView";
 
 interface ChatSession {
   id: string;
@@ -162,7 +163,7 @@ export const AIChat: React.FC = () => {
       const fallbackMsg: ChatMessage = {
         id: `msg-${Date.now() + 1}`,
         role: "assistant",
-        content: "Ваш запрос обработан. Если возникла сетевая задержка, проверьте интернет-соединение или статус API-ключа в настройках.",
+        content: "⚠️ Не удалось связаться с сервером. Пожалуйста, проверьте подключение к сети и настройки API-ключа.",
         created_at: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       };
       setSessions((prev) =>
@@ -274,9 +275,13 @@ export const AIChat: React.FC = () => {
                         : "bg-slate-900 dark:bg-slate-800 text-white dark:text-slate-100"
                     }`}
                   >
-                    <div className="whitespace-pre-wrap leading-relaxed">
-                      {msg.content}
-                    </div>
+                    {isAssistant ? (
+                      <MarkdownView content={msg.content} />
+                    ) : (
+                      <div className="whitespace-pre-wrap leading-relaxed">
+                        {msg.content}
+                      </div>
+                    )}
 
                     {isAssistant && (
                       <div className="mt-2 pt-1 flex items-center justify-end opacity-0 group-hover:opacity-100 transition-opacity">

@@ -34,10 +34,12 @@ export default function Home() {
           return {
             ...m,
             status: "APPROVED",
-            ai_draft: {
-              ...m.ai_draft,
-              reply_body: finalReplyText || m.ai_draft.reply_body,
-            },
+            ai_draft: m.ai_draft
+              ? {
+                  ...m.ai_draft,
+                  reply_body: finalReplyText || m.ai_draft.reply_body,
+                }
+              : undefined,
           };
         }
         return m;

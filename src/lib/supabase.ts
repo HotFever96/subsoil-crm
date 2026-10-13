@@ -21,24 +21,27 @@ export interface SubsoilLicense {
 
 export interface MailItem {
   id: string;
+  folder?: "INBOX" | "SENT" | "DRAFTS";
   incoming_number: string;
   date: string;
-  agency: string; // e.g., "Роснедра", "Росприроднадзор", "Центрсибнедра"
+  agency: string; // e.g., "Роснедра", "Росприроднадзор", "Центрнедра"
   department: string;
   subject: string;
   urgency: "HIGH" | "CRITICAL" | "STANDARD";
-  deadline: string;
+  deadline?: string;
   status: "PENDING_APPROVAL" | "APPROVED" | "EDITED" | "SENT";
   incoming_content: string;
   license_id?: string;
   license_code?: string;
-  ai_draft: {
+  ai_draft?: {
     title: string;
     legal_basis: string[];
     reply_body: string;
     confidence_score: number;
     recommended_action: string;
   };
+  sent_body?: string;
+  recipient?: string;
 }
 
 export interface ChatMessage {
