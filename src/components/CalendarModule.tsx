@@ -22,60 +22,6 @@ import { getUserInitialEvents } from "@/lib/mock-data";
 
 type CalendarViewMode = "month" | "week" | "day";
 
-const INITIAL_EVENTS: CalendarEvent[] = [
-  {
-    id: "evt-1",
-    title: "Сдача формы 2-ЛС в Департамент недропользования",
-    date: "2026-10-15",
-    time: "18:00",
-    description: "Форма федерального государственного статистического наблюдения по недропользованию (лицензия КРР 01842 ТЭ).",
-    tag: "Дедлайн",
-    priority: "CRITICAL",
-    license_code: "КРР 01842 ТЭ",
-  },
-  {
-    id: "evt-2",
-    title: "Инспекция маркшейдерской службы на карьере №2",
-    date: "2026-10-18",
-    time: "11:00",
-    description: "Инструментальная сверка фактических объемов выемки вскрышных пород и состояния бортов карьера.",
-    tag: "Проверка",
-    priority: "HIGH",
-    license_code: "УХТ 09211 ТЭ",
-  },
-  {
-    id: "evt-3",
-    title: "Совещание с куратором Центрнедр по продлению лицензии",
-    date: "2026-10-22",
-    time: "14:30",
-    description: "Обсуждение устранения замечаний в пакете заявительных документов на доизучение флангов месторождения.",
-    tag: "Встреча",
-    priority: "NORMAL",
-    license_code: "КРР 01842 ТЭ",
-  },
-  {
-    id: "evt-4",
-    title: "Плановая проверка Росприроднадзора (участок №3)",
-    date: "2026-10-25",
-    time: "10:00",
-    description: "Экологический надзор: проверка соблюдения нормативов сбросов и рекультивации нарушенных земель.",
-    tag: "Проверка",
-    priority: "CRITICAL",
-    license_code: "НАО 03119 ТЭ",
-  },
-  {
-    id: "evt-5",
-    title: "Подготовка материалов для согласования ПРГР на 2027 год",
-    date: "2026-10-28",
-    time: "16:00",
-    description: "Формирование пояснительной записки и графических приложений для согласования в территориальном органе Роснедр.",
-    tag: "Отчет",
-    priority: "HIGH",
-  },
-];
-
-const STORAGE_CALENDAR_KEY = "geo_ai_calendar_events_v1";
-
 const MONTH_NAMES = [
   "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
   "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
@@ -86,9 +32,9 @@ const WEEKDAY_NAMES = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
 export const CalendarModule: React.FC = () => {
   const { user } = useAuth();
   const currentUsername = user?.username ? user.username.trim().toLowerCase() : "";
-  const storageKey = `geo_ai_calendar_events_${currentUsername || "guest"}_v2`;
+  const storageKey = `geo_ai_calendar_events_${currentUsername || "guest"}_v3`;
 
-  const [events, setEvents] = useState<CalendarEvent[]>(() => getUserInitialEvents(currentUsername));
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [viewMode, setViewMode] = useState<CalendarViewMode>("month");
   const [currentDate, setCurrentDate] = useState<Date>(new Date(2026, 9, 13)); // October 2026
   const [selectedDate, setSelectedDate] = useState<string>("2026-10-13");
@@ -112,16 +58,14 @@ export const CalendarModule: React.FC = () => {
       return;
     }
 
-    let loadedEvents: CalendarEvent[] = getUserInitialEvents(currentUsername);
+    let loadedEvents: CalendarEvent[] = [];
     try {
       const saved = localStorage.getItem(storageKey);
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
+        if (Array.isArray(parsed)) {
           loadedEvents = parsed;
         }
-      } else {
-        localStorage.setItem(storageKey, JSON.stringify(loadedEvents));
       }
     } catch (e) {
       console.warn("Failed to load calendar from localStorage:", e);

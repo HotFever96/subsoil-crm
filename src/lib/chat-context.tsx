@@ -25,8 +25,11 @@ interface ChatContextType {
   isSyncing: boolean;
 }
 
-const getStorageSessionsKey = (u: string) => `geo_ai_chat_sessions_${u || "guest"}_v4`;
-const getStorageActiveIdKey = (u: string) => `geo_ai_active_session_id_${u || "guest"}_v4`;
+const getStorageSessionsKey = (u: string) => `geo_ai_chat_sessions_${u || "guest"}_v5`;
+const getStorageActiveIdKey = (u: string) => `geo_ai_active_session_id_${u || "guest"}_v5`;
+
+const generateUniqueSessionId = () =>
+  `sess-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 
 const STATIC_FALLBACK_SESSION: ChatSession = {
   id: "session-fallback",
@@ -35,14 +38,6 @@ const STATIC_FALLBACK_SESSION: ChatSession = {
   updatedAt: 0,
   messages: [],
 };
-
-const createInitialUserSession = (username: string, name?: string): ChatSession => ({
-  id: `session-init-${username || "default"}`,
-  title: "Новый чат",
-  createdAt: "Сегодня",
-  updatedAt: 0,
-  messages: [getUserWelcomeMsg(username, name)],
-});
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
 
@@ -67,41 +62,68 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     syncedMsgIds.current = new Set();
-    let currentSessions: ChatSession[] = [];
     const sessionsKey = getStorageSessionsKey(currentUsername);
     const activeIdKey = getStorageActiveIdKey(currentUsername);
 
+    let loadedSessions: ChatSession[] = [];
+
     try {
-      const savedSessions = localStorage.getItem(sessionsKey);
+      // Check v5 first
+      const savedV5 = localStorage.getItem(sessionsKey);
       const savedActiveId = localStorage.getItem(activeIdKey);
 
-      if (savedSessions) {
-        const parsed = JSON.parse(savedSessions);
+      if (savedV5) {
+        const parsed = JSON.parse(savedV5);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          currentSessions = parsed;
-          setSessions(parsed);
-          const validActive = parsed.find((s: ChatSession) => s.id === savedActiveId);
-          setActiveSessionId(validActive ? validActive.id : parsed[0].id);
+          // Strictly deduplicate by ID and ensure no duplicate or corrupted session-init IDs
+          const seenIds = new Set<string>();
+          parsed.forEach((s: any) => {
+            if (!s || typeof s !== "object") return;
+            const validId = s.id && typeof s.id === "string" ? s.id : generateUniqueSessionId();
+            if (!seenIds.has(validId)) {
+              seenIds.add(validId);
+              loadedSessions.push({
+                ...s,
+                id: validId,
+              });
+            }
+          });
+
+          if (loadedSessions.length > 0) {
+            setSessions(loadedSessions);
+            const validActive = loadedSessions.find((s) => s.id === savedActiveId);
+            setActiveSessionId(validActive ? validActive.id : loadedSessions[0].id);
+          }
         }
       }
     } catch (e) {
       console.warn("Failed to parse saved chat sessions from localStorage:", e);
     }
 
-    if (currentSessions.length === 0) {
-      const initial = createInitialUserSession(currentUsername, user?.name);
-      currentSessions = [initial];
-      setSessions([initial]);
-      setActiveSessionId(initial.id);
+    // If no valid sessions exist, create exactly ONE fresh session with a unique ID
+    if (loadedSessions.length === 0) {
+      const freshId = generateUniqueSessionId();
+      const freshSession: ChatSession = {
+        id: freshId,
+        title: "Новый чат",
+        createdAt: "Сегодня",
+        updatedAt: Date.now(),
+        messages: [getUserWelcomeMsg(currentUsername, user?.name)],
+      };
+      loadedSessions = [freshSession];
+      setSessions([freshSession]);
+      setActiveSessionId(freshId);
+
       try {
-        localStorage.setItem(sessionsKey, JSON.stringify([initial]));
-        localStorage.setItem(activeIdKey, initial.id);
+        localStorage.setItem(sessionsKey, JSON.stringify([freshSession]));
+        localStorage.setItem(activeIdKey, freshId);
       } catch {}
     }
+
     setIsInitialized(true);
 
     // Track already known message IDs
-    currentSessions.forEach((s) => {
+    loadedSessions.forEach((s) => {
       s.messages.forEach((m) => syncedMsgIds.current.add(m.id));
     });
 
@@ -117,11 +139,13 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (!res.ok) return;
         const data = await res.json();
         if (data.success && Array.isArray(data.rows) && data.rows.length > 0) {
-          // Group Supabase rows by session_id
+          // Group Supabase rows strictly by session_id
           const sessionMap = new Map<string, { title: string; messages: ChatMessage[] }>();
 
           data.rows.forEach((row: any) => {
-            const sessId = row.citations?.session_id || "session-cloud";
+            const sessId = row.citations?.session_id;
+            if (!sessId) return;
+
             const sessTitle = row.citations?.session_title || "Диалог с ИИ";
             const msg: ChatMessage = {
               id: row.id,
@@ -141,32 +165,33 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
             sessionMap.get(sessId)!.messages.push(msg);
           });
 
-          // Merge cloud sessions with local user sessions
-          setSessions((prev) => {
-            const merged = [...prev];
-            sessionMap.forEach((val, sessId) => {
-              const existingIdx = merged.findIndex((s) => s.id === sessId);
-              if (existingIdx >= 0) {
-                const existingMsgIds = new Set(merged[existingIdx].messages.map((m) => m.id));
-                const newMsgs = val.messages.filter((m) => !existingMsgIds.has(m.id));
-                if (newMsgs.length > 0) {
-                  merged[existingIdx] = {
-                    ...merged[existingIdx],
-                    messages: [...merged[existingIdx].messages, ...newMsgs],
-                  };
+          if (sessionMap.size > 0) {
+            setSessions((prev) => {
+              const merged = [...prev];
+              sessionMap.forEach((val, sessId) => {
+                const existingIdx = merged.findIndex((s) => s.id === sessId);
+                if (existingIdx >= 0) {
+                  const existingMsgIds = new Set(merged[existingIdx].messages.map((m) => m.id));
+                  const newMsgs = val.messages.filter((m) => !existingMsgIds.has(m.id));
+                  if (newMsgs.length > 0) {
+                    merged[existingIdx] = {
+                      ...merged[existingIdx],
+                      messages: [...merged[existingIdx].messages, ...newMsgs],
+                    };
+                  }
+                } else {
+                  merged.unshift({
+                    id: sessId,
+                    title: val.title,
+                    createdAt: "В облаке",
+                    updatedAt: Date.now(),
+                    messages: val.messages,
+                  });
                 }
-              } else {
-                merged.unshift({
-                  id: sessId,
-                  title: val.title,
-                  createdAt: "В облаке",
-                  updatedAt: Date.now(),
-                  messages: val.messages,
-                });
-              }
+              });
+              return merged;
             });
-            return merged;
-          });
+          }
         }
       } catch (err) {
         console.warn("Supabase chat fetch error:", err);
@@ -191,11 +216,20 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [sessions, activeSessionId, isInitialized, currentUsername]);
 
+  // Create a brand new distinct chat session with a unique ID
   const createNewChat = (): string => {
-    const newSession = createInitialUserSession(currentUsername, user?.name);
+    const newId = generateUniqueSessionId();
+    const newSession: ChatSession = {
+      id: newId,
+      title: "Новый чат",
+      createdAt: "Сегодня",
+      updatedAt: Date.now(),
+      messages: [getUserWelcomeMsg(currentUsername, user?.name)],
+    };
+
     setSessions((prev) => [newSession, ...prev]);
-    setActiveSessionId(newSession.id);
-    return newSession.id;
+    setActiveSessionId(newId);
+    return newId;
   };
 
   const selectSession = (id: string) => {
@@ -206,8 +240,15 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setSessions((prev) => {
       const remaining = prev.filter((s) => s.id !== id);
       if (remaining.length === 0) {
-        const brandNew = createInitialUserSession(currentUsername, user?.name);
-        setActiveSessionId(brandNew.id);
+        const brandNewId = generateUniqueSessionId();
+        const brandNew: ChatSession = {
+          id: brandNewId,
+          title: "Новый чат",
+          createdAt: "Сегодня",
+          updatedAt: Date.now(),
+          messages: [getUserWelcomeMsg(currentUsername, user?.name)],
+        };
+        setActiveSessionId(brandNewId);
         return [brandNew];
       }
       if (activeSessionId === id) {
@@ -232,6 +273,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const setSessionMessages = (sessionId: string, messages: ChatMessage[], newTitle?: string) => {
     setSessions((prev) =>
       prev.map((s) => {
+        // ONLY update the session with this exact sessionId
         if (s.id === sessionId) {
           const title = newTitle !== undefined ? newTitle : s.title;
           return {
@@ -275,13 +317,21 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const clearAllChats = () => {
-    const fresh = createInitialUserSession(currentUsername, user?.name);
+    const freshId = generateUniqueSessionId();
+    const fresh: ChatSession = {
+      id: freshId,
+      title: "Новый чат",
+      createdAt: "Сегодня",
+      updatedAt: Date.now(),
+      messages: [getUserWelcomeMsg(currentUsername, user?.name)],
+    };
     setSessions([fresh]);
-    setActiveSessionId(fresh.id);
+    setActiveSessionId(freshId);
   };
 
   const activeSession =
     sessions.find((s) => s.id === activeSessionId) ||
+    sessions[0] ||
     STATIC_FALLBACK_SESSION;
 
   return (
