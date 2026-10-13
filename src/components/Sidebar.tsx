@@ -222,9 +222,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <div className="text-xs font-medium text-slate-900 dark:text-slate-100 truncate">
                   {user?.name || "Пользователь"}
                 </div>
-                <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
-                  {user?.role === "admin" ? "Администратор" : "Клиент"}
-                </div>
               </div>
             </div>
 
