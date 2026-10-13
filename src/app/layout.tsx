@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/lib/theme-context";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "GEONEDRA | Корпоративная CRM-платформа недропользования",
-  description: "Интеллектуальная система управления лицензиями, смарт-перепиской с госорганами и нормативной документацией",
+  title: "GEONEDRA | Subsoil Governance OS",
+  description: "B2B CRM-система для управления недропользованием, деловой перепиской и проектной документацией",
 };
 
 export default function RootLayout({
@@ -24,8 +25,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ru" className={`${geistSans.variable} ${geistMono.variable} dark h-full`}>
-      <body className="min-h-screen bg-[#0a1019] text-slate-100 antialiased selection:bg-[#b8860b]/30 selection:text-amber-200">
-        {children}
+      <body className="min-h-screen antialiased selection:bg-amber-500/20 selection:text-amber-300">
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

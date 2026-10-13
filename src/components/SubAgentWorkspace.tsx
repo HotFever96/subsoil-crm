@@ -6,7 +6,6 @@ import {
   Edit3,
   Copy,
   Check,
-  CheckCircle2,
   RotateCw,
 } from "lucide-react";
 import { ProjectSubSection, MiningProjectMetadata } from "@/lib/project-types";
@@ -97,15 +96,15 @@ export const SubAgentWorkspace: React.FC<SubAgentWorkspaceProps> = ({
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-[#0a0f18] overflow-hidden">
+    <div className="flex-1 flex flex-col h-full bg-white dark:bg-[#12161c] overflow-hidden">
       {/* Subsection Header Bar */}
-      <div className="px-6 py-3.5 border-b border-slate-800/80 bg-[#0e1522] flex items-center justify-between">
+      <div className="px-6 py-3.5 border-b border-slate-200 dark:border-white/[0.08] flex items-center justify-between">
         <div>
-          <h2 className="text-sm font-semibold text-slate-100 flex items-center space-x-2">
+          <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100 flex items-center space-x-2">
             <span className="text-slate-400 font-mono">{subsection.code}</span>
             <span>{subsection.title}</span>
           </h2>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             {subsection.summary}
           </p>
         </div>
@@ -114,16 +113,16 @@ export const SubAgentWorkspace: React.FC<SubAgentWorkspaceProps> = ({
         <div className="flex items-center space-x-2">
           <button
             onClick={handleCopy}
-            className="px-2.5 py-1.5 rounded-lg text-xs bg-slate-800 text-slate-300 hover:text-slate-100 transition-colors flex items-center space-x-1"
+            className="px-2.5 py-1.5 rounded-lg text-xs bg-slate-100 dark:bg-white/[0.06] hover:bg-slate-200 dark:hover:bg-white/[0.1] text-slate-700 dark:text-slate-300 transition-colors flex items-center space-x-1"
             title="Копировать"
           >
-            {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+            {copied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
             <span>{copied ? "Скопировано" : "Копировать"}</span>
           </button>
 
           <button
             onClick={() => exportSingleSubSectionToDocx(subsection, metadata)}
-            className="px-2.5 py-1.5 rounded-lg text-xs bg-slate-800 text-slate-300 hover:text-slate-100 transition-colors flex items-center space-x-1"
+            className="px-2.5 py-1.5 rounded-lg text-xs bg-slate-100 dark:bg-white/[0.06] hover:bg-slate-200 dark:hover:bg-white/[0.1] text-slate-700 dark:text-slate-300 transition-colors flex items-center space-x-1"
             title="Экспорт в DOCX"
           >
             <Download className="w-3.5 h-3.5" />
@@ -133,14 +132,14 @@ export const SubAgentWorkspace: React.FC<SubAgentWorkspaceProps> = ({
           {isEditingManually ? (
             <button
               onClick={handleSaveManualEdit}
-              className="px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-700 hover:bg-emerald-600 text-slate-100 transition-colors"
+              className="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-900 dark:bg-white text-white dark:text-slate-900 transition-colors"
             >
               Сохранить
             </button>
           ) : (
             <button
               onClick={() => setIsEditingManually(true)}
-              className="px-2.5 py-1.5 rounded-lg text-xs bg-slate-800 text-slate-300 hover:text-slate-100 transition-colors flex items-center space-x-1"
+              className="px-2.5 py-1.5 rounded-lg text-xs bg-slate-100 dark:bg-white/[0.06] hover:bg-slate-200 dark:hover:bg-white/[0.1] text-slate-700 dark:text-slate-300 transition-colors flex items-center space-x-1"
             >
               <Edit3 className="w-3.5 h-3.5" />
               <span>Править</span>
@@ -150,15 +149,13 @@ export const SubAgentWorkspace: React.FC<SubAgentWorkspaceProps> = ({
           {subsection.status !== "APPROVED" ? (
             <button
               onClick={() => onApproveSubSection(subsection.id)}
-              className="px-3.5 py-1.5 rounded-lg text-xs font-medium bg-amber-500 hover:bg-amber-400 text-slate-950 transition-colors flex items-center space-x-1.5"
+              className="px-3.5 py-1.5 rounded-lg text-xs font-medium bg-slate-900 dark:bg-white hover:bg-slate-800 dark:hover:bg-slate-100 text-white dark:text-slate-900 transition-colors"
             >
-              <CheckCircle2 className="w-3.5 h-3.5" />
-              <span>Утвердить</span>
+              Утвердить
             </button>
           ) : (
-            <span className="flex items-center space-x-1 text-xs text-emerald-400 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-              <CheckCircle2 className="w-3.5 h-3.5" />
-              <span>Утверждено</span>
+            <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium px-2.5 py-1 rounded-lg bg-emerald-500/10">
+              Утверждено
             </span>
           )}
         </div>
@@ -167,58 +164,53 @@ export const SubAgentWorkspace: React.FC<SubAgentWorkspaceProps> = ({
       {/* Main Split: Left Document Workspace, Right Subagent Expert Panel */}
       <div className="flex-1 flex overflow-hidden">
         {/* Document Content View */}
-        <div className="flex-1 flex flex-col overflow-y-auto p-6 bg-[#0a0f18]">
+        <div className="flex-1 flex flex-col overflow-y-auto p-6 bg-white dark:bg-[#12161c]">
           {isEditingManually ? (
-            <div className="flex-1 flex flex-col space-y-2">
-              <textarea
-                value={editableContent}
-                onChange={(e) => setEditableContent(e.target.value)}
-                rows={22}
-                className="w-full flex-1 p-4 rounded-xl bg-[#0e1522] border border-amber-500/40 text-xs sm:text-sm text-slate-200 leading-relaxed focus:outline-none focus:ring-1 focus:ring-amber-500 resize-none font-sans"
-              />
-            </div>
+            <textarea
+              value={editableContent}
+              onChange={(e) => setEditableContent(e.target.value)}
+              rows={22}
+              className="w-full flex-1 p-4 rounded-xl bg-slate-50 dark:bg-[#181d24] border border-slate-300 dark:border-white/[0.15] text-xs sm:text-sm text-slate-900 dark:text-slate-100 leading-relaxed focus:outline-none focus:border-amber-500 resize-none"
+            />
           ) : (
-            <div className="p-6 rounded-xl bg-[#0e1522] border border-slate-800 space-y-4">
-              <div className="text-xs sm:text-sm text-slate-200 leading-relaxed whitespace-pre-wrap font-sans">
-                {editableContent}
-              </div>
+            <div className="p-6 rounded-xl bg-slate-50 dark:bg-[#181d24] border border-slate-200/80 dark:border-white/[0.06] text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">
+              {editableContent}
             </div>
           )}
         </div>
 
         {/* Right Subagent Panel */}
-        <div className="w-80 border-l border-slate-800/80 bg-[#0b111c] flex flex-col justify-between overflow-y-auto">
-          {/* Agent Persona Bar */}
-          <div className="p-5 border-b border-slate-800/80 space-y-4">
+        <div className="w-80 border-l border-slate-200 dark:border-white/[0.08] bg-slate-50/60 dark:bg-[#0e1217] flex flex-col justify-between overflow-y-auto shrink-0">
+          <div className="p-5 border-b border-slate-200 dark:border-white/[0.08] space-y-4">
             <div>
-              <div className="text-xs font-semibold text-slate-200">
+              <div className="text-xs font-semibold text-slate-900 dark:text-slate-200">
                 {agent.title}
               </div>
-              <div className="text-[11px] text-slate-400 mt-0.5">
+              <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
                 {agent.name}
               </div>
             </div>
 
             {/* Agent Rationale Box */}
-            <div className="p-3 rounded-lg bg-[#0e1522] border border-slate-800 space-y-1.5">
-              <div className="text-[11px] font-medium text-slate-400">
+            <div className="p-3.5 rounded-lg bg-white dark:bg-[#181d24] border border-slate-200/80 dark:border-white/[0.06] space-y-1">
+              <div className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
                 Комментарий специалиста:
               </div>
-              <p className="text-xs text-slate-300 leading-relaxed font-sans">
+              <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
                 {subsection.agentExplanation}
               </p>
             </div>
 
             {/* Normative Base Tags */}
             <div className="space-y-1.5">
-              <span className="text-[11px] font-medium text-slate-400 block">
+              <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 block">
                 Нормативная основа:
               </span>
               <div className="space-y-1">
                 {subsection.normativeBase.map((item, idx) => (
                   <div
                     key={idx}
-                    className="p-2 rounded bg-[#0e1522] border border-slate-800 text-[11px] text-slate-300 leading-snug"
+                    className="p-2 rounded bg-white dark:bg-[#181d24] border border-slate-200/80 dark:border-white/[0.06] text-[11px] text-slate-700 dark:text-slate-300 leading-snug"
                   >
                     {item}
                   </div>
@@ -228,30 +220,28 @@ export const SubAgentWorkspace: React.FC<SubAgentWorkspaceProps> = ({
           </div>
 
           {/* Quick Prompts & Task Input to Subagent */}
-          <div className="p-5 bg-[#0e1522] border-t border-slate-800/80 space-y-3">
-            <div className="space-y-2">
-              <textarea
-                value={instruction}
-                onChange={(e) => setInstruction(e.target.value)}
-                placeholder="Задание специалисту (например: скорректировать расчет уступов под глубину 20 м)..."
-                rows={3}
-                className="w-full p-2.5 rounded-lg bg-[#0a0f18] border border-slate-800 text-xs text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-amber-500/60 resize-none font-sans"
-              />
-              <button
-                onClick={() => handleExecutePrompt()}
-                disabled={isProcessing || !instruction.trim()}
-                className="w-full py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-medium text-xs flex items-center justify-center space-x-1.5 transition-colors disabled:opacity-40"
-              >
-                {isProcessing ? (
-                  <>
-                    <RotateCw className="w-3.5 h-3.5 animate-spin" />
-                    <span>Расчет...</span>
-                  </>
-                ) : (
-                  <span>Отправить правку</span>
-                )}
-              </button>
-            </div>
+          <div className="p-4 bg-white dark:bg-[#181d24] border-t border-slate-200 dark:border-white/[0.08] space-y-2.5">
+            <textarea
+              value={instruction}
+              onChange={(e) => setInstruction(e.target.value)}
+              placeholder="Задание специалисту (например: скорректировать расчет уступов)..."
+              rows={3}
+              className="w-full p-2.5 rounded-lg bg-slate-50 dark:bg-[#12161c] border border-slate-200 dark:border-white/[0.1] text-xs text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:border-amber-500 resize-none"
+            />
+            <button
+              onClick={() => handleExecutePrompt()}
+              disabled={isProcessing || !instruction.trim()}
+              className="w-full py-2 rounded-lg bg-slate-900 dark:bg-white hover:bg-slate-800 dark:hover:bg-slate-100 text-white dark:text-slate-900 font-medium text-xs flex items-center justify-center space-x-1.5 transition-colors disabled:opacity-40"
+            >
+              {isProcessing ? (
+                <>
+                  <RotateCw className="w-3.5 h-3.5 animate-spin" />
+                  <span>Расчет...</span>
+                </>
+              ) : (
+                <span>Отправить правку</span>
+              )}
+            </button>
           </div>
         </div>
       </div>

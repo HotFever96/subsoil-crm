@@ -1,26 +1,48 @@
 @import "tailwindcss";
 
-:root {
-  --navy-base: #0a0f18;
-  --navy-surface: #0e1522;
-  --navy-card: #131b29;
-  --navy-border: rgba(184, 134, 11, 0.15);
-  --bronze-accent: #c59b27;
-  --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
+@layer base {
+  :root {
+    --bg-main: #f8fafc;
+    --bg-surface: #ffffff;
+    --bg-sidebar: #f1f5f9;
+    --bg-card: #ffffff;
+    --border-subtle: #e2e8f0;
+    --border-focus: #cbd5e1;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --accent: #b48118;
+    --accent-hover: #966b13;
+    --accent-soft: rgba(180, 129, 24, 0.1);
+  }
+
+  .dark {
+    --bg-main: #12161c;
+    --bg-surface: #181d24;
+    --bg-sidebar: #0e1217;
+    --bg-card: #191f27;
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --border-focus: rgba(255, 255, 255, 0.16);
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --accent: #c59b27;
+    --accent-hover: #dbb038;
+    --accent-soft: rgba(197, 155, 39, 0.12);
+  }
 }
 
 body {
-  background-color: #0a0f18;
-  color: #f1f5f9;
+  background-color: var(--bg-main);
+  color: var(--text-primary);
   min-height: 100vh;
   font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.011em;
   overflow-x: hidden;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* Чистые тонкие полосы прокрутки */
+/* Минималистичный тонкий скроллбар */
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
@@ -36,5 +58,5 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(197, 155, 39, 0.4);
+  background: rgba(148, 163, 184, 0.35);
 }

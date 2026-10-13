@@ -1,17 +1,19 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
+  MessageSquareText,
   Mail,
-  Scale,
-  FolderGit2,
-  Database,
+  FileText,
+  Settings,
+  Sun,
+  Moon,
   Layers,
-  ChevronRight,
-  User,
+  X,
 } from "lucide-react";
+import { useTheme } from "@/lib/theme-context";
 
-export type NavTab = "smart-mail" | "legal-expert" | "project-studio" | "licenses";
+export type NavTab = "ai-chat" | "smart-mail" | "project-studio";
 
 interface SidebarProps {
   currentTab: NavTab;
@@ -24,101 +26,160 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onSelectTab,
   pendingMailsCount = 2,
 }) => {
+  const { theme, toggleTheme } = useTheme();
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+
   const navItems = [
     {
+      id: "ai-chat" as NavTab,
+      label: "Чат с ИИ-Секретарем",
+      icon: MessageSquareText,
+    },
+    {
       id: "smart-mail" as NavTab,
-      label: "Деловая переписка",
+      label: "Умная почта",
       icon: Mail,
       badge: pendingMailsCount > 0 ? `${pendingMailsCount}` : undefined,
     },
     {
-      id: "legal-expert" as NavTab,
-      label: "Правовой консультант",
-      icon: Scale,
-    },
-    {
       id: "project-studio" as NavTab,
       label: "Проектирование",
-      icon: FolderGit2,
-    },
-    {
-      id: "licenses" as NavTab,
-      label: "Реестр лицензий",
-      icon: Database,
+      icon: FileText,
     },
   ];
 
   return (
-    <aside className="w-64 border-r border-slate-800/80 bg-[#0a0f18] flex flex-col justify-between shrink-0 select-none">
-      <div>
-        {/* Brand Header */}
-        <div className="px-5 py-5 border-b border-slate-800/80 flex items-center space-x-3">
-          <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
-            <Layers className="w-4 h-4" />
-          </div>
-          <div>
-            <div className="font-semibold text-sm text-slate-100 tracking-tight">
-              GEONEDRA
+    <>
+      <aside className="w-64 border-r border-slate-200 dark:border-white/[0.08] bg-[#f8fafc] dark:bg-[#0e1217] flex flex-col justify-between shrink-0 select-none transition-colors">
+        <div>
+          {/* Brand Header */}
+          <div className="px-5 py-5 border-b border-slate-200 dark:border-white/[0.08] flex items-center space-x-3">
+            <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-amber-500 shrink-0">
+              <Layers className="w-4 h-4" />
             </div>
-            <div className="text-[11px] text-slate-500">
-              Система недропользования
+            <div className="min-w-0">
+              <div className="font-semibold text-sm text-slate-900 dark:text-slate-100 tracking-tight leading-tight">
+                GEONEDRA
+              </div>
+              <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                Subsoil Governance OS
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Navigation Section */}
-        <div className="p-3 space-y-1">
-          <div className="px-3 py-2 text-[11px] font-medium text-slate-500 uppercase tracking-wider">
-            Разделы
-          </div>
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = currentTab === item.id;
-            return (
-              <button
-                key={item.id}
-                onClick={() => onSelectTab(item.id)}
-                className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors flex items-center justify-between ${
-                  isActive
-                    ? "bg-slate-800/80 text-amber-300 font-medium border border-amber-500/20"
-                    : "text-slate-400 hover:text-slate-200 hover:bg-slate-900/60"
-                }`}
-              >
-                <div className="flex items-center space-x-3">
-                  <Icon className={`w-4 h-4 ${isActive ? "text-amber-400" : "text-slate-500"}`} />
-                  <span>{item.label}</span>
-                </div>
+          {/* Navigation Section (strictly 3 items) */}
+          <nav className="p-3 space-y-1">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = currentTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => onSelectTab(item.id)}
+                  className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition-all flex items-center justify-between ${
+                    isActive
+                      ? "bg-slate-200/80 dark:bg-white/[0.08] text-slate-900 dark:text-slate-100 font-medium"
+                      : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-white/[0.04]"
+                  }`}
+                >
+                  <div className="flex items-center space-x-3 min-w-0">
+                    <Icon className={`w-4 h-4 shrink-0 ${isActive ? "text-amber-500 dark:text-amber-400" : "text-slate-400 dark:text-slate-500"}`} />
+                    <span className="truncate">{item.label}</span>
+                  </div>
 
-                <div className="flex items-center space-x-1.5">
                   {item.badge && (
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 font-medium">
+                    <span className="text-[11px] px-2 py-0.5 rounded-full bg-orange-500/15 text-orange-600 dark:text-orange-400 font-medium ml-2 shrink-0">
                       {item.badge}
                     </span>
                   )}
-                  {isActive && <ChevronRight className="w-3.5 h-3.5 text-amber-400/60" />}
-                </div>
-              </button>
-            );
-          })}
+                </button>
+              );
+            })}
+          </nav>
         </div>
-      </div>
 
-      {/* Footer Profile */}
-      <div className="p-3 border-t border-slate-800/80">
-        <div className="p-2.5 rounded-lg bg-slate-900/50 border border-slate-800/60 flex items-center space-x-3">
-          <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-xs font-medium text-slate-300 border border-slate-700">
-            <User className="w-4 h-4 text-slate-400" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-xs font-medium text-slate-200 truncate">
-              Константин Орлов
-            </p>
-            <p className="text-[11px] text-slate-500 truncate">
-              Юридический отдел
-            </p>
+        {/* Footer: Settings & Theme Switcher (No fake cards) */}
+        <div className="p-3 border-t border-slate-200 dark:border-white/[0.08] space-y-1">
+          <button
+            onClick={() => setShowSettingsModal(true)}
+            className="w-full text-left px-3 py-2 rounded-lg text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-white/[0.04] transition-colors flex items-center space-x-3"
+          >
+            <Settings className="w-4 h-4 text-slate-400" />
+            <span>Настройки</span>
+          </button>
+
+          <button
+            onClick={toggleTheme}
+            className="w-full text-left px-3 py-2 rounded-lg text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-white/[0.04] transition-colors flex items-center justify-between"
+          >
+            <div className="flex items-center space-x-3">
+              {theme === "dark" ? (
+                <Moon className="w-4 h-4 text-slate-400" />
+              ) : (
+                <Sun className="w-4 h-4 text-amber-500" />
+              )}
+              <span>{theme === "dark" ? "Темная тема" : "Светлая тема"}</span>
+            </div>
+            <span className="text-[11px] text-slate-400 uppercase tracking-wider font-mono">
+              {theme === "dark" ? "Dark" : "Light"}
+            </span>
+          </button>
+        </div>
+      </aside>
+
+      {/* Clean Settings Modal */}
+      {showSettingsModal && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="w-full max-w-md bg-white dark:bg-[#181d24] border border-slate-200 dark:border-white/[0.08] rounded-xl p-5 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/[0.08] pb-3">
+              <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                Настройки системы
+              </h3>
+              <button
+                onClick={() => setShowSettingsModal(false)}
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="space-y-3 text-xs text-slate-600 dark:text-slate-300">
+              <div>
+                <label className="block text-slate-500 dark:text-slate-400 mb-1">
+                  Подключение к ИИ-ядру (OpenRouter):
+                </label>
+                <input
+                  type="password"
+                  placeholder="sk-or-v1-..."
+                  className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-[#12161c] border border-slate-200 dark:border-white/[0.08] text-slate-900 dark:text-slate-100 focus:outline-none focus:border-amber-500/50"
+                  defaultValue=""
+                />
+              </div>
+
+              <div>
+                <label className="block text-slate-500 dark:text-slate-400 mb-1">
+                  Адрес Supabase:
+                </label>
+                <input
+                  type="text"
+                  placeholder="https://your-project.supabase.co"
+                  className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-[#12161c] border border-slate-200 dark:border-white/[0.08] text-slate-900 dark:text-slate-100 focus:outline-none focus:border-amber-500/50"
+                  defaultValue="https://hrdchbltqfakgxxkjroy.supabase.co"
+                />
+              </div>
+            </div>
+
+            <div className="flex justify-end pt-2">
+              <button
+                onClick={() => setShowSettingsModal(false)}
+                className="px-4 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-medium text-xs transition-colors"
+              >
+                Готово
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    </aside>
+      )}
+    </>
   );
 };

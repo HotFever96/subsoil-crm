@@ -2,15 +2,14 @@
 
 import React, { useState } from "react";
 import { Sidebar, NavTab } from "@/components/Sidebar";
+import { AIChat } from "@/components/AIChat";
 import { SmartMail } from "@/components/SmartMail";
-import { LegalExpert } from "@/components/LegalExpert";
 import { ProjectStudio } from "@/components/ProjectStudio";
-import { LicenseRegistry } from "@/components/LicenseRegistry";
 import { INITIAL_MAILS } from "@/lib/mock-data";
 import { MailItem } from "@/lib/supabase";
 
 export default function Home() {
-  const [currentTab, setCurrentTab] = useState<NavTab>("smart-mail");
+  const [currentTab, setCurrentTab] = useState<NavTab>("ai-chat");
   const [mails, setMails] = useState<MailItem[]>(INITIAL_MAILS);
 
   const handleApproveMail = (mailId: string, finalReplyText?: string) => {
@@ -34,25 +33,23 @@ export default function Home() {
   const pendingCount = mails.filter((m) => m.status === "PENDING_APPROVAL").length;
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-[#0a1019]">
-      {/* Swiss Banking / Deep Navy Sidebar */}
+    <div className="flex h-screen w-screen overflow-hidden bg-white dark:bg-[#12161c] text-slate-900 dark:text-slate-100 transition-colors">
+      {/* 3-item Narrow Minimal Sidebar */}
       <Sidebar
         currentTab={currentTab}
         onSelectTab={setCurrentTab}
         pendingMailsCount={pendingCount}
       />
 
-      {/* Main Workspace Frame */}
+      {/* Main Workspace */}
       <main className="flex-1 flex flex-col h-full overflow-hidden">
+        {currentTab === "ai-chat" && <AIChat />}
+
         {currentTab === "smart-mail" && (
           <SmartMail mails={mails} onApproveMail={handleApproveMail} />
         )}
 
-        {currentTab === "legal-expert" && <LegalExpert />}
-
         {currentTab === "project-studio" && <ProjectStudio />}
-
-        {currentTab === "licenses" && <LicenseRegistry />}
       </main>
     </div>
   );
