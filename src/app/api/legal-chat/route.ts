@@ -33,6 +33,7 @@ export async function POST(req: NextRequest) {
     const {
       messages,
       userMessage,
+      userName,
       apiKey,
       model,
       mode, // "brief" | "detailed" | "normal"
@@ -63,9 +64,13 @@ export async function POST(req: NextRequest) {
       styleInstruction = "\n\n[РЕЖИМ ОТВЕТА: РАЗВЕРНУТО. Предоставь исчерпывающий, глубокий, детальный анализ со структурой, примерами и полными пояснениями.]";
     }
 
+    const userGreetingInstruction = (userName && typeof userName === "string" && userName.trim())
+      ? `\n\n[ПОЛЬЗОВАТЕЛЬ: Имя текущего собеседника — «${userName.trim()}». При приветствиях и персональном обращении уважительно обращайся к нему по этому имени.]`
+      : "";
+
     // Build base system prompt
     const formattedMessages: Array<{ role: "system" | "user" | "assistant"; content: MessageContent }> = [
-      { role: "system", content: GENERAL_ASSISTANT_SYSTEM_PROMPT + styleInstruction },
+      { role: "system", content: GENERAL_ASSISTANT_SYSTEM_PROMPT + styleInstruction + userGreetingInstruction },
     ];
 
     // Add prior conversation messages

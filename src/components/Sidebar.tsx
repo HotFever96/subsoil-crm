@@ -38,9 +38,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onCloseMobile,
 }) => {
   const { theme, toggleTheme } = useTheme();
-  const { user, logout } = useAuth();
+  const { user, logout, updateName } = useAuth();
   const { sessions, activeSessionId, selectSession, deleteSession, createNewChat } = useChat();
   const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [nameInput, setNameInput] = useState("");
 
   const navItems = [
     {
@@ -236,7 +237,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
           <div className="space-y-0.5">
             <button
-              onClick={() => setShowSettingsModal(true)}
+              onClick={() => {
+                setNameInput(user?.name || "");
+                setShowSettingsModal(true);
+              }}
               className="w-full text-left px-3 py-1.5 rounded-lg text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-white/[0.04] transition-colors flex items-center space-x-2.5 cursor-pointer"
             >
               <Settings className="w-3.5 h-3.5 text-slate-400" />
@@ -269,7 +273,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div className="w-full max-w-md bg-white dark:bg-[#131821] border border-slate-200 dark:border-white/[0.08] rounded-2xl p-5 shadow-2xl space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/[0.08] pb-3">
               <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
-                Настройки системы
+                Настройки профиля и системы
               </h3>
               <button
                 onClick={() => setShowSettingsModal(false)}
@@ -279,22 +283,25 @@ export const Sidebar: React.FC<SidebarProps> = ({
               </button>
             </div>
 
-            <div className="space-y-3 text-xs text-slate-600 dark:text-slate-300">
+            <div className="space-y-4 text-xs text-slate-600 dark:text-slate-300">
               <div>
-                <label className="block text-slate-500 dark:text-slate-400 mb-1">
-                  Подключение к ИИ (OpenRouter API):
+                <label className="block text-slate-700 dark:text-slate-300 font-medium mb-1.5">
+                  Ваше имя:
                 </label>
                 <input
-                  id="openrouter-key-input"
-                  type="password"
-                  placeholder="sk-or-v1-..."
+                  type="text"
+                  value={nameInput}
+                  onChange={(e) => setNameInput(e.target.value)}
+                  placeholder="Как к вам обращаться?"
                   className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-[#0c1015] border border-slate-200 dark:border-white/[0.08] text-slate-900 dark:text-slate-100 focus:outline-none focus:border-sky-500/50"
-                  defaultValue={typeof window !== "undefined" ? localStorage.getItem("geonedra_openrouter_key") || "" : ""}
                 />
+                <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-1">
+                  Логин аккаунта ({user?.username}) защищен. Имя отображается в панели и используется ИИ при обращении к вам.
+                </p>
               </div>
 
               <div>
-                <label className="block text-slate-500 dark:text-slate-400 mb-1">
+                <label className="block text-slate-700 dark:text-slate-300 font-medium mb-1.5">
                   Основная модель ИИ:
                 </label>
                 <select
@@ -313,28 +320,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   Если у модели нет свободных серверов, система автоматически переключится на резервные.
                 </p>
               </div>
-
-              <div>
-                <label className="block text-slate-500 dark:text-slate-400 mb-1">
-                  Адрес базы Supabase:
-                </label>
-                <input
-                  type="text"
-                  placeholder="https://your-project.supabase.co"
-                  className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-[#0c1015] border border-slate-200 dark:border-white/[0.08] text-slate-900 dark:text-slate-100 focus:outline-none focus:border-sky-500/50"
-                  defaultValue="https://hrdchbltqfakgxxkjroy.supabase.co"
-                />
-              </div>
             </div>
 
             <div className="flex justify-end pt-2">
               <button
                 onClick={() => {
-                  const input = document.getElementById("openrouter-key-input") as HTMLInputElement | null;
+                  if (nameInput.trim()) {
+                    updateName(nameInput.trim());
+                  }
                   const modelSelect = document.getElementById("openrouter-model-select") as HTMLSelectElement | null;
-                  if (typeof window !== "undefined") {
-                    if (input) localStorage.setItem("geonedra_openrouter_key", input.value.trim());
-                    if (modelSelect) localStorage.setItem("geonedra_openrouter_model", modelSelect.value);
+                  if (typeof window !== "undefined" && modelSelect) {
+                    localStorage.setItem("geonedra_openrouter_model", modelSelect.value);
                   }
                   setShowSettingsModal(false);
                 }}

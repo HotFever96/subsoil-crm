@@ -12,6 +12,7 @@ interface AuthContextType {
   user: AuthUser | null;
   login: (username: string, password: string) => boolean;
   logout: () => void;
+  updateName: (newName: string) => void;
   isLoading: boolean;
 }
 
@@ -32,6 +33,7 @@ const AuthContext = createContext<AuthContextType>({
   user: null,
   login: () => false,
   logout: () => {},
+  updateName: () => {},
   isLoading: true,
 });
 
@@ -43,7 +45,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const saved = localStorage.getItem("geonedra_auth_user");
     if (saved) {
       try {
-        setUser(JSON.parse(saved));
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.username) {
+          const customName = localStorage.getItem(`geo_ai_custom_name_${parsed.username}`);
+          if (customName) {
+            parsed.name = customName;
+          }
+        }
+        setUser(parsed);
       } catch (e) {
         localStorage.removeItem("geonedra_auth_user");
       }
@@ -57,9 +66,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const account = ACCOUNTS[cleanUser];
     if (account && account.password === cleanPass) {
+      const customName = typeof window !== "undefined" ? localStorage.getItem(`geo_ai_custom_name_${cleanUser}`) : null;
       const authUser: AuthUser = {
         username: cleanUser,
-        name: account.name,
+        name: customName || account.name,
         role: account.role,
       };
       setUser(authUser);
@@ -74,8 +84,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.removeItem("geonedra_auth_user");
   };
 
+  const updateName = (newName: string) => {
+    const trimmed = newName.trim();
+    if (!trimmed || !user) return;
+    const updatedUser: AuthUser = {
+      ...user,
+      name: trimmed,
+    };
+    setUser(updatedUser);
+    try {
+      localStorage.setItem("geonedra_auth_user", JSON.stringify(updatedUser));
+      localStorage.setItem(`geo_ai_custom_name_${user.username}`, trimmed);
+    } catch {}
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ user, login, logout, updateName, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

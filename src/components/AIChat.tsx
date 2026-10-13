@@ -23,6 +23,7 @@ import {
 import { ChatMessage } from "@/lib/supabase";
 import { MarkdownView } from "@/components/MarkdownView";
 import { useChat } from "@/lib/chat-context";
+import { useAuth } from "@/lib/auth-context";
 
 interface AttachedFile {
   id: string;
@@ -34,6 +35,7 @@ interface AttachedFile {
 }
 
 export const AIChat: React.FC = () => {
+  const { user } = useAuth();
   const { activeSession, setSessionMessages } = useChat();
 
   const [inputPrompt, setInputPrompt] = useState("");
@@ -289,6 +291,7 @@ export const AIChat: React.FC = () => {
         body: JSON.stringify({
           messages: updatedMessages.map((m) => ({ role: m.role, content: m.content })),
           userMessage: text,
+          userName: user?.name,
           apiKey: storedKey || undefined,
           model: storedModel || undefined,
           mode: styleMode,
@@ -371,7 +374,7 @@ export const AIChat: React.FC = () => {
         <div className="flex-1 flex flex-col items-center justify-center px-4 overflow-y-auto relative bg-[radial-gradient(ellipse_70%_50%_at_50%_35%,rgba(14,165,233,0.09),transparent_75%)] dark:bg-[radial-gradient(ellipse_75%_55%_at_50%_35%,rgba(14,165,233,0.12),transparent_75%)]">
           <div className="w-full max-w-xl flex flex-col items-center text-center -mt-6">
             <h1 className="text-3xl sm:text-4xl font-medium tracking-tight text-slate-800 dark:text-slate-100 mb-8 select-none">
-              Чем я могу помочь сегодня?
+              {user?.name ? `${user.name}, чем я могу помочь?` : "Чем я могу помочь сегодня?"}
             </h1>
 
             {/* Central Narrower Rounded Pill Input Box (Gemini / ChatGPT Screen 3 style) */}
