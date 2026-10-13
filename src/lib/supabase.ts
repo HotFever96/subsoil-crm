@@ -54,6 +54,11 @@ export interface ChatMessage {
     title: string;
     excerpt?: string;
   }[];
+  attachments?: {
+    name: string;
+    type: "image" | "text";
+    previewUrl?: string;
+  }[];
 }
 
 export interface ProjectStudioDraft {

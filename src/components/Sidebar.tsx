@@ -56,12 +56,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
     <>
       <aside className="w-64 border-r border-slate-200 dark:border-white/[0.08] bg-[#f8fafc] dark:bg-[#0e1217] flex flex-col justify-between shrink-0 select-none transition-colors">
         <div>
-          {/* Brand Header with stylish PNG logo */}
-          <div className="px-5 py-4 border-b border-slate-200 dark:border-white/[0.08] flex items-center">
+          {/* Brand Header with adapted user logo */}
+          <div className="px-5 py-3.5 border-b border-slate-200 dark:border-white/[0.08] flex items-center">
             <img
-              src={theme === "dark" ? "/geo-ai-logo-dark.png" : "/geo-ai-logo-transparent.png"}
+              src={theme === "dark" ? "/geo-ai-logo-dark.png" : "/geo-ai-logo-light.png"}
               alt="Geo AI"
-              className="h-8 w-auto object-contain"
+              className="h-10 w-auto object-contain transition-all"
             />
           </div>
 

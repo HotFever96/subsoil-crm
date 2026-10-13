@@ -1,12 +1,20 @@
+export type MessageContent =
+  | string
+  | Array<
+      | { type: "text"; text: string }
+      | { type: "image_url"; image_url: { url: string } }
+    >;
+
 export interface OpenRouterRequestPayload {
   model?: string;
   models?: string[];
   messages: Array<{
     role: "system" | "user" | "assistant";
-    content: string;
+    content: MessageContent;
   }>;
   temperature?: number;
   max_tokens?: number;
+  plugins?: Array<{ id: string; [key: string]: unknown }>;
 }
 
 export async function callOpenRouter(payload: OpenRouterRequestPayload, userApiKey?: string) {
@@ -47,13 +55,21 @@ export async function callOpenRouter(payload: OpenRouterRequestPayload, userApiK
     });
   };
 
+  // Base parameters
+  const baseParams: Record<string, unknown> = {
+    messages: payload.messages,
+    temperature: payload.temperature ?? 0.3,
+    max_tokens: payload.max_tokens ?? 3500,
+  };
+  if (payload.plugins && payload.plugins.length > 0) {
+    baseParams.plugins = payload.plugins;
+  }
+
   // Tier 1: Try OpenRouter native fallback array
   try {
     const response = await executeCall({
+      ...baseParams,
       models: uniqueModels,
-      messages: payload.messages,
-      temperature: payload.temperature ?? 0.3,
-      max_tokens: payload.max_tokens ?? 3500,
     });
 
     if (response.ok) {
@@ -68,10 +84,8 @@ export async function callOpenRouter(payload: OpenRouterRequestPayload, userApiK
   for (const candidate of uniqueModels) {
     try {
       const response = await executeCall({
+        ...baseParams,
         model: candidate,
-        messages: payload.messages,
-        temperature: payload.temperature ?? 0.3,
-        max_tokens: payload.max_tokens ?? 3500,
       });
 
       if (response.ok) {

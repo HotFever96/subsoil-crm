@@ -22,9 +22,11 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     if (saved === "dark") {
       setTheme("dark");
       document.documentElement.classList.add("dark");
+      document.documentElement.setAttribute("data-theme", "dark");
     } else {
       setTheme("light");
       document.documentElement.classList.remove("dark");
+      document.documentElement.setAttribute("data-theme", "light");
     }
   }, []);
 
@@ -34,8 +36,10 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       localStorage.setItem("geonedra_theme", nextTheme);
       if (nextTheme === "dark") {
         document.documentElement.classList.add("dark");
+        document.documentElement.setAttribute("data-theme", "dark");
       } else {
         document.documentElement.classList.remove("dark");
+        document.documentElement.setAttribute("data-theme", "light");
       }
       return nextTheme;
     });
