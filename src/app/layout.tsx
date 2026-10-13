@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/lib/theme-context";
 import { AuthProvider } from "@/lib/auth-context";
+import { ChatProvider } from "@/lib/chat-context";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,7 +30,9 @@ export default function RootLayout({
       <body className="min-h-screen antialiased selection:bg-amber-500/20 selection:text-amber-500">
         <ThemeProvider>
           <AuthProvider>
-            {children}
+            <ChatProvider>
+              {children}
+            </ChatProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>

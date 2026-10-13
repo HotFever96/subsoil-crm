@@ -8,13 +8,16 @@ import {
   Settings,
   Sun,
   Moon,
-  Layers,
+  Plus,
+  MessageSquare,
+  Trash2,
   X,
   LogOut,
   User,
 } from "lucide-react";
 import { useTheme } from "@/lib/theme-context";
 import { useAuth } from "@/lib/auth-context";
+import { useChat } from "@/lib/chat-context";
 
 export type NavTab = "ai-chat" | "smart-mail" | "project-studio";
 
@@ -31,12 +34,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const { theme, toggleTheme } = useTheme();
   const { user, logout } = useAuth();
+  const { sessions, activeSessionId, selectSession, deleteSession, createNewChat } = useChat();
   const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   const navItems = [
     {
       id: "ai-chat" as NavTab,
-      label: "Чат с ИИ-Секретарем",
+      label: "Чат с ИИ",
       icon: MessageSquareText,
     },
     {
@@ -52,12 +56,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
   ];
 
+  const handleNewChatClick = () => {
+    createNewChat();
+    onSelectTab("ai-chat");
+  };
+
   return (
     <>
-      <aside className="w-64 border-r border-slate-200 dark:border-white/[0.08] bg-[#f8fafc] dark:bg-[#0e1217] flex flex-col justify-between shrink-0 select-none transition-colors">
-        <div>
+      <aside className="w-64 border-r border-slate-200 dark:border-white/[0.08] bg-[#f8fafc] dark:bg-[#0e1217] flex flex-col justify-between shrink-0 select-none transition-colors h-full">
+        <div className="flex flex-col flex-1 min-h-0">
           {/* Brand Header with adapted user logo */}
-          <div className="px-5 py-3.5 border-b border-slate-200 dark:border-white/[0.08] flex items-center">
+          <div className="px-5 py-3.5 border-b border-slate-200 dark:border-white/[0.08] flex items-center justify-between">
             <img
               src={theme === "dark" ? "/geo-ai-logo-dark.png" : "/geo-ai-logo-light.png"}
               alt="Geo AI"
@@ -65,8 +74,26 @@ export const Sidebar: React.FC<SidebarProps> = ({
             />
           </div>
 
-          {/* Navigation Section (strictly 3 items) */}
-          <nav className="p-3 space-y-1">
+          {/* New Chat Button (Prominent like ChatGPT / Gemini) */}
+          <div className="p-3">
+            <button
+              onClick={handleNewChatClick}
+              className="w-full py-2.5 px-3 rounded-xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-[#181d24] hover:bg-slate-100 dark:hover:bg-white/[0.06] text-xs font-medium text-slate-800 dark:text-slate-100 flex items-center justify-between transition-all shadow-2xs group cursor-pointer"
+            >
+              <div className="flex items-center space-x-2.5">
+                <div className="w-5 h-5 rounded-md bg-amber-500/10 flex items-center justify-center text-amber-500 group-hover:scale-105 transition-transform">
+                  <Plus className="w-3.5 h-3.5" />
+                </div>
+                <span>Новый чат</span>
+              </div>
+              <span className="text-[10px] text-slate-400 font-mono px-1.5 py-0.5 rounded bg-slate-100 dark:bg-white/[0.06]">
+                ⌘N
+              </span>
+            </button>
+          </div>
+
+          {/* Navigation Section */}
+          <nav className="px-3 pb-2 space-y-1">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = currentTab === item.id;
@@ -74,19 +101,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <button
                   key={item.id}
                   onClick={() => onSelectTab(item.id)}
-                  className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition-all flex items-center justify-between ${
+                  className={`w-full text-left px-3 py-2 rounded-lg text-xs font-medium transition-all flex items-center justify-between cursor-pointer ${
                     isActive
-                      ? "bg-slate-200/80 dark:bg-white/[0.08] text-slate-900 dark:text-slate-100 font-medium"
-                      : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-white/[0.04]"
+                      ? "bg-slate-200/80 dark:bg-white/[0.08] text-slate-900 dark:text-slate-100"
+                      : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/40 dark:hover:bg-white/[0.04]"
                   }`}
                 >
-                  <div className="flex items-center space-x-3 min-w-0">
+                  <div className="flex items-center space-x-2.5 min-w-0">
                     <Icon className={`w-4 h-4 shrink-0 ${isActive ? "text-amber-500 dark:text-amber-400" : "text-slate-400 dark:text-slate-500"}`} />
                     <span className="truncate">{item.label}</span>
                   </div>
 
                   {item.badge && (
-                    <span className="text-[11px] px-2 py-0.5 rounded-full bg-orange-500/15 text-orange-600 dark:text-orange-400 font-medium ml-2 shrink-0">
+                    <span className="text-[11px] px-2 py-0.2 rounded-full bg-orange-500/15 text-orange-600 dark:text-orange-400 font-medium ml-2 shrink-0">
                       {item.badge}
                     </span>
                   )}
@@ -94,10 +121,58 @@ export const Sidebar: React.FC<SidebarProps> = ({
               );
             })}
           </nav>
+
+          {/* Divider */}
+          <div className="mx-3 border-t border-slate-200 dark:border-white/[0.06] my-1" />
+
+          {/* Dialogue History List (ChatGPT style inside single main sidebar) */}
+          <div className="flex-1 overflow-y-auto px-3 py-1 space-y-1 min-h-0">
+            <div className="px-2 py-1 text-[11px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+              Диалоги
+            </div>
+
+            <div className="space-y-0.5">
+              {sessions.map((sess) => {
+                const isActive = currentTab === "ai-chat" && sess.id === activeSessionId;
+                return (
+                  <div
+                    key={sess.id}
+                    onClick={() => {
+                      selectSession(sess.id);
+                      onSelectTab("ai-chat");
+                    }}
+                    className={`group w-full px-2.5 py-2 rounded-lg text-xs cursor-pointer flex items-center justify-between transition-colors ${
+                      isActive
+                        ? "bg-slate-200/90 dark:bg-white/[0.08] text-slate-950 dark:text-slate-100 font-medium shadow-2xs"
+                        : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/40 dark:hover:bg-white/[0.04]"
+                    }`}
+                  >
+                    <div className="flex items-center space-x-2 min-w-0 pr-1">
+                      <MessageSquare className={`w-3.5 h-3.5 shrink-0 ${isActive ? "text-amber-500" : "text-slate-400"}`} />
+                      <span className="truncate text-xs">{sess.title}</span>
+                    </div>
+
+                    {sessions.length > 1 && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          deleteSession(sess.id);
+                        }}
+                        className="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-rose-500 p-0.5 rounded transition-opacity"
+                        title="Удалить чат"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
 
-        {/* Footer: Current User Profile, Settings, Theme & Logout */}
-        <div className="p-3 border-t border-slate-200 dark:border-white/[0.08] space-y-2">
+        {/* Footer: User Profile, Settings, Theme & Logout */}
+        <div className="p-3 border-t border-slate-200 dark:border-white/[0.08] space-y-2 shrink-0">
           {/* User Profile Info + Logout */}
           <div className="px-3 py-2 rounded-lg bg-slate-200/60 dark:bg-white/[0.04] flex items-center justify-between">
             <div className="flex items-center space-x-2.5 min-w-0">
@@ -116,7 +191,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
             <button
               onClick={logout}
-              className="p-1.5 rounded-md text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 transition-colors"
+              className="p-1.5 rounded-md text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 transition-colors cursor-pointer"
               title="Выйти из системы"
             >
               <LogOut className="w-3.5 h-3.5" />
@@ -126,7 +201,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div className="space-y-0.5">
             <button
               onClick={() => setShowSettingsModal(true)}
-              className="w-full text-left px-3 py-1.5 rounded-lg text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-white/[0.04] transition-colors flex items-center space-x-2.5"
+              className="w-full text-left px-3 py-1.5 rounded-lg text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-white/[0.04] transition-colors flex items-center space-x-2.5 cursor-pointer"
             >
               <Settings className="w-3.5 h-3.5 text-slate-400" />
               <span>Настройки</span>
@@ -134,7 +209,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
             <button
               onClick={toggleTheme}
-              className="w-full text-left px-3 py-1.5 rounded-lg text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-white/[0.04] transition-colors flex items-center justify-between"
+              className="w-full text-left px-3 py-1.5 rounded-lg text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-white/[0.04] transition-colors flex items-center justify-between cursor-pointer"
             >
               <div className="flex items-center space-x-2.5">
                 {theme === "dark" ? (
@@ -162,7 +237,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               </h3>
               <button
                 onClick={() => setShowSettingsModal(false)}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -227,7 +302,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   }
                   setShowSettingsModal(false);
                 }}
-                className="px-4 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-medium text-xs transition-colors"
+                className="px-4 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-medium text-xs transition-colors cursor-pointer"
               >
                 Сохранить
               </button>
