@@ -5,6 +5,7 @@ import {
   MessageSquareText,
   Mail,
   FileText,
+  Calendar,
   Settings,
   Sun,
   Moon,
@@ -19,18 +20,22 @@ import { useTheme } from "@/lib/theme-context";
 import { useAuth } from "@/lib/auth-context";
 import { useChat } from "@/lib/chat-context";
 
-export type NavTab = "ai-chat" | "smart-mail" | "project-studio";
+export type NavTab = "ai-chat" | "smart-mail" | "project-studio" | "calendar";
 
 interface SidebarProps {
   currentTab: NavTab;
   onSelectTab: (tab: NavTab) => void;
   pendingMailsCount?: number;
+  isMobileOpen?: boolean;
+  onCloseMobile?: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
   currentTab,
   onSelectTab,
   pendingMailsCount = 2,
+  isMobileOpen = false,
+  onCloseMobile,
 }) => {
   const { theme, toggleTheme } = useTheme();
   const { user, logout } = useAuth();
@@ -50,6 +55,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
       badge: pendingMailsCount > 0 ? `${pendingMailsCount}` : undefined,
     },
     {
+      id: "calendar" as NavTab,
+      label: "Календарь",
+      icon: Calendar,
+    },
+    {
       id: "project-studio" as NavTab,
       label: "Проектирование",
       icon: FileText,
@@ -59,19 +69,56 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const handleNewChatClick = () => {
     createNewChat();
     onSelectTab("ai-chat");
+    onCloseMobile?.();
+  };
+
+  const handleTabClick = (tab: NavTab) => {
+    onSelectTab(tab);
+    onCloseMobile?.();
+  };
+
+  const handleSelectSession = (sessionId: string) => {
+    selectSession(sessionId);
+    onSelectTab("ai-chat");
+    onCloseMobile?.();
   };
 
   return (
     <>
-      <aside className="w-72 border-r border-slate-200 dark:border-white/[0.08] bg-[#f8fafc] dark:bg-[#090d12] flex flex-col justify-between shrink-0 select-none transition-all h-full">
+      {/* Mobile Backdrop */}
+      {isMobileOpen && (
+        <div
+          onClick={onCloseMobile}
+          className="fixed inset-0 bg-black/60 backdrop-blur-xs z-40 md:hidden transition-opacity"
+        />
+      )}
+
+      {/* Main Sidebar (Fixed slide-out on mobile, static flex on desktop) */}
+      <aside
+        className={`w-72 border-r border-slate-200 dark:border-white/[0.08] bg-[#f8fafc] dark:bg-[#090d12] flex flex-col justify-between shrink-0 select-none transition-all h-full z-50 ${
+          isMobileOpen
+            ? "fixed inset-y-0 left-0 shadow-2xl flex"
+            : "hidden md:flex"
+        }`}
+      >
         <div className="flex flex-col flex-1 min-h-0">
-          {/* Brand Header with adapted wide horizontal user logo */}
+          {/* Brand Header with adapted wide horizontal user logo and mobile close button */}
           <div className="px-5 py-4 border-b border-slate-200 dark:border-white/[0.08] flex items-center justify-between">
             <img
               src={theme === "dark" ? "/geo-ai-logo-dark.png" : "/geo-ai-logo-light.png"}
               alt="Geo AI"
-              className="h-8 w-auto max-w-[220px] object-contain transition-all"
+              className="h-8 w-auto max-w-[190px] object-contain transition-all"
             />
+
+            {onCloseMobile && (
+              <button
+                onClick={onCloseMobile}
+                className="md:hidden p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
+                title="Закрыть меню"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            )}
           </div>
 
           {/* New Chat Button (Clean, modern, harmonious with nav items) */}
@@ -87,7 +134,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </button>
           </div>
 
-          {/* Navigation Section */}
+          {/* Navigation Section (4 tabs: Чат с ИИ, Умная почта, Календарь, Проектирование) */}
           <nav className="px-3 pt-1 pb-2 space-y-1">
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -95,10 +142,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
               return (
                 <button
                   key={item.id}
-                  onClick={() => onSelectTab(item.id)}
+                  onClick={() => handleTabClick(item.id)}
                   className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-medium transition-all flex items-center justify-between cursor-pointer ${
                     isActive
-                      ? "bg-slate-200/80 dark:bg-white/[0.08] text-slate-900 dark:text-slate-100 shadow-2xs"
+                      ? "bg-slate-200/80 dark:bg-white/[0.08] text-slate-900 dark:text-slate-100 shadow-2xs font-semibold"
                       : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/40 dark:hover:bg-white/[0.04]"
                   }`}
                 >
@@ -132,10 +179,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 return (
                   <div
                     key={sess.id}
-                    onClick={() => {
-                      selectSession(sess.id);
-                      onSelectTab("ai-chat");
-                    }}
+                    onClick={() => handleSelectSession(sess.id)}
                     className={`group w-full px-2.5 py-2 rounded-xl text-xs cursor-pointer flex items-center justify-between transition-colors ${
                       isActive
                         ? "bg-slate-200/90 dark:bg-white/[0.08] text-slate-950 dark:text-slate-100 font-medium shadow-2xs"

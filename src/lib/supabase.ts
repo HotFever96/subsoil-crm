@@ -85,3 +85,14 @@ export interface ProjectStudioDraft {
     status: "ready" | "in_review" | "generating";
   }[];
 }
+
+export interface CalendarEvent {
+  id: string;
+  title: string;
+  date: string; // YYYY-MM-DD
+  time?: string; // HH:mm
+  description?: string;
+  tag: "Проверка" | "Дедлайн" | "Встреча" | "Отчет";
+  priority: "CRITICAL" | "HIGH" | "NORMAL";
+  license_code?: string;
+}
