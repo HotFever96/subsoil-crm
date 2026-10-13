@@ -56,16 +56,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
     <>
       <aside className="w-64 border-r border-slate-200 dark:border-white/[0.08] bg-[#f8fafc] dark:bg-[#0e1217] flex flex-col justify-between shrink-0 select-none transition-colors">
         <div>
-          {/* Brand Header */}
-          <div className="px-5 py-4 border-b border-slate-200 dark:border-white/[0.08] flex items-center space-x-3">
-            <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-amber-500 shrink-0">
-              <Layers className="w-4 h-4" />
-            </div>
-            <div className="min-w-0">
-              <div className="font-semibold text-sm text-slate-900 dark:text-slate-100 tracking-tight">
-                Geo AI
-              </div>
-            </div>
+          {/* Brand Header with stylish PNG logo */}
+          <div className="px-5 py-4 border-b border-slate-200 dark:border-white/[0.08] flex items-center">
+            <img
+              src={theme === "dark" ? "/geo-ai-logo-dark.png" : "/geo-ai-logo-transparent.png"}
+              alt="Geo AI"
+              className="h-8 w-auto object-contain"
+            />
           </div>
 
           {/* Navigation Section (strictly 3 items) */}
@@ -187,6 +184,27 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
               <div>
                 <label className="block text-slate-500 dark:text-slate-400 mb-1">
+                  Основная модель ИИ:
+                </label>
+                <select
+                  id="openrouter-model-select"
+                  className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-[#12161c] border border-slate-200 dark:border-white/[0.08] text-slate-900 dark:text-slate-100 focus:outline-none focus:border-amber-500/50 text-xs"
+                  defaultValue={typeof window !== "undefined" ? localStorage.getItem("geonedra_openrouter_model") || "anthropic/claude-3.7-sonnet" : "anthropic/claude-3.7-sonnet"}
+                >
+                  <option value="anthropic/claude-3.7-sonnet">Claude 3.7 Sonnet (Флагман, рекомендуется)</option>
+                  <option value="anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet</option>
+                  <option value="anthropic/claude-3.5-haiku">Claude 3.5 Haiku (Быстрая и экономичная)</option>
+                  <option value="google/gemini-2.5-flash">Google Gemini 2.5 Flash</option>
+                  <option value="openai/gpt-4o">OpenAI GPT-4o</option>
+                  <option value="deepseek/deepseek-chat">DeepSeek V3</option>
+                </select>
+                <p className="text-[10px] text-slate-400 mt-1">
+                  Если у модели нет свободных серверов, система автоматически переключится на резервные.
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-slate-500 dark:text-slate-400 mb-1">
                   Адрес базы Supabase:
                 </label>
                 <input
@@ -202,8 +220,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <button
                 onClick={() => {
                   const input = document.getElementById("openrouter-key-input") as HTMLInputElement | null;
-                  if (input && typeof window !== "undefined") {
-                    localStorage.setItem("geonedra_openrouter_key", input.value.trim());
+                  const modelSelect = document.getElementById("openrouter-model-select") as HTMLSelectElement | null;
+                  if (typeof window !== "undefined") {
+                    if (input) localStorage.setItem("geonedra_openrouter_key", input.value.trim());
+                    if (modelSelect) localStorage.setItem("geonedra_openrouter_model", modelSelect.value);
                   }
                   setShowSettingsModal(false);
                 }}

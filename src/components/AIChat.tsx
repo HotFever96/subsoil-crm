@@ -133,6 +133,7 @@ export const AIChat: React.FC = () => {
 
     try {
       const storedKey = typeof window !== "undefined" ? localStorage.getItem("geonedra_openrouter_key") : null;
+      const storedModel = typeof window !== "undefined" ? localStorage.getItem("geonedra_openrouter_model") : null;
       const res = await fetch("/api/legal-chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -140,6 +141,7 @@ export const AIChat: React.FC = () => {
           messages: updatedMessages.map((m) => ({ role: m.role, content: m.content })),
           userMessage: text,
           apiKey: storedKey || undefined,
+          model: storedModel || undefined,
         }),
       });
 

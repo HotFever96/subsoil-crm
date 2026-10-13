@@ -16,14 +16,14 @@ const GENERAL_ASSISTANT_SYSTEM_PROMPT = `Ты — универсальный, в
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { messages, userMessage, apiKey } = body;
+    const { messages, userMessage, apiKey, model } = body;
 
     // Check API Key
     const effectiveApiKey = (apiKey && typeof apiKey === "string" && apiKey.trim()) || process.env.OPENROUTER_API_KEY;
 
     if (!effectiveApiKey || !effectiveApiKey.trim()) {
       return NextResponse.json({
-        content: `Для работы универсального ИИ-ассистента на базе **Claude 3.5 Sonnet** требуется API-ключ OpenRouter.\n\nПожалуйста, укажите ваш ключ в **Настройках** (шестеренка в левом нижнем углу меню) или настройте переменную окружения \`OPENROUTER_API_KEY\` в Vercel/хостинге.`,
+        content: `Для работы универсального ИИ-ассистента на базе Claude / OpenRouter требуется API-ключ.\n\nПожалуйста, укажите ваш ключ в **Настройках** (шестеренка в левом нижнем углу меню) или настройте переменную окружения \`OPENROUTER_API_KEY\` в Vercel/хостинге.`,
         source: "notice",
       });
     }
@@ -49,10 +49,10 @@ export async function POST(req: NextRequest) {
       formattedMessages.push({ role: "user", content: String(userMessage) });
     }
 
-    // Call Claude 3.5 Sonnet via OpenRouter
+    // Call OpenRouter with chosen model and automatic multi-tier fallback
     try {
       const openRouterResponse = await callOpenRouter({
-        model: "anthropic/claude-3.5-sonnet",
+        model: model || "anthropic/claude-3.7-sonnet",
         messages: formattedMessages,
         temperature: 0.3,
         max_tokens: 4000,
@@ -62,6 +62,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({
           content: openRouterResponse.choices[0].message.content,
           source: "openrouter",
+          usedModel: openRouterResponse.model,
         });
       }
 
@@ -70,7 +71,7 @@ export async function POST(req: NextRequest) {
       console.error("OpenRouter request failed:", apiError?.message || apiError);
       const errorMsg = apiError?.message || "Ошибка подключения к серверу OpenRouter";
       return NextResponse.json({
-        content: `⚠️ **Не удалось получить ответ от Claude 3.5 Sonnet**\n\nПричина: ${errorMsg}\n\nПожалуйста, проверьте:\n1. Корректность API-ключа в **Настройках**;\n2. Наличие положительного баланса кредитов в вашем аккаунте OpenRouter;\n3. Доступность API-сервера.`,
+        content: `⚠️ **Не удалось получить ответ от языковой модели**\n\nПричина: ${errorMsg}\n\nПожалуйста, проверьте:\n1. Корректность API-ключа в **Настройках**;\n2. Наличие положительного баланса кредитов в вашем аккаунте OpenRouter;\n3. В **Настройках** (шестеренка в сайдбаре) вы можете переключить модель (например, на Claude 3.7 Sonnet, Gemini 2.5 Flash или GPT-4o).`,
         source: "error",
       });
     }
