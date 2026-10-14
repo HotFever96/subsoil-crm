@@ -16,12 +16,19 @@ import { useAuth } from "@/lib/auth-context";
 export const ProjectStudio: React.FC = () => {
   const { user } = useAuth();
   const currentUsername = user?.username ? user.username.trim().toLowerCase() : "";
-  const storageKey = `geo_ai_project_categories_${currentUsername || "guest"}_v2`;
+  const storageKey = `geo_ai_project_categories_${currentUsername || "guest"}_v3`;
 
   const [metadata, setMetadata] = useState<MiningProjectMetadata>(DEFAULT_MINING_PROJECT);
   const [categories, setCategories] = useState<ProjectCategory[]>(INITIAL_PROJECT_CATEGORIES);
   const [activeSubSectionId, setActiveSubSectionId] = useState<string>("sub-1-1");
-  const [openCategoryIds, setOpenCategoryIds] = useState<string[]>(["cat-1", "cat-2", "cat-3", "cat-4", "cat-5"]);
+  const [openCategoryIds, setOpenCategoryIds] = useState<string[]>([
+    "cat-1",
+    "cat-2",
+    "cat-3",
+    "cat-4",
+    "cat-5",
+    "cat-6",
+  ]);
   const [isExporting, setIsExporting] = useState(false);
   const [viewMode, setViewMode] = useState<"INTERACTIVE" | "FULL_PREVIEW">("INTERACTIVE");
 
@@ -33,10 +40,11 @@ export const ProjectStudio: React.FC = () => {
     }
     try {
       localStorage.removeItem(`geo_ai_project_categories_${currentUsername}_v1`);
+      localStorage.removeItem(`geo_ai_project_categories_${currentUsername}_v2`);
       const saved = localStorage.getItem(storageKey);
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
+        if (Array.isArray(parsed) && parsed.length === INITIAL_PROJECT_CATEGORIES.length) {
           setCategories(parsed);
           return;
         }
@@ -100,9 +108,9 @@ export const ProjectStudio: React.FC = () => {
       case "APPROVED":
         return <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" title="Утверждено" />;
       case "AI_DRAFT":
-        return <span className="w-2 h-2 rounded-full bg-sky-500 shrink-0" title="Черновик ИИ" />;
+        return <span className="w-2 h-2 rounded-full bg-amber-500 shrink-0" title="Черновик на проверку" />;
       case "NEEDS_DATA":
-        return <span className="w-2 h-2 rounded-full bg-rose-500 shrink-0" title="Требует данных" />;
+        return <span className="w-2 h-2 rounded-full bg-rose-500 shrink-0" title="Ожидает исходных данных" />;
     }
   };
 
