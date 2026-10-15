@@ -26,7 +26,7 @@ ${JSON.stringify(projectData.parameters, null, 2)}
 Составь исчерпывающий, профессиональный текст раздела с таблицами параметров, обоснованием выбранной системы разработки, балансом запасов и мерами промышленной безопасности.`;
 
     const openRouterResponse = await callOpenRouter({
-      model: "anthropic/claude-3.5-sonnet",
+      model: "anthropic/claude-sonnet-4.6",
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt },

@@ -19,9 +19,9 @@ export interface OpenRouterRequestPayload {
 
 // Tiered High-Performance Models Chain
 // Strictly flagship models that maintain complete JSON structure & Function Calling
-export const PRIMARY_MODEL = "anthropic/claude-3.5-sonnet";
-export const FALLBACK_MODEL_1 = "openai/gpt-4o";
-export const FALLBACK_MODEL_2 = "google/gemini-2.5-pro";
+export const PRIMARY_MODEL = "anthropic/claude-sonnet-4.6";
+export const FALLBACK_MODEL_1 = "openai/gpt-5.4";
+export const FALLBACK_MODEL_2 = "google/gemini-3.8-flash";
 
 export const DEFAULT_MODELS_CHAIN = [
   PRIMARY_MODEL,

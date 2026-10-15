@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
     userPrompt += `\nЗадание инженеру:\n${instruction || "На основе предоставленных выше исходных данных произведи строгие расчеты по формулам правил безопасности (ФНиП Ростехнадзора № 505 / Постановление № 800 / ГОСТ 8736-2014), сформируй инженерно-технический текст подраздела с расчетными таблицами и ссылками на нормативные правовые акты РФ."}`;
 
     const openRouterResponse = await callOpenRouter({
-      model: "anthropic/claude-3.5-sonnet",
+      model: "anthropic/claude-sonnet-4.6",
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt },

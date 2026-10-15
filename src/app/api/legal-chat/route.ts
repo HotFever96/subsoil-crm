@@ -526,10 +526,10 @@ export async function POST(req: NextRequest) {
     }
 
     // Model selection: strictly flagship models
-    let chosenModel = model || "anthropic/claude-3.5-sonnet";
+    let chosenModel = model || "anthropic/claude-sonnet-4.6";
     if (Array.isArray(images) && images.length > 0) {
-      if (!chosenModel.includes("claude") && !chosenModel.includes("gpt-4") && !chosenModel.includes("gemini")) {
-        chosenModel = "anthropic/claude-3.5-sonnet";
+      if (!chosenModel.includes("claude") && !chosenModel.includes("gpt") && !chosenModel.includes("gemini")) {
+        chosenModel = "anthropic/claude-sonnet-4.6";
       }
     }
 

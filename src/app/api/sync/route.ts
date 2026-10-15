@@ -401,6 +401,57 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    // 17. Save/Upsert User Settings (preferred_model, display_name)
+    if (action === "save_user_settings") {
+      const { preferred_model, display_name } = payload || {};
+      const settingsObj = {
+        preferred_model: preferred_model || "anthropic/claude-sonnet-4.6",
+        display_name: display_name || username,
+        updated_at: new Date().toISOString(),
+      };
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/chat_messages`, {
+        method: "POST",
+        headers: {
+          ...headers,
+          Prefer: "resolution=merge-duplicates,return=representation",
+        },
+        body: JSON.stringify({
+          id: `settings-${username}`,
+          role: "system",
+          content: JSON.stringify(settingsObj),
+          citations: {
+            type: "user_settings",
+            username,
+            preferred_model: settingsObj.preferred_model,
+          },
+        }),
+      });
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(`Failed to save user settings: ${errText}`);
+      }
+      return NextResponse.json({ success: true, settings: settingsObj });
+    }
+
+    // 18. Get User Settings
+    if (action === "get_user_settings") {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/chat_messages?select=*&role=eq.system&citations->>type=eq.user_settings&citations->>username=eq.${encodeURIComponent(username)}&order=created_at.desc&limit=1`,
+        { headers }
+      );
+      if (!res.ok) {
+        throw new Error(`Supabase settings query failed: ${res.statusText}`);
+      }
+      const rows = await res.json();
+      let settings = null;
+      if (rows.length > 0) {
+        try {
+          settings = typeof rows[0].content === "string" ? JSON.parse(rows[0].content) : rows[0].content;
+        } catch {}
+      }
+      return NextResponse.json({ success: true, settings });
+    }
+
     return NextResponse.json({ error: "Unknown action" }, { status: 400 });
   } catch (err: any) {
     console.error("Supabase sync API error:", err);

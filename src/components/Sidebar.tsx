@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   MessageSquareText,
   Mail,
@@ -42,6 +42,34 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const { sessions, activeSessionId, selectSession, deleteSession, createNewChat } = useChat();
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [nameInput, setNameInput] = useState("");
+  const [selectedModel, setSelectedModel] = useState<string>("anthropic/claude-sonnet-4.6");
+  const [isSavingSettings, setIsSavingSettings] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("geonedra_openrouter_model");
+      if (saved) {
+        setSelectedModel(saved);
+      }
+    }
+    if (user?.username) {
+      fetch("/api/sync", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "get_user_settings", username: user.username }),
+      })
+        .then((r) => r.json())
+        .then((data) => {
+          if (data.success && data.settings?.preferred_model) {
+            setSelectedModel(data.settings.preferred_model);
+            if (typeof window !== "undefined") {
+              localStorage.setItem("geonedra_openrouter_model", data.settings.preferred_model);
+            }
+          }
+        })
+        .catch(() => {});
+    }
+  }, [user?.username]);
 
   const navItems = [
     {
@@ -306,15 +334,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </label>
                 <select
                   id="openrouter-model-select"
-                  className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-[#0c1015] border border-slate-200 dark:border-white/[0.08] text-slate-900 dark:text-slate-100 focus:outline-none focus:border-sky-500/50 text-xs"
-                  defaultValue={typeof window !== "undefined" ? localStorage.getItem("geonedra_openrouter_model") || "anthropic/claude-3.5-sonnet" : "anthropic/claude-3.5-sonnet"}
+                  value={selectedModel}
+                  onChange={(e) => setSelectedModel(e.target.value)}
+                  className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-[#0c1015] border border-slate-200 dark:border-white/[0.08] text-slate-900 dark:text-slate-100 focus:outline-none focus:border-sky-500/50 text-xs font-medium cursor-pointer"
                 >
-                  <option value="anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet (Основная, золотой стандарт)</option>
-                  <option value="openai/gpt-4o">OpenAI GPT-4o (Резерв №1)</option>
-                  <option value="google/gemini-2.5-pro">Google Gemini 2.5 Pro (Резерв №2)</option>
+                  <option value="anthropic/claude-sonnet-4.6">Claude Sonnet 4.6 (Основной флагман, рекомендуется)</option>
+                  <option value="openai/gpt-5.4">OpenAI GPT-5.4 (Резервный флагман)</option>
+                  <option value="google/gemini-3.8-flash">Google Gemini 4 Argon (Высокопроизводительный резерв)</option>
                 </select>
                 <p className="text-[10px] text-slate-400 mt-1">
-                  Надежное резервирование: Claude 3.5 Sonnet → GPT-4o → Gemini 2.5 Pro (без потери качества).
+                  Выбранная модель сохраняется в облаке Supabase и используется как приоритетная с автоматическим отказоустойчивым резервированием.
                 </p>
               </div>
 
@@ -342,19 +371,39 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
             <div className="flex justify-end pt-2">
               <button
-                onClick={() => {
+                disabled={isSavingSettings}
+                onClick={async () => {
+                  setIsSavingSettings(true);
                   if (nameInput.trim()) {
                     updateName(nameInput.trim());
                   }
-                  const modelSelect = document.getElementById("openrouter-model-select") as HTMLSelectElement | null;
-                  if (typeof window !== "undefined" && modelSelect) {
-                    localStorage.setItem("geonedra_openrouter_model", modelSelect.value);
+                  if (typeof window !== "undefined") {
+                    localStorage.setItem("geonedra_openrouter_model", selectedModel);
                   }
+                  if (user?.username) {
+                    try {
+                      await fetch("/api/sync", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                          action: "save_user_settings",
+                          username: user.username,
+                          payload: {
+                            preferred_model: selectedModel,
+                            display_name: nameInput.trim() || user.name,
+                          },
+                        }),
+                      });
+                    } catch (e) {
+                      console.warn("Failed to sync settings to Supabase:", e);
+                    }
+                  }
+                  setIsSavingSettings(false);
                   setShowSettingsModal(false);
                 }}
                 className="px-4 py-1.5 rounded-lg bg-sky-500 hover:bg-sky-400 text-white font-medium text-xs transition-colors cursor-pointer"
               >
-                Сохранить
+                {isSavingSettings ? "Сохранение..." : "Сохранить"}
               </button>
             </div>
           </div>

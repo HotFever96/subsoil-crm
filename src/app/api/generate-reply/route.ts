@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
 Дополнительные указания недропользователя: ${customInstructions || "Сформировать жесткую, но дипломатичную юридическую защиту с подтверждением соблюдения сроков"}`;
 
     const openRouterResponse = await callOpenRouter({
-      model: "anthropic/claude-3.5-sonnet",
+      model: "anthropic/claude-sonnet-4.6",
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt },

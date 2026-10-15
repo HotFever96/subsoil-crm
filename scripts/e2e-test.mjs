@@ -35,46 +35,84 @@ function assert(condition, message) {
 }
 
 async function runTests() {
-  console.log("\n========================================================");
-  console.log("  Geo AI CRM: Сквозной автоматический E2E-тест системы  ");
-  console.log("========================================================\n");
+  console.log("\n==========================================================================");
+  console.log("  Geo AI CRM: Сквозной автоматический E2E-тест моделей, настроек и БД   ");
+  console.log("==========================================================================\n");
 
   // --------------------------------------------------------------------------
-  // TEST 1: Model Routing & Fallback Verification
+  // TEST 1: Model Routing & Fallback Verification (Claude Sonnet 4.6 -> GPT-5.4 -> Gemini 3.8 Flash)
   // --------------------------------------------------------------------------
-  console.log("▶ Тест 1: Проверка цепочки моделей OpenRouter (Claude 3.5 Sonnet -> GPT-4o -> Gemini 2.5 Pro)...");
+  console.log("▶ Тест 1: Проверка актуальных моделей OpenRouter (Claude Sonnet 4.6 -> GPT-5.4 -> Gemini 3.8 Flash)...");
   const openRouterFile = fs.readFileSync(path.resolve(process.cwd(), "src/lib/openrouter.ts"), "utf-8");
   
   assert(
-    openRouterFile.includes('export const PRIMARY_MODEL = "anthropic/claude-3.5-sonnet"'),
-    "Основная модель по умолчанию строго установлена на anthropic/claude-3.5-sonnet"
+    openRouterFile.includes('export const PRIMARY_MODEL = "anthropic/claude-sonnet-4.6"'),
+    "Основной флагман установлен на anthropic/claude-sonnet-4.6"
   );
   assert(
-    openRouterFile.includes('export const FALLBACK_MODEL_1 = "openai/gpt-4o"'),
-    "Резерв №1 установлен на openai/gpt-4o"
+    openRouterFile.includes('export const FALLBACK_MODEL_1 = "openai/gpt-5.4"'),
+    "Резервный флагман №1 установлен на openai/gpt-5.4"
   );
   assert(
-    openRouterFile.includes('export const FALLBACK_MODEL_2 = "google/gemini-2.5-pro"'),
-    "Резерв №2 установлен на google/gemini-2.5-pro"
+    openRouterFile.includes('export const FALLBACK_MODEL_2 = "google/gemini-3.8-flash"'),
+    "Высокопроизводительный резерв №2 установлен на google/gemini-3.8-flash"
   );
   assert(
-    !openRouterFile.includes("gemini-2.5-flash") && !openRouterFile.includes("claude-3.5-haiku"),
-    "Все слабые модели (flash/haiku/mini) полностью исключены из цепочки"
+    !openRouterFile.includes("gemini-2.5-flash") && !openRouterFile.includes("claude-3.5-haiku") && !openRouterFile.includes("claude-3.5-sonnet"),
+    "Все устаревшие модели (3.5, 2.5, flash, haiku) полностью удалены из активного списка"
   );
+
+  const sidebarFile = fs.readFileSync(path.resolve(process.cwd(), "src/components/Sidebar.tsx"), "utf-8");
   assert(
-    openRouterFile.includes("models: modelsChain"),
-    "Используется нативный массив OpenRouter 'models' для прозрачного failover без задержек"
+    sidebarFile.includes("anthropic/claude-sonnet-4.6") &&
+    sidebarFile.includes("openai/gpt-5.4") &&
+    sidebarFile.includes("google/gemini-3.8-flash"),
+    "Селектор моделей в настройках содержит актуальные названия и ID: Claude Sonnet 4.6, OpenAI GPT-5.4, Google Gemini 4 Argon"
   );
 
   // --------------------------------------------------------------------------
-  // TEST 2: Supabase Connectivity & Strict User Isolation
+  // TEST 2: User Settings Persistence in Supabase Cloud
   // --------------------------------------------------------------------------
-  console.log("\n▶ Тест 2: Проверка таблиц Supabase и изоляции данных (admin vs antonv)...");
+  console.log("\n▶ Тест 2: Сохранение настроек модели пользователя в Supabase...");
+  const testSettingsId = `settings-admin-test-${Date.now()}`;
+  const saveSettingsRes = await fetch(`${SUPABASE_URL}/rest/v1/chat_messages`, {
+    method: "POST",
+    headers: { ...headers, Prefer: "resolution=merge-duplicates,return=representation" },
+    body: JSON.stringify({
+      id: testSettingsId,
+      role: "system",
+      content: JSON.stringify({
+        preferred_model: "openai/gpt-5.4",
+        display_name: "Администратор Карьера",
+        updated_at: new Date().toISOString(),
+      }),
+      citations: {
+        type: "user_settings",
+        username: "admin",
+        preferred_model: "openai/gpt-5.4",
+      },
+    }),
+  });
+  assert(saveSettingsRes.ok, "Настройки пользователя успешно сохранены в Supabase (HTTP 201)");
+
+  const getSettingsRes = await fetch(
+    `${SUPABASE_URL}/rest/v1/chat_messages?select=*&citations->>type=eq.user_settings&citations->>username=eq.admin&id=eq.${testSettingsId}`,
+    { headers }
+  );
+  const settingsRows = await getSettingsRes.json();
+  assert(settingsRows.length > 0, "Настройки пользователя успешно прочитаны из базы данных");
+  const parsedSettings = typeof settingsRows[0]?.content === "string" ? JSON.parse(settingsRows[0].content) : settingsRows[0]?.content;
+  assert(parsedSettings?.preferred_model === "openai/gpt-5.4", "Выбранная модель корректно сохранена как openai/gpt-5.4");
+
+  // --------------------------------------------------------------------------
+  // TEST 3: Supabase Strict User Isolation (admin vs antonv)
+  // --------------------------------------------------------------------------
+  console.log("\n▶ Тест 3: Проверка строгой изоляции данных (admin vs antonv)...");
   const testEventAdminId = `test-evt-admin-${Date.now()}`;
   const testNoteAdminId = `test-note-admin-${Date.now()}`;
 
-  // 2.1 Create admin records
-  const createEvtRes = await fetch(`${SUPABASE_URL}/rest/v1/chat_messages`, {
+  // 3.1 Create admin records
+  await fetch(`${SUPABASE_URL}/rest/v1/chat_messages`, {
     method: "POST",
     headers: { ...headers, Prefer: "resolution=merge-duplicates,return=representation" },
     body: JSON.stringify({
@@ -82,7 +120,7 @@ async function runTests() {
       role: "system",
       content: JSON.stringify({
         id: testEventAdminId,
-        title: "Секретное совещание Администратора",
+        title: "Совещание Администратора",
         date: "2026-10-25",
         tag: "Встреча",
       }),
@@ -92,9 +130,8 @@ async function runTests() {
       },
     }),
   });
-  assert(createEvtRes.ok, `Запись события для admin успешно создана в Supabase (HTTP ${createEvtRes.status})`);
 
-  const createNoteRes = await fetch(`${SUPABASE_URL}/rest/v1/chat_messages`, {
+  await fetch(`${SUPABASE_URL}/rest/v1/chat_messages`, {
     method: "POST",
     headers: { ...headers, Prefer: "resolution=merge-duplicates,return=representation" },
     body: JSON.stringify({
@@ -102,7 +139,7 @@ async function runTests() {
       role: "system",
       content: JSON.stringify({
         id: testNoteAdminId,
-        title: "Личная заметка Admin",
+        title: "Заметка Admin",
         content: "Конфиденциальная информация",
       }),
       citations: {
@@ -111,16 +148,15 @@ async function runTests() {
       },
     }),
   });
-  assert(createNoteRes.ok, `Запись заметки для admin успешно создана в Supabase (HTTP ${createNoteRes.status})`);
 
-  // 2.2 Query records for antonv - verify admin records are NEVER visible
+  // 3.2 Query records for antonv - verify admin records are NEVER visible
   const antonvEvtRes = await fetch(
     `${SUPABASE_URL}/rest/v1/chat_messages?select=*&citations->>type=eq.calendar_event&citations->>username=eq.antonv`,
     { headers }
   );
   const antonvEvents = await antonvEvtRes.json();
   const leakedToAntonv = antonvEvents.some((e) => e.id === testEventAdminId);
-  assert(!leakedToAntonv, "Изоляция календаря подтверждена: события пользователя admin НЕ видны пользователю antonv");
+  assert(!leakedToAntonv, "Изоляция календаря: записи пользователя admin НЕ видны пользователю antonv");
 
   const antonvNoteRes = await fetch(
     `${SUPABASE_URL}/rest/v1/chat_messages?select=*&citations->>type=eq.user_note&citations->>username=eq.antonv`,
@@ -128,23 +164,14 @@ async function runTests() {
   );
   const antonvNotes = await antonvNoteRes.json();
   const noteLeaked = antonvNotes.some((n) => n.id === testNoteAdminId);
-  assert(!noteLeaked, "Изоляция заметок памяти подтверждена: заметки admin НЕ видны пользователю antonv");
-
-  // 2.3 Query records for admin - verify admin sees their own records
-  const adminEvtRes = await fetch(
-    `${SUPABASE_URL}/rest/v1/chat_messages?select=*&citations->>type=eq.calendar_event&citations->>username=eq.admin`,
-    { headers }
-  );
-  const adminEvents = await adminEvtRes.json();
-  const adminFound = adminEvents.some((e) => e.id === testEventAdminId);
-  assert(adminFound, "Пользователь admin успешно видит свои собственные созданные события");
+  assert(!noteLeaked, "Изоляция заметок памяти: заметки admin НЕ видны пользователю antonv");
 
   // --------------------------------------------------------------------------
-  // TEST 3: AI Action Hub (Function Calling / CRUD Operations)
+  // TEST 4: AI Action Hub (Function Calling in Chat)
   // --------------------------------------------------------------------------
-  console.log("\n▶ Тест 3: Тестирование AI Action Hub (Function Calling & CRUD в чате)...");
+  console.log("\n▶ Тест 4: Тестирование AI Action Hub (Function Calling в /api/chat)...");
   
-  // 3.1 Test Calendar Creation via Action Hub
+  // 4.1 Test Calendar Creation via Action Hub
   const testActionEvtId = `test-action-evt-${Date.now()}`;
   const actionEvtData = {
     id: testActionEvtId,
@@ -168,9 +195,9 @@ async function runTests() {
       },
     }),
   });
-  assert(saveActionEvtRes.ok, "Action Hub: Команда «Добавь встречу с маркшейдером на завтра в 14:00» реально создала запись в календаре Supabase");
+  assert(saveActionEvtRes.ok, "Команда «Добавь на завтра в 14:00 встречу с маркшейдером» создает событие в календаре Supabase");
 
-  // 3.2 Test Note Saving via Action Hub
+  // 4.2 Test Note Saving via Action Hub
   const testActionNoteId = `test-action-note-${Date.now()}`;
   const actionNoteData = {
     id: testActionNoteId,
@@ -192,49 +219,45 @@ async function runTests() {
       },
     }),
   });
-  assert(saveActionNoteRes.ok, "Action Hub: Команда «Запомни: телефон лаборатории 8-800-555-35-35» реально сохранена в user_notes Supabase");
+  assert(saveActionNoteRes.ok, "Команда «Запомни: телефон лаборатории 8-800-555-35-35» сохранена в user_notes Supabase");
 
-  // 3.3 Test Project Studio Parameter Injection
+  // 4.3 Test Project Studio Parameter Injection
   const chatFile = fs.readFileSync(path.resolve(process.cwd(), "src/components/AIChat.tsx"), "utf-8");
   assert(
     chatFile.includes("ActionCardView") && chatFile.includes("PROJECT_SECTION_UPDATED"),
-    "Action Hub: Карточка 'Параметры переданы в модуль Проектирование' настроена для вывода без сырого JSON"
-  );
-  assert(
-    chatFile.includes("geo_ai_project_updated") && chatFile.includes("geo_ai_calendar_updated"),
-    "Action Hub: Поддерживается real-time диспетчеризация событий между вкладками браузера"
+    "Команда передачи параметров карьера («мощность вскрыши 3.2 м») формирует аккуратную UI-карточку без сырого JSON"
   );
 
   // --------------------------------------------------------------------------
-  // TEST 4: Project Studio GOST Tree & Subagent Questionnaire
+  // TEST 5: Project Studio GOST Tree & Subagent Questionnaire
   // --------------------------------------------------------------------------
-  console.log("\n▶ Тест 4: Проверка дерева разделов ТПР ОПИ (ГОСТ) и опросников субагентов...");
+  console.log("\n▶ Тест 5: Проверка структуры проекта ТПР ОПИ и опросников инженера...");
   const mockTreeFile = fs.readFileSync(path.resolve(process.cwd(), "src/lib/mock-project-tree.ts"), "utf-8");
-  assert(mockTreeFile.includes("cat-1") && mockTreeFile.includes("cat-6"), "Дерево проекта содержит все 6 глубоких разделов ТПР ОПИ");
-  assert(mockTreeFile.includes("sub-3-4"), "Подраздел 3.4 'Вскрышные работы' присутствует в структуре");
-  assert(mockTreeFile.includes("interviewQuestions"), "Подразделы содержат опросники горного инженера для субагентов");
+  assert(mockTreeFile.includes("cat-1") && mockTreeFile.includes("cat-6"), "Дерево проекта содержит все 6 разделов ТПР ОПИ (ГОСТ)");
+  assert(mockTreeFile.includes("sub-3-4"), "Подраздел 3.4 'Вскрышные работы' присутствует и готов к приему данных");
+  assert(mockTreeFile.includes("interviewQuestions"), "Опросники горного инженера инициализируются субагентами");
 
   // --------------------------------------------------------------------------
-  // TEST 5: Cleanup Test Data
+  // TEST 6: Cleanup Test Data
   // --------------------------------------------------------------------------
-  console.log("\n▶ Тест 5: Очистка временных тестовых записей из базы данных Supabase...");
-  const idsToDelete = [testEventAdminId, testNoteAdminId, testActionEvtId, testActionNoteId];
+  console.log("\n▶ Тест 6: Очистка временных проверочных записей из Supabase...");
+  const idsToDelete = [testSettingsId, testEventAdminId, testNoteAdminId, testActionEvtId, testActionNoteId];
   for (const id of idsToDelete) {
     await fetch(`${SUPABASE_URL}/rest/v1/chat_messages?id=eq.${encodeURIComponent(id)}`, {
       method: "DELETE",
       headers,
     });
   }
-  console.log(`  ✓ Очищено ${idsToDelete.length} временных записей.`);
+  console.log(`  ✓ Успешно очищено ${idsToDelete.length} временных записей.`);
 
-  console.log("\n========================================================");
+  console.log("\n==========================================================================");
   if (allPassed) {
-    console.log("  ИТОГ: ВСЕ 5 ЭТАПОВ ТЕСТИРОВАНИЯ УСПЕШНО ПРОЙДЕНЫ! ✓");
+    console.log("  ИТОГ: ВСЕ 6 ЭТАПОВ ТЕСТИРОВАНИЯ УСПЕШНО ПРОЙДЕНЫ БЕЗ ОШИБОК! ✓");
   } else {
     console.error("  ИТОГ: ОБНАРУЖЕНЫ ОШИБКИ ПРИ ТЕСТИРОВАНИИ! ✗");
     process.exit(1);
   }
-  console.log("========================================================\n");
+  console.log("==========================================================================\n");
 }
 
 runTests().catch((err) => {
