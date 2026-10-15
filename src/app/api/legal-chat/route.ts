@@ -525,11 +525,11 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Model selection
-    let chosenModel = model || "anthropic/claude-3.7-sonnet";
+    // Model selection: strictly flagship models
+    let chosenModel = model || "anthropic/claude-3.5-sonnet";
     if (Array.isArray(images) && images.length > 0) {
       if (!chosenModel.includes("claude") && !chosenModel.includes("gpt-4") && !chosenModel.includes("gemini")) {
-        chosenModel = "anthropic/claude-3.7-sonnet";
+        chosenModel = "anthropic/claude-3.5-sonnet";
       }
     }
 

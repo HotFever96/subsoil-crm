@@ -17,6 +17,18 @@ export interface OpenRouterRequestPayload {
   plugins?: Array<{ id: string; [key: string]: unknown }>;
 }
 
+// Tiered High-Performance Models Chain
+// Strictly flagship models that maintain complete JSON structure & Function Calling
+export const PRIMARY_MODEL = "anthropic/claude-3.5-sonnet";
+export const FALLBACK_MODEL_1 = "openai/gpt-4o";
+export const FALLBACK_MODEL_2 = "google/gemini-2.5-pro";
+
+export const DEFAULT_MODELS_CHAIN = [
+  PRIMARY_MODEL,
+  FALLBACK_MODEL_1,
+  FALLBACK_MODEL_2,
+];
+
 export async function callOpenRouter(payload: OpenRouterRequestPayload, userApiKey?: string) {
   // Support both server environment variable and runtime key
   const apiKey = (userApiKey && userApiKey.trim()) || process.env.OPENROUTER_API_KEY;
@@ -26,21 +38,11 @@ export async function callOpenRouter(payload: OpenRouterRequestPayload, userApiK
     return null;
   }
 
-  // Primary model preference
-  const primaryModel = payload.model || "anthropic/claude-3.7-sonnet";
-
-  // Construct priority fallback list
-  const fallbackModels = [
-    primaryModel,
-    "anthropic/claude-3.7-sonnet",
-    "anthropic/claude-3.5-sonnet:beta",
-    "anthropic/claude-3.5-sonnet",
-    "anthropic/claude-3-5-sonnet-20241022",
-    "anthropic/claude-3.5-haiku",
-    "google/gemini-2.5-flash",
-    "openai/gpt-4o",
-  ];
-  const uniqueModels = Array.from(new Set(fallbackModels));
+  // Determine target model chain
+  const requestedModel = payload.model || PRIMARY_MODEL;
+  const modelsChain: string[] = payload.models && payload.models.length > 0
+    ? payload.models
+    : Array.from(new Set([requestedModel, ...DEFAULT_MODELS_CHAIN]));
 
   const executeCall = async (bodyPayload: Record<string, unknown>) => {
     return fetch("https://openrouter.ai/api/v1/chat/completions", {
@@ -55,7 +57,6 @@ export async function callOpenRouter(payload: OpenRouterRequestPayload, userApiK
     });
   };
 
-  // Base parameters
   const baseParams: Record<string, unknown> = {
     messages: payload.messages,
     temperature: payload.temperature ?? 0.3,
@@ -65,23 +66,31 @@ export async function callOpenRouter(payload: OpenRouterRequestPayload, userApiK
     baseParams.plugins = payload.plugins;
   }
 
-  // Tier 1: Try OpenRouter native fallback array
+  // Tier 1: Use OpenRouter native 'models' fallback routing
+  // OpenRouter automatically queries the first model, and seamlessly switches to the next
+  // only if the provider encounters 5xx outages or unavailability.
   try {
     const response = await executeCall({
       ...baseParams,
-      models: uniqueModels,
+      models: modelsChain,
     });
 
     if (response.ok) {
-      return await response.json();
+      const data = await response.json();
+      if (data?.choices?.[0]?.message?.content) {
+        return data;
+      }
+    } else {
+      const statusText = await response.text();
+      console.warn(`OpenRouter batch routing returned ${response.status}:`, statusText);
     }
   } catch (err) {
-    console.warn("OpenRouter models array call failed, trying sequential fallbacks...", err);
+    console.warn("OpenRouter native models routing failed, attempting sequential fallback...", err);
   }
 
-  // Tier 2: Try candidates sequentially if batch fallback didn't resolve
+  // Tier 2: Explicit sequential fallback for server/network errors (5xx/429)
   let lastError = "";
-  for (const candidate of uniqueModels) {
+  for (const candidate of modelsChain) {
     try {
       const response = await executeCall({
         ...baseParams,
@@ -89,11 +98,14 @@ export async function callOpenRouter(payload: OpenRouterRequestPayload, userApiK
       });
 
       if (response.ok) {
-        return await response.json();
+        const data = await response.json();
+        if (data?.choices?.[0]?.message?.content) {
+          return data;
+        }
       } else {
         const errText = await response.text();
         lastError = `OpenRouter (${response.status}): ${errText}`;
-        console.warn(`Model candidate ${candidate} returned ${response.status}:`, errText);
+        console.warn(`Model candidate ${candidate} failed (${response.status}):`, errText);
       }
     } catch (singleErr: unknown) {
       const msg = singleErr instanceof Error ? singleErr.message : String(singleErr);

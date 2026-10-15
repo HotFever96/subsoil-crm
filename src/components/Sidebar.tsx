@@ -307,17 +307,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <select
                   id="openrouter-model-select"
                   className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-[#0c1015] border border-slate-200 dark:border-white/[0.08] text-slate-900 dark:text-slate-100 focus:outline-none focus:border-sky-500/50 text-xs"
-                  defaultValue={typeof window !== "undefined" ? localStorage.getItem("geonedra_openrouter_model") || "anthropic/claude-3.7-sonnet" : "anthropic/claude-3.7-sonnet"}
+                  defaultValue={typeof window !== "undefined" ? localStorage.getItem("geonedra_openrouter_model") || "anthropic/claude-3.5-sonnet" : "anthropic/claude-3.5-sonnet"}
                 >
-                  <option value="anthropic/claude-3.7-sonnet">Claude 3.7 Sonnet (Флагман, рекомендуется)</option>
-                  <option value="anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet</option>
-                  <option value="anthropic/claude-3.5-haiku">Claude 3.5 Haiku (Быстрая и экономичная)</option>
-                  <option value="google/gemini-2.5-flash">Google Gemini 2.5 Flash</option>
-                  <option value="openai/gpt-4o">OpenAI GPT-4o</option>
-                  <option value="deepseek/deepseek-chat">DeepSeek V3</option>
+                  <option value="anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet (Основная, золотой стандарт)</option>
+                  <option value="openai/gpt-4o">OpenAI GPT-4o (Резерв №1)</option>
+                  <option value="google/gemini-2.5-pro">Google Gemini 2.5 Pro (Резерв №2)</option>
                 </select>
                 <p className="text-[10px] text-slate-400 mt-1">
-                  Если у модели нет свободных серверов, система автоматически переключится на резервные.
+                  Надежное резервирование: Claude 3.5 Sonnet → GPT-4o → Gemini 2.5 Pro (без потери качества).
                 </p>
               </div>
 
