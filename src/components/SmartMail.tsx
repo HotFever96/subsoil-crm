@@ -19,11 +19,27 @@ import {
   Shield,
   RefreshCw,
   CheckCircle2,
+  Clock,
 } from "lucide-react";
 import { MailItem, MailboxAccount } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth-context";
 import { MailboxManagerModal } from "./MailboxManagerModal";
 import { getMailboxBadgeStyle, getMailboxDotColor } from "@/lib/mailbox-presets";
+
+function detectDeadlineDate(text?: string): string | null {
+  if (!text) return null;
+  const match = text.match(/(?:до|срок|дедлайн|предоставить до|не позднее)\s*([0-3]?[0-9][./-][0-1]?[0-9][./-][12][0-9]{3})/i);
+  if (match && match[1]) {
+    const parts = match[1].split(/[./-]/);
+    if (parts.length === 3) {
+      const day = parts[0].padStart(2, "0");
+      const month = parts[1].padStart(2, "0");
+      const year = parts[2];
+      return `${year}-${month}-${day}`;
+    }
+  }
+  return null;
+}
 
 type MailFolder = "INBOX" | "SENT" | "DRAFTS";
 
@@ -199,6 +215,59 @@ export const SmartMail: React.FC<SmartMailProps> = ({
     setSelectedMailboxId(mbx.id);
     setActionSuccessMessage(`✓ Письмо успешно принято по IMAP на ящик «${mbx.name}» (${mbx.email})`);
     setTimeout(() => setActionSuccessMessage(null), 5000);
+  };
+
+  // Listen for remote mail events (e.g. AI draft creation from Chat)
+  useEffect(() => {
+    const handleRemoteMail = (e: any) => {
+      const newMail = e?.detail;
+      if (newMail && newMail.id) {
+        setMails((prev) => [newMail, ...prev.filter((m) => m.id !== newMail.id)]);
+      }
+    };
+    window.addEventListener("geo_ai_mail_updated", handleRemoteMail);
+    return () => window.removeEventListener("geo_ai_mail_updated", handleRemoteMail);
+  }, []);
+
+  // Quick action: Add mail deadline to Calendar
+  const handleAddMailToCalendar = async (mail: MailItem, explicitDate?: string) => {
+    const deadlineDate = explicitDate || detectDeadlineDate(mail.incoming_content) || "2026-10-25";
+    const newEvent = {
+      id: `evt-deadline-${Date.now()}`,
+      title: `Дедлайн: ответ для ${mail.agency}`,
+      date: deadlineDate,
+      time: "17:00",
+      description: `По письму № ${mail.incoming_number} от ${mail.date}. Тема: ${mail.subject}`,
+      tag: "Дедлайн" as const,
+      priority: "HIGH" as const,
+    };
+
+    // Save to user calendar storage
+    const calKey = `geo_ai_calendar_events_${currentUsername || "guest"}_v4`;
+    try {
+      const raw = localStorage.getItem(calKey);
+      const existing = raw ? JSON.parse(raw) : [];
+      const merged = [newEvent, ...existing.filter((e: any) => e.id !== newEvent.id)];
+      localStorage.setItem(calKey, JSON.stringify(merged));
+    } catch {}
+
+    // Dispatch event so Calendar updates immediately
+    window.dispatchEvent(new CustomEvent("geo_ai_calendar_updated", { detail: newEvent }));
+
+    // Sync to Supabase
+    if (currentUsername) {
+      await fetch("/api/sync", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "save_calendar_event",
+          payload: { event: newEvent, username: currentUsername },
+        }),
+      }).catch((e) => console.error("Error saving calendar event:", e));
+    }
+
+    setActionSuccessMessage(`Дедлайн успешно добавлен в Календарь на ${deadlineDate}!`);
+    setTimeout(() => setActionSuccessMessage(null), 4000);
   };
 
   // Filter letters by Mailbox selector AND Folder
@@ -725,15 +794,52 @@ export const SmartMail: React.FC<SmartMailProps> = ({
               </div>
             </div>
 
-            {currentMail.license_code && (
-              <span className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-white/[0.06] text-xs font-mono text-slate-600 dark:text-slate-300">
-                {currentMail.license_code}
-              </span>
-            )}
+            <div className="flex items-center space-x-2 shrink-0">
+              {currentFolder === "INBOX" && (
+                <button
+                  type="button"
+                  onClick={() => handleAddMailToCalendar(currentMail)}
+                  className="px-3 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30 text-xs font-semibold flex items-center space-x-1.5 transition-colors cursor-pointer shadow-2xs"
+                  title="Создать дедлайн или событие в Календаре"
+                >
+                  <Calendar className="w-3.5 h-3.5 text-amber-500" />
+                  <span>В календарь (Дедлайн)</span>
+                </button>
+              )}
+
+              {currentMail.license_code && (
+                <span className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-white/[0.06] text-xs font-mono text-slate-600 dark:text-slate-300">
+                  {currentMail.license_code}
+                </span>
+              )}
+            </div>
           </div>
 
           {/* Letter Body & AI Draft Area */}
           <div className="flex-1 overflow-y-auto p-6 space-y-6">
+            {/* Auto-detected deadline banner */}
+            {(() => {
+              const detected = detectDeadlineDate(currentMail.incoming_content);
+              if (!detected || currentFolder !== "INBOX") return null;
+              return (
+                <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between shadow-2xs">
+                  <div className="flex items-center space-x-2.5">
+                    <Clock className="w-4 h-4 text-amber-500 shrink-0" />
+                    <span className="text-xs text-amber-950 dark:text-amber-200">
+                      ИИ обнаружил крайний срок ответа: <strong>{detected}</strong>
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleAddMailToCalendar(currentMail, detected)}
+                    className="px-3 py-1 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold text-xs transition-colors cursor-pointer shadow-2xs"
+                  >
+                    + Добавить в календарь
+                  </button>
+                </div>
+              );
+            })()}
+
             {/* Original content */}
             <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#181d24] border border-slate-200/80 dark:border-white/[0.06]">
               <div className="text-[11px] font-medium text-slate-400 uppercase tracking-wider mb-2">

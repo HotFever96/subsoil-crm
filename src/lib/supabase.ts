@@ -67,11 +67,44 @@ export interface MailItem {
   recipient?: string;
 }
 
+export interface UserNote {
+  id: string;
+  title: string;
+  content: string;
+  category?: "contacts" | "tasks" | "general" | "equipment" | "legal" | string;
+  created_at?: string;
+  tags?: string[];
+}
+
+export interface ChatActionPayload {
+  type:
+    | "CALENDAR_CREATED"
+    | "CALENDAR_UPDATED"
+    | "CALENDAR_DELETED"
+    | "MAIL_DRAFT_CREATED"
+    | "NOTE_SAVED"
+    | "PROJECT_SECTION_UPDATED";
+  title?: string;
+  date?: string;
+  time?: string;
+  tag?: string;
+  priority?: string;
+  agency?: string;
+  subject?: string;
+  sectionCode?: string;
+  sectionTitle?: string;
+  content?: string;
+  description?: string;
+  details?: string | Record<string, any>;
+  data?: any;
+}
+
 export interface ChatMessage {
   id: string;
   role: "user" | "assistant" | "system";
   content: string;
   created_at: string;
+  actions?: ChatActionPayload[];
   citations?: {
     law_article: string;
     title: string;

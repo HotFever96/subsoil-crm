@@ -23,8 +23,14 @@ import {
   Mic,
   MicOff,
   AlertCircle,
+  Calendar,
+  Mail,
+  Sparkles,
+  Sliders,
+  CheckCircle2,
+  Trash2,
 } from "lucide-react";
-import { ChatMessage } from "@/lib/supabase";
+import { ChatMessage, ChatActionPayload } from "@/lib/supabase";
 import { MarkdownView } from "@/components/MarkdownView";
 import { useChat } from "@/lib/chat-context";
 import { useAuth } from "@/lib/auth-context";
@@ -44,6 +50,154 @@ interface AttachedFile {
   previewUrl?: string;
   content?: string;
 }
+
+const renderActionDetails = (details?: string | Record<string, any>) => {
+  if (!details) return "";
+  return typeof details === "string" ? details : JSON.stringify(details);
+};
+
+const ActionCardView: React.FC<{ action: ChatActionPayload }> = ({ action }) => {
+  if (action.type === "CALENDAR_CREATED") {
+    return (
+      <div className="flex items-start space-x-3 p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-950 dark:text-emerald-200 shadow-2xs my-2">
+        <div className="p-2 rounded-xl bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 shrink-0">
+          <Calendar className="w-4 h-4" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center space-x-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+            <CheckCircle2 className="w-3.5 h-3.5" />
+            <span>Событие добавлено в Календарь</span>
+          </div>
+          <div className="text-sm font-bold text-slate-900 dark:text-white truncate mt-0.5">
+            {action.title}
+          </div>
+          {action.details && (
+            <div className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
+              📅 {renderActionDetails(action.details)}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  if (action.type === "CALENDAR_UPDATED") {
+    return (
+      <div className="flex items-start space-x-3 p-3.5 rounded-2xl bg-sky-500/10 border border-sky-500/30 text-sky-950 dark:text-sky-200 shadow-2xs my-2">
+        <div className="p-2 rounded-xl bg-sky-500/20 text-sky-600 dark:text-sky-400 shrink-0">
+          <RotateCw className="w-4 h-4" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center space-x-1.5 text-xs font-semibold text-sky-600 dark:text-sky-400">
+            <CheckCircle2 className="w-3.5 h-3.5" />
+            <span>Событие перенесено в Календаре</span>
+          </div>
+          <div className="text-sm font-bold text-slate-900 dark:text-white truncate mt-0.5">
+            {action.title}
+          </div>
+          {action.details && (
+            <div className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
+              🕒 {renderActionDetails(action.details)}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  if (action.type === "CALENDAR_DELETED") {
+    return (
+      <div className="flex items-start space-x-3 p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-950 dark:text-rose-200 shadow-2xs my-2">
+        <div className="p-2 rounded-xl bg-rose-500/20 text-rose-600 dark:text-rose-400 shrink-0">
+          <Trash2 className="w-4 h-4" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center space-x-1.5 text-xs font-semibold text-rose-600 dark:text-rose-400">
+            <CheckCircle2 className="w-3.5 h-3.5" />
+            <span>Событие удалено из Календаря</span>
+          </div>
+          <div className="text-sm font-bold text-slate-900 dark:text-white truncate mt-0.5">
+            {action.title}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (action.type === "MAIL_DRAFT_CREATED") {
+    return (
+      <div className="flex items-start space-x-3 p-3.5 rounded-2xl bg-purple-500/10 border border-purple-500/30 text-purple-950 dark:text-purple-200 shadow-2xs my-2">
+        <div className="p-2 rounded-xl bg-purple-500/20 text-purple-600 dark:text-purple-400 shrink-0">
+          <Mail className="w-4 h-4" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center space-x-1.5 text-xs font-semibold text-purple-600 dark:text-purple-400">
+            <CheckCircle2 className="w-3.5 h-3.5" />
+            <span>Черновик сохранен в «Умной почте»</span>
+          </div>
+          <div className="text-sm font-bold text-slate-900 dark:text-white truncate mt-0.5">
+            {action.title}
+          </div>
+          {action.details && (
+            <div className="text-xs text-slate-600 dark:text-slate-300 mt-0.5 truncate">
+              ✉️ Тема: {renderActionDetails(action.details)}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  if (action.type === "NOTE_SAVED") {
+    return (
+      <div className="flex items-start space-x-3 p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-950 dark:text-amber-200 shadow-2xs my-2">
+        <div className="p-2 rounded-xl bg-amber-500/20 text-amber-600 dark:text-amber-400 shrink-0">
+          <Sparkles className="w-4 h-4" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center space-x-1.5 text-xs font-semibold text-amber-600 dark:text-amber-400">
+            <CheckCircle2 className="w-3.5 h-3.5" />
+            <span>Заметка сохранена в долгосрочную память</span>
+          </div>
+          <div className="text-sm font-bold text-slate-900 dark:text-white truncate mt-0.5">
+            {action.title}
+          </div>
+          {action.details && (
+            <div className="text-xs text-slate-600 dark:text-slate-300 mt-0.5 whitespace-pre-wrap">
+              📌 {renderActionDetails(action.details)}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  if (action.type === "PROJECT_SECTION_UPDATED") {
+    return (
+      <div className="flex items-start space-x-3 p-3.5 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-950 dark:text-indigo-200 shadow-2xs my-2">
+        <div className="p-2 rounded-xl bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 shrink-0">
+          <Sliders className="w-4 h-4" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center space-x-1.5 text-xs font-semibold text-indigo-600 dark:text-indigo-400">
+            <CheckCircle2 className="w-3.5 h-3.5" />
+            <span>Параметры переданы в модуль «Проектирование»</span>
+          </div>
+          <div className="text-sm font-bold text-slate-900 dark:text-white truncate mt-0.5">
+            {action.title}
+          </div>
+          {action.details && (
+            <div className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
+              🏗️ {renderActionDetails(action.details)}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  return null;
+};
 
 export const AIChat: React.FC = () => {
   const { user } = useAuth();
@@ -322,6 +476,8 @@ export const AIChat: React.FC = () => {
           messages: updatedMessages.map((m) => ({ role: m.role, content: m.content })),
           userMessage: text,
           userName: user?.name,
+          username: user?.username,
+          userId: user?.username,
           apiKey: storedKey || undefined,
           model: storedModel || undefined,
           mode: styleMode,
@@ -337,9 +493,66 @@ export const AIChat: React.FC = () => {
         role: "assistant",
         content: data.content || "Ответ сформирован.",
         created_at: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        actions: data.actions && Array.isArray(data.actions) && data.actions.length > 0 ? data.actions : undefined,
       };
 
       setSessionMessages(activeSession.id, [...updatedMessages, assistantMsg]);
+
+      // Synchronize local caches and notify other CRM modules immediately
+      if (data.actions && Array.isArray(data.actions) && data.actions.length > 0) {
+        const currentUsername = user?.username ? user.username.trim().toLowerCase() : "";
+        data.actions.forEach((act: ChatActionPayload) => {
+          if ((act.type === "CALENDAR_CREATED" || act.type === "CALENDAR_UPDATED") && act.data) {
+            const calKey = `geo_ai_calendar_events_${currentUsername || "guest"}_v4`;
+            try {
+              const raw = localStorage.getItem(calKey);
+              const existing = raw ? JSON.parse(raw) : [];
+              const merged = [act.data, ...existing.filter((e: any) => e.id !== act.data.id)];
+              localStorage.setItem(calKey, JSON.stringify(merged));
+            } catch {}
+            window.dispatchEvent(new CustomEvent("geo_ai_calendar_updated", { detail: act.data }));
+          } else if (act.type === "CALENDAR_DELETED" && act.data) {
+            const calKey = `geo_ai_calendar_events_${currentUsername || "guest"}_v4`;
+            try {
+              const raw = localStorage.getItem(calKey);
+              const existing = raw ? JSON.parse(raw) : [];
+              const filtered = existing.filter((e: any) => e.id !== act.data.id);
+              localStorage.setItem(calKey, JSON.stringify(filtered));
+            } catch {}
+            window.dispatchEvent(new CustomEvent("geo_ai_calendar_updated", { detail: act.data }));
+          } else if (act.type === "PROJECT_SECTION_UPDATED" && act.data) {
+            const projKey = `geo_ai_project_categories_${currentUsername || "guest"}_v3`;
+            try {
+              const raw = localStorage.getItem(projKey);
+              if (raw) {
+                const cats = JSON.parse(raw);
+                if (Array.isArray(cats)) {
+                  const secCode = act.data.sectionCode;
+                  const updatedCats = cats.map((cat: any) => ({
+                    ...cat,
+                    subsections: cat.subsections.map((sub: any) => {
+                      if (sub.code === secCode || sub.title?.includes(secCode)) {
+                        return {
+                          ...sub,
+                          parameters: { ...(sub.parameters || {}), ...(act.data.parameters || {}) },
+                          status: "AI_DRAFT",
+                        };
+                      }
+                      return sub;
+                    }),
+                  }));
+                  localStorage.setItem(projKey, JSON.stringify(updatedCats));
+                }
+              }
+            } catch {}
+            window.dispatchEvent(new CustomEvent("geo_ai_project_updated", { detail: act.data }));
+          } else if (act.type === "MAIL_DRAFT_CREATED") {
+            window.dispatchEvent(new CustomEvent("geo_ai_mail_updated", { detail: act.data }));
+          } else if (act.type === "NOTE_SAVED") {
+            window.dispatchEvent(new CustomEvent("geo_ai_note_updated", { detail: act.data }));
+          }
+        });
+      }
     } catch (err) {
       console.error("Chat error:", err);
       const fallbackMsg: ChatMessage = {
@@ -670,6 +883,15 @@ export const AIChat: React.FC = () => {
                               )}
                               <span className="max-w-[170px] truncate">{att.name}</span>
                             </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Action Cards (CRM Function Calling visual badges) */}
+                      {isAssistant && msg.actions && msg.actions.length > 0 && (
+                        <div className="mb-3 space-y-2">
+                          {msg.actions.map((act, aIdx) => (
+                            <ActionCardView key={aIdx} action={act} />
                           ))}
                         </div>
                       )}

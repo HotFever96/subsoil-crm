@@ -102,6 +102,23 @@ export const CalendarModule: React.FC = () => {
         }
       })
       .catch((err) => console.warn("Supabase calendar sync error:", err));
+
+    const handleRemoteUpdate = () => {
+      try {
+        const saved = localStorage.getItem(storageKey);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed)) {
+            setEvents(parsed);
+          }
+        }
+      } catch {}
+    };
+
+    window.addEventListener("geo_ai_calendar_updated", handleRemoteUpdate);
+    return () => {
+      window.removeEventListener("geo_ai_calendar_updated", handleRemoteUpdate);
+    };
   }, [currentUsername, storageKey]);
 
   // 2. Save changes to user-scoped LocalStorage

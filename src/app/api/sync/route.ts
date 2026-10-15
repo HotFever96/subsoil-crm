@@ -289,6 +289,118 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: res.ok });
     }
 
+    // 13. Get user-specific notes and long-term memory
+    if (action === "get_notes") {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/chat_messages?select=*&role=eq.system&citations->>type=eq.user_note&citations->>username=eq.${encodeURIComponent(username)}&order=created_at.desc`,
+        { headers }
+      );
+      if (!res.ok) {
+        throw new Error(`Supabase notes query failed: ${res.statusText}`);
+      }
+      const rows = await res.json();
+      const notes = rows
+        .map((r: any) => {
+          try {
+            return typeof r.content === "string" ? JSON.parse(r.content) : r.content;
+          } catch {
+            return null;
+          }
+        })
+        .filter(Boolean);
+      return NextResponse.json({ success: true, notes });
+    }
+
+    // 14. Save/Upsert user-specific note
+    if (action === "save_note") {
+      const { note } = payload;
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/chat_messages`, {
+        method: "POST",
+        headers: {
+          ...headers,
+          Prefer: "resolution=merge-duplicates,return=representation",
+        },
+        body: JSON.stringify({
+          id: note.id,
+          role: "system",
+          content: JSON.stringify(note),
+          citations: {
+            type: "user_note",
+            username,
+            title: note.title || "",
+            category: note.category || "general",
+            created_at: note.created_at || new Date().toISOString(),
+          },
+        }),
+      });
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(`Failed to save note: ${errText}`);
+      }
+      const data = await res.json();
+      return NextResponse.json({ success: true, data });
+    }
+
+    // 15. Delete user-specific note
+    if (action === "delete_note") {
+      const { noteId } = payload;
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/chat_messages?id=eq.${encodeURIComponent(noteId)}&citations->>username=eq.${encodeURIComponent(username)}`,
+        {
+          method: "DELETE",
+          headers,
+        }
+      );
+      return NextResponse.json({ success: res.ok });
+    }
+
+    // 16. Get Full CRM Context for AI Chat
+    if (action === "get_full_crm_context") {
+      const [eventsRes, mailsRes, notesRes] = await Promise.all([
+        fetch(
+          `${SUPABASE_URL}/rest/v1/chat_messages?select=*&role=eq.system&citations->>type=eq.calendar_event&citations->>username=eq.${encodeURIComponent(username)}&order=created_at.asc`,
+          { headers }
+        ),
+        fetch(
+          `${SUPABASE_URL}/rest/v1/chat_messages?select=*&role=eq.system&citations->>type=eq.mail_item&citations->>username=eq.${encodeURIComponent(username)}&order=created_at.asc`,
+          { headers }
+        ),
+        fetch(
+          `${SUPABASE_URL}/rest/v1/chat_messages?select=*&role=eq.system&citations->>type=eq.user_note&citations->>username=eq.${encodeURIComponent(username)}&order=created_at.desc`,
+          { headers }
+        ),
+      ]);
+
+      const parseJsonRows = async (res: Response) => {
+        if (!res.ok) return [];
+        try {
+          const rows = await res.json();
+          return rows.map((r: any) => {
+            try {
+              return typeof r.content === "string" ? JSON.parse(r.content) : r.content;
+            } catch {
+              return null;
+            }
+          }).filter(Boolean);
+        } catch {
+          return [];
+        }
+      };
+
+      const [events, mails, notes] = await Promise.all([
+        parseJsonRows(eventsRes),
+        parseJsonRows(mailsRes),
+        parseJsonRows(notesRes),
+      ]);
+
+      return NextResponse.json({
+        success: true,
+        events,
+        mails,
+        notes,
+      });
+    }
+
     return NextResponse.json({ error: "Unknown action" }, { status: 400 });
   } catch (err: any) {
     console.error("Supabase sync API error:", err);

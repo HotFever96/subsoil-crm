@@ -51,6 +51,23 @@ export const ProjectStudio: React.FC = () => {
       }
     } catch {}
     setCategories(INITIAL_PROJECT_CATEGORIES);
+
+    const handleRemoteProjectUpdate = () => {
+      try {
+        const saved = localStorage.getItem(storageKey);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length === INITIAL_PROJECT_CATEGORIES.length) {
+            setCategories(parsed);
+          }
+        }
+      } catch {}
+    };
+
+    window.addEventListener("geo_ai_project_updated", handleRemoteProjectUpdate);
+    return () => {
+      window.removeEventListener("geo_ai_project_updated", handleRemoteProjectUpdate);
+    };
   }, [currentUsername, storageKey]);
 
   const saveCategories = (newCategories: ProjectCategory[]) => {

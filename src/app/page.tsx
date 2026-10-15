@@ -79,6 +79,23 @@ export default function Home() {
         }
       })
       .catch((err) => console.warn("Supabase mails sync error:", err));
+
+    const handleRemoteMailUpdate = () => {
+      try {
+        const saved = localStorage.getItem(mailStorageKey);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed)) {
+            setMails(parsed);
+          }
+        }
+      } catch {}
+    };
+
+    window.addEventListener("geo_ai_mail_updated", handleRemoteMailUpdate);
+    return () => {
+      window.removeEventListener("geo_ai_mail_updated", handleRemoteMailUpdate);
+    };
   }, [currentUsername, mailStorageKey]);
 
   const persistMails = (updated: MailItem[]) => {
