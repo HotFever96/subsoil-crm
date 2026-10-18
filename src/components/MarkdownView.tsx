@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import { Check, Copy, FileSpreadsheet, Download } from "lucide-react";
+import { Check, Copy, FileSpreadsheet, Download, FileText, Presentation, FileCheck } from "lucide-react";
 import { FileArtifactCard } from "@/components/FileArtifactCard";
 import { exportToExcel } from "@/lib/file-generator";
+import { tryRepairAndParseJson, extractFileMetadataFallback } from "@/lib/json-repair";
 
 interface MarkdownViewProps {
   content: string;
@@ -38,7 +39,22 @@ export const MarkdownView: React.FC<MarkdownViewProps> = ({ content, className =
   }
 
   if (lastIndex < content.length) {
-    parts.push({ type: "text", content: content.slice(lastIndex) });
+    const leftover = content.slice(lastIndex);
+    // Check if leftover starts with or contains an unclosed code block, e.g. ```file:document\n...
+    const unclosedMatch = /(?:^|\n)```([a-zA-Z0-9_\-:#+]*)\n([\s\S]*)$/.exec(leftover);
+    if (unclosedMatch) {
+      const textBefore = leftover.slice(0, unclosedMatch.index);
+      if (textBefore.trim()) {
+        parts.push({ type: "text", content: textBefore });
+      }
+      parts.push({
+        type: "code",
+        lang: unclosedMatch[1] || "text",
+        content: unclosedMatch[2].trimEnd(),
+      });
+    } else {
+      parts.push({ type: "text", content: leftover });
+    }
   }
 
   const renderInlineFormatted = (text: string) => {
@@ -293,6 +309,14 @@ export const MarkdownView: React.FC<MarkdownViewProps> = ({ content, className =
         continue;
       }
 
+      // Hide stray JSON artifacts from leaking into regular chat paragraphs
+      if (/^\s*"(?:heading|sections|text|title|filename|subtitle|slides|sheets)"\s*:/i.test(line)) {
+        continue;
+      }
+      if (/^\s*[{}\[\],]+\s*$/.test(line)) {
+        continue;
+      }
+
       // Regular paragraph line
       flushList();
       elements.push(
@@ -323,15 +347,20 @@ export const MarkdownView: React.FC<MarkdownViewProps> = ({ content, className =
             lang.startsWith("file:") ||
             lang === "excel" ||
             lang === "presentation" ||
-            lang === "document"
+            lang === "document" ||
+            lang === "docx" ||
+            lang === "pdf" ||
+            lang === "xlsx" ||
+            lang === "pptx"
           ) {
-            try {
-              const cleanType = lang.replace("file:", "").trim();
-              const parsed = JSON.parse(part.content);
-              if (cleanType === "excel" || cleanType === "xlsx") {
+            const cleanType = lang.replace("file:", "").trim();
+            const parsed = tryRepairAndParseJson(part.content);
+
+            if (parsed) {
+              if (cleanType === "excel" || cleanType === "xlsx" || parsed.sheets) {
                 return <FileArtifactCard key={`art-${pIdx}`} type="excel" excelData={parsed} />;
               }
-              if (cleanType === "presentation" || cleanType === "pptx") {
+              if (cleanType === "presentation" || cleanType === "pptx" || parsed.slides) {
                 return (
                   <FileArtifactCard
                     key={`art-${pIdx}`}
@@ -340,12 +369,53 @@ export const MarkdownView: React.FC<MarkdownViewProps> = ({ content, className =
                   />
                 );
               }
-              if (cleanType === "document" || cleanType === "pdf" || cleanType === "docx") {
+              if (cleanType === "document" || cleanType === "pdf" || cleanType === "docx" || parsed.sections) {
                 return <FileArtifactCard key={`art-${pIdx}`} type="document" documentData={parsed} />;
               }
-            } catch (err) {
-              // fallback to regular code block
             }
+
+            // If JSON parsing could not be completed even after repair,
+            // render a graceful in-progress / archived document card instead of dumping raw JSON code!
+            const meta = extractFileMetadataFallback(part.content);
+            const isExcelType = cleanType === "excel" || cleanType === "xlsx";
+            const isPptxType = cleanType === "presentation" || cleanType === "pptx";
+
+            return (
+              <div
+                key={`art-fallback-${pIdx}`}
+                className="my-3 rounded-2xl border border-sky-500/25 bg-sky-500/5 dark:bg-sky-500/10 p-4 transition-all"
+              >
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="flex items-center space-x-3 min-w-0">
+                    <div className="w-10 h-10 rounded-xl bg-sky-500/15 text-sky-600 dark:text-sky-400 flex items-center justify-center shrink-0">
+                      {isExcelType ? (
+                        <FileSpreadsheet className="w-5 h-5 text-emerald-500" />
+                      ) : isPptxType ? (
+                        <Presentation className="w-5 h-5 text-amber-500" />
+                      ) : (
+                        <FileText className="w-5 h-5 text-sky-500" />
+                      )}
+                    </div>
+                    <div className="min-w-0">
+                      <h4 className="text-sm font-semibold text-slate-900 dark:text-slate-100 truncate">
+                        {meta.title}
+                      </h4>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">
+                        {isExcelType ? "Таблица Excel" : isPptxType ? "Презентация" : "Проектный документ"}{" "}
+                        • {meta.approxSectionsCount > 0 ? `${meta.approxSectionsCount} разделов структурировано` : "Параметры зафиксированы"} • Сохранен в Электронном архиве
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-2 shrink-0">
+                    <span className="px-3 py-1 rounded-lg bg-sky-500/15 text-sky-600 dark:text-sky-400 text-xs font-medium flex items-center space-x-1.5">
+                      <FileCheck className="w-3.5 h-3.5" />
+                      <span>В архиве</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            );
           }
 
           const codeIdx = codeBlockCounter++;

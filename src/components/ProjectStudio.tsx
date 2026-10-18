@@ -113,6 +113,43 @@ export const ProjectStudio: React.FC = () => {
     setIsExporting(true);
     try {
       await exportProjectToDocx(metadata, categories);
+
+      // Auto-register exported project in user's Electronic Archive
+      if (currentUsername) {
+        const docName = `ТПР_ОПИ_${metadata.depositName && metadata.depositName !== "—" ? metadata.depositName : "Месторождение"}_${new Date().toISOString().slice(0, 10)}.docx`;
+        const item = {
+          id: `arch-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+          name: docName,
+          category: "project_doc" as const,
+          fileType: "word" as const,
+          size: "4.8 МБ",
+          source: "project_studio" as const,
+          createdAt: new Date().toISOString().slice(0, 10),
+          username: currentUsername,
+          metadata: {
+            licenseNumber: metadata.licenseCode,
+            description: `Сводный технический проект разработки (${metadata.depositName || "ОПИ"}), готовность ${progressPercent}%`,
+            tags: ["ТПР", "Проектирование"],
+          },
+        };
+        const archKey = `geo_ai_archive_${currentUsername}_v1`;
+        try {
+          const raw = localStorage.getItem(archKey);
+          const existing = raw ? JSON.parse(raw) : [];
+          localStorage.setItem(archKey, JSON.stringify([item, ...(Array.isArray(existing) ? existing : [])]));
+          window.dispatchEvent(new Event("geo_ai_archive_updated"));
+        } catch {}
+
+        fetch("/api/sync", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "save_archive_file",
+            username: currentUsername,
+            payload: item,
+          }),
+        }).catch(() => {});
+      }
     } catch (e) {
       console.error(e);
     } finally {

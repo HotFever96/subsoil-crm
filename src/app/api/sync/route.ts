@@ -452,6 +452,69 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: true, settings });
     }
 
+    // 19. Get Archive Files
+    if (action === "get_archive_files") {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/chat_messages?select=*&role=eq.system&citations->>type=eq.archive_file&citations->>username=eq.${encodeURIComponent(username)}&order=created_at.desc`,
+        { headers }
+      );
+      if (!res.ok) {
+        throw new Error(`Supabase archive query failed: ${res.statusText}`);
+      }
+      const rows = await res.json();
+      const files = rows
+        .map((r: any) => {
+          try {
+            return typeof r.content === "string" ? JSON.parse(r.content) : r.content;
+          } catch {
+            return null;
+          }
+        })
+        .filter(Boolean);
+      return NextResponse.json({ success: true, files });
+    }
+
+    // 20. Save/Upsert Archive File
+    if (action === "save_archive_file") {
+      const fileItem = payload;
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/chat_messages`, {
+        method: "POST",
+        headers: {
+          ...headers,
+          Prefer: "resolution=merge-duplicates,return=representation",
+        },
+        body: JSON.stringify({
+          id: `archive-${fileItem.id}`,
+          role: "system",
+          content: JSON.stringify(fileItem),
+          citations: {
+            type: "archive_file",
+            username,
+            category: fileItem.category,
+            fileType: fileItem.fileType,
+          },
+        }),
+      });
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(`Failed to save archive file: ${errText}`);
+      }
+      return NextResponse.json({ success: true, file: fileItem });
+    }
+
+    // 21. Delete Archive File
+    if (action === "delete_archive_file") {
+      const { fileId } = payload;
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/chat_messages?id=eq.archive-${encodeURIComponent(fileId)}&citations->>username=eq.${encodeURIComponent(username)}`,
+        {
+          method: "DELETE",
+          headers,
+        }
+      );
+      return NextResponse.json({ success: res.ok });
+    }
+
     return NextResponse.json({ error: "Unknown action" }, { status: 400 });
   } catch (err: any) {
     console.error("Supabase sync API error:", err);

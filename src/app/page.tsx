@@ -6,6 +6,7 @@ import { AIChat } from "@/components/AIChat";
 import { SmartMail } from "@/components/SmartMail";
 import { ProjectStudio } from "@/components/ProjectStudio";
 import { CalendarModule } from "@/components/CalendarModule";
+import { ElectronicArchive } from "@/components/ElectronicArchive";
 import { LoginScreen } from "@/components/LoginScreen";
 import { useAuth } from "@/lib/auth-context";
 import { useTheme } from "@/lib/theme-context";
@@ -168,6 +169,8 @@ export default function Home() {
         return "Календарь";
       case "project-studio":
         return "Проектирование";
+      case "archive":
+        return "Электронный архив";
       default:
         return "Geo AI";
     }
@@ -245,6 +248,8 @@ export default function Home() {
         {currentTab === "calendar" && <CalendarModule />}
 
         {currentTab === "project-studio" && <ProjectStudio />}
+
+        {currentTab === "archive" && <ElectronicArchive />}
       </main>
     </div>
   );

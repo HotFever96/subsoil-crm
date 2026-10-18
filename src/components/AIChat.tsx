@@ -34,7 +34,8 @@ import { ChatMessage, ChatActionPayload } from "@/lib/supabase";
 import { MarkdownView } from "@/components/MarkdownView";
 import { useChat } from "@/lib/chat-context";
 import { useAuth } from "@/lib/auth-context";
-import { parseUploadedFile } from "@/lib/file-parser";
+import { parseUploadedFile, downloadUploadedFile } from "@/lib/file-parser";
+import { tryRepairAndParseJson } from "@/lib/json-repair";
 import {
   exportToExcel,
   exportToDocx,
@@ -351,6 +352,51 @@ export const AIChat: React.FC = () => {
           content: p.extractedText,
         })),
       ]);
+
+      // Automatically preserve uploaded file in the user's isolated Electronic Archive
+      if (user?.username) {
+        const username = user.username.trim().toLowerCase();
+        const storageKey = `geo_ai_archive_${username}_v1`;
+        try {
+          const existingRaw = localStorage.getItem(storageKey);
+          const existing = existingRaw ? JSON.parse(existingRaw) : [];
+          const newArchiveItems = parsedResults.map((p) => ({
+            id: `arch-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+            name: p.name,
+            category: p.type === "excel" ? "table_calc" : "license",
+            fileType: p.type === "image" ? "image" : p.type === "excel" ? "excel" : p.type === "word" ? "word" : "pdf",
+            size: p.size,
+            source: "chat_upload",
+            createdAt: new Date().toISOString().slice(0, 10),
+            url: p.previewUrl,
+            content: p.extractedText,
+            username,
+            metadata: {
+              description: `Файл прикреплен пользователем в чате с ИИ`,
+              tags: ["Чат", "Вложение"],
+            },
+          }));
+
+          const updatedArchive = [...newArchiveItems, ...(Array.isArray(existing) ? existing : [])];
+          localStorage.setItem(storageKey, JSON.stringify(updatedArchive));
+          window.dispatchEvent(new Event("geo_ai_archive_updated"));
+
+          // Sync to Supabase in background
+          newArchiveItems.forEach((item) => {
+            fetch("/api/sync", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                action: "save_archive_file",
+                username,
+                payload: item,
+              }),
+            }).catch(() => {});
+          });
+        } catch (e) {
+          console.warn("Error auto-saving uploaded files to archive:", e);
+        }
+      }
     } catch (err) {
       console.error("Error parsing uploaded files:", err);
     } finally {
@@ -497,6 +543,66 @@ export const AIChat: React.FC = () => {
       };
 
       setSessionMessages(activeSession.id, [...updatedMessages, assistantMsg]);
+
+      // Auto-archive generated files from assistant response
+      if (data.content && typeof data.content === "string") {
+        const fileBlockRegex = /```(?:file:)?([a-zA-Z0-9_\-]+)\s*([\s\S]*?)```/gi;
+        let match;
+        const currentUsername = user?.username ? user.username.trim().toLowerCase() : "";
+        while ((match = fileBlockRegex.exec(data.content)) !== null) {
+          const rawType = match[1].toLowerCase().replace("file:", "").trim();
+          if (["excel", "presentation", "document", "docx", "pdf", "xlsx", "pptx"].includes(rawType)) {
+            const jsonContent = match[2].trim();
+            const parsed = tryRepairAndParseJson(jsonContent);
+            const title = parsed?.title || parsed?.filename || "Сгенерированный документ";
+            const isExcel = rawType === "excel" || rawType === "xlsx" || parsed?.sheets;
+            const isPptx = rawType === "presentation" || rawType === "pptx" || parsed?.slides;
+            const filename = title.includes(".")
+              ? title
+              : isExcel
+              ? `${title}.xlsx`
+              : isPptx
+              ? `${title}.pptx`
+              : `${title}.docx`;
+
+            const archiveItem = {
+              id: `arch-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+              name: filename,
+              category: isExcel ? ("table_calc" as const) : ("project_doc" as const),
+              fileType: isExcel ? ("excel" as const) : isPptx ? ("presentation" as const) : ("word" as const),
+              size: "1.5 МБ",
+              source: "chat_generated" as const,
+              createdAt: new Date().toISOString().slice(0, 10),
+              rawContent: parsed,
+              username: currentUsername,
+              metadata: {
+                description: parsed?.subtitle || "Документ сгенерирован ИИ-ассистентом в чате",
+                tags: ["ИИ", "Чат", isExcel ? "Таблица" : "Проект"],
+              },
+            };
+
+            const archKey = `geo_ai_archive_${currentUsername || "guest"}_v1`;
+            try {
+              const existingRaw = localStorage.getItem(archKey);
+              const existing = existingRaw ? JSON.parse(existingRaw) : [];
+              localStorage.setItem(archKey, JSON.stringify([archiveItem, ...(Array.isArray(existing) ? existing : [])]));
+              window.dispatchEvent(new Event("geo_ai_archive_updated"));
+            } catch {}
+
+            if (currentUsername) {
+              fetch("/api/sync", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  action: "save_archive_file",
+                  username: currentUsername,
+                  payload: archiveItem,
+                }),
+              }).catch(() => {});
+            }
+          }
+        }
+      }
 
       // Synchronize local caches and notify other CRM modules immediately
       if (data.actions && Array.isArray(data.actions) && data.actions.length > 0) {
@@ -862,9 +968,12 @@ export const AIChat: React.FC = () => {
                       {!isAssistant && msg.attachments && msg.attachments.length > 0 && (
                         <div className="mb-2.5 flex flex-wrap gap-2">
                           {msg.attachments.map((att, idx) => (
-                            <div
+                            <button
                               key={idx}
-                              className="flex items-center space-x-2 rounded-xl bg-black/30 px-3 py-1.5 text-xs text-slate-200 border border-white/10"
+                              type="button"
+                              onClick={() => downloadUploadedFile({ name: att.name, previewUrl: att.previewUrl })}
+                              className="flex items-center space-x-2 rounded-xl bg-black/30 hover:bg-black/50 px-3 py-1.5 text-xs text-slate-200 border border-white/10 hover:border-white/25 transition-all cursor-pointer group/att"
+                              title="Нажмите, чтобы скачать файл"
                             >
                               {att.type === "image" && att.previewUrl ? (
                                 <img
@@ -882,7 +991,8 @@ export const AIChat: React.FC = () => {
                                 <FileText className="w-4 h-4 text-slate-400 shrink-0" />
                               )}
                               <span className="max-w-[170px] truncate">{att.name}</span>
-                            </div>
+                              <Download className="w-3.5 h-3.5 text-slate-400 group-hover/att:text-white transition-colors ml-1 shrink-0" />
+                            </button>
                           ))}
                         </div>
                       )}

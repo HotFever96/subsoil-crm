@@ -28,27 +28,45 @@ export function formatFileSize(bytes: number): string {
   return `${Math.max(1, Math.round(bytes / 1024))} КБ`;
 }
 
+export function downloadUploadedFile(file: { name: string; previewUrl?: string; content?: string }) {
+  if (typeof window === "undefined") return;
+  const target = file.previewUrl || file.content;
+  if (!target) return;
+  const link = document.createElement("a");
+  if (target.startsWith("data:") || target.startsWith("blob:")) {
+    link.href = target;
+  } else {
+    const blob = new Blob([target], { type: "text/plain;charset=utf-8" });
+    link.href = URL.createObjectURL(blob);
+  }
+  link.download = file.name;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
 export async function parseUploadedFile(file: File): Promise<ParsedFileResult> {
   const fileName = file.name;
   const ext = fileName.split(".").pop()?.toLowerCase() || "";
   const size = formatFileSize(file.size);
   const id = `file-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 
+  // Generate a base64 DataURL so the file can be downloaded or previewed anywhere
+  const fileDataUrl = await new Promise<string>((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => resolve((e.target?.result as string) || "");
+    reader.onerror = () => resolve("");
+    reader.readAsDataURL(file);
+  });
+
   // 1. IMAGES
   if (file.type.startsWith("image/") || ["png", "jpg", "jpeg", "webp", "gif", "bmp"].includes(ext)) {
-    const previewUrl = await new Promise<string>((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = (e) => resolve(e.target?.result as string);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-
     return {
       id,
       name: fileName,
       type: "image",
       size,
-      previewUrl,
+      previewUrl: fileDataUrl,
       extractedText: `[Изображение: ${fileName}, размер: ${size}]`,
     };
   }
@@ -69,6 +87,7 @@ export async function parseUploadedFile(file: File): Promise<ParsedFileResult> {
         name: fileName,
         type: "pdf",
         size,
+        previewUrl: fileDataUrl,
         extractedText: extracted,
       };
     } catch (err: any) {
@@ -78,6 +97,7 @@ export async function parseUploadedFile(file: File): Promise<ParsedFileResult> {
         name: fileName,
         type: "pdf",
         size,
+        previewUrl: fileDataUrl,
         extractedText: `[PDF документ: ${fileName}, размер: ${size}. Не удалось извлечь текст напрямую: ${err?.message || "ошибка чтения"}]`,
       };
     }
@@ -140,6 +160,7 @@ export async function parseUploadedFile(file: File): Promise<ParsedFileResult> {
         name: fileName,
         type: "excel",
         size,
+        previewUrl: fileDataUrl,
         extractedText: fullText,
         tableData: { sheets: sheetsData },
       };
@@ -153,6 +174,7 @@ export async function parseUploadedFile(file: File): Promise<ParsedFileResult> {
           name: fileName,
           type: "excel",
           size,
+          previewUrl: fileDataUrl,
           extractedText: `--- ТАБЛИЦА CSV: ${fileName} ---\n${text}`,
         };
       } catch {
@@ -161,6 +183,7 @@ export async function parseUploadedFile(file: File): Promise<ParsedFileResult> {
           name: fileName,
           type: "excel",
           size,
+          previewUrl: fileDataUrl,
           extractedText: `[Таблица: ${fileName}, размер: ${size}]`,
         };
       }
@@ -179,6 +202,7 @@ export async function parseUploadedFile(file: File): Promise<ParsedFileResult> {
         name: fileName,
         type: "word",
         size,
+        previewUrl: fileDataUrl,
         extractedText: `--- ДОКУМЕНТ WORD (.docx): ${fileName} ---\n\n${rawText}`,
       };
     } catch (err: any) {
@@ -188,6 +212,7 @@ export async function parseUploadedFile(file: File): Promise<ParsedFileResult> {
         name: fileName,
         type: "word",
         size,
+        previewUrl: fileDataUrl,
         extractedText: `[Документ Word: ${fileName}, размер: ${size}]`,
       };
     }
@@ -201,6 +226,7 @@ export async function parseUploadedFile(file: File): Promise<ParsedFileResult> {
       name: fileName,
       type: "text",
       size,
+      previewUrl: fileDataUrl,
       extractedText: `--- ФАЙЛ: ${fileName} ---\n\n${text}`,
     };
   } catch (err) {
@@ -209,6 +235,7 @@ export async function parseUploadedFile(file: File): Promise<ParsedFileResult> {
       name: fileName,
       type: "text",
       size,
+      previewUrl: fileDataUrl,
       extractedText: `[Файл: ${fileName}, размер: ${size}]`,
     };
   }

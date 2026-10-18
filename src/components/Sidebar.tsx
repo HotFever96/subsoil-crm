@@ -15,12 +15,13 @@ import {
   X,
   LogOut,
   User,
+  FolderArchive,
 } from "lucide-react";
 import { useTheme } from "@/lib/theme-context";
 import { useAuth } from "@/lib/auth-context";
 import { useChat } from "@/lib/chat-context";
 
-export type NavTab = "ai-chat" | "smart-mail" | "project-studio" | "calendar";
+export type NavTab = "ai-chat" | "smart-mail" | "project-studio" | "calendar" | "archive";
 
 interface SidebarProps {
   currentTab: NavTab;
@@ -92,6 +93,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
       id: "project-studio" as NavTab,
       label: "Проектирование",
       icon: FileText,
+    },
+    {
+      id: "archive" as NavTab,
+      label: "Электронный архив",
+      icon: FolderArchive,
     },
   ];
 

@@ -60,7 +60,7 @@ export async function callOpenRouter(payload: OpenRouterRequestPayload, userApiK
   const baseParams: Record<string, unknown> = {
     messages: payload.messages,
     temperature: payload.temperature ?? 0.3,
-    max_tokens: payload.max_tokens ?? 3500,
+    max_tokens: payload.max_tokens ?? 8192,
   };
   if (payload.plugins && payload.plugins.length > 0) {
     baseParams.plugins = payload.plugins;
