@@ -16,12 +16,29 @@ import {
   LogOut,
   User,
   FolderArchive,
+  ArrowLeftRight,
+  ClipboardList,
+  CalendarClock,
+  Package,
+  Users,
+  Wrench,
+  Car,
 } from "lucide-react";
 import { useTheme } from "@/lib/theme-context";
 import { useAuth } from "@/lib/auth-context";
 import { useChat } from "@/lib/chat-context";
+import { useBusiness } from "@/lib/business-context";
 
-export type NavTab = "ai-chat" | "smart-mail" | "project-studio" | "calendar" | "archive";
+export type NavTab =
+  | "ai-chat"
+  | "smart-mail"
+  | "project-studio"
+  | "calendar"
+  | "archive"
+  | "repair-orders"
+  | "bay-scheduler"
+  | "warehouse-parts"
+  | "garage-clients";
 
 interface SidebarProps {
   currentTab: NavTab;
@@ -41,6 +58,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const { theme, toggleTheme } = useTheme();
   const { user, logout, updateName } = useAuth();
   const { sessions, activeSessionId, selectSession, deleteSession, createNewChat } = useChat();
+  const { currentBusiness, toggleBusiness } = useBusiness();
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [nameInput, setNameInput] = useState("");
   const [selectedModel, setSelectedModel] = useState<string>("anthropic/claude-sonnet-4.6");
@@ -72,7 +90,31 @@ export const Sidebar: React.FC<SidebarProps> = ({
     }
   }, [user?.username]);
 
-  const navItems = [
+  const isChaika = currentBusiness === "chaika-service";
+
+  const handleToggleBusiness = () => {
+    toggleBusiness();
+    if (isChaika) {
+      // Switching to geo-ai
+      if (["repair-orders", "bay-scheduler", "warehouse-parts", "garage-clients"].includes(currentTab)) {
+        onSelectTab("ai-chat");
+      }
+    } else {
+      // Switching to chaika-service
+      if (["smart-mail", "project-studio", "calendar"].includes(currentTab)) {
+        onSelectTab("repair-orders");
+      }
+    }
+  };
+
+  interface SidebarNavItem {
+    id: NavTab;
+    label: string;
+    icon: any;
+    badge?: string;
+  }
+
+  const geoNavItems: SidebarNavItem[] = [
     {
       id: "ai-chat" as NavTab,
       label: "Чат с ИИ",
@@ -100,6 +142,41 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: FolderArchive,
     },
   ];
+
+  const chaikaNavItems: SidebarNavItem[] = [
+    {
+      id: "repair-orders" as NavTab,
+      label: "Заказ-наряды",
+      icon: ClipboardList,
+    },
+    {
+      id: "bay-scheduler" as NavTab,
+      label: "Планировщик постов",
+      icon: CalendarClock,
+    },
+    {
+      id: "warehouse-parts" as NavTab,
+      label: "Склад и Запчасти",
+      icon: Package,
+    },
+    {
+      id: "garage-clients" as NavTab,
+      label: "Клиенты и Автопарк",
+      icon: Users,
+    },
+    {
+      id: "ai-chat" as NavTab,
+      label: "Шеф-мастер (ИИ-чат)",
+      icon: MessageSquareText,
+    },
+    {
+      id: "archive" as NavTab,
+      label: "Электронный архив",
+      icon: FolderArchive,
+    },
+  ];
+
+  const navItems = isChaika ? chaikaNavItems : geoNavItems;
 
   const handleNewChatClick = () => {
     createNewChat();
@@ -137,13 +214,55 @@ export const Sidebar: React.FC<SidebarProps> = ({
         }`}
       >
         <div className="flex flex-col flex-1 min-h-0">
-          {/* Brand Header with adapted wide horizontal user logo and mobile close button */}
-          <div className="px-5 py-4 border-b border-slate-200 dark:border-white/[0.08] flex items-center justify-between">
-            <img
-              src={theme === "dark" ? "/geo-ai-logo-dark.png" : "/geo-ai-logo-light.png"}
-              alt="Geo AI"
-              className="h-8 w-auto max-w-[190px] object-contain transition-all"
-            />
+          {/* Brand Header with Interactive Multi-Business Transformer Switcher */}
+          <div className="px-4 py-3.5 border-b border-slate-200 dark:border-white/[0.08] flex items-center justify-between">
+            <button
+              onClick={handleToggleBusiness}
+              className={`flex items-center space-x-2.5 p-1.5 rounded-xl transition-all cursor-pointer group text-left max-w-[215px] border ${
+                isChaika
+                  ? "hover:bg-rose-500/10 border-rose-500/20 bg-rose-500/5 dark:bg-rose-950/20"
+                  : "hover:bg-sky-500/10 border-slate-200/80 dark:border-white/[0.06] bg-white dark:bg-[#131821]"
+              }`}
+              title={isChaika ? "Переключить режим: Нажмите для перехода в GEO AI (Недропользование)" : "Переключить режим: Нажмите для перехода в ЧАЙКА-СЕРВИС (СТО и автопарк)"}
+            >
+              {isChaika ? (
+                <div className="flex items-center space-x-2 min-w-0">
+                  <div className="w-8 h-8 rounded-lg bg-rose-500 flex items-center justify-center text-white shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+                    <Wrench className="w-4 h-4" />
+                  </div>
+                  <div className="min-w-0 flex flex-col">
+                    <div className="flex items-center space-x-1.5">
+                      <span className="font-bold text-xs tracking-tight text-rose-600 dark:text-rose-400 truncate">
+                        ЧАЙКА-СЕРВИС
+                      </span>
+                    </div>
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 truncate font-medium">
+                      CRM СТО & Автопарк
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-2 min-w-0">
+                  <img
+                    src={theme === "dark" ? "/geo-ai-logo-dark.png" : "/geo-ai-logo-light.png"}
+                    alt="Geo AI"
+                    className="h-7 w-auto max-w-[140px] object-contain transition-all"
+                  />
+                </div>
+              )}
+
+              {/* Transformer Switcher Badge */}
+              <div
+                className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 transition-all ${
+                  isChaika
+                    ? "bg-rose-500/15 text-rose-500 group-hover:bg-rose-500 group-hover:text-white"
+                    : "bg-slate-100 dark:bg-white/[0.08] text-slate-500 group-hover:bg-sky-500 group-hover:text-white"
+                }`}
+                title="Сменить бизнес-режим"
+              >
+                <ArrowLeftRight className="w-3 h-3 group-hover:rotate-180 transition-transform duration-300" />
+              </div>
+            </button>
 
             {onCloseMobile && (
               <button
@@ -156,20 +275,28 @@ export const Sidebar: React.FC<SidebarProps> = ({
             )}
           </div>
 
-          {/* New Chat Button (Clean, modern, harmonious with nav items) */}
+          {/* New Chat Button */}
           <div className="px-3 pt-3 pb-1">
             <button
               onClick={handleNewChatClick}
-              className="w-full text-left px-3 py-2.5 rounded-xl text-xs font-medium transition-all flex items-center space-x-3 cursor-pointer bg-white dark:bg-[#131821] hover:bg-slate-100 dark:hover:bg-white/[0.06] text-slate-800 dark:text-slate-100 border border-slate-200/90 dark:border-white/[0.08] shadow-2xs group"
+              className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-medium transition-all flex items-center space-x-3 cursor-pointer bg-white dark:bg-[#131821] hover:bg-slate-100 dark:hover:bg-white/[0.06] text-slate-800 dark:text-slate-100 border border-slate-200/90 dark:border-white/[0.08] shadow-2xs group`}
             >
-              <div className="w-5 h-5 rounded-lg bg-sky-500/10 dark:bg-sky-500/15 flex items-center justify-center text-sky-500 shrink-0 group-hover:scale-110 transition-transform">
+              <div
+                className={`w-5 h-5 rounded-lg flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform ${
+                  isChaika
+                    ? "bg-rose-500/10 dark:bg-rose-500/15 text-rose-500"
+                    : "bg-sky-500/10 dark:bg-sky-500/15 text-sky-500"
+                }`}
+              >
                 <Plus className="w-3.5 h-3.5" />
               </div>
-              <span className="font-medium text-slate-800 dark:text-slate-100">Новый чат</span>
+              <span className="font-medium text-slate-800 dark:text-slate-100">
+                {isChaika ? "Новый запрос шефу" : "Новый чат"}
+              </span>
             </button>
           </div>
 
-          {/* Navigation Section (4 tabs: Чат с ИИ, Умная почта, Календарь, Проектирование) */}
+          {/* Navigation Section */}
           <nav className="px-3 pt-1 pb-2 space-y-1">
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -180,17 +307,33 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   onClick={() => handleTabClick(item.id)}
                   className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-medium transition-all flex items-center justify-between cursor-pointer ${
                     isActive
-                      ? "bg-slate-200/80 dark:bg-white/[0.08] text-slate-900 dark:text-slate-100 shadow-2xs font-semibold"
+                      ? isChaika
+                        ? "bg-rose-500/10 dark:bg-rose-500/15 text-rose-600 dark:text-rose-400 shadow-2xs font-semibold"
+                        : "bg-slate-200/80 dark:bg-white/[0.08] text-slate-900 dark:text-slate-100 shadow-2xs font-semibold"
                       : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/40 dark:hover:bg-white/[0.04]"
                   }`}
                 >
                   <div className="flex items-center space-x-3 min-w-0">
-                    <Icon className={`w-4 h-4 shrink-0 ${isActive ? "text-sky-500 dark:text-sky-400" : "text-slate-400 dark:text-slate-500"}`} />
+                    <Icon
+                      className={`w-4 h-4 shrink-0 ${
+                        isActive
+                          ? isChaika
+                            ? "text-rose-500 dark:text-rose-400"
+                            : "text-sky-500 dark:text-sky-400"
+                          : "text-slate-400 dark:text-slate-500"
+                      }`}
+                    />
                     <span className="truncate">{item.label}</span>
                   </div>
 
                   {item.badge && (
-                    <span className="text-[11px] px-2 py-0.5 rounded-full bg-sky-500/15 text-sky-600 dark:text-sky-400 font-medium ml-2 shrink-0">
+                    <span
+                      className={`text-[11px] px-2 py-0.5 rounded-full font-medium ml-2 shrink-0 ${
+                        isChaika
+                          ? "bg-rose-500/15 text-rose-600 dark:text-rose-400"
+                          : "bg-sky-500/15 text-sky-600 dark:text-sky-400"
+                      }`}
+                    >
                       {item.badge}
                     </span>
                   )}
@@ -222,7 +365,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     }`}
                   >
                     <div className="flex items-center space-x-2.5 min-w-0 pr-1">
-                      <MessageSquare className={`w-3.5 h-3.5 shrink-0 ${isActive ? "text-sky-500" : "text-slate-400"}`} />
+                      <MessageSquare className={`w-3.5 h-3.5 shrink-0 ${isActive ? (isChaika ? "text-rose-500" : "text-sky-500") : "text-slate-400"}`} />
                       <span className="truncate text-xs">{sess.title}</span>
                     </div>
 

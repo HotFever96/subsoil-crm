@@ -515,6 +515,74 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: res.ok });
     }
 
+    // 22. Get Repair Orders (Auto-Service)
+    if (action === "get_repair_orders") {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/chat_messages?select=*&role=eq.system&citations->>type=eq.repair_order&citations->>username=eq.${encodeURIComponent(username)}&order=created_at.desc`,
+        { headers }
+      );
+      if (!res.ok) {
+        throw new Error(`Supabase repair orders query failed: ${res.statusText}`);
+      }
+      const rows = await res.json();
+      const orders = rows
+        .map((r: any) => {
+          try {
+            return typeof r.content === "string" ? JSON.parse(r.content) : r.content;
+          } catch {
+            return null;
+          }
+        })
+        .filter(Boolean);
+      return NextResponse.json({ success: true, orders });
+    }
+
+    // 23. Save/Upsert Repair Order
+    if (action === "save_repair_order") {
+      const order = payload?.order || payload;
+      if (!order?.id) {
+        return NextResponse.json({ error: "Order id is required" }, { status: 400 });
+      }
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/chat_messages`, {
+        method: "POST",
+        headers: {
+          ...headers,
+          Prefer: "resolution=merge-duplicates,return=representation",
+        },
+        body: JSON.stringify({
+          id: `order-${order.id}`,
+          role: "system",
+          content: JSON.stringify(order),
+          citations: {
+            type: "repair_order",
+            username,
+            order_number: order.orderNumber,
+            status: order.status,
+            vehicle: order.vehicle?.plate || "",
+            client: order.client?.name || "",
+          },
+        }),
+      });
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(`Failed to save repair order: ${errText}`);
+      }
+      return NextResponse.json({ success: true, order });
+    }
+
+    // 24. Delete Repair Order
+    if (action === "delete_repair_order") {
+      const { orderId } = payload;
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/chat_messages?id=eq.order-${encodeURIComponent(orderId)}&citations->>username=eq.${encodeURIComponent(username)}`,
+        {
+          method: "DELETE",
+          headers,
+        }
+      );
+      return NextResponse.json({ success: res.ok });
+    }
+
     return NextResponse.json({ error: "Unknown action" }, { status: 400 });
   } catch (err: any) {
     console.error("Supabase sync API error:", err);

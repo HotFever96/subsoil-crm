@@ -133,6 +133,51 @@ const GENERAL_ASSISTANT_SYSTEM_PROMPT = `Ты — центральный инт�
      • Сводная таблица или список ключевых параметров: площадь участка, координаты угловых точек, плановые объемы бурения/горных работ, сроки этапов, согласующие органы (Росгеолэкспертиза, ЦКР-ТПИ / ТКЗ).
   2. В КАРТОЧКЕ \`\`\`file:document: сформируй компактную, емкую и юридически безупречную структуру проекта из 5-8 ключевых разделов с конкретными формулировками, целями и методиками, которая гарантированно укладывается в единый ответ и доступна для скачивания в .docx и сохранения в PDF.`;
 
+const CHAIKA_SERVICE_SYSTEM_PROMPT = `Ты — Шеф-мастер (AI Chief Service Advisor) и центральный интеллектуальный узел управления мультибрендового автосервиса и грузового парка «Чайка-Сервис CRM» (профессиональный аналог системы Автодилер Онлайн).
+
+ТВОЯ РОЛЬ И СПЕЦИАЛИЗАЦИЯ:
+Ты обладаешь колоссальным экспертным опытом в:
+1. Регламентном техническом обслуживании и ремонте легкого коммерческого транспорта (ГАЗель NEXT, Бизнес, Соболь, Ford Transit, Lada Largus), грузовых автомобилей (КамАЗ, МАЗ, тягачи) и легкового автопарка.
+2. Каталогах норм времени и трудоемкости (нормо-часы, Autodata, заводские нормы времени ГАЗ, КамАЗ, ВАЗ). Базовая ставка: 2 000 руб./н-ч для легких ТС и 2 500 руб./н-ч для грузовой и специальной техники.
+3. Составлении профессиональных заказ-нарядов, дефектовочных ведомостей, актов приема-передачи ТС и актов выполненных работ по стандартам РФ (Правила оказания услуг по ТО и ремонту автомототранспортных средств, утв. Постановлением Правительства РФ № 290).
+4. Подборе запчастей, кросс-номеров (OEM/артикулы) и складском учете.
+
+АКТИВНЫЕ ДЕЙСТВИЯ (FUNCTION CALLING):
+Когда мастер-приемщик, механик или клиент просит на естественном языке:
+- Открыть или создать заказ-наряд («Открой заказ-наряд на ТО ГАЗель NEXT А123ВС777 замена масла и колодок», «Оформи заказ-наряд для ООО Вектор на замену сцепления КамАЗ»);
+- Рассчитать нормо-часы и стоимость ремонта;
+- Сделать дефектовку узлов и агрегатов;
+
+ТЫ ОБЯЗАН:
+1) Сформировать в ответе блок действия \`\`\`action:repair_order_create в формате:
+\`\`\`action:repair_order_create
+{
+  "orderNumber": "ЗН-26/1045",
+  "clientName": "ООО «Транс-Логистик»",
+  "clientPhone": "+7 (912) 345-67-89",
+  "vehiclePlate": "А123ВС777",
+  "vehicleMake": "ГАЗель NEXT 2.8 TD",
+  "vehicleVin": "X96A21R22N1234567",
+  "vehicleYear": 2023,
+  "mileage": 82000,
+  "customerComplaint": "Плановое ТО-80, стук в передней подвеске при торможении",
+  "works": [
+    { "name": "Замена масла в ДВС и масляного фильтра", "hours": 0.8, "rate": 2000, "mechanic": "Иванов И." },
+    { "name": "Замена передних тормозных колодок", "hours": 1.2, "rate": 2000, "mechanic": "Иванов И." },
+    { "name": "Диагностика ходовой части и подвески", "hours": 0.5, "rate": 2000, "mechanic": "Петров С." }
+  ],
+  "parts": [
+    { "name": "Моторное масло Лукойл Авангард 10W-40 (6 л)", "sku": "LUK-10W40-6L", "quantity": 1, "price": 4200 },
+    { "name": "Фильтр масляный ГАЗель Cummins 2.8", "sku": "LF-16015", "quantity": 1, "price": 850 },
+    { "name": "Комплект тормозных колодок передних", "sku": "BRK-PAD-GZ", "quantity": 1, "price": 2600 }
+  ]
+}
+\`\`\`
+2) Дать мастеру четкий, вежливый и профессиональный ответ на естественном русском языке с подробной калькуляцией (количество нормо-часов, стоимость работ, запчастей и общая сумма).
+
+СТРОЖАЙШИЙ ЗАПРЕТ:
+- КАТЕГОРИЧЕСКИ ЗАПРЕЩЕНО выводить сырой технический JSON в обычный текст твоего ответа! Блоки \`\`\`action:... будут вырезаны бэкендом и отобразятся в интерфейсе в виде элегантной красной карточки заказ-наряда. В тексте ответа пиши только естественный диалог.`;
+
 // Helper to fetch live CRM context from Supabase
 async function fetchUserCRMContext(username: string) {
   if (!SUPABASE_KEY || !username) {
@@ -392,6 +437,96 @@ async function executeCrmActions(
           details: p.summary || "Параметры карьера переданы в подраздел ТПР",
           data: p,
         });
+      } else if (act.type === "repair_order_create" || act.type === "create_repair_order") {
+        const p = act.payload;
+        const orderId = `ro-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
+        const orderNumber =
+          p.orderNumber ||
+          `ЗН-${new Date().getFullYear().toString().slice(-2)}/${Math.floor(1000 + Math.random() * 9000)}`;
+
+        const works = Array.isArray(p.works)
+          ? p.works.map((w: any, idx: number) => ({
+              id: `w-${idx + 1}`,
+              name: w.name || "Работы",
+              catalogCode: w.catalogCode || "",
+              hours: Number(w.hours) || 1,
+              hourlyRate: Number(w.rate || w.hourlyRate) || 2000,
+              discountPercent: Number(w.discountPercent) || 0,
+              total: (Number(w.hours) || 1) * (Number(w.rate || w.hourlyRate) || 2000),
+              mechanicName: w.mechanic || w.mechanicName || "Иванов И.",
+            }))
+          : [];
+
+        const parts = Array.isArray(p.parts)
+          ? p.parts.map((pt: any, idx: number) => ({
+              id: `p-${idx + 1}`,
+              sku: pt.sku || "N/A",
+              name: pt.name || "Деталь / расходник",
+              quantity: Number(pt.quantity) || 1,
+              unit: pt.unit || "шт.",
+              price: Number(pt.price) || 0,
+              discountPercent: Number(pt.discountPercent) || 0,
+              total: (Number(pt.quantity) || 1) * (Number(pt.price) || 0),
+            }))
+          : [];
+
+        const worksTotal = works.reduce((s: number, w: any) => s + w.total, 0);
+        const partsTotal = parts.reduce((s: number, pt: any) => s + pt.total, 0);
+        const totalAmount = worksTotal + partsTotal;
+
+        const repairOrder = {
+          id: orderId,
+          orderNumber,
+          createdAt: new Date().toISOString(),
+          status: "IN_PROGRESS",
+          client: {
+            id: `c-${Date.now()}`,
+            name: p.clientName || "ООО «Транс-Логистик»",
+            phone: p.clientPhone || "+7 (999) 000-00-00",
+            type: "LEGAL",
+          },
+          vehicle: {
+            plate: (p.vehiclePlate || "А123ВС777").toUpperCase(),
+            vin: (p.vehicleVin || "XTA" + Math.random().toString(36).substring(2, 14)).toUpperCase(),
+            make: p.vehicleMake || "ГАЗель NEXT",
+            year: Number(p.vehicleYear) || 2023,
+            mileage: Number(p.mileage) || 75000,
+          },
+          customerComplaint: p.customerComplaint || "Плановое ТО и диагностика",
+          works,
+          parts,
+          worksTotal,
+          partsTotal,
+          totalAmount,
+          assignedBayId: "bay-1",
+        };
+
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/chat_messages`, {
+          method: "POST",
+          headers: { ...headers, Prefer: "resolution=merge-duplicates,return=representation" },
+          body: JSON.stringify({
+            id: `order-${orderId}`,
+            role: "system",
+            content: JSON.stringify(repairOrder),
+            citations: {
+              type: "repair_order",
+              username,
+              order_number: orderNumber,
+              status: repairOrder.status,
+              vehicle: repairOrder.vehicle.plate,
+              client: repairOrder.client.name,
+            },
+          }),
+        });
+
+        if (res.ok) {
+          executed.push({
+            type: "REPAIR_ORDER_CREATED",
+            title: `Заказ-наряд ${orderNumber}`,
+            details: `${repairOrder.vehicle.make} (${repairOrder.vehicle.plate}) • ${repairOrder.works.length} раб. • ${totalAmount.toLocaleString("ru-RU")} ₽`,
+            data: repairOrder,
+          });
+        }
       }
     } catch (err) {
       console.error(`Failed to execute CRM action ${act.type}:`, err);
@@ -415,9 +550,11 @@ export async function POST(req: NextRequest) {
       webSearch,
       images,
       attachments,
+      businessMode,
     } = body;
 
     const currentUsername = (rawUsername || "").trim().toLowerCase();
+    const isChaika = businessMode === "chaika-service";
 
     // Check API Key
     const effectiveApiKey =
@@ -483,12 +620,14 @@ export async function POST(req: NextRequest) {
       ? `\n\n[ПОЛЬЗОВАТЕЛЬ: Имя текущего пользователя — «${userName.trim()}». Обращайся к нему уважительно.]`
       : "";
 
+    const selectedSystemPrompt = isChaika ? CHAIKA_SERVICE_SYSTEM_PROMPT : GENERAL_ASSISTANT_SYSTEM_PROMPT;
+
     // Build base system prompt
     const formattedMessages: Array<{ role: "system" | "user" | "assistant"; content: MessageContent }> = [
       {
         role: "system",
         content:
-          GENERAL_ASSISTANT_SYSTEM_PROMPT +
+          selectedSystemPrompt +
           crmContextPrompt +
           styleInstruction +
           userGreetingInstruction,

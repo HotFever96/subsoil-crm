@@ -18,6 +18,12 @@
     --accent-soft: rgba(2, 132, 199, 0.08);
   }
 
+  [data-business="chaika-service"] {
+    --accent: #dc2626;
+    --accent-hover: #b91c1c;
+    --accent-soft: rgba(220, 38, 38, 0.08);
+  }
+
   .dark {
     --bg-main: #0c1015;
     --bg-surface: #131821;
@@ -32,6 +38,14 @@
     --accent-hover: #0ea5e9;
     --accent-soft: rgba(56, 189, 248, 0.12);
   }
+
+  [data-business="chaika-service"].dark,
+  .dark [data-business="chaika-service"],
+  .dark[data-business="chaika-service"] {
+    --accent: #ef4444;
+    --accent-hover: #dc2626;
+    --accent-soft: rgba(239, 68, 68, 0.15);
+  }
 }
 
 body {
@@ -42,6 +56,37 @@ body {
   letter-spacing: -0.011em;
   overflow-x: hidden;
   transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Print layout for A4 auto-service documents */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  aside,
+  header,
+  nav,
+  .no-print,
+  button {
+    display: none !important;
+  }
+  #printable-service-doc {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  @page {
+    size: A4 portrait;
+    margin: 12mm 15mm;
+  }
 }
 
 /* Минималистичный тонкий скроллбар */
@@ -62,3 +107,4 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(148, 163, 184, 0.4);
 }
+

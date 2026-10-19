@@ -83,7 +83,8 @@ export interface ChatActionPayload {
     | "CALENDAR_DELETED"
     | "MAIL_DRAFT_CREATED"
     | "NOTE_SAVED"
-    | "PROJECT_SECTION_UPDATED";
+    | "PROJECT_SECTION_UPDATED"
+    | "REPAIR_ORDER_CREATED";
   title?: string;
   date?: string;
   time?: string;

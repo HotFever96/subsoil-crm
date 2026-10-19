@@ -7,18 +7,24 @@ import { SmartMail } from "@/components/SmartMail";
 import { ProjectStudio } from "@/components/ProjectStudio";
 import { CalendarModule } from "@/components/CalendarModule";
 import { ElectronicArchive } from "@/components/ElectronicArchive";
+import { RepairOrdersModule } from "@/components/RepairOrdersModule";
+import { BaySchedulerModule } from "@/components/BaySchedulerModule";
+import { WarehouseModule } from "@/components/WarehouseModule";
+import { ClientsGarageModule } from "@/components/ClientsGarageModule";
 import { LoginScreen } from "@/components/LoginScreen";
 import { useAuth } from "@/lib/auth-context";
 import { useTheme } from "@/lib/theme-context";
+import { useBusiness } from "@/lib/business-context";
 import { getUserInitialMails } from "@/lib/mock-data";
 import { MailItem } from "@/lib/supabase";
-import { Menu, Plus } from "lucide-react";
+import { Menu, Plus, Wrench } from "lucide-react";
 import { useChat } from "@/lib/chat-context";
 
 export default function Home() {
   const { user, isLoading } = useAuth();
   const { theme } = useTheme();
   const { createNewChat } = useChat();
+  const { currentBusiness } = useBusiness();
   const [currentTab, setCurrentTab] = useState<NavTab>("ai-chat");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -162,7 +168,7 @@ export default function Home() {
   const getTabTitle = (tab: NavTab) => {
     switch (tab) {
       case "ai-chat":
-        return "Чат с ИИ";
+        return currentBusiness === "chaika-service" ? "Шеф-мастер (ИИ)" : "Чат с ИИ";
       case "smart-mail":
         return "Умная почта";
       case "calendar":
@@ -171,15 +177,23 @@ export default function Home() {
         return "Проектирование";
       case "archive":
         return "Электронный архив";
+      case "repair-orders":
+        return "Заказ-наряды";
+      case "bay-scheduler":
+        return "Планировщик постов";
+      case "warehouse-parts":
+        return "Склад и Запчасти";
+      case "garage-clients":
+        return "Клиенты и Автопарк";
       default:
-        return "Geo AI";
+        return currentBusiness === "chaika-service" ? "Чайка-Сервис" : "Geo AI";
     }
   };
 
   if (isLoading) {
     return (
       <div className="h-screen w-screen flex items-center justify-center bg-[#f8fafc] dark:bg-[#0c1015]">
-        <div className="w-6 h-6 border-2 border-sky-500 border-t-transparent rounded-full animate-spin" />
+        <div className={`w-6 h-6 border-2 ${currentBusiness === "chaika-service" ? "border-rose-500" : "border-sky-500"} border-t-transparent rounded-full animate-spin`} />
       </div>
     );
   }
@@ -187,6 +201,8 @@ export default function Home() {
   if (!user) {
     return <LoginScreen />;
   }
+
+  const isChaika = currentBusiness === "chaika-service";
 
   return (
     <div className="flex flex-col md:flex-row h-screen w-screen overflow-hidden bg-white dark:bg-[#0c1015] text-slate-900 dark:text-slate-100 transition-colors">
@@ -209,18 +225,29 @@ export default function Home() {
           {currentTab === "ai-chat" && (
             <button
               onClick={() => createNewChat()}
-              className="p-1.5 rounded-lg bg-sky-500/10 text-sky-500 hover:bg-sky-500/20 transition-colors cursor-pointer"
+              className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+                isChaika
+                  ? "bg-rose-500/10 text-rose-500 hover:bg-rose-500/20"
+                  : "bg-sky-500/10 text-sky-500 hover:bg-sky-500/20"
+              }`}
               title="Новый диалог"
             >
               <Plus className="w-4 h-4" />
             </button>
           )}
 
-          <img
-            src={theme === "dark" ? "/geo-ai-logo-dark.png" : "/geo-ai-logo-light.png"}
-            alt="Geo AI"
-            className="h-6 w-auto max-w-[110px] object-contain ml-1"
-          />
+          {isChaika ? (
+            <div className="flex items-center space-x-1.5 px-2 py-0.5 rounded-md bg-rose-500/10 border border-rose-500/20 text-rose-500 font-bold text-xs">
+              <Wrench className="w-3.5 h-3.5" />
+              <span>ЧАЙКА</span>
+            </div>
+          ) : (
+            <img
+              src={theme === "dark" ? "/geo-ai-logo-dark.png" : "/geo-ai-logo-light.png"}
+              alt="Geo AI"
+              className="h-6 w-auto max-w-[110px] object-contain ml-1"
+            />
+          )}
         </div>
       </header>
 
@@ -250,6 +277,14 @@ export default function Home() {
         {currentTab === "project-studio" && <ProjectStudio />}
 
         {currentTab === "archive" && <ElectronicArchive />}
+
+        {currentTab === "repair-orders" && <RepairOrdersModule />}
+
+        {currentTab === "bay-scheduler" && <BaySchedulerModule />}
+
+        {currentTab === "warehouse-parts" && <WarehouseModule />}
+
+        {currentTab === "garage-clients" && <ClientsGarageModule />}
       </main>
     </div>
   );

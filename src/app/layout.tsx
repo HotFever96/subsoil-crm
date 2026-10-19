@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/lib/theme-context";
 import { AuthProvider } from "@/lib/auth-context";
 import { ChatProvider } from "@/lib/chat-context";
+import { BusinessProvider } from "@/lib/business-context";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,8 +17,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Geo AI | Интеллектуальная система недропользования",
-  description: "B2B CRM-система для управления недропользованием, деловой перепиской и проектной документацией",
+  title: "Geo AI & Чайка-Сервис | Интеллектуальная CRM-платформа",
+  description: "B2B CRM-система для управления недропользованием и автосервисом (СТО)",
 };
 
 export default function RootLayout({
@@ -28,13 +29,15 @@ export default function RootLayout({
   return (
     <html lang="ru" className={`${geistSans.variable} ${geistMono.variable} h-full`}>
       <body className="min-h-screen antialiased selection:bg-sky-500/20 selection:text-sky-500">
-        <ThemeProvider>
-          <AuthProvider>
-            <ChatProvider>
-              {children}
-            </ChatProvider>
-          </AuthProvider>
-        </ThemeProvider>
+        <BusinessProvider>
+          <ThemeProvider>
+            <AuthProvider>
+              <ChatProvider>
+                {children}
+              </ChatProvider>
+            </AuthProvider>
+          </ThemeProvider>
+        </BusinessProvider>
       </body>
     </html>
   );

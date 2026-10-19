@@ -29,11 +29,13 @@ import {
   Sliders,
   CheckCircle2,
   Trash2,
+  Wrench,
 } from "lucide-react";
 import { ChatMessage, ChatActionPayload } from "@/lib/supabase";
 import { MarkdownView } from "@/components/MarkdownView";
 import { useChat } from "@/lib/chat-context";
 import { useAuth } from "@/lib/auth-context";
+import { useBusiness } from "@/lib/business-context";
 import { parseUploadedFile, downloadUploadedFile } from "@/lib/file-parser";
 import { tryRepairAndParseJson } from "@/lib/json-repair";
 import {
@@ -197,12 +199,38 @@ const ActionCardView: React.FC<{ action: ChatActionPayload }> = ({ action }) => 
     );
   }
 
+  if (action.type === "REPAIR_ORDER_CREATED") {
+    return (
+      <div className="flex items-start space-x-3 p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-950 dark:text-rose-200 shadow-2xs my-2">
+        <div className="p-2 rounded-xl bg-rose-500/20 text-rose-600 dark:text-rose-400 shrink-0">
+          <Wrench className="w-4 h-4" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center space-x-1.5 text-xs font-semibold text-rose-600 dark:text-rose-400">
+            <CheckCircle2 className="w-3.5 h-3.5" />
+            <span>Заказ-наряд оформлен и сохранен в базе СТО</span>
+          </div>
+          <div className="text-sm font-bold text-slate-900 dark:text-white truncate mt-0.5">
+            {action.title}
+          </div>
+          {action.details && (
+            <div className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
+              🔧 {renderActionDetails(action.details)}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   return null;
 };
 
 export const AIChat: React.FC = () => {
   const { user } = useAuth();
   const { activeSession, setSessionMessages } = useChat();
+  const { currentBusiness } = useBusiness();
+  const isChaika = currentBusiness === "chaika-service";
 
   const [inputPrompt, setInputPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -530,6 +558,7 @@ export const AIChat: React.FC = () => {
           webSearch: webSearchEnabled,
           images: imagesPayload,
           attachments: textAttachmentsPayload,
+          businessMode: currentBusiness,
         }),
       });
 
@@ -802,18 +831,38 @@ export const AIChat: React.FC = () => {
 
       {/* CASE 1: EMPTY / NEW CHAT STATE (Gemini / ChatGPT aesthetic with glowing ambient gradient) */}
       {!hasUserMessages ? (
-        <div className="flex-1 flex flex-col items-center justify-center px-4 overflow-y-auto relative bg-[radial-gradient(ellipse_70%_50%_at_50%_35%,rgba(14,165,233,0.09),transparent_75%)] dark:bg-[radial-gradient(ellipse_75%_55%_at_50%_35%,rgba(14,165,233,0.12),transparent_75%)]">
+        <div
+          className={`flex-1 flex flex-col items-center justify-center px-4 overflow-y-auto relative ${
+            isChaika
+              ? "bg-[radial-gradient(ellipse_70%_50%_at_50%_35%,rgba(239,68,68,0.1),transparent_75%)] dark:bg-[radial-gradient(ellipse_75%_55%_at_50%_35%,rgba(239,68,68,0.14),transparent_75%)]"
+              : "bg-[radial-gradient(ellipse_70%_50%_at_50%_35%,rgba(14,165,233,0.09),transparent_75%)] dark:bg-[radial-gradient(ellipse_75%_55%_at_50%_35%,rgba(14,165,233,0.12),transparent_75%)]"
+          }`}
+        >
           <div className="w-full max-w-xl flex flex-col items-center text-center -mt-6">
             <h1 className="text-3xl sm:text-4xl font-medium tracking-tight text-slate-800 dark:text-slate-100 mb-8 select-none">
-              {user?.name ? `${user.name}, чем я могу помочь?` : "Чем я могу помочь сегодня?"}
+              {isChaika
+                ? user?.name
+                  ? `${user.name}, чем могу помочь по автосервису?`
+                  : "Шеф-мастер СТО Чайка-Сервис"
+                : user?.name
+                ? `${user.name}, чем я могу помочь?`
+                : "Чем я могу помочь сегодня?"}
             </h1>
 
             {/* Central Narrower Rounded Pill Input Box (Gemini / ChatGPT Screen 3 style) */}
-            <div className={`w-full relative rounded-3xl bg-slate-50/90 dark:bg-[#131821]/90 backdrop-blur-md border transition-all text-left shadow-lg shadow-sky-950/5 dark:shadow-2xl dark:shadow-sky-950/20 ${
-              isListening
-                ? "border-rose-500/70 ring-4 ring-rose-500/20"
-                : "border-slate-200/90 dark:border-white/[0.1] focus-within:border-sky-500/60 focus-within:ring-4 focus-within:ring-sky-500/10"
-            }`}>
+            <div
+              className={`w-full relative rounded-3xl bg-slate-50/90 dark:bg-[#131821]/90 backdrop-blur-md border transition-all text-left shadow-lg ${
+                isChaika
+                  ? "shadow-rose-950/5 dark:shadow-2xl dark:shadow-rose-950/20"
+                  : "shadow-sky-950/5 dark:shadow-2xl dark:shadow-sky-950/20"
+              } ${
+                isListening
+                  ? "border-rose-500/70 ring-4 ring-rose-500/20"
+                  : isChaika
+                  ? "border-slate-200/90 dark:border-white/[0.1] focus-within:border-rose-500/60 focus-within:ring-4 focus-within:ring-rose-500/10"
+                  : "border-slate-200/90 dark:border-white/[0.1] focus-within:border-sky-500/60 focus-within:ring-4 focus-within:ring-sky-500/10"
+              }`}
+            >
               {/* Voice recording live indicator */}
               {isListening && (
                 <div className="px-5 pt-3 flex items-center space-x-2 text-xs font-medium text-rose-500 animate-pulse">
@@ -835,7 +884,13 @@ export const AIChat: React.FC = () => {
                 onChange={handleInput}
                 onKeyDown={handleKeyDown}
                 onPaste={handlePaste}
-                placeholder={isListening ? "Слушаю вас..." : "Спросите что-нибудь или надиктуйте запрос..."}
+                placeholder={
+                  isListening
+                    ? "Слушаю вас..."
+                    : isChaika
+                    ? "Спросите шеф-мастера СТО или продиктуйте заказ-наряд..."
+                    : "Спросите что-нибудь или надиктуйте запрос..."
+                }
                 rows={2}
                 className="w-full pt-4 pb-12 px-5 bg-transparent text-[15px] text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none resize-none max-h-48 leading-relaxed"
               />
@@ -873,7 +928,9 @@ export const AIChat: React.FC = () => {
                     disabled={(!inputPrompt.trim() && attachedFiles.length === 0) || isLoading}
                     className={`p-2 rounded-full transition-all cursor-pointer ${
                       (inputPrompt.trim() || attachedFiles.length > 0) && !isLoading
-                        ? "bg-slate-900 dark:bg-sky-500 text-white dark:text-slate-950 hover:opacity-90 shadow-2xs"
+                        ? isChaika
+                          ? "bg-rose-500 hover:bg-rose-600 text-white shadow-2xs"
+                          : "bg-slate-900 dark:bg-sky-500 text-white dark:text-slate-950 hover:opacity-90 shadow-2xs"
                         : "bg-slate-200 dark:bg-white/[0.08] text-slate-400 dark:text-slate-600 cursor-not-allowed"
                     }`}
                     title="Отправить"
@@ -886,53 +943,111 @@ export const AIChat: React.FC = () => {
 
             {/* Quick Pills (Pure rounded-full capsules, Screen 3 Gemini style) */}
             <div className="flex flex-wrap items-center justify-center gap-2 mt-5 max-w-xl">
-              <button
-                type="button"
-                onClick={() => setWebSearchEnabled((prev) => !prev)}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-full text-xs border transition-all cursor-pointer shadow-2xs ${
-                  webSearchEnabled
-                    ? "bg-sky-500/15 border-sky-500/50 text-sky-600 dark:text-sky-400 font-medium"
-                    : "bg-white/80 dark:bg-[#131821]/80 backdrop-blur-xs border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 hover:border-sky-500/40 hover:text-sky-600 dark:hover:text-sky-400"
-                }`}
-              >
-                <Globe className="w-3.5 h-3.5 text-sky-500" />
-                <span>Поиск в сети</span>
-              </button>
+              {isChaika ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      handleSend(
+                        "Открой заказ-наряд на ТО ГАЗель NEXT А123ВС777: замена масла в ДВС и передних тормозных колодок"
+                      )
+                    }
+                    className="flex items-center space-x-2 px-3.5 py-1.5 rounded-full text-xs border bg-white/80 dark:bg-[#131821]/80 backdrop-blur-xs border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 hover:border-rose-500/50 hover:text-rose-500 transition-all cursor-pointer shadow-2xs"
+                  >
+                    <Wrench className="w-3.5 h-3.5 text-rose-500" />
+                    <span>Оформить заказ-наряд</span>
+                  </button>
 
-              <button
-                type="button"
-                onClick={() => setStyleMode((prev) => (prev === "brief" ? "normal" : "brief"))}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-full text-xs border transition-all cursor-pointer shadow-2xs ${
-                  styleMode === "brief"
-                    ? "bg-sky-500/15 border-sky-500/50 text-sky-600 dark:text-sky-400 font-medium"
-                    : "bg-white/80 dark:bg-[#131821]/80 backdrop-blur-xs border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 hover:border-sky-500/40 hover:text-sky-600 dark:hover:text-sky-400"
-                }`}
-              >
-                <Zap className="w-3.5 h-3.5 text-sky-500" />
-                <span>Краткий ответ</span>
-              </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      handleSend(
+                        "Рассчитай нормо-часы и стоимость ремонта КамАЗ 65115: замена корзины сцепления и выжимного подшипника"
+                      )
+                    }
+                    className="flex items-center space-x-2 px-3.5 py-1.5 rounded-full text-xs border bg-white/80 dark:bg-[#131821]/80 backdrop-blur-xs border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 hover:border-rose-500/50 hover:text-rose-500 transition-all cursor-pointer shadow-2xs"
+                  >
+                    <RotateCw className="w-3.5 h-3.5 text-rose-500" />
+                    <span>Нормо-часы КамАЗ</span>
+                  </button>
 
-              <button
-                type="button"
-                onClick={() => setStyleMode((prev) => (prev === "detailed" ? "normal" : "detailed"))}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-full text-xs border transition-all cursor-pointer shadow-2xs ${
-                  styleMode === "detailed"
-                    ? "bg-sky-500/15 border-sky-500/50 text-sky-600 dark:text-sky-400 font-medium"
-                    : "bg-white/80 dark:bg-[#131821]/80 backdrop-blur-xs border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 hover:border-sky-500/40 hover:text-sky-600 dark:hover:text-sky-400"
-                }`}
-              >
-                <BookOpen className="w-3.5 h-3.5 text-sky-500" />
-                <span>Развернутый анализ</span>
-              </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      handleSend(
+                        "Подготовь дефектовочную ведомость для проверки передней подвески и рулевого управления ГАЗель NEXT"
+                      )
+                    }
+                    className="flex items-center space-x-2 px-3.5 py-1.5 rounded-full text-xs border bg-white/80 dark:bg-[#131821]/80 backdrop-blur-xs border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 hover:border-rose-500/50 hover:text-rose-500 transition-all cursor-pointer shadow-2xs"
+                  >
+                    <FileText className="w-3.5 h-3.5 text-rose-500" />
+                    <span>Дефектовка подвески</span>
+                  </button>
 
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="flex items-center space-x-2 px-4 py-2 rounded-full text-xs border bg-white/80 dark:bg-[#131821]/80 backdrop-blur-xs border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 hover:border-sky-500/40 hover:text-sky-600 dark:hover:text-sky-400 shadow-2xs transition-all cursor-pointer"
-              >
-                <Paperclip className="w-3.5 h-3.5 text-slate-400" />
-                <span>Анализ файлов и фото</span>
-              </button>
+                  <button
+                    type="button"
+                    onClick={() => setWebSearchEnabled((prev) => !prev)}
+                    className={`flex items-center space-x-2 px-3.5 py-1.5 rounded-full text-xs border transition-all cursor-pointer shadow-2xs ${
+                      webSearchEnabled
+                        ? "bg-rose-500/15 border-rose-500/50 text-rose-600 dark:text-rose-400 font-medium"
+                        : "bg-white/80 dark:bg-[#131821]/80 backdrop-blur-xs border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 hover:border-rose-500/40 hover:text-rose-500"
+                    }`}
+                  >
+                    <Globe className="w-3.5 h-3.5 text-rose-500" />
+                    <span>Поиск регламентов</span>
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => setWebSearchEnabled((prev) => !prev)}
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-full text-xs border transition-all cursor-pointer shadow-2xs ${
+                      webSearchEnabled
+                        ? "bg-sky-500/15 border-sky-500/50 text-sky-600 dark:text-sky-400 font-medium"
+                        : "bg-white/80 dark:bg-[#131821]/80 backdrop-blur-xs border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 hover:border-sky-500/40 hover:text-sky-600 dark:hover:text-sky-400"
+                    }`}
+                  >
+                    <Globe className="w-3.5 h-3.5 text-sky-500" />
+                    <span>Поиск в сети</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setStyleMode((prev) => (prev === "brief" ? "normal" : "brief"))}
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-full text-xs border transition-all cursor-pointer shadow-2xs ${
+                      styleMode === "brief"
+                        ? "bg-sky-500/15 border-sky-500/50 text-sky-600 dark:text-sky-400 font-medium"
+                        : "bg-white/80 dark:bg-[#131821]/80 backdrop-blur-xs border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 hover:border-sky-500/40 hover:text-sky-600 dark:hover:text-sky-400"
+                    }`}
+                  >
+                    <Zap className="w-3.5 h-3.5 text-sky-500" />
+                    <span>Краткий ответ</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setStyleMode((prev) => (prev === "detailed" ? "normal" : "detailed"))}
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-full text-xs border transition-all cursor-pointer shadow-2xs ${
+                      styleMode === "detailed"
+                        ? "bg-sky-500/15 border-sky-500/50 text-sky-600 dark:text-sky-400 font-medium"
+                        : "bg-white/80 dark:bg-[#131821]/80 backdrop-blur-xs border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 hover:border-sky-500/40 hover:text-sky-600 dark:hover:text-sky-400"
+                    }`}
+                  >
+                    <BookOpen className="w-3.5 h-3.5 text-sky-500" />
+                    <span>Развернутый анализ</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="flex items-center space-x-2 px-4 py-2 rounded-full text-xs border bg-white/80 dark:bg-[#131821]/80 backdrop-blur-xs border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 hover:border-sky-500/40 hover:text-sky-600 dark:hover:text-sky-400 shadow-2xs transition-all cursor-pointer"
+                  >
+                    <Paperclip className="w-3.5 h-3.5 text-slate-400" />
+                    <span>Анализ файлов и фото</span>
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -1103,12 +1218,22 @@ export const AIChat: React.FC = () => {
 
               {isLoading && (
                 <div className="flex space-x-4 justify-start">
-                  <div className="w-8 h-8 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-500 dark:text-sky-400 flex items-center justify-center shrink-0">
-                    <Bot className="w-4 h-4" />
+                  <div
+                    className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 border ${
+                      isChaika
+                        ? "bg-rose-500/10 border-rose-500/20 text-rose-500 dark:text-rose-400"
+                        : "bg-sky-500/10 border-sky-500/20 text-sky-500 dark:text-sky-400"
+                    }`}
+                  >
+                    {isChaika ? <Wrench className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
                   </div>
                   <div className="rounded-2xl px-4 py-3 bg-slate-100 dark:bg-[#131821] border border-slate-200/60 dark:border-white/[0.06] text-xs text-slate-400 flex items-center space-x-2">
-                    <div className="w-2 h-2 rounded-full bg-sky-500 animate-pulse" />
-                    <span>ИИ формирует ответ...</span>
+                    <div
+                      className={`w-2 h-2 rounded-full animate-pulse ${
+                        isChaika ? "bg-rose-500" : "bg-sky-500"
+                      }`}
+                    />
+                    <span>{isChaika ? "Шеф-мастер рассчитывает заказ-наряд..." : "ИИ формирует ответ..."}</span>
                   </div>
                 </div>
               )}
@@ -1119,11 +1244,15 @@ export const AIChat: React.FC = () => {
 
           {/* Floating Center Bottom Input Box */}
           <div className="w-full max-w-3xl mx-auto px-4 pb-4 pt-1">
-            <div className={`relative rounded-3xl bg-slate-100/90 dark:bg-[#131821]/90 backdrop-blur-md border transition-colors ${
-              isListening
-                ? "border-rose-500/70 ring-4 ring-rose-500/20 shadow-md shadow-rose-500/10"
-                : "border-slate-200 dark:border-white/[0.1] shadow-2xs focus-within:border-sky-500/60 focus-within:ring-4 focus-within:ring-sky-500/10"
-            }`}>
+            <div
+              className={`relative rounded-3xl bg-slate-100/90 dark:bg-[#131821]/90 backdrop-blur-md border transition-colors ${
+                isListening
+                  ? "border-rose-500/70 ring-4 ring-rose-500/20 shadow-md shadow-rose-500/10"
+                  : isChaika
+                  ? "border-slate-200 dark:border-white/[0.1] shadow-2xs focus-within:border-rose-500/60 focus-within:ring-4 focus-within:ring-rose-500/10"
+                  : "border-slate-200 dark:border-white/[0.1] shadow-2xs focus-within:border-sky-500/60 focus-within:ring-4 focus-within:ring-sky-500/10"
+              }`}
+            >
               {/* Voice recording live indicator */}
               {isListening && (
                 <div className="px-4 pt-2.5 flex items-center space-x-2 text-xs font-medium text-rose-500 animate-pulse">
@@ -1145,7 +1274,13 @@ export const AIChat: React.FC = () => {
                 onChange={handleInput}
                 onKeyDown={handleKeyDown}
                 onPaste={handlePaste}
-                placeholder={isListening ? "Слушаю вас..." : "Спросите что-нибудь (код, текст, анализ, бизнес)..."}
+                placeholder={
+                  isListening
+                    ? "Слушаю вас..."
+                    : isChaika
+                    ? "Спросите шеф-мастера СТО или продиктуйте заказ-наряд..."
+                    : "Спросите что-нибудь (код, текст, анализ, бизнес)..."
+                }
                 rows={1}
                 className="w-full pt-3.5 pb-11 px-5 bg-transparent text-[15px] text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none resize-none max-h-48 leading-relaxed"
               />
@@ -1161,12 +1296,24 @@ export const AIChat: React.FC = () => {
                     <Paperclip className="w-4 h-4" />
                   </button>
                   {webSearchEnabled && (
-                    <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-sky-500/10 text-sky-500 font-medium">
+                    <span
+                      className={`text-[11px] px-2.5 py-0.5 rounded-full font-medium ${
+                        isChaika
+                          ? "bg-rose-500/10 text-rose-500"
+                          : "bg-sky-500/10 text-sky-500"
+                      }`}
+                    >
                       Поиск в сети
                     </span>
                   )}
                   {styleMode === "brief" && (
-                    <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-sky-500/10 text-sky-500 font-medium">
+                    <span
+                      className={`text-[11px] px-2.5 py-0.5 rounded-full font-medium ${
+                        isChaika
+                          ? "bg-rose-500/10 text-rose-500"
+                          : "bg-sky-500/10 text-sky-500"
+                      }`}
+                    >
                       Кратко
                     </span>
                   )}
@@ -1193,7 +1340,9 @@ export const AIChat: React.FC = () => {
                     disabled={(!inputPrompt.trim() && attachedFiles.length === 0) || isLoading}
                     className={`p-1.5 rounded-full transition-all cursor-pointer ${
                       (inputPrompt.trim() || attachedFiles.length > 0) && !isLoading
-                        ? "bg-slate-900 dark:bg-sky-500 text-white dark:text-slate-950 hover:opacity-90"
+                        ? isChaika
+                          ? "bg-rose-500 hover:bg-rose-600 text-white"
+                          : "bg-slate-900 dark:bg-sky-500 text-white dark:text-slate-950 hover:opacity-90"
                         : "bg-slate-200 dark:bg-white/[0.08] text-slate-400 dark:text-slate-600 cursor-not-allowed"
                     }`}
                     title="Отправить"
@@ -1206,7 +1355,9 @@ export const AIChat: React.FC = () => {
 
             <div className="text-center mt-2">
               <span className="text-[11px] text-slate-400 dark:text-slate-500 select-none">
-                Geo AI может допускать ошибки. Проверяйте важную информацию.
+                {isChaika
+                  ? "Чайка-Сервис CRM может допускать неточности в нормах времени. Проверяйте данные по заказ-нарядам."
+                  : "Geo AI может допускать ошибки. Проверяйте важную информацию."}
               </span>
             </div>
           </div>
