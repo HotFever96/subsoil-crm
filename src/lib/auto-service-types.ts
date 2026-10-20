@@ -62,6 +62,7 @@ export interface RepairOrder {
   vehicle: OrderVehicle;
   works: OrderWorkItem[];
   parts: OrderPartItem[];
+  inspection?: VehicleInspectionData;
   recommendations?: string; // Рекомендации мастера
   totalWorks: number;      // Сумма по работам
   totalParts: number;      // Сумма по запчастям
@@ -135,3 +136,73 @@ export type ServiceDocumentType =
   | "completion_act"   // Акт выполненных работ
   | "invoice"          // Счет на оплату
   | "defect_sheet";    // Дефектовочная ведомость
+
+export type DamageType = "scratch" | "dent" | "chip" | "rust";
+
+export interface DamagePoint {
+  id: string;
+  type: DamageType;
+  label: "Ц" | "В" | "С" | "К";
+  x: number; // percentage 0-100 on schematic
+  y: number; // percentage 0-100 on schematic
+  view: "top" | "side_left" | "side_right" | "front" | "rear";
+  note?: string;
+}
+
+export interface VehicleInspectionData {
+  vehicleBodyType: "car" | "van_truck";
+  fuelLevel: "0" | "1/4" | "1/2" | "3/4" | "1/1";
+  equipment: {
+    sts: boolean;
+    keysCount: number;
+    spareWheel: boolean;
+    jack: boolean;
+    firstAidKit: boolean;
+    warningTriangle: boolean;
+    dashcam: boolean;
+  };
+  isDirty: boolean; // ТС принято в грязном виде (скрытые дефекты не выявлены)
+  damages: DamagePoint[];
+}
+
+export interface StoCompanyRequisites {
+  name: string;
+  brandName: string;
+  address: string;
+  phone: string;
+  email: string;
+  inn: string;
+  kpp: string;
+  ogrn: string;
+  bankName: string;
+  bik: string;
+  rs: string;
+  ks: string;
+  defaultRatePerHour: number;
+  masterReceiver: string;
+  director: string;
+  mechanics: string[];
+}
+
+export interface WarehouseInvoiceItem {
+  id: string;
+  oem: string;
+  name: string;
+  category: string;
+  quantity: number;
+  unit: string;
+  purchasePrice: number;
+  salePrice: number;
+  location?: string;
+}
+
+export interface WarehouseInvoice {
+  id: string;
+  invoiceNumber: string;
+  supplierName: string;
+  date: string;
+  items: WarehouseInvoiceItem[];
+  totalAmount: number;
+  createdAt: string;
+  username: string;
+}

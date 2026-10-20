@@ -15,8 +15,9 @@ import {
   FileCheck,
 } from "lucide-react";
 import { RepairOrder, ServiceDocumentType } from "@/lib/auto-service-types";
-import { SERVICE_COMPANY_REQUISITES, formatCurrency } from "@/lib/auto-service-data";
+import { SERVICE_COMPANY_REQUISITES, formatCurrency, getStoRequisites } from "@/lib/auto-service-data";
 import { exportAutoServiceDocx } from "@/lib/auto-service-docx";
+import { VehicleInspectionSchematic } from "./VehicleInspectionSchematic";
 
 interface ServiceDocumentModalProps {
   order: RepairOrder;
@@ -39,7 +40,7 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
 
   if (!isOpen) return null;
 
-  const req = SERVICE_COMPANY_REQUISITES;
+  const req = getStoRequisites(order.username);
 
   const handlePrint = () => {
     window.print();
@@ -265,18 +266,11 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
               )}
             </div>
 
-            {/* Acceptance Act Specific Block */}
+            {/* Acceptance Act Specific Block with Schematic */}
             {docType === "acceptance_act" && (
-              <div className="mb-5 p-3.5 rounded-lg border border-slate-200 text-xs space-y-2">
-                <h3 className="font-bold text-slate-900">Комплектность и состояние при приеме:</h3>
-                <div className="grid grid-cols-3 gap-2 text-[11px]">
-                  <div>Уровень топлива: <strong>~ 50%</strong></div>
-                  <div>Чистота ТС: <strong>Загрязнен (осмотр кузова ограничен)</strong></div>
-                  <div>Запасное колесо: <strong>В наличии</strong></div>
-                  <div>Домкрат / баллонник: <strong>В наличии</strong></div>
-                  <div>Магнитола / панель: <strong>Штатная</strong></div>
-                  <div>Скрытые повреждения: <strong>Без разборки не выявлены</strong></div>
-                </div>
+              <div className="mb-5 p-3.5 rounded-lg border border-slate-200 text-xs space-y-3 bg-slate-50/50">
+                <h3 className="font-bold text-slate-900 text-xs">Карта дефектов кузова и состояние при приеме ТС:</h3>
+                <VehicleInspectionSchematic inspection={order.inspection} readOnly={true} />
               </div>
             )}
 

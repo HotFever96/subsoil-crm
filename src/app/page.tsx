@@ -181,13 +181,13 @@ export default function Home() {
       case "repair-orders":
         return "Заказ-наряды";
       case "parts-procurement":
-        return "Проценка и Заказ";
+        return "Проценка автозапчастей";
       case "bay-scheduler":
-        return "Планировщик постов";
+        return "Пост-планировщик";
       case "warehouse-parts":
-        return "Склад и Запчасти";
+        return "Складской учет";
       case "garage-clients":
-        return "Клиенты и Автопарк";
+        return "Контрагенты и Автопарк";
       default:
         return currentBusiness === "chaika-service" ? "Чайка-Сервис" : "Geo AI";
     }

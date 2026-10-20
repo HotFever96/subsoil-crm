@@ -11,13 +11,14 @@ export interface ChatSession {
   messages: ChatMessage[];
   createdAt: string;
   updatedAt: number;
+  workspace?: "geo" | "service";
 }
 
 interface ChatContextType {
   sessions: ChatSession[];
   activeSessionId: string;
   activeSession: ChatSession;
-  createNewChat: () => string;
+  createNewChat: (workspace?: "geo" | "service") => string;
   selectSession: (id: string) => void;
   deleteSession: (id: string) => void;
   setSessionMessages: (sessionId: string, messages: ChatMessage[], newTitle?: string) => void;
@@ -216,15 +217,27 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [sessions, activeSessionId, isInitialized, currentUsername]);
 
-  // Create a brand new distinct chat session with a unique ID
-  const createNewChat = (): string => {
+  // Create a brand new distinct chat session with a unique ID and workspace tag
+  const createNewChat = (workspace: "geo" | "service" = "geo"): string => {
     const newId = generateUniqueSessionId();
+    const isService = workspace === "service";
+
+    const initialMessage: ChatMessage = isService
+      ? {
+          id: `msg-welcome-service-${Date.now()}`,
+          role: "assistant",
+          content: `Здравствуйте, ${user?.name || "Мастер"}! Я — Шеф-мастер СТО «Чайка-Сервис CRM».\n\nГотов рассчитать нормо-часы, открыть заказ-наряд, выполнить проценку запчастей по оптовым складам (Росско, Армтек, Автодок) или провести дефектовку узлов.\n\nКакая задача по автопарку в работе?`,
+          created_at: new Date().toISOString(),
+        }
+      : getUserWelcomeMsg(currentUsername, user?.name);
+
     const newSession: ChatSession = {
       id: newId,
-      title: "Новый чат",
+      title: isService ? "Чат по СТО" : "Новый чат",
       createdAt: "Сегодня",
       updatedAt: Date.now(),
-      messages: [getUserWelcomeMsg(currentUsername, user?.name)],
+      workspace,
+      messages: [initialMessage],
     };
 
     setSessions((prev) => [newSession, ...prev]);
@@ -246,6 +259,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
           title: "Новый чат",
           createdAt: "Сегодня",
           updatedAt: Date.now(),
+          workspace: "geo",
           messages: [getUserWelcomeMsg(currentUsername, user?.name)],
         };
         setActiveSessionId(brandNewId);
@@ -323,6 +337,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
       title: "Новый чат",
       createdAt: "Сегодня",
       updatedAt: Date.now(),
+      workspace: "geo",
       messages: [getUserWelcomeMsg(currentUsername, user?.name)],
     };
     setSessions([fresh]);
