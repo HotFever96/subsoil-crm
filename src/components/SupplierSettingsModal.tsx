@@ -7,15 +7,13 @@ import {
   Save,
   Globe,
   Key,
-  ShieldCheck,
   RefreshCw,
-  Plus,
-  Trash2,
   AlertCircle,
   HelpCircle,
-  Zap,
+  ShieldAlert,
+  Building2,
 } from "lucide-react";
-import { SupplierIntegrationConfig, SupplierType } from "@/lib/parts-procurement-types";
+import { SupplierIntegrationConfig } from "@/lib/parts-procurement-types";
 import { useAuth } from "@/lib/auth-context";
 
 interface SupplierSettingsModalProps {
@@ -36,11 +34,12 @@ export const SupplierSettingsModal: React.FC<SupplierSettingsModalProps> = ({
 
   const [configs, setConfigs] = useState<SupplierIntegrationConfig[]>(integrations);
   const [testingId, setTestingId] = useState<string | null>(null);
-  const [testSuccessId, setTestSuccessId] = useState<string | null>(null);
+  const [testResults, setTestResults] = useState<{
+    [id: string]: { success: boolean; message: string };
+  }>({});
   const [isSaving, setIsSaving] = useState(false);
   const [savedSuccess, setSavedSuccess] = useState(false);
 
-  // Sync state if props change
   React.useEffect(() => {
     if (integrations && integrations.length > 0) {
       setConfigs(integrations);
@@ -59,16 +58,55 @@ export const SupplierSettingsModal: React.FC<SupplierSettingsModalProps> = ({
     setConfigs((prev) =>
       prev.map((c) => (c.id === id ? { ...c, [field]: value } : c))
     );
+    // Clear test status on field update
+    if (testResults[id]) {
+      setTestResults((prev) => {
+        const next = { ...prev };
+        delete next[id];
+        return next;
+      });
+    }
   };
 
-  const handleTestConnection = (id: string) => {
+  const handleTestConnection = async (id: string) => {
+    const config = configs.find((c) => c.id === id);
+    if (!config) return;
+
     setTestingId(id);
-    setTestSuccessId(null);
-    setTimeout(() => {
+    try {
+      const res = await fetch("/api/sync", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "test_supplier_connection",
+          username: currentUsername,
+          payload: { supplierConfig: config },
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setTestResults((prev) => ({
+          ...prev,
+          [id]: { success: true, message: data.message || "✓ Шлюз активен (Онлайн)" },
+        }));
+      } else {
+        setTestResults((prev) => ({
+          ...prev,
+          [id]: {
+            success: false,
+            message: data.error || "❌ Ошибка авторизации: введите действующий API-ключ",
+          },
+        }));
+      }
+    } catch (err: any) {
+      setTestResults((prev) => ({
+        ...prev,
+        [id]: { success: false, message: `❌ Ошибка сети: ${err.message}` },
+      }));
+    } finally {
       setTestingId(null);
-      setTestSuccessId(id);
-      setTimeout(() => setTestSuccessId(null), 3000);
-    }, 600);
+    }
   };
 
   const handleSaveAll = async () => {
@@ -99,61 +137,50 @@ export const SupplierSettingsModal: React.FC<SupplierSettingsModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-      <div className="relative w-full max-w-3xl rounded-3xl bg-white dark:bg-[#131821] border border-slate-200 dark:border-white/[0.1] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md">
+      <div className="relative w-full max-w-3xl rounded-3xl bg-zinc-900/90 backdrop-blur-2xl border border-white/[0.08] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-white/[0.08] bg-slate-50/70 dark:bg-white/[0.02]">
+        <div className="flex items-center justify-between px-6 py-4.5 border-b border-white/[0.07] bg-white/[0.02]">
           <div className="flex items-center space-x-3">
-            <div className="p-2 rounded-xl bg-red-500/10 text-red-600 dark:text-red-400">
+            <div className="p-2 rounded-xl bg-red-500/10 text-red-500">
               <Key className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-slate-900 dark:text-white">
+              <h2 className="text-base font-bold text-white">
                 Шлюзы API поставщиков автозапчастей
               </h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                Подключение оптовых учетных записей (Росско, Армтек, Автодок, Берг, Custom REST)
+              <p className="text-xs text-zinc-400 mt-0.5">
+                Официальные учетные записи дистрибьюторов (Росско, Армтек, Автодок, Берг)
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-xl hover:bg-slate-200/60 dark:hover:bg-white/[0.06] text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors cursor-pointer"
+            className="p-1.5 rounded-xl hover:bg-white/[0.06] text-zinc-400 hover:text-white transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Notice */}
-        <div className="px-6 py-2.5 bg-sky-500/10 border-b border-sky-500/20 text-xs text-sky-800 dark:text-sky-300 flex items-center space-x-2">
-          <Zap className="w-4 h-4 text-sky-500 shrink-0" />
-          <span>
-            <strong>Гибридный режим (Live API + ИИ-Кроссирование):</strong> Если API-ключ не заполнен или шлюз временно недоступен, система автоматически генерирует реалистичные рыночные котировки оптовых цен и проверенные кросс-номера.
-          </span>
-        </div>
-
         {/* Supplier List */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-4">
+        <div className="flex-1 overflow-y-auto p-6 space-y-4 divide-y divide-white/[0.04]">
           {configs.map((supp) => {
             const isTesting = testingId === supp.id;
-            const isSuccess = testSuccessId === supp.id;
+            const result = testResults[supp.id];
+            const hasKeys =
+              Boolean(supp.apiKey1?.trim()) ||
+              Boolean(supp.apiToken?.trim()) ||
+              Boolean(supp.login?.trim());
 
             return (
-              <div
-                key={supp.id}
-                className={`p-4 rounded-2xl border transition-all ${
-                  supp.enabled
-                    ? "bg-slate-50/80 dark:bg-white/[0.03] border-slate-200 dark:border-white/[0.08]"
-                    : "bg-slate-100/40 dark:bg-white/[0.01] border-slate-200/50 dark:border-white/[0.04] opacity-60"
-                }`}
-              >
-                <div className="flex items-start justify-between">
+              <div key={supp.id} className="pt-4 first:pt-0 space-y-3">
+                <div className="flex items-start justify-between gap-4">
                   <div className="flex items-center space-x-3">
                     <button
                       type="button"
                       onClick={() => handleToggle(supp.id)}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer ${
-                        supp.enabled ? "bg-red-500" : "bg-slate-300 dark:bg-slate-700"
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer shrink-0 ${
+                        supp.enabled ? "bg-red-600" : "bg-zinc-700"
                       }`}
                     >
                       <span
@@ -164,83 +191,110 @@ export const SupplierSettingsModal: React.FC<SupplierSettingsModalProps> = ({
                     </button>
                     <div>
                       <div className="flex items-center space-x-2">
-                        <span className="font-bold text-sm text-slate-900 dark:text-white">
-                          {supp.name}
-                        </span>
-                        {supp.isCustom && (
-                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-400 font-semibold">
-                            Custom REST
+                        <span className="font-bold text-sm text-white">{supp.name}</span>
+                        {/* Honest Gateway Status */}
+                        {!supp.enabled ? (
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 font-medium">
+                            ⚪ Отключен
+                          </span>
+                        ) : result ? (
+                          <span
+                            className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+                              result.success
+                                ? "bg-emerald-500/15 text-emerald-400"
+                                : "bg-rose-500/15 text-rose-400"
+                            }`}
+                          >
+                            {result.success ? "🟢 Онлайн" : "❌ Ошибка"}
+                          </span>
+                        ) : hasKeys ? (
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 font-medium">
+                            🟡 Не проверен
+                          </span>
+                        ) : (
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 font-medium">
+                            ⚪ Не подключен (Введите API-ключ)
                           </span>
                         )}
                       </div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                        {supp.description}
-                      </p>
+                      <p className="text-xs text-zinc-400 mt-0.5">{supp.description}</p>
                     </div>
                   </div>
 
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-2 shrink-0">
                     <button
                       type="button"
                       disabled={!supp.enabled || isTesting}
                       onClick={() => handleTestConnection(supp.id)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1.5 transition-colors cursor-pointer ${
-                        isSuccess
-                          ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
-                          : "bg-slate-200/70 dark:bg-white/[0.06] hover:bg-slate-300/70 text-slate-700 dark:text-slate-300"
-                      }`}
+                      className="px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1.5 transition-colors cursor-pointer bg-white/[0.05] hover:bg-white/[0.1] text-zinc-200 border border-white/[0.08] disabled:opacity-40"
                     >
                       {isTesting ? (
                         <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                      ) : isSuccess ? (
-                        <Check className="w-3.5 h-3.5 text-emerald-500" />
                       ) : (
                         <Globe className="w-3.5 h-3.5" />
                       )}
-                      <span>{isTesting ? "Проверка..." : isSuccess ? "Онлайн (OK)" : "Тест API"}</span>
+                      <span>{isTesting ? "Проверка..." : "Тест API"}</span>
                     </button>
                   </div>
                 </div>
 
+                {/* Status Result Message */}
+                {result && (
+                  <div
+                    className={`p-2.5 rounded-xl text-xs font-medium flex items-center space-x-2 ${
+                      result.success
+                        ? "bg-emerald-500/10 text-emerald-300 border border-emerald-500/20"
+                        : "bg-rose-500/10 text-rose-300 border border-rose-500/20"
+                    }`}
+                  >
+                    {result.success ? (
+                      <Check className="w-4 h-4 shrink-0 text-emerald-400" />
+                    ) : (
+                      <ShieldAlert className="w-4 h-4 shrink-0 text-rose-400" />
+                    )}
+                    <span>{result.message}</span>
+                  </div>
+                )}
+
                 {/* Specific Fields depending on supplier */}
                 {supp.enabled && (
-                  <div className="mt-4 pt-3 border-t border-slate-200/60 dark:border-white/[0.04] grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs pt-1">
                     {supp.supplier === "rossko" && (
                       <>
                         <div>
-                          <label className="block text-[11px] font-semibold text-slate-500 mb-1">
+                          <label className="block text-[11px] font-semibold text-zinc-400 mb-1">
                             Rossko API Key 1
                           </label>
                           <input
                             type="text"
                             value={supp.apiKey1 || ""}
                             onChange={(e) => handleUpdateField(supp.id, "apiKey1", e.target.value)}
-                            placeholder="rk_live_..."
-                            className="w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-mono text-[11px]"
+                            placeholder="Например: rk_live_xxxxxxxxxxxx"
+                            className="w-full px-3 py-1.5 rounded-xl border border-white/[0.08] bg-zinc-950 text-white font-mono text-[11px] focus:outline-none focus:border-red-500"
                           />
                         </div>
                         <div>
-                          <label className="block text-[11px] font-semibold text-slate-500 mb-1">
+                          <label className="block text-[11px] font-semibold text-zinc-400 mb-1">
                             Rossko API Key 2 (Secret)
                           </label>
                           <input
                             type="password"
                             value={supp.apiKey2 || ""}
                             onChange={(e) => handleUpdateField(supp.id, "apiKey2", e.target.value)}
-                            placeholder="••••••••••••"
-                            className="w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-mono text-[11px]"
+                            placeholder="Секретный ключ партнера"
+                            className="w-full px-3 py-1.5 rounded-xl border border-white/[0.08] bg-zinc-950 text-white font-mono text-[11px] focus:outline-none focus:border-red-500"
                           />
                         </div>
                         <div className="sm:col-span-2">
-                          <label className="block text-[11px] font-semibold text-slate-500 mb-1">
-                            Адрес доставки / Код филиала СТО
+                          <label className="block text-[11px] font-semibold text-zinc-400 mb-1">
+                            Адрес склада / Филиал получения
                           </label>
                           <input
                             type="text"
                             value={supp.deliveryAddress || ""}
                             onChange={(e) => handleUpdateField(supp.id, "deliveryAddress", e.target.value)}
-                            placeholder="г. Сургут, Нефтеюганское шоссе, д. 28/4"
-                            className="w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
+                            placeholder="Адрес вашего автосервиса для доставки"
+                            className="w-full px-3 py-1.5 rounded-xl border border-white/[0.08] bg-zinc-950 text-white focus:outline-none focus:border-red-500"
                           />
                         </div>
                       </>
@@ -249,43 +303,45 @@ export const SupplierSettingsModal: React.FC<SupplierSettingsModalProps> = ({
                     {supp.supplier === "armtek" && (
                       <>
                         <div>
-                          <label className="block text-[11px] font-semibold text-slate-500 mb-1">
-                            Логин Armtek (User ID)
+                          <label className="block text-[11px] font-semibold text-zinc-400 mb-1">
+                            Логин / Учетная запись Armtek
                           </label>
                           <input
                             type="text"
                             value={supp.login || ""}
                             onChange={(e) => handleUpdateField(supp.id, "login", e.target.value)}
-                            placeholder="CHAIKA_SURGUT"
-                            className="w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-mono text-[11px]"
+                            placeholder="Ваш логин в Armtek"
+                            className="w-full px-3 py-1.5 rounded-xl border border-white/[0.08] bg-zinc-950 text-white font-mono text-[11px] focus:outline-none focus:border-red-500"
                           />
                         </div>
                         <div>
-                          <label className="block text-[11px] font-semibold text-slate-500 mb-1">
-                            Код сбытовой орг. (VKORG)
+                          <label className="block text-[11px] font-semibold text-zinc-400 mb-1">
+                            Код сбытовой организации (VKORG)
                           </label>
                           <input
                             type="text"
                             value={supp.vkorg || ""}
                             onChange={(e) => handleUpdateField(supp.id, "vkorg", e.target.value)}
-                            placeholder="4001"
-                            className="w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-mono text-[11px]"
+                            placeholder="Например: 4001"
+                            className="w-full px-3 py-1.5 rounded-xl border border-white/[0.08] bg-zinc-950 text-white font-mono text-[11px] focus:outline-none focus:border-red-500"
                           />
                         </div>
                       </>
                     )}
 
-                    {(supp.supplier === "autodoc" || supp.supplier === "berg" || supp.supplier === "forum_auto") && (
+                    {(supp.supplier === "autodoc" ||
+                      supp.supplier === "berg" ||
+                      supp.supplier === "forum_auto") && (
                       <div className="sm:col-span-2">
-                        <label className="block text-[11px] font-semibold text-slate-500 mb-1">
-                          API-токен / Ключ доступа
+                        <label className="block text-[11px] font-semibold text-zinc-400 mb-1">
+                          API Token / Ключ доступа
                         </label>
                         <input
-                          type="text"
+                          type="password"
                           value={supp.apiToken || ""}
                           onChange={(e) => handleUpdateField(supp.id, "apiToken", e.target.value)}
-                          placeholder="Токен оптового кабинета..."
-                          className="w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-mono text-[11px]"
+                          placeholder="Введите токен из личного кабинета дистрибьютора"
+                          className="w-full px-3 py-1.5 rounded-xl border border-white/[0.08] bg-zinc-950 text-white font-mono text-[11px] focus:outline-none focus:border-red-500"
                         />
                       </div>
                     )}
@@ -293,45 +349,31 @@ export const SupplierSettingsModal: React.FC<SupplierSettingsModalProps> = ({
                     {supp.supplier === "custom_rest" && (
                       <>
                         <div className="sm:col-span-2">
-                          <label className="block text-[11px] font-semibold text-slate-500 mb-1">
-                            URL эндпоинта поиска
+                          <label className="block text-[11px] font-semibold text-zinc-400 mb-1">
+                            URL REST эндпоинта поиска
                           </label>
                           <input
                             type="text"
                             value={supp.endpointUrl || ""}
                             onChange={(e) => handleUpdateField(supp.id, "endpointUrl", e.target.value)}
                             placeholder="https://api.parts-supplier.ru/v1/search"
-                            className="w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-mono text-[11px]"
+                            className="w-full px-3 py-1.5 rounded-xl border border-white/[0.08] bg-zinc-950 text-white font-mono text-[11px] focus:outline-none focus:border-red-500"
                           />
                         </div>
                         <div className="sm:col-span-2">
-                          <label className="block text-[11px] font-semibold text-slate-500 mb-1">
-                            Bearer Token / API Key
+                          <label className="block text-[11px] font-semibold text-zinc-400 mb-1">
+                            Bearer Token авторизации
                           </label>
                           <input
-                            type="text"
+                            type="password"
                             value={supp.apiToken || ""}
                             onChange={(e) => handleUpdateField(supp.id, "apiToken", e.target.value)}
-                            placeholder="Секретный токен для заголовка Authorization"
-                            className="w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-mono text-[11px]"
+                            placeholder="Токен авторизации (если требуется)"
+                            className="w-full px-3 py-1.5 rounded-xl border border-white/[0.08] bg-zinc-950 text-white font-mono text-[11px] focus:outline-none focus:border-red-500"
                           />
                         </div>
                       </>
                     )}
-
-                    <div>
-                      <label className="block text-[11px] font-semibold text-slate-500 mb-1">
-                        Базовая наценка на позиции этого поставщика (%)
-                      </label>
-                      <input
-                        type="number"
-                        min="0"
-                        max="200"
-                        value={supp.markupPercent ?? 30}
-                        onChange={(e) => handleUpdateField(supp.id, "markupPercent", Number(e.target.value))}
-                        className="w-24 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-bold"
-                      />
-                    </div>
                   </div>
                 )}
               </div>
@@ -340,38 +382,32 @@ export const SupplierSettingsModal: React.FC<SupplierSettingsModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between px-6 py-4 border-t border-slate-200 dark:border-white/[0.08] bg-slate-50/70 dark:bg-white/[0.02]">
-          <div className="flex items-center space-x-2 text-xs text-slate-500">
-            <ShieldCheck className="w-4 h-4 text-emerald-500" />
-            <span>Ключи хранятся с изоляцией по учетной записи СТО</span>
+        <div className="flex items-center justify-between px-6 py-4 border-t border-white/[0.07] bg-white/[0.02]">
+          <div className="text-xs text-zinc-400">
+            {configs.filter((c) => c.enabled).length} из {configs.length} шлюзов включено
           </div>
-
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-3">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl border border-slate-200 dark:border-white/[0.1] text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
+              className="px-4 py-2 rounded-xl text-xs font-semibold text-zinc-400 hover:text-white hover:bg-white/[0.05] transition-colors cursor-pointer"
             >
               Отмена
             </button>
-
             <button
               type="button"
               disabled={isSaving}
               onClick={handleSaveAll}
-              className="px-5 py-2 rounded-xl bg-red-500 hover:bg-red-600 text-white text-xs font-semibold flex items-center space-x-1.5 transition-colors shadow-xs cursor-pointer"
+              className="flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-bold transition-all shadow-md cursor-pointer disabled:opacity-50"
             >
-              {savedSuccess ? (
-                <>
-                  <Check className="w-4 h-4" />
-                  <span>Сохранено!</span>
-                </>
+              {isSaving ? (
+                <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+              ) : savedSuccess ? (
+                <Check className="w-3.5 h-3.5 text-white" />
               ) : (
-                <>
-                  <Save className="w-4 h-4" />
-                  <span>{isSaving ? "Сохранение..." : "Сохранить настройки"}</span>
-                </>
+                <Save className="w-3.5 h-3.5" />
               )}
+              <span>{savedSuccess ? "Сохранено!" : isSaving ? "Сохранение..." : "Сохранить настройки"}</span>
             </button>
           </div>
         </div>

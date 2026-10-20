@@ -254,17 +254,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
             >
               {isChaika ? (
                 <div className="flex items-center space-x-2 min-w-0">
-                  <div className="w-8 h-8 rounded-lg bg-rose-500 flex items-center justify-center text-white shrink-0 shadow-xs group-hover:scale-105 transition-transform">
-                    <Wrench className="w-4 h-4" />
+                  <div className="h-8 flex items-center shrink-0">
+                    <img
+                      src="/logo-chaika-white.png"
+                      alt="Чайка-Сервис"
+                      className="h-6 w-auto max-w-[130px] object-contain transition-all brightness-0 dark:brightness-100"
+                    />
                   </div>
-                  <div className="min-w-0 flex flex-col">
-                    <div className="flex items-center space-x-1.5">
-                      <span className="font-bold text-xs tracking-tight text-rose-600 dark:text-rose-400 truncate">
-                        ЧАЙКА-СЕРВИС
-                      </span>
-                    </div>
-                    <span className="text-[10px] text-slate-500 dark:text-slate-400 truncate font-medium">
-                      CRM СТО & Автопарк
+                  <div className="min-w-0 flex flex-col justify-center">
+                    <span className="text-[9px] text-rose-600 dark:text-rose-400 truncate font-semibold tracking-wide uppercase">
+                      СТО & Парк
                     </span>
                   </div>
                 </div>

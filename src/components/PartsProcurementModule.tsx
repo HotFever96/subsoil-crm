@@ -60,8 +60,9 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
   const ordersStorageKey = `geo_ai_repair_orders_${currentUsername || "guest"}_v2`;
   const warehouseStorageKey = `geo_ai_warehouse_${currentUsername || "guest"}_v2`;
 
-  // Search input state
+  // Search input & mode state
   const [query, setQuery] = useState(initialQuery || (initialVehicle?.make ? `${initialVehicle.make} ${initialVehicle.model || ""}` : ""));
+  const [searchMode, setSearchMode] = useState<"ai_catalog" | "api">("ai_catalog");
   const [isLoading, setIsLoading] = useState(false);
   const [searchResponse, setSearchResponse] = useState<PartsSearchResponse | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -170,10 +171,11 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
     }
   };
 
-  const performSearch = async (searchStr?: string) => {
+  const performSearch = async (searchStr?: string, overrideMode?: "ai_catalog" | "api") => {
     const q = (searchStr !== undefined ? searchStr : query).trim();
     if (!q) return;
 
+    const currentMode = overrideMode || searchMode;
     setIsLoading(true);
     setErrorMsg(null);
 
@@ -188,6 +190,7 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
           vehicleModel: initialVehicle?.model,
           markupPercent,
           username: currentUsername,
+          searchMode: currentMode,
         }),
       });
 
@@ -342,7 +345,7 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
   const recommendations = searchResponse?.recommendations;
 
   return (
-    <div className={`flex flex-col h-full overflow-hidden ${isEmbedded ? "p-4" : "p-6"} space-y-5 bg-white dark:bg-[#0c1015]`}>
+    <div className={`flex flex-col h-full overflow-hidden ${isEmbedded ? "p-4" : "p-6"} space-y-5 bg-transparent`}>
       {/* Toast alert */}
       {toastMessage && (
         <div className="fixed top-5 right-5 z-50 flex items-center space-x-2.5 px-4 py-3 rounded-2xl bg-emerald-600 text-white shadow-xl animate-in fade-in slide-in-from-top-4 duration-300">
@@ -382,8 +385,88 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
         </div>
       )}
 
+      {/* Mode Switcher Tabs */}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center space-x-1 p-1 bg-slate-100 dark:bg-white/[0.04] rounded-xl border border-slate-200 dark:border-white/[0.06]">
+          <button
+            type="button"
+            onClick={() => {
+              setSearchMode("ai_catalog");
+              if (query.trim()) performSearch(query, "ai_catalog");
+            }}
+            className={`flex items-center space-x-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+              searchMode === "ai_catalog"
+                ? "bg-white dark:bg-zinc-800 text-rose-600 dark:text-rose-400 shadow-xs"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+            }`}
+          >
+            <Sparkles className="w-3.5 h-3.5 text-rose-500" />
+            <span>ИИ-справочник OEM и цен</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setSearchMode("api");
+              if (query.trim()) performSearch(query, "api");
+            }}
+            className={`flex items-center space-x-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+              searchMode === "api"
+                ? "bg-white dark:bg-zinc-800 text-rose-600 dark:text-rose-400 shadow-xs"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+            }`}
+          >
+            <Truck className="w-3.5 h-3.5 text-rose-500" />
+            <span>Поиск по API поставщиков</span>
+          </button>
+        </div>
+
+        {searchMode === "ai_catalog" ? (
+          <span className="text-[11px] text-slate-500 dark:text-slate-400 flex items-center space-x-1">
+            <span>💡 Подбор кросс-номеров и ориентировочных цен без фейковых остатков</span>
+          </span>
+        ) : (
+          <span className="text-[11px] text-slate-500 dark:text-slate-400 flex items-center space-x-1">
+            <span>🌐 Запрос к подключенным шлюзам дистрибьюторов</span>
+          </span>
+        )}
+      </div>
+
+      {/* Notice when API mode is chosen and no suppliers are active */}
+      {searchMode === "api" && (searchResponse?.apiNotConfigured || supplierConfigs.filter((s) => s.enabled).length === 0) && (
+        <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-900 dark:text-amber-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
+          <div className="flex items-start space-x-3">
+            <AlertCircle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+            <div>
+              <h4 className="text-xs font-bold uppercase tracking-wider">Шлюзы API поставщиков не настроены</h4>
+              <p className="text-xs text-amber-800 dark:text-amber-300/90 mt-0.5">
+                Все внешние API (Rossko, Армтек, Автодок, Берг) выключены по умолчанию. Введите реальные ключи авторизации в настройках или переключитесь на «ИИ-справочник» для мгновенного подбора кроссов.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center space-x-2 shrink-0">
+            <button
+              type="button"
+              onClick={() => setIsSettingsOpen(true)}
+              className="px-3.5 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition-all cursor-pointer shadow-xs"
+            >
+              Настроить API шлюзы
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setSearchMode("ai_catalog");
+                if (query.trim()) performSearch(query, "ai_catalog");
+              }}
+              className="px-3 py-1.5 rounded-xl border border-amber-500/30 hover:bg-amber-500/10 text-xs font-medium transition-all cursor-pointer"
+            >
+              В ИИ-справочник
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Main Search Controls */}
-      <div className="p-4 rounded-2xl bg-slate-50/80 dark:bg-[#131821] border border-slate-200/90 dark:border-white/[0.08] space-y-3.5 shadow-2xs">
+      <div className="p-4 rounded-2xl bg-white/80 dark:bg-zinc-900/65 dark:backdrop-blur-xl border border-slate-200 dark:border-white/[0.07] space-y-3.5 shadow-xl">
         {/* Search input with Speech-to-Text and Submit */}
         <div className="flex items-center space-x-2">
           <div className="relative flex-1">
@@ -772,7 +855,7 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
           </div>
 
           {/* Table */}
-          <div className="border border-slate-200 dark:border-white/[0.08] rounded-2xl overflow-hidden bg-white dark:bg-[#131821] shadow-2xs">
+          <div className="border border-slate-200/80 dark:border-white/[0.07] rounded-2xl overflow-hidden bg-white/90 dark:bg-zinc-900/65 dark:backdrop-blur-xl shadow-xl">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>

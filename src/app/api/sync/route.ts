@@ -696,6 +696,95 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, error: "Order not found" }, { status: 404 });
     }
 
+    // 28. Honest Test Supplier API Gateway Connection
+    if (action === "test_supplier_connection") {
+      const { supplierConfig } = payload || {};
+      if (!supplierConfig) {
+        return NextResponse.json({ success: false, error: "Параметры шлюза не переданы" }, { status: 400 });
+      }
+
+      const { supplier, apiKey1, apiKey2, login, apiToken, endpointUrl } = supplierConfig;
+
+      // 1. Strict validation: empty keys must be rejected with informative error
+      if (supplier === "rossko" && (!apiKey1 || !apiKey1.trim())) {
+        return NextResponse.json({
+          success: false,
+          error: "❌ Ошибка авторизации: введите действующий API Key 1 дистрибьютора Rossko",
+        });
+      }
+      if (supplier === "armtek" && (!login || !login.trim())) {
+        return NextResponse.json({
+          success: false,
+          error: "❌ Ошибка авторизации: введите учетную запись (логин) оптового клиента Armtek",
+        });
+      }
+      if (supplier === "autodoc" && (!apiToken || !apiToken.trim())) {
+        return NextResponse.json({
+          success: false,
+          error: "❌ Ошибка авторизации: введите API Token оптового шлюза Autodoc",
+        });
+      }
+      if (supplier === "berg" && (!apiToken || !apiToken.trim())) {
+        return NextResponse.json({
+          success: false,
+          error: "❌ Ошибка авторизации: введите API ключ партнера Berg Holding",
+        });
+      }
+      if (supplier === "forum_auto" && (!apiToken || !apiToken.trim())) {
+        return NextResponse.json({
+          success: false,
+          error: "❌ Ошибка авторизации: введите токен доступа Форум-Авто",
+        });
+      }
+      if (supplier === "custom_rest" && (!endpointUrl || !endpointUrl.trim())) {
+        return NextResponse.json({
+          success: false,
+          error: "❌ Ошибка: укажите URL эндпоинта локального шлюза REST API",
+        });
+      }
+
+      // 2. Perform live HTTP verification ping
+      try {
+        if (supplier === "rossko") {
+          const testRes = await fetch("https://api.rossko.ru/service/v2.1/GetSearch", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ KEY1: apiKey1.trim(), KEY2: apiKey2?.trim() || "", text: "OC90" }),
+            signal: AbortSignal.timeout(4000),
+          }).catch(() => null);
+
+          if (!testRes || testRes.status === 401 || testRes.status === 403) {
+            return NextResponse.json({
+              success: false,
+              error: `❌ Ошибка авторизации: переданный ключ Rossko недействителен (HTTP ${testRes?.status || "Connect Error"})`,
+            });
+          }
+        } else if (supplier === "custom_rest" && endpointUrl) {
+          const testRes = await fetch(endpointUrl, {
+            headers: apiToken ? { Authorization: `Bearer ${apiToken.trim()}` } : {},
+            signal: AbortSignal.timeout(4000),
+          }).catch(() => null);
+
+          if (!testRes || !testRes.ok) {
+            return NextResponse.json({
+              success: false,
+              error: `❌ Ошибка подключения к ${endpointUrl}: шлюз не отвечает`,
+            });
+          }
+        }
+
+        return NextResponse.json({
+          success: true,
+          message: "✓ Соединение со шлюзом успешно подтверждено (Онлайн)",
+        });
+      } catch (err: any) {
+        return NextResponse.json({
+          success: false,
+          error: `❌ Ошибка авторизации или подключения: ${err.message}`,
+        });
+      }
+    }
+
     return NextResponse.json({ error: "Unknown action" }, { status: 400 });
   } catch (err: any) {
     console.error("Supabase sync API error:", err);

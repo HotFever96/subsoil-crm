@@ -90,4 +90,6 @@ export interface PartsSearchResponse {
   };
   providersQueried: string[];
   liveApiUsed: boolean;
+  apiNotConfigured?: boolean;
+  message?: string;
 }

@@ -206,17 +206,24 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
             id="printable-service-doc"
             className="max-w-3xl mx-auto bg-white text-slate-900 p-8 sm:p-12 shadow-md print:shadow-none print:p-0 rounded-xl print:rounded-none font-sans text-xs leading-relaxed"
           >
-            {/* Header with Requisites */}
-            <div className="border-b-2 border-red-600 pb-4 mb-5 flex justify-between items-start">
-              <div>
-                <h1 className="text-base font-extrabold text-red-600 uppercase tracking-wide">
-                  {req.brandName}
-                </h1>
-                <p className="font-semibold text-xs text-slate-800">{req.name}</p>
-                <p className="text-[11px] text-slate-600">{req.address}</p>
-                <p className="text-[11px] text-slate-600">Тел: {req.phone} • Email: {req.email}</p>
+            {/* Header with Brand Logo & Requisites */}
+            <div className="border-b-2 border-red-600 pb-4 mb-5 flex justify-between items-start gap-4">
+              <div className="flex items-start space-x-4">
+                <img
+                  src="/logo-chaika-white.png"
+                  alt="Чайка-Сервис"
+                  className="h-11 w-auto max-w-[170px] object-contain filter invert shrink-0"
+                />
+                <div>
+                  <h1 className="text-base font-extrabold text-red-600 uppercase tracking-wide">
+                    {req.brandName}
+                  </h1>
+                  <p className="font-semibold text-xs text-slate-800">{req.name}</p>
+                  <p className="text-[11px] text-slate-600">{req.address}</p>
+                  <p className="text-[11px] text-slate-600">Тел: {req.phone} • Email: {req.email}</p>
+                </div>
               </div>
-              <div className="text-right text-[11px] text-slate-500 space-y-0.5">
+              <div className="text-right text-[11px] text-slate-500 space-y-0.5 shrink-0">
                 <p>ИНН: <span className="font-semibold text-slate-800">{req.inn}</span> / КПП: {req.kpp}</p>
                 <p>ОГРН: {req.ogrn}</p>
                 <p>Р/с: {req.rs}</p>
@@ -268,9 +275,8 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
 
             {/* Acceptance Act Specific Block with Schematic */}
             {docType === "acceptance_act" && (
-              <div className="mb-5 p-3.5 rounded-lg border border-slate-200 text-xs space-y-3 bg-slate-50/50">
-                <h3 className="font-bold text-slate-900 text-xs">Карта дефектов кузова и состояние при приеме ТС:</h3>
-                <VehicleInspectionSchematic inspection={order.inspection} readOnly={true} />
+              <div className="mb-5 p-3 rounded-lg border border-slate-300 bg-white">
+                <VehicleInspectionSchematic inspection={order.inspection} readOnly={true} isPrint={true} />
               </div>
             )}
 

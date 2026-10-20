@@ -25,11 +25,11 @@
   }
 
   .dark {
-    --bg-main: #0c1015;
-    --bg-surface: #131821;
-    --bg-sidebar: #090d12;
-    --bg-card: #151b24;
-    --border-subtle: rgba(255, 255, 255, 0.08);
+    --bg-main: #090c10;
+    --bg-surface: #12161f;
+    --bg-sidebar: #080b0f;
+    --bg-card: rgba(24, 24, 27, 0.65);
+    --border-subtle: rgba(255, 255, 255, 0.07);
     --border-focus: rgba(255, 255, 255, 0.16);
     --text-primary: #f1f5f9;
     --text-secondary: #94a3b8;
@@ -42,9 +42,9 @@
   [data-business="chaika-service"].dark,
   .dark [data-business="chaika-service"],
   .dark[data-business="chaika-service"] {
-    --accent: #ef4444;
-    --accent-hover: #dc2626;
-    --accent-soft: rgba(239, 68, 68, 0.15);
+    --accent: #f43f5e;
+    --accent-hover: #e11d48;
+    --accent-soft: rgba(244, 63, 94, 0.15);
   }
 }
 
@@ -56,6 +56,18 @@ body {
   letter-spacing: -0.011em;
   overflow-x: hidden;
   transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+html.dark body {
+  background-color: #090c10;
+  background-image: radial-gradient(ellipse 90% 60% at 75% -10%, rgba(14, 165, 233, 0.08), transparent 70%);
+  background-attachment: fixed;
+}
+
+html.dark[data-business="chaika-service"] body {
+  background-color: #090c10;
+  background-image: radial-gradient(ellipse 90% 60% at 75% -10%, rgba(244, 63, 94, 0.08), transparent 70%);
+  background-attachment: fixed;
 }
 
 /* Print layout for A4 auto-service documents */

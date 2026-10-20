@@ -10,10 +10,10 @@ export const DEFAULT_SUPPLIER_INTEGRATIONS: SupplierIntegrationConfig[] = [
     supplier: "rossko",
     name: "Росско (Rossko)",
     description: "Крупнейший дистрибьютор в РФ и СНГ. Прямой доступ к региональным складам, экспресс-доставка.",
-    enabled: true,
-    apiKey1: "rk_live_89410f823a01",
-    apiKey2: "rk_secret_7721a99d45",
-    deliveryAddress: "г. Сургут, Нефтеюганское ш., 28/4 (Склад СТО)",
+    enabled: false,
+    apiKey1: "",
+    apiKey2: "",
+    deliveryAddress: "",
     markupPercent: 30,
     username: "admin",
   },
@@ -22,9 +22,9 @@ export const DEFAULT_SUPPLIER_INTEGRATIONS: SupplierIntegrationConfig[] = [
     supplier: "armtek",
     name: "Армтек (Armtek)",
     description: "Оптовый поставщик автозапчастей для легкового и грузового транспорта. SOAP/REST API.",
-    enabled: true,
-    login: "CHAIKA_SURGUT",
-    vkorg: "4001",
+    enabled: false,
+    login: "",
+    vkorg: "",
     markupPercent: 30,
     username: "admin",
   },
@@ -33,8 +33,8 @@ export const DEFAULT_SUPPLIER_INTEGRATIONS: SupplierIntegrationConfig[] = [
     supplier: "autodoc",
     name: "Автодок Опт (Autodoc)",
     description: "Федеральная сеть оптовых поставок, глубокая база кросс-номеров и заменителей.",
-    enabled: true,
-    apiToken: "atd_token_991823746a",
+    enabled: false,
+    apiToken: "",
     markupPercent: 35,
     username: "admin",
   },
@@ -43,8 +43,8 @@ export const DEFAULT_SUPPLIER_INTEGRATIONS: SupplierIntegrationConfig[] = [
     supplier: "berg",
     name: "Берг Холдинг (Berg)",
     description: "Официальный дистрибьютор мировых брендов деталей подвески, тормозных систем и сцеплений.",
-    enabled: true,
-    apiToken: "berg_key_384710294b",
+    enabled: false,
+    apiToken: "",
     markupPercent: 30,
     username: "admin",
   },
@@ -64,7 +64,7 @@ export const DEFAULT_SUPPLIER_INTEGRATIONS: SupplierIntegrationConfig[] = [
     name: "Локальный поставщик (Custom REST)",
     description: "Подключение регионального оптового склада через собственный REST API шлюз.",
     enabled: false,
-    endpointUrl: "https://api.local-parts-surgut.ru/v1/search",
+    endpointUrl: "",
     apiToken: "",
     markupPercent: 25,
     isCustom: true,
@@ -299,10 +299,84 @@ export function findCatalogMatches(query: string): VehiclePartsCatalogItem[] {
   return keywordMatches.length > 0 ? keywordMatches : [KNOWN_PARTS_DATABASE[0]];
 }
 
-export function generateSupplierQuotes(
+export function getAiReferenceQuotes(
   catalogItem: VehiclePartsCatalogItem,
   markupPercent: number = 30
 ): PartSearchResult[] {
+  const results: PartSearchResult[] = [];
+
+  const addAiQuote = (
+    oem: string,
+    brand: string,
+    name: string,
+    type: PartQualityTier,
+    typeLabel: "Оригинал (OEM)" | "Премиум-аналог" | "Бюджетный аналог",
+    purchasePrice: number,
+    rating: number = 5
+  ) => {
+    const roundedPurchase = Math.round(purchasePrice);
+    const salePrice = Math.round(roundedPurchase * (1 + markupPercent / 100));
+    const marginAmount = salePrice - roundedPurchase;
+
+    results.push({
+      id: `ai-ref-${oem}-${Math.random().toString(36).slice(2, 6)}`,
+      supplierId: "ai_reference",
+      supplierName: "ИИ-каталог (Рыночный ориентир)",
+      supplierBadgeColor: type === "original" ? "emerald" : type === "cross_premium" ? "blue" : "zinc",
+      oem,
+      brand,
+      name,
+      type,
+      typeLabel,
+      stockQty: 0,
+      deliveryHours: 24,
+      deliveryLabel: "Справочная цена рынка",
+      deliveryProbability: 100,
+      purchasePrice: roundedPurchase,
+      salePrice,
+      marginAmount,
+      marginPercent: markupPercent,
+      rating,
+    });
+  };
+
+  // 1. Original OEM part
+  addAiQuote(
+    catalogItem.oem,
+    catalogItem.originalBrand,
+    catalogItem.partName,
+    "original",
+    "Оригинал (OEM)",
+    catalogItem.baseWholesalePrice,
+    5
+  );
+
+  // 2. Crosses
+  catalogItem.crosses.forEach((c) => {
+    addAiQuote(
+      c.oem,
+      c.brand,
+      `${catalogItem.partName} (${c.brand})`,
+      c.tier,
+      c.tier === "cross_premium" ? "Премиум-аналог" : "Бюджетный аналог",
+      catalogItem.baseWholesalePrice * c.priceMultiplier,
+      c.tier === "cross_premium" ? 5 : 4
+    );
+  });
+
+  return results;
+}
+
+export function generateSupplierQuotes(
+  catalogItem: VehiclePartsCatalogItem,
+  markupPercent: number = 30,
+  enabledSupplierIds: string[] = []
+): PartSearchResult[] {
+  // If no suppliers are enabled, strictly return empty list — NO fake supplier stock
+  if (!enabledSupplierIds || enabledSupplierIds.length === 0) {
+    return [];
+  }
+
   const results: PartSearchResult[] = [];
 
   const addQuote = (
@@ -349,177 +423,119 @@ export function generateSupplierQuotes(
     });
   };
 
-  // 1. Warehouse quote (In-stock in our local service shop)
-  addQuote(
-    "warehouse",
-    "Свой склад (СТО)",
-    "emerald",
-    catalogItem.oem,
-    catalogItem.originalBrand.split(" ")[0],
-    catalogItem.partName,
-    "original",
-    "Оригинал (OEM)",
-    catalogItem.baseWholesalePrice * 0.95,
-    0,
-    "В наличии (Стеллаж А-12)",
-    3,
-    100,
-    5,
-    "Стеллаж А-12"
-  );
-
-  // 2. Rossko quotes (Primary distributor)
-  addQuote(
-    "rossko",
-    "Росско (Rossko)",
-    "red",
-    catalogItem.oem,
-    catalogItem.originalBrand,
-    catalogItem.partName,
-    "original",
-    "Оригинал (OEM)",
-    catalogItem.baseWholesalePrice,
-    4,
-    "Сегодня (экспресс 4 ч)",
-    18,
-    98,
-    5
-  );
-
-  if (catalogItem.crosses[0]) {
-    const c = catalogItem.crosses[0];
+  if (enabledSupplierIds.includes("rossko")) {
     addQuote(
       "rossko",
-      "Росско (Rossko)",
+      "Росско (Rossko API)",
       "red",
-      c.oem,
-      c.brand,
-      `${catalogItem.partName} (${c.brand})`,
-      c.tier,
-      c.tier === "cross_premium" ? "Премиум-аналог" : "Бюджетный аналог",
-      catalogItem.baseWholesalePrice * c.priceMultiplier,
+      catalogItem.oem,
+      catalogItem.originalBrand,
+      catalogItem.partName,
+      "original",
+      "Оригинал (OEM)",
+      catalogItem.baseWholesalePrice,
       24,
-      "Завтра (1 день)",
-      12,
-      96,
-      c.tier === "cross_premium" ? 5 : 4
-    );
-  }
-
-  // 3. Armtek quotes
-  if (catalogItem.crosses[1]) {
-    const c = catalogItem.crosses[1];
-    addQuote(
-      "armtek",
-      "Армтек (Armtek)",
-      "purple",
-      c.oem,
-      c.brand,
-      `${catalogItem.partName} (${c.brand})`,
-      c.tier,
-      c.tier === "cross_premium" ? "Премиум-аналог" : "Бюджетный аналог",
-      catalogItem.baseWholesalePrice * c.priceMultiplier * 0.98,
-      24,
-      "Завтра к 10:00 (1 дн.)",
-      25,
+      "Доставка поставщика (1-2 дня)",
+      10,
       95,
-      4
+      5
     );
+    if (catalogItem.crosses[0]) {
+      const c = catalogItem.crosses[0];
+      addQuote(
+        "rossko",
+        "Росско (Rossko API)",
+        "red",
+        c.oem,
+        c.brand,
+        `${catalogItem.partName} (${c.brand})`,
+        c.tier,
+        c.tier === "cross_premium" ? "Премиум-аналог" : "Бюджетный аналог",
+        catalogItem.baseWholesalePrice * c.priceMultiplier,
+        24,
+        "Доставка поставщика (1-2 дня)",
+        8,
+        94,
+        5
+      );
+    }
   }
 
-  // 4. Autodoc quotes
-  addQuote(
-    "autodoc",
-    "Автодок (Autodoc)",
-    "blue",
-    catalogItem.oem,
-    catalogItem.originalBrand,
-    catalogItem.partName,
-    "original",
-    "Оригинал (OEM)",
-    catalogItem.baseWholesalePrice * 1.02,
-    24,
-    "Завтра (1 день)",
-    34,
-    97,
-    5
-  );
+  if (enabledSupplierIds.includes("armtek")) {
+    if (catalogItem.crosses[1]) {
+      const c = catalogItem.crosses[1];
+      addQuote(
+        "armtek",
+        "Армтек (Armtek API)",
+        "purple",
+        c.oem,
+        c.brand,
+        `${catalogItem.partName} (${c.brand})`,
+        c.tier,
+        c.tier === "cross_premium" ? "Премиум-аналог" : "Бюджетный аналог",
+        catalogItem.baseWholesalePrice * c.priceMultiplier * 0.98,
+        24,
+        "Доставка поставщика (1-2 дня)",
+        15,
+        93,
+        4
+      );
+    }
+  }
 
-  if (catalogItem.crosses[2]) {
-    const c = catalogItem.crosses[2];
+  if (enabledSupplierIds.includes("autodoc")) {
     addQuote(
       "autodoc",
-      "Автодок (Autodoc)",
+      "Автодок (Autodoc API)",
       "blue",
-      c.oem,
-      c.brand,
-      `${catalogItem.partName} (${c.brand})`,
-      c.tier,
-      c.tier === "cross_premium" ? "Премиум-аналог" : "Бюджетный аналог",
-      catalogItem.baseWholesalePrice * c.priceMultiplier * 0.95,
+      catalogItem.oem,
+      catalogItem.originalBrand,
+      catalogItem.partName,
+      "original",
+      "Оригинал (OEM)",
+      catalogItem.baseWholesalePrice * 1.02,
       48,
-      "2-3 дня",
-      40,
-      91,
-      3
-    );
-  }
-
-  // 5. Berg quotes
-  if (catalogItem.crosses[0]) {
-    const c = catalogItem.crosses[0];
-    addQuote(
-      "berg",
-      "Берг Холдинг",
-      "amber",
-      c.oem,
-      c.brand,
-      `${catalogItem.partName} (${c.brand})`,
-      c.tier,
-      c.tier === "cross_premium" ? "Премиум-аналог" : "Бюджетный аналог",
-      catalogItem.baseWholesalePrice * c.priceMultiplier * 1.01,
-      24,
-      "Завтра (1 день)",
-      7,
-      94,
+      "Доставка Autodoc (2-3 дня)",
+      20,
+      96,
       5
     );
   }
 
-  // 6. Forum-Auto quotes (Budget options)
-  const budgetCross = catalogItem.crosses.find((c) => c.tier === "cross_economy") || catalogItem.crosses[catalogItem.crosses.length - 1];
-  if (budgetCross) {
-    addQuote(
-      "forum_auto",
-      "Форум-Авто",
-      "indigo",
-      budgetCross.oem,
-      budgetCross.brand,
-      `${catalogItem.partName} (${budgetCross.brand})`,
-      "cross_economy",
-      "Бюджетный аналог",
-      catalogItem.baseWholesalePrice * budgetCross.priceMultiplier * 0.92,
-      24,
-      "Завтра (1 день)",
-      15,
-      89,
-      3
-    );
+  if (enabledSupplierIds.includes("berg")) {
+    if (catalogItem.crosses[0]) {
+      const c = catalogItem.crosses[0];
+      addQuote(
+        "berg",
+        "Берг Холдинг (Berg API)",
+        "amber",
+        c.oem,
+        c.brand,
+        `${catalogItem.partName} (${c.brand})`,
+        c.tier,
+        c.tier === "cross_premium" ? "Премиум-аналог" : "Бюджетный аналог",
+        catalogItem.baseWholesalePrice * c.priceMultiplier * 1.01,
+        24,
+        "Доставка Berg (1-2 дня)",
+        5,
+        92,
+        4
+      );
+    }
   }
 
   // Compute recommendations
-  // 1) Fastest: min delivery hours
-  const sortedByHours = [...results].sort((a, b) => a.deliveryHours - b.deliveryHours || a.purchasePrice - b.purchasePrice);
-  if (sortedByHours[0]) sortedByHours[0].isFastest = true;
+  if (results.length > 0) {
+    const sortedByHours = [...results].sort((a, b) => a.deliveryHours - b.deliveryHours || a.purchasePrice - b.purchasePrice);
+    if (sortedByHours[0]) sortedByHours[0].isFastest = true;
 
-  // 2) Best Value: premium or original with best balance
-  const bestValueCandidates = results.filter((r) => r.type === "cross_premium" || r.type === "original");
-  const sortedByValue = [...bestValueCandidates].sort((a, b) => a.purchasePrice - b.purchasePrice);
-  if (sortedByValue[0]) sortedByValue[0].isBestValue = true;
+    const bestValueCandidates = results.filter((r) => r.type === "cross_premium" || r.type === "original");
+    const sortedByValue = [...bestValueCandidates].sort((a, b) => a.purchasePrice - b.purchasePrice);
+    if (sortedByValue[0]) sortedByValue[0].isBestValue = true;
 
-  // 3) Max Margin: lowest purchase price with reasonable delivery
-  const sortedByPrice = [...results].sort((a, b) => a.purchasePrice - b.purchasePrice);
-  if (sortedByPrice[0]) sortedByPrice[0].isMaxMargin = true;
+    const sortedByPrice = [...results].sort((a, b) => a.purchasePrice - b.purchasePrice);
+    if (sortedByPrice[0]) sortedByPrice[0].isMaxMargin = true;
+  }
 
   return results;
 }

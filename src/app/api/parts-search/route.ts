@@ -3,6 +3,7 @@ import { callOpenRouter } from "@/lib/openrouter";
 import {
   findCatalogMatches,
   generateSupplierQuotes,
+  getAiReferenceQuotes,
   DEFAULT_SUPPLIER_INTEGRATIONS,
 } from "@/lib/parts-procurement-data";
 import {
@@ -59,6 +60,7 @@ export async function POST(req: NextRequest) {
       vehicleModel,
       markupPercent = 30,
       username = "admin",
+      searchMode = "ai_catalog",
     } = body;
 
     const rawQuery = String(query || "").trim();
@@ -165,9 +167,39 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // 4. Generate multi-supplier quotes
+    // 4. Generate quotes based on searchMode (API vs AI Reference)
     const primaryCatalog = matchedCatalogItems[0] || findCatalogMatches("сцепление")[0];
-    const generatedQuotes = generateSupplierQuotes(primaryCatalog, Number(markupPercent));
+    const enabledSupplierIds = enabledSuppliers.map((s) => s.id);
+
+    if (searchMode === "api" && enabledSupplierIds.length === 0) {
+      return NextResponse.json({
+        success: true,
+        query: rawQuery,
+        detectedPart: detectedPart || {
+          oem: primaryCatalog.oem,
+          brand: primaryCatalog.originalBrand,
+          name: primaryCatalog.partName,
+          vehicle: primaryCatalog.vehicle,
+        },
+        crossArticleList: primaryCatalog.crosses.map((c) => ({
+          oem: c.oem,
+          brand: c.brand,
+          name: primaryCatalog.partName,
+          tier: c.tier,
+        })),
+        results: [],
+        apiNotConfigured: true,
+        message:
+          "API поставщиков не настроены. Перейдите в настройки шлюзов для ввода реальных ключей Rossko/Armtek или переключитесь на ИИ-справочник.",
+        providersQueried: [],
+        liveApiUsed: false,
+      });
+    }
+
+    const generatedQuotes =
+      searchMode === "api"
+        ? generateSupplierQuotes(primaryCatalog, Number(markupPercent), enabledSupplierIds)
+        : getAiReferenceQuotes(primaryCatalog, Number(markupPercent));
 
     if (!detectedPart) {
       detectedPart = {
@@ -183,7 +215,11 @@ export async function POST(req: NextRequest) {
     const maxMargin = generatedQuotes.find((q) => q.isMaxMargin) || generatedQuotes[generatedQuotes.length - 1];
 
     if (!aiSummary) {
-      aiSummary = `Подобрано ${generatedQuotes.length} вариантов от поставщиков. Рекомендуем "${bestValue.brand} (${bestValue.oem})" по соотношению надежности и цены. В наличии на собственном складе доступна экспресс-выдача.`;
+      if (searchMode === "api") {
+        aiSummary = `Получено ${generatedQuotes.length} вариантов от подключенных поставщиков. Рекомендуем "${bestValue?.brand || ""} (${bestValue?.oem || ""})".`;
+      } else {
+        aiSummary = `Справочные среднерыночные цены и кросс-номера для "${detectedPart.brand} ${detectedPart.oem}". Рекомендуем оригинальные детали или премиум-аналоги для гарантийного обслуживания.`;
+      }
     }
 
     const responseData: PartsSearchResponse = {
@@ -203,8 +239,8 @@ export async function POST(req: NextRequest) {
         maxMargin,
         aiSummary,
       },
-      providersQueried,
-      liveApiUsed: enabledSuppliers.some((s) => s.apiKey1 || s.apiToken),
+      providersQueried: searchMode === "api" ? providersQueried : ["ИИ-база знаний каталогов и кросс-номеров"],
+      liveApiUsed: searchMode === "api" && enabledSuppliers.some((s) => s.apiKey1 || s.apiToken),
     };
 
     return NextResponse.json(responseData);

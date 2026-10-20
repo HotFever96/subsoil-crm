@@ -99,7 +99,7 @@ export const RepairOrdersModule: React.FC = () => {
   const [vehicleModel, setVehicleModel] = useState("");
   const [licensePlate, setLicensePlate] = useState("");
   const [vin, setVin] = useState("");
-  const [mileage, setMileage] = useState<number>(0);
+  const [mileage, setMileage] = useState<number | string>("");
   const [complaints, setComplaints] = useState("");
   const [recommendations, setRecommendations] = useState("");
   const [orderStatus, setOrderStatus] = useState<OrderStatus>("in_progress");
@@ -209,7 +209,7 @@ export const RepairOrdersModule: React.FC = () => {
     setVehicleModel("");
     setLicensePlate("");
     setVin("");
-    setMileage(0);
+    setMileage("");
     setComplaints("");
     setRecommendations("");
     setOrderStatus("in_progress");
@@ -235,7 +235,7 @@ export const RepairOrdersModule: React.FC = () => {
     setVehicleModel(order.vehicle.model || "");
     setLicensePlate(order.vehicle.licensePlate || "");
     setVin(order.vehicle.vin || "");
-    setMileage(order.vehicle.mileage || 0);
+    setMileage(order.vehicle.mileage ? String(order.vehicle.mileage) : "");
     setComplaints(order.vehicle.complaints || "");
     setRecommendations(order.recommendations || "");
     setOrderStatus(order.status || "in_progress");
@@ -795,32 +795,42 @@ export const RepairOrdersModule: React.FC = () => {
 
       {/* FULL REPAIR ORDER MODAL: 3 WORK TABS */}
       {isEditorOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-2 sm:p-4 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-[#0c1015] w-full max-w-5xl h-[92vh] rounded-2xl shadow-2xl border border-slate-200 dark:border-zinc-800 flex flex-col overflow-hidden">
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-0 sm:p-4 animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-zinc-900/90 dark:backdrop-blur-2xl w-full max-w-5xl h-full sm:h-[92vh] sm:rounded-2xl rounded-none shadow-2xl border-0 sm:border border-slate-200 dark:border-white/[0.08] flex flex-col overflow-hidden">
             {/* Modal Header & Tabs */}
-            <div className="px-6 py-3.5 border-b border-slate-200 dark:border-zinc-800 flex items-center justify-between bg-slate-50 dark:bg-zinc-900/60 shrink-0">
-              <div className="flex items-center space-x-3">
-                <div className="p-2 rounded-lg bg-red-600/10 text-red-600 font-bold">
-                  <Wrench className="w-5 h-5" />
+            <div className="px-4 sm:px-6 py-3 border-b border-slate-200 dark:border-white/[0.08] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 bg-slate-50/80 dark:bg-white/[0.02] shrink-0">
+              <div className="flex items-center justify-between sm:justify-start space-x-3">
+                <div className="flex items-center space-x-2.5">
+                  <div className="p-2 rounded-xl bg-red-600/10 text-red-600 font-bold shrink-0">
+                    <Wrench className="w-4 h-4 sm:w-5 sm:h-5" />
+                  </div>
+                  <div className="min-w-0">
+                    <h2 className="text-sm font-bold text-slate-900 dark:text-zinc-100 truncate">
+                      {editingOrder ? `Редактирование: ${editingOrder.orderNumber}` : "Новый заказ-наряд"}
+                    </h2>
+                    <p className="text-[11px] text-slate-500 dark:text-zinc-400 truncate">
+                      {licensePlate ? `${vehicleMake} ${vehicleModel} (${licensePlate})` : "Заполните данные заказчика и ТС"}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h2 className="text-sm font-bold text-slate-900 dark:text-zinc-100">
-                    {editingOrder ? `Редактирование: ${editingOrder.orderNumber}` : "Новый заказ-наряд"}
-                  </h2>
-                  <p className="text-[11px] text-slate-500 dark:text-zinc-400">
-                    {licensePlate ? `${vehicleMake} ${vehicleModel} (${licensePlate})` : "Заполните данные заказчика и транспортного средства"}
-                  </p>
-                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setIsEditorOpen(false)}
+                  className="sm:hidden p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 cursor-pointer"
+                >
+                  <X className="w-5 h-5" />
+                </button>
               </div>
 
-              {/* 3 WORK TABS */}
-              <div className="flex items-center bg-white dark:bg-zinc-900 p-1 rounded-xl border border-slate-200 dark:border-zinc-800">
+              {/* 3 WORK TABS with mobile horizontal scroll */}
+              <div className="flex items-center space-x-1 overflow-x-auto whitespace-nowrap bg-slate-100 dark:bg-white/[0.04] p-1 rounded-xl border border-slate-200/80 dark:border-white/[0.06] scrollbar-none">
                 <button
                   type="button"
                   onClick={() => setEditorTab("works_parts")}
-                  className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                  className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer shrink-0 ${
                     editorTab === "works_parts"
-                      ? "bg-slate-900 dark:bg-white text-white dark:text-slate-950 shadow-2xs"
+                      ? "bg-white dark:bg-zinc-800 text-rose-600 dark:text-rose-400 shadow-xs"
                       : "text-slate-600 dark:text-zinc-400 hover:text-slate-900"
                   }`}
                 >
@@ -830,14 +840,14 @@ export const RepairOrdersModule: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setEditorTab("inspection")}
-                  className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                  className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer shrink-0 ${
                     editorTab === "inspection"
-                      ? "bg-slate-900 dark:bg-white text-white dark:text-slate-950 shadow-2xs"
+                      ? "bg-white dark:bg-zinc-800 text-rose-600 dark:text-rose-400 shadow-xs"
                       : "text-slate-600 dark:text-zinc-400 hover:text-slate-900"
                   }`}
                 >
                   <Car className="w-3.5 h-3.5" />
-                  <span>2. Акт осмотра (Схема ТС)</span>
+                  <span>2. Акт осмотра</span>
                   {(inspection.damages?.length || 0) > 0 && (
                     <span className="w-4 h-4 rounded-full bg-rose-500 text-white text-[10px] flex items-center justify-center font-bold">
                       {inspection.damages.length}
@@ -847,21 +857,21 @@ export const RepairOrdersModule: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setEditorTab("documents")}
-                  className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                  className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer shrink-0 ${
                     editorTab === "documents"
-                      ? "bg-slate-900 dark:bg-white text-white dark:text-slate-950 shadow-2xs"
+                      ? "bg-white dark:bg-zinc-800 text-rose-600 dark:text-rose-400 shadow-xs"
                       : "text-slate-600 dark:text-zinc-400 hover:text-slate-900"
                   }`}
                 >
                   <Printer className="w-3.5 h-3.5" />
-                  <span>3. Пакет документов и Печать А4</span>
+                  <span>3. Документы А4</span>
                 </button>
               </div>
 
               <button
                 type="button"
                 onClick={() => setIsEditorOpen(false)}
-                className="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 cursor-pointer"
+                className="hidden sm:block p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -872,122 +882,121 @@ export const RepairOrdersModule: React.FC = () => {
               {/* TAB 1: WORKS AND PARTS */}
               {editorTab === "works_parts" && (
                 <div className="space-y-6">
-                  {/* Client & Vehicle Section */}
-                  <div className="p-4 rounded-xl bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 space-y-3">
-                    <div className="font-bold text-slate-900 dark:text-zinc-100 text-xs uppercase tracking-wider flex items-center space-x-1.5">
-                      <Car className="w-4 h-4 text-red-500" />
-                      <span>Клиент и Транспортное средство</span>
+                  {/* Ergonomic Compact 2-Column Split: Client & Vehicle */}
+                  <div className="space-y-2.5">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {/* Left Card: Заказчик */}
+                      <div className="p-3.5 rounded-2xl bg-zinc-900/60 border border-white/[0.07] space-y-2.5">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider flex items-center space-x-1.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
+                            <span>Заказчик</span>
+                          </span>
+                          <span className="text-[10px] text-zinc-500 font-medium">
+                            {clientInn.trim() ? "Юридическое лицо" : "Физическое лицо"}
+                          </span>
+                        </div>
+
+                        <div>
+                          <input
+                            type="text"
+                            value={clientName}
+                            onChange={(e) => setClientName(e.target.value)}
+                            placeholder="ФИО владельца или Название организации *"
+                            className="w-full px-3 py-1.5 rounded-xl border border-white/[0.08] bg-zinc-950 text-xs text-white font-semibold placeholder:text-zinc-500 focus:outline-none focus:border-red-500"
+                          />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-2">
+                          <input
+                            type="text"
+                            value={clientPhone}
+                            onChange={(e) => setClientPhone(e.target.value)}
+                            placeholder="Телефон *"
+                            className="w-full px-3 py-1.5 rounded-xl border border-white/[0.08] bg-zinc-950 text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-red-500"
+                          />
+                          <input
+                            type="text"
+                            value={clientInn}
+                            onChange={(e) => setClientInn(e.target.value)}
+                            placeholder="ИНН (для юрлиц)"
+                            className="w-full px-3 py-1.5 rounded-xl border border-white/[0.08] bg-zinc-950 text-xs text-white font-mono placeholder:text-zinc-500 focus:outline-none focus:border-red-500"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Right Card: Транспортное средство */}
+                      <div className="p-3.5 rounded-2xl bg-zinc-900/60 border border-white/[0.07] space-y-2.5">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider flex items-center space-x-1.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
+                            <span>Транспортное средство</span>
+                          </span>
+                          {/* Russian License Plate Styling */}
+                          <div className="inline-flex items-center border border-zinc-400/80 rounded px-1.5 py-0.5 bg-white text-zinc-950 shadow-2xs font-mono font-black text-xs tracking-wider">
+                            <input
+                              type="text"
+                              value={licensePlate}
+                              onChange={(e) => setLicensePlate(e.target.value.toUpperCase())}
+                              placeholder="А000АА77"
+                              className="w-20 text-center font-bold uppercase bg-transparent focus:outline-none"
+                            />
+                            <span className="text-[9px] font-bold border-l border-zinc-400 pl-1 ml-1 text-zinc-700">RUS</span>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-2">
+                          <input
+                            type="text"
+                            value={vehicleMake}
+                            onChange={(e) => setVehicleMake(e.target.value)}
+                            placeholder="Марка (ГАЗ / Toyota) *"
+                            className="w-full px-3 py-1.5 rounded-xl border border-white/[0.08] bg-zinc-950 text-xs text-white font-medium placeholder:text-zinc-500 focus:outline-none focus:border-red-500"
+                          />
+                          <input
+                            type="text"
+                            value={vehicleModel}
+                            onChange={(e) => setVehicleModel(e.target.value)}
+                            placeholder="Модель (Next / Camry) *"
+                            className="w-full px-3 py-1.5 rounded-xl border border-white/[0.08] bg-zinc-950 text-xs text-white font-medium placeholder:text-zinc-500 focus:outline-none focus:border-red-500"
+                          />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-2">
+                          <input
+                            type="text"
+                            value={vin}
+                            onChange={(e) => setVin(e.target.value.toUpperCase())}
+                            placeholder="VIN (17 знаков)"
+                            className="w-full px-3 py-1.5 rounded-xl border border-white/[0.08] bg-zinc-950 text-[11px] font-mono text-white placeholder:text-zinc-500 focus:outline-none focus:border-red-500"
+                          />
+                          <input
+                            type="text"
+                            value={mileage ? String(mileage) : ""}
+                            onChange={(e) => setMileage(e.target.value.replace(/\D/g, ""))}
+                            placeholder="Например, 85 000"
+                            className="w-full px-3 py-1.5 rounded-xl border border-white/[0.08] bg-zinc-950 text-xs text-white font-mono placeholder:text-zinc-500 focus:outline-none focus:border-red-500"
+                          />
+                        </div>
+                      </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                      <div>
-                        <label className="text-[11px] font-semibold text-slate-500">Заказчик (ФИО / Компания) *</label>
-                        <input
-                          type="text"
-                          value={clientName}
-                          onChange={(e) => setClientName(e.target.value)}
-                          placeholder="ООО Логистик / Иванов И.И."
-                          className="mt-1 w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 font-medium"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="text-[11px] font-semibold text-slate-500">Телефон *</label>
-                        <input
-                          type="text"
-                          value={clientPhone}
-                          onChange={(e) => setClientPhone(e.target.value)}
-                          placeholder="+7 (999) 000-00-00"
-                          className="mt-1 w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="text-[11px] font-semibold text-slate-500">ИНН (для юрлиц)</label>
-                        <input
-                          type="text"
-                          value={clientInn}
-                          onChange={(e) => setClientInn(e.target.value)}
-                          placeholder="8602194820"
-                          className="mt-1 w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 font-mono"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-                      <div>
-                        <label className="text-[11px] font-semibold text-slate-500">Марка *</label>
-                        <input
-                          type="text"
-                          value={vehicleMake}
-                          onChange={(e) => setVehicleMake(e.target.value)}
-                          placeholder="ГАЗ / КАМАЗ"
-                          className="mt-1 w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="text-[11px] font-semibold text-slate-500">Модель *</label>
-                        <input
-                          type="text"
-                          value={vehicleModel}
-                          onChange={(e) => setVehicleModel(e.target.value)}
-                          placeholder="Газель Next"
-                          className="mt-1 w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="text-[11px] font-semibold text-slate-500">Госномер *</label>
-                        <input
-                          type="text"
-                          value={licensePlate}
-                          onChange={(e) => setLicensePlate(e.target.value.toUpperCase())}
-                          placeholder="А123ВС86"
-                          className="mt-1 w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 font-mono font-bold"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="text-[11px] font-semibold text-slate-500">VIN-номер</label>
-                        <input
-                          type="text"
-                          value={vin}
-                          onChange={(e) => setVin(e.target.value.toUpperCase())}
-                          placeholder="X96A21R22..."
-                          className="mt-1 w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 font-mono text-[11px]"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="text-[11px] font-semibold text-slate-500">Пробег (км)</label>
-                        <input
-                          type="number"
-                          value={mileage}
-                          onChange={(e) => setMileage(Number(e.target.value))}
-                          className="mt-1 w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 font-mono"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                      <div className="sm:col-span-2">
-                        <label className="text-[11px] font-semibold text-slate-500">Причина обращения / Жалобы клиента</label>
+                    {/* Compact Single Row: Причина обращения + Статус */}
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-2.5 items-center p-2.5 rounded-2xl bg-zinc-900/40 border border-white/[0.05]">
+                      <div className="md:col-span-3">
                         <input
                           type="text"
                           value={complaints}
                           onChange={(e) => setComplaints(e.target.value)}
-                          placeholder="Скрежет при торможении, плановое ТО..."
-                          className="mt-1 w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900"
+                          placeholder="Причина обращения / Жалобы клиента: стук в подвеске, плановое ТО, замена колодок..."
+                          className="w-full px-3 py-1.5 rounded-xl border border-white/[0.08] bg-zinc-950 text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-red-500"
                         />
                       </div>
-
                       <div>
-                        <label className="text-[11px] font-semibold text-slate-500">Статус заказ-наряда</label>
                         <select
                           value={orderStatus}
                           onChange={(e) => setOrderStatus(e.target.value as OrderStatus)}
-                          className="mt-1 w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 font-medium cursor-pointer"
+                          className="w-full px-3 py-1.5 rounded-xl border border-white/[0.08] bg-zinc-950 text-xs text-white font-semibold focus:outline-none cursor-pointer"
                         >
                           <option value="estimate">Заявка / Оценка</option>
                           <option value="in_progress">В работе</option>
@@ -1317,16 +1326,23 @@ export const RepairOrdersModule: React.FC = () => {
 
                   {/* Document Canvas Preview */}
                   <div className="p-8 rounded-xl bg-white text-slate-900 border border-slate-300 shadow-md font-sans text-xs space-y-5 leading-relaxed">
-                    {/* Header */}
-                    <div className="border-b-2 border-red-600 pb-3 flex justify-between items-start">
-                      <div>
-                        <h2 className="text-base font-extrabold text-red-600 uppercase tracking-wide">
-                          {stoReq.brandName}
-                        </h2>
-                        <p className="font-semibold">{stoReq.name}</p>
-                        <p className="text-[11px] text-slate-600">{stoReq.address} • Тел: {stoReq.phone}</p>
+                    {/* Header with Brand Logo */}
+                    <div className="border-b-2 border-red-600 pb-3 flex justify-between items-start gap-4">
+                      <div className="flex items-start space-x-3.5">
+                        <img
+                          src="/logo-chaika-white.png"
+                          alt="Чайка-Сервис"
+                          className="h-10 w-auto max-w-[150px] object-contain filter invert shrink-0"
+                        />
+                        <div>
+                          <h2 className="text-base font-extrabold text-red-600 uppercase tracking-wide">
+                            {stoReq.brandName}
+                          </h2>
+                          <p className="font-semibold">{stoReq.name}</p>
+                          <p className="text-[11px] text-slate-600">{stoReq.address} • Тел: {stoReq.phone}</p>
+                        </div>
                       </div>
-                      <div className="text-right text-[11px] text-slate-600">
+                      <div className="text-right text-[11px] text-slate-600 shrink-0">
                         <p>ИНН: {stoReq.inn} / КПП: {stoReq.kpp} • ОГРН: {stoReq.ogrn}</p>
                         <p>Р/с: {stoReq.rs} в {stoReq.bankName} (БИК: {stoReq.bik})</p>
                       </div>
@@ -1362,11 +1378,8 @@ export const RepairOrdersModule: React.FC = () => {
 
                     {/* Acceptance Act Schematic & Damages embed */}
                     {selectedDocTypeInEditor === "acceptance_act" && (
-                      <div className="space-y-3 p-3 rounded-lg border border-slate-200 bg-slate-50/50">
-                        <div className="font-bold text-slate-900 text-xs">
-                          Карта дефектов кузова и состояние при приеме:
-                        </div>
-                        <VehicleInspectionSchematic inspection={draftOrderForDoc.inspection} readOnly={true} />
+                      <div className="border border-slate-300 p-2.5 rounded-lg bg-white">
+                        <VehicleInspectionSchematic inspection={draftOrderForDoc.inspection} readOnly={true} isPrint={true} />
                       </div>
                     )}
 
