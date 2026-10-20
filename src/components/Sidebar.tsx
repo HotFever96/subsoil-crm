@@ -23,6 +23,7 @@ import {
   Users,
   Wrench,
   Car,
+  SearchCheck,
 } from "lucide-react";
 import { useTheme } from "@/lib/theme-context";
 import { useAuth } from "@/lib/auth-context";
@@ -38,6 +39,7 @@ export type NavTab =
   | "repair-orders"
   | "bay-scheduler"
   | "warehouse-parts"
+  | "parts-procurement"
   | "garage-clients";
 
 interface SidebarProps {
@@ -96,7 +98,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     toggleBusiness();
     if (isChaika) {
       // Switching to geo-ai
-      if (["repair-orders", "bay-scheduler", "warehouse-parts", "garage-clients"].includes(currentTab)) {
+      if (["repair-orders", "bay-scheduler", "warehouse-parts", "parts-procurement", "garage-clients"].includes(currentTab)) {
         onSelectTab("ai-chat");
       }
     } else {
@@ -148,6 +150,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
       id: "repair-orders" as NavTab,
       label: "Заказ-наряды",
       icon: ClipboardList,
+    },
+    {
+      id: "parts-procurement" as NavTab,
+      label: "Проценка и Заказ",
+      icon: SearchCheck,
+      badge: "AI",
     },
     {
       id: "bay-scheduler" as NavTab,

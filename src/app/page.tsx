@@ -11,6 +11,7 @@ import { RepairOrdersModule } from "@/components/RepairOrdersModule";
 import { BaySchedulerModule } from "@/components/BaySchedulerModule";
 import { WarehouseModule } from "@/components/WarehouseModule";
 import { ClientsGarageModule } from "@/components/ClientsGarageModule";
+import { PartsProcurementModule } from "@/components/PartsProcurementModule";
 import { LoginScreen } from "@/components/LoginScreen";
 import { useAuth } from "@/lib/auth-context";
 import { useTheme } from "@/lib/theme-context";
@@ -179,6 +180,8 @@ export default function Home() {
         return "Электронный архив";
       case "repair-orders":
         return "Заказ-наряды";
+      case "parts-procurement":
+        return "Проценка и Заказ";
       case "bay-scheduler":
         return "Планировщик постов";
       case "warehouse-parts":
@@ -279,6 +282,8 @@ export default function Home() {
         {currentTab === "archive" && <ElectronicArchive />}
 
         {currentTab === "repair-orders" && <RepairOrdersModule />}
+
+        {currentTab === "parts-procurement" && <PartsProcurementModule />}
 
         {currentTab === "bay-scheduler" && <BaySchedulerModule />}
 

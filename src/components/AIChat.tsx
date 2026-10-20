@@ -30,6 +30,7 @@ import {
   CheckCircle2,
   Trash2,
   Wrench,
+  SearchCheck,
 } from "lucide-react";
 import { ChatMessage, ChatActionPayload } from "@/lib/supabase";
 import { MarkdownView } from "@/components/MarkdownView";
@@ -219,6 +220,55 @@ const ActionCardView: React.FC<{ action: ChatActionPayload }> = ({ action }) => 
             </div>
           )}
         </div>
+      </div>
+    );
+  }
+
+  if (action.type === "PARTS_PROCUREMENT_QUOTE") {
+    const qData = action.data;
+    return (
+      <div className="p-3.5 rounded-2xl bg-gradient-to-r from-red-500/10 via-amber-500/10 to-orange-500/10 border border-red-500/30 text-slate-900 dark:text-slate-100 shadow-2xs my-2">
+        <div className="flex items-start justify-between">
+          <div className="flex items-center space-x-2">
+            <div className="p-2 rounded-xl bg-red-500/20 text-red-500 shrink-0">
+              <SearchCheck className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="text-xs font-semibold text-red-500 flex items-center space-x-1">
+                <CheckCircle2 className="w-3.5 h-3.5" />
+                <span>ИИ-Проценка поставщиков автозапчастей</span>
+              </div>
+              <div className="text-sm font-bold mt-0.5">{action.title}</div>
+            </div>
+          </div>
+          {qData?.oem && (
+            <span className="font-mono text-xs px-2 py-0.5 rounded bg-black/5 dark:bg-white/10 text-slate-600 dark:text-slate-300">
+              OEM: {qData.oem}
+            </span>
+          )}
+        </div>
+        {action.details && (
+          <div className="text-xs text-slate-600 dark:text-slate-300 mt-2">
+            📦 {renderActionDetails(action.details)}
+          </div>
+        )}
+        {Array.isArray(qData?.quotes) && qData.quotes.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-3 pt-3 border-t border-slate-200/50 dark:border-white/[0.08]">
+            {qData.quotes.map((q: any, i: number) => (
+              <div key={i} className="p-2.5 rounded-xl bg-white/70 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.06] text-xs">
+                <div className="flex items-center justify-between font-bold text-slate-800 dark:text-slate-200">
+                  <span>{q.brand}</span>
+                  <span className="text-red-500 font-mono">
+                    {(q.clientPrice || q.purchasePrice || 0).toLocaleString()} ₽
+                  </span>
+                </div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 truncate">
+                  {q.supplierName || "Поставщик"} • {q.deliveryDays === 0 ? "Сегодня" : `${q.deliveryDays} дн.`}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     );
   }

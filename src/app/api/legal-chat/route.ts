@@ -173,10 +173,59 @@ const CHAIKA_SERVICE_SYSTEM_PROMPT = `Ты — Шеф-мастер (AI Chief Ser
   ]
 }
 \`\`\`
-2) Дать мастеру четкий, вежливый и профессиональный ответ на естественном русском языке с подробной калькуляцией (количество нормо-часов, стоимость работ, запчастей и общая сумма).
+
+- Подобрать автозапчасти, найти кросс-номера OEM или выполнить проценку у поставщиков («Найди сцепление на Газель Некст Cummins», «Сколько стоят тормозные колодки на КамАЗ?», «Сделай проценку на фильтра»);
+
+ТЫ ОБЯЗАН сформировать в ответе блок \`\`\`action:parts_procurement_quote в формате:
+\`\`\`action:parts_procurement_quote
+{
+  "query": "Комплект сцепления Газель Next Cummins 2.8",
+  "vehicle": "ГАЗель NEXT Cummins ISF 2.8",
+  "oem": "5254999 / 3000951401",
+  "partName": "Комплект сцепления",
+  "quotes": [
+    {
+      "tier": "fastest",
+      "brand": "Sachs",
+      "sku": "3000951401",
+      "name": "Комплект сцепления (диск + корзина + муфта)",
+      "supplierName": "Росско (Экспресс)",
+      "deliveryDays": 0,
+      "deliveryHours": 2,
+      "purchasePrice": 18200,
+      "clientPrice": 23660,
+      "stockQty": 4
+    },
+    {
+      "tier": "top_quality",
+      "brand": "Luk",
+      "sku": "624323200",
+      "name": "Сцепление в сборе LuK RepSet",
+      "supplierName": "Армтек (Центральный)",
+      "deliveryDays": 1,
+      "purchasePrice": 16900,
+      "clientPrice": 21970,
+      "stockQty": 8
+    },
+    {
+      "tier": "budget",
+      "brand": "Fenox",
+      "sku": "CP61002",
+      "name": "Диск и корзина сцепления усиленные",
+      "supplierName": "Автодок",
+      "deliveryDays": 1,
+      "purchasePrice": 10500,
+      "clientPrice": 13650,
+      "stockQty": 12
+    }
+  ]
+}
+\`\`\`
+
+2) Дать мастеру четкий, вежливый и профессиональный ответ на естественном русском языке с подробной калькуляцией (количество нормо-часов, стоимость работ, запчастей, сроки поставки и общая сумма).
 
 СТРОЖАЙШИЙ ЗАПРЕТ:
-- КАТЕГОРИЧЕСКИ ЗАПРЕЩЕНО выводить сырой технический JSON в обычный текст твоего ответа! Блоки \`\`\`action:... будут вырезаны бэкендом и отобразятся в интерфейсе в виде элегантной красной карточки заказ-наряда. В тексте ответа пиши только естественный диалог.`;
+- КАТЕГОРИЧЕСКИ ЗАПРЕЩЕНО выводить сырой технический JSON в обычный текст твоего ответа! Блоки \`\`\`action:... будут вырезаны бэкендом и отобразятся в интерфейсе в виде элегантных интерактивных карточек (заказ-наряда или проценки запчастей). В тексте ответа пиши только естественный живой диалог.`;
 
 // Helper to fetch live CRM context from Supabase
 async function fetchUserCRMContext(username: string) {
@@ -527,6 +576,14 @@ async function executeCrmActions(
             data: repairOrder,
           });
         }
+      } else if (act.type === "parts_procurement_quote") {
+        const p = act.payload;
+        executed.push({
+          type: "PARTS_PROCUREMENT_QUOTE",
+          title: `Проценка: ${p.partName || p.query || "Автозапчасти"}`,
+          details: `${p.vehicle ? p.vehicle + " • " : ""}${p.quotes?.length || 0} предложений от оптовых складов`,
+          data: p,
+        });
       }
     } catch (err) {
       console.error(`Failed to execute CRM action ${act.type}:`, err);

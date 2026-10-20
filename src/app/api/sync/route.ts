@@ -583,6 +583,119 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: res.ok });
     }
 
+    // 25. Get Supplier Integrations
+    if (action === "get_supplier_integrations") {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/chat_messages?select=*&role=eq.system&citations->>type=eq.supplier_integrations&citations->>username=eq.${encodeURIComponent(username)}&limit=1`,
+        { headers }
+      );
+      if (!res.ok) {
+        return NextResponse.json({ success: true, integrations: [] });
+      }
+      const rows = await res.json();
+      let integrations = [];
+      if (rows.length > 0 && rows[0].content) {
+        try {
+          integrations = typeof rows[0].content === "string" ? JSON.parse(rows[0].content) : rows[0].content;
+        } catch {}
+      }
+      return NextResponse.json({ success: true, integrations });
+    }
+
+    // 26. Save Supplier Integrations
+    if (action === "save_supplier_integrations") {
+      const { integrations } = payload;
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/chat_messages`, {
+        method: "POST",
+        headers: {
+          ...headers,
+          Prefer: "resolution=merge-duplicates,return=representation",
+        },
+        body: JSON.stringify({
+          id: `supplier-integrations-${username}`,
+          role: "system",
+          content: JSON.stringify(integrations),
+          citations: {
+            type: "supplier_integrations",
+            username,
+            updatedAt: new Date().toISOString(),
+          },
+        }),
+      });
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(`Failed to save supplier integrations: ${errText}`);
+      }
+      return NextResponse.json({ success: true, integrations });
+    }
+
+    // 27. Add Part to Existing Repair Order
+    if (action === "add_part_to_repair_order") {
+      const { orderId, orderNumber, part } = payload;
+      // Fetch the order
+      const queryId = orderId ? `eq.order-${orderId}` : undefined;
+      const queryNumber = orderNumber ? `citations->>order_number=eq.${encodeURIComponent(orderNumber)}` : undefined;
+      const filter = queryId || queryNumber || `order_number=eq.unknown`;
+
+      const searchRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/chat_messages?select=*&role=eq.system&citations->>type=eq.repair_order&citations->>username=eq.${encodeURIComponent(username)}&${filter}&limit=1`,
+        { headers }
+      );
+      if (searchRes.ok) {
+        const rows = await searchRes.json();
+        if (rows.length > 0) {
+          const raw = rows[0];
+          const existingOrder = typeof raw.content === "string" ? JSON.parse(raw.content) : raw.content;
+          const currentParts = Array.isArray(existingOrder.parts) ? existingOrder.parts : [];
+          
+          const newPartItem = {
+            id: `p-${Date.now()}`,
+            oem: part.oem || "N/A",
+            name: part.name || "Деталь",
+            qty: Number(part.qty) || 1,
+            unit: part.unit || "шт",
+            purchasePrice: Number(part.purchasePrice) || 0,
+            salePrice: Number(part.salePrice) || Number(part.purchasePrice) * 1.3,
+            total: (Number(part.qty) || 1) * (Number(part.salePrice) || Number(part.purchasePrice) * 1.3),
+            supplier: part.supplierName || part.supplierId || "Поставщик",
+          };
+
+          const updatedParts = [...currentParts, newPartItem];
+          const totalWorks = existingOrder.totalWorks || (Array.isArray(existingOrder.works) ? existingOrder.works.reduce((s: number, w: any) => s + (w.total || 0), 0) : 0);
+          const totalParts = updatedParts.reduce((s: number, p: any) => s + (p.total || 0), 0);
+          const grandTotal = totalWorks + totalParts;
+
+          const updatedOrder = {
+            ...existingOrder,
+            parts: updatedParts,
+            totalWorks,
+            totalParts,
+            grandTotal,
+          };
+
+          await fetch(`${SUPABASE_URL}/rest/v1/chat_messages`, {
+            method: "POST",
+            headers: {
+              ...headers,
+              Prefer: "resolution=merge-duplicates,return=representation",
+            },
+            body: JSON.stringify({
+              id: raw.id,
+              role: "system",
+              content: JSON.stringify(updatedOrder),
+              citations: {
+                ...raw.citations,
+                updatedAt: new Date().toISOString(),
+              },
+            }),
+          });
+
+          return NextResponse.json({ success: true, order: updatedOrder, part: newPartItem });
+        }
+      }
+      return NextResponse.json({ success: false, error: "Order not found" }, { status: 404 });
+    }
+
     return NextResponse.json({ error: "Unknown action" }, { status: 400 });
   } catch (err: any) {
     console.error("Supabase sync API error:", err);

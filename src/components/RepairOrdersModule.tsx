@@ -38,6 +38,8 @@ import {
 } from "@/lib/auto-service-data";
 import { useAuth } from "@/lib/auth-context";
 import { ServiceDocumentModal } from "./ServiceDocumentModal";
+import { PartsProcurementModule } from "./PartsProcurementModule";
+import { PartSearchResult } from "@/lib/parts-procurement-types";
 
 export const RepairOrdersModule: React.FC = () => {
   const { user } = useAuth();
@@ -70,6 +72,22 @@ export const RepairOrdersModule: React.FC = () => {
   const [orderStatus, setOrderStatus] = useState<OrderStatus>("in_progress");
   const [works, setWorks] = useState<OrderWorkItem[]>([]);
   const [parts, setParts] = useState<OrderPartItem[]>([]);
+  const [isProcurementModalOpen, setIsProcurementModalOpen] = useState(false);
+
+  const handleAddProcuredPart = (part: PartSearchResult) => {
+    const newPart: OrderPartItem = {
+      id: `p-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+      name: `${part.brand} - ${part.name}`,
+      oem: part.oem,
+      qty: 1,
+      unit: "шт",
+      purchasePrice: part.purchasePrice,
+      salePrice: part.salePrice || part.purchasePrice,
+      total: part.salePrice || part.purchasePrice,
+    };
+    setParts((prev) => [...prev, newPart]);
+    setIsProcurementModalOpen(false);
+  };
 
   // Load orders for current user
   useEffect(() => {
@@ -917,14 +935,24 @@ export const RepairOrdersModule: React.FC = () => {
                   <div className="font-bold text-slate-900 dark:text-slate-100 text-sm">
                     2. Запчасти и материалы
                   </div>
-                  <button
-                    type="button"
-                    onClick={addPartRow}
-                    className="flex items-center space-x-1 text-xs text-red-600 dark:text-red-400 font-semibold hover:underline cursor-pointer"
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                    <span>Добавить запчасть</span>
-                  </button>
+                  <div className="flex items-center space-x-2">
+                    <button
+                      type="button"
+                      onClick={() => setIsProcurementModalOpen(true)}
+                      className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-red-600/10 hover:bg-red-600/20 text-red-600 dark:text-red-400 border border-red-500/20 text-xs font-semibold transition-all cursor-pointer shadow-2xs"
+                    >
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>ИИ-Проценка у поставщиков</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={addPartRow}
+                      className="flex items-center space-x-1 px-2.5 py-1.5 text-xs text-slate-600 dark:text-slate-300 hover:text-red-600 dark:hover:text-red-400 font-semibold cursor-pointer"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>Вручную</span>
+                    </button>
+                  </div>
                 </div>
 
                 <div className="border border-slate-200 dark:border-white/[0.08] rounded-xl overflow-hidden">
@@ -1048,6 +1076,43 @@ export const RepairOrdersModule: React.FC = () => {
           isOpen={!!activeDocOrder}
           onClose={() => setActiveDocOrder(null)}
         />
+      )}
+
+      {/* Embedded Quick Procurement Modal */}
+      {isProcurementModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-[#0c1015] w-full max-w-5xl h-[88vh] rounded-2xl shadow-2xl border border-slate-200 dark:border-white/[0.1] flex flex-col overflow-hidden">
+            <div className="p-4 border-b border-slate-200 dark:border-white/[0.08] flex items-center justify-between bg-slate-50 dark:bg-white/[0.02]">
+              <div className="flex items-center space-x-2">
+                <div className="p-1.5 rounded-lg bg-red-600/10 text-red-600">
+                  <Sparkles className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">
+                    ИИ-Проценка и быстрый подбор запчастей
+                  </h3>
+                  <p className="text-[11px] text-slate-500">
+                    {vehicleMake ? `${vehicleMake} ${vehicleModel}` : "Поиск по складам поставщиков"} {licensePlate ? `(${licensePlate})` : ""} {vin ? `• VIN: ${vin}` : ""}
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsProcurementModalOpen(false)}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-200 dark:hover:bg-white/[0.06] cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-hidden">
+              <PartsProcurementModule
+                isEmbedded={true}
+                initialVehicle={{ make: vehicleMake, model: vehicleModel, vin }}
+                onAddPartToOrder={handleAddProcuredPart}
+              />
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

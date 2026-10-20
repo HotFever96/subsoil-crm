@@ -84,7 +84,8 @@ export interface ChatActionPayload {
     | "MAIL_DRAFT_CREATED"
     | "NOTE_SAVED"
     | "PROJECT_SECTION_UPDATED"
-    | "REPAIR_ORDER_CREATED";
+    | "REPAIR_ORDER_CREATED"
+    | "PARTS_PROCUREMENT_QUOTE";
   title?: string;
   date?: string;
   time?: string;
