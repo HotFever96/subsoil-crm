@@ -225,20 +225,38 @@ const CHAIKA_SERVICE_SYSTEM_PROMPT = `Ты — Шеф-мастер (AI Chief Ser
 
 2) Дать мастеру четкий, вежливый и профессиональный ответ на естественном русском языке с подробной калькуляцией (количество нормо-часов, стоимость работ, запчастей, сроки поставки и общая сумма).
 
+5. РАСЧЕТ ВЫРАБОТКИ И ЗАРПЛАТЫ МАСТЕРОВ (МОДУЛЬ PAYROLL):
+Когда руководитель, мастер-приемщик или владелец спрашивает на естественном языке:
+- «Посчитай, сколько заработал мастер за этот месяц и сколько у него нормо-часов?»
+- «Какая выработка у Иванова / Кузнецова / механиков?»
+- «Сколько начислено слесарям по выполненным заказ-нарядам?»
+- «Сделай расчет зарплаты сотрудников СТО»
+
+ТЫ ОБЯЗАН:
+1) Проанализировать актуальный список выполненных работ из контекста [АКТИВНЫЕ ЗАКАЗ-НАРЯДЫ И ВЫРАБОТКА СТО];
+2) Сделать точный расчет по каждому мастеру:
+   - Подсчитать количество заказ-нарядов с участием мастера;
+   - Суммировать фактически закрытые нормо-часы (Н/Ч);
+   - Вычислить общую выручку СТО по выполненным им работам;
+   - Применить стандартную схему мотивации: для сдельной оплаты — 40% от суммы работ (или 900–1000 ₽ за 1 Н/Ч);
+3) Выдать ответ в виде наглядной таблицы:
+   | Мастер | Специальность | Заказ-нарядов | Нормо-часы | Выручка СТО (₽) | Начислено к выплате (₽) |
+   с кратким профессиональным резюме Шеф-мастера и напоминанием, что официальный расчетный листок можно распечатать в разделе «Выработка и Зарплата».
+
 СТРОЖАЙШИЙ ЗАПРЕТ:
 - КАТЕГОРИЧЕСКИ ЗАПРЕЩЕНО выводить сырой технический JSON в обычный текст твоего ответа! Блоки \`\`\`action:... будут вырезаны бэкендом и отобразятся в интерфейсе в виде элегантных интерактивных карточек (заказ-наряда или проценки запчастей). В тексте ответа пиши только естественный живой диалог.`;
 
 // Helper to fetch live CRM context from Supabase
 async function fetchUserCRMContext(username: string) {
   if (!SUPABASE_KEY || !username) {
-    return { events: [], mails: [], notes: [] };
+    return { events: [], mails: [], notes: [], orders: [] };
   }
 
   const headers = getSupabaseHeaders();
   const safeUser = encodeURIComponent(username);
 
   try {
-    const [eventsRes, mailsRes, notesRes] = await Promise.all([
+    const [eventsRes, mailsRes, notesRes, ordersRes] = await Promise.all([
       fetch(
         `${SUPABASE_URL}/rest/v1/chat_messages?select=*&role=eq.system&citations->>type=eq.calendar_event&citations->>username=eq.${safeUser}&order=created_at.asc`,
         { headers }
@@ -249,6 +267,10 @@ async function fetchUserCRMContext(username: string) {
       ),
       fetch(
         `${SUPABASE_URL}/rest/v1/chat_messages?select=*&role=eq.system&citations->>type=eq.user_note&citations->>username=eq.${safeUser}&order=created_at.desc`,
+        { headers }
+      ),
+      fetch(
+        `${SUPABASE_URL}/rest/v1/chat_messages?select=*&role=eq.system&citations->>type=eq.repair_order&citations->>username=eq.${safeUser}&order=created_at.desc`,
         { headers }
       ),
     ]);
@@ -272,16 +294,17 @@ async function fetchUserCRMContext(username: string) {
       }
     };
 
-    const [events, mails, notes] = await Promise.all([
+    const [events, mails, notes, orders] = await Promise.all([
       parseRows(eventsRes),
       parseRows(mailsRes),
       parseRows(notesRes),
+      parseRows(ordersRes),
     ]);
 
-    return { events, mails, notes };
+    return { events, mails, notes, orders };
   } catch (e) {
     console.warn("Could not fetch user CRM context:", e);
-    return { events: [], mails: [], notes: [] };
+    return { events: [], mails: [], notes: [], orders: [] };
   }
 }
 
@@ -636,6 +659,24 @@ export async function POST(req: NextRequest) {
       });
     } else {
       crmContextPrompt += `\n\n--- ✉️ ПОЧТА: Писем нет. Ты можешь формировать черновики через action:mail_create_draft. ---`;
+    }
+
+    // Repair Orders & Staff Payroll Context (for Chaika Service mode)
+    if (isChaika) {
+      crmContextPrompt += `\n\n--- 🚗 АКТИВНЫЕ ЗАКАЗ-НАРЯДЫ И ВЫРАБОТКА СТО («ЧАЙКА-СЕРВИС») ---`;
+      if (crmContext.orders && crmContext.orders.length > 0) {
+        crmContext.orders.forEach((o: any, idx: number) => {
+          const worksList = (o.works || [])
+            .map(
+              (w: any) =>
+                `"${w.name}" (${w.laborHours} Н/Ч, исполнитель: ${w.mechanic || "не указан"}, сумма: ${w.total} ₽)`
+            )
+            .join("; ");
+          crmContextPrompt += `\n${idx + 1}. ЗН № ${o.orderNumber} [статус: ${o.status}] от ${o.createdAt || "недавно"} | Авто: ${o.vehicle?.make} ${o.vehicle?.model} (${o.vehicle?.licensePlate}) | Клиент: ${o.client?.name || "Клиент"} | Работы: ${worksList || "нет"} | Итого ЗН: ${o.grandTotal} ₽`;
+        });
+      } else {
+        crmContextPrompt += `\nВ базе пока нет сохраненных заказ-нарядов. Ты можешь оформлять их через action:repair_order_create.`;
+      }
     }
 
     // Style instruction

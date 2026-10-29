@@ -10,7 +10,79 @@ import {
   OrderWorkItem,
   OrderPartItem,
   StoCompanyRequisites,
+  ServiceEmployee,
+  MasterPayrollSummary,
+  MasterPayrollWorkDetail,
+  PaymentScheme,
 } from "./auto-service-types";
+
+export const DEFAULT_EMPLOYEES: ServiceEmployee[] = [
+  {
+    id: "emp-1",
+    name: "Иванов М.С.",
+    role: "mechanic",
+    roleTitle: "Автослесарь-универсал",
+    phone: "+7 (922) 111-22-33",
+    paymentScheme: "percent_labor",
+    laborPercent: 40, // 40% от работ
+    normHourRate: 900,
+    baseSalary: 0,
+    partsPercent: 0,
+    isActive: true,
+  },
+  {
+    id: "emp-2",
+    name: "Кузнецов П.А.",
+    role: "engine_specialist",
+    roleTitle: "Моторист-агрегатчик",
+    phone: "+7 (922) 222-33-44",
+    paymentScheme: "fixed_norm_hour",
+    laborPercent: 0,
+    normHourRate: 1000, // 1000 руб за 1 Н/Ч
+    baseSalary: 0,
+    partsPercent: 0,
+    isActive: true,
+  },
+  {
+    id: "emp-3",
+    name: "Сидоров Д.А.",
+    role: "electrician",
+    roleTitle: "Автоэлектрик-диагност",
+    phone: "+7 (922) 333-44-55",
+    paymentScheme: "combined",
+    laborPercent: 30, // 30% от работ
+    normHourRate: 0,
+    baseSalary: 45000, // Оклад 45 000 руб
+    partsPercent: 3, // 3% от запчастей
+    isActive: true,
+  },
+  {
+    id: "emp-4",
+    name: "Смирнов В.К.",
+    role: "suspension_specialist",
+    roleTitle: "Слесарь по ходовой части",
+    phone: "+7 (922) 444-55-66",
+    paymentScheme: "percent_labor",
+    laborPercent: 35, // 35% от работ
+    normHourRate: 850,
+    baseSalary: 0,
+    partsPercent: 0,
+    isActive: true,
+  },
+  {
+    id: "emp-5",
+    name: "Петров А.Н.",
+    role: "master_receiver",
+    roleTitle: "Мастер-приемщик",
+    phone: "+7 (922) 555-66-77",
+    paymentScheme: "combined",
+    laborPercent: 10, // 10% от работ
+    normHourRate: 0,
+    baseSalary: 55000, // Оклад 55 000 руб
+    partsPercent: 5, // 5% от запчастей
+    isActive: true,
+  },
+];
 
 export const SERVICE_COMPANY_REQUISITES: StoCompanyRequisites = {
   name: "ИП Водоватовский Антон Игоревич",
@@ -34,6 +106,9 @@ export const SERVICE_COMPANY_REQUISITES: StoCompanyRequisites = {
   director: "Водоватовский Антон Игоревич",
   directorBasis: "Свидетельства серии 26 № 003664718",
   mechanics: ["Иванов М.С.", "Кузнецов П.А.", "Сидоров Д.А.", "Смирнов В.К.", "Петров А.Н."],
+  employees: DEFAULT_EMPLOYEES,
+  facsimileDefaultEnabled: true,
+  scanModeDefaultEnabled: false,
 };
 
 export function getStoRequisites(username?: string): StoCompanyRequisites {
@@ -47,6 +122,7 @@ export function getStoRequisites(username?: string): StoCompanyRequisites {
           ...SERVICE_COMPANY_REQUISITES,
           ...parsed,
           mechanics: Array.isArray(parsed.mechanics) && parsed.mechanics.length > 0 ? parsed.mechanics : SERVICE_COMPANY_REQUISITES.mechanics,
+          employees: Array.isArray(parsed.employees) && parsed.employees.length > 0 ? parsed.employees : DEFAULT_EMPLOYEES,
         };
       }
     }
@@ -406,3 +482,185 @@ export const AUTO_DEALER_LABOR_STANDARDS = [
     ],
   },
 ];
+
+export function calculateMasterPayroll(
+  orders: RepairOrder[],
+  employees: ServiceEmployee[],
+  options?: {
+    periodFilter?: "today" | "week" | "month" | "all" | "custom";
+    startDate?: string;
+    endDate?: string;
+    statusFilter?: "closed_only" | "all_active";
+    masterFilter?: string;
+    manualAdjustments?: Record<string, { bonus: number; deduction: number; status: "pending" | "paid" }>;
+  }
+): {
+  summaries: MasterPayrollSummary[];
+  kpi: {
+    totalLaborRevenue: number;
+    totalLaborHours: number;
+    totalPayrollFund: number;
+    netMarginWorks: number;
+  };
+} {
+  const safeOrders = Array.isArray(orders) ? orders : [];
+  const safeEmployees = Array.isArray(employees) && employees.length > 0 ? employees : DEFAULT_EMPLOYEES;
+  const opts = options || {};
+  const statusFilter = opts.statusFilter || "all_active";
+  const periodFilter = opts.periodFilter || "month";
+  const manualAdjustments = opts.manualAdjustments || {};
+
+  const now = new Date();
+  const todayStr = now.toISOString().slice(0, 10);
+
+  // Filter orders by status
+  const statusFiltered = safeOrders.filter((ord) => {
+    if (statusFilter === "closed_only") {
+      return ord.status === "closed";
+    }
+    return ord.status !== "estimate";
+  });
+
+  // Filter orders by date
+  const dateFiltered = statusFiltered.filter((ord) => {
+    if (periodFilter === "all") return true;
+    const orderDate = ord.createdAt?.slice(0, 10) || "";
+    if (periodFilter === "today") {
+      return orderDate === todayStr;
+    }
+    if (periodFilter === "week") {
+      const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 3600 * 1000).toISOString().slice(0, 10);
+      return orderDate >= oneWeekAgo && orderDate <= todayStr;
+    }
+    if (periodFilter === "month") {
+      const oneMonthAgo = new Date(now.getTime() - 30 * 24 * 3600 * 1000).toISOString().slice(0, 10);
+      return orderDate >= oneMonthAgo && orderDate <= todayStr;
+    }
+    if (periodFilter === "custom" && (opts.startDate || opts.endDate)) {
+      if (opts.startDate && orderDate < opts.startDate) return false;
+      if (opts.endDate && orderDate > opts.endDate) return false;
+      return true;
+    }
+    return true;
+  });
+
+  const summaries: MasterPayrollSummary[] = safeEmployees.map((emp) => {
+    const details: MasterPayrollWorkDetail[] = [];
+    const matchedOrderIds = new Set<string>();
+
+    let totalLaborHours = 0;
+    let totalLaborRevenue = 0;
+    let accruedLaborRub = 0;
+
+    dateFiltered.forEach((ord) => {
+      let orderHasEmpWorks = false;
+      (ord.works || []).forEach((w) => {
+        const wMech = (w.mechanic || "").trim().toLowerCase();
+        const eName = emp.name.trim().toLowerCase();
+        const eLastName = eName.split(" ")[0] || "";
+
+        const isMatch =
+          wMech === eName ||
+          (eLastName.length > 2 && wMech.includes(eLastName)) ||
+          wMech.startsWith(eLastName);
+
+        if (isMatch) {
+          orderHasEmpWorks = true;
+          matchedOrderIds.add(ord.id);
+          const workHours = Number(w.laborHours) || 0;
+          const workTotal = Number(w.total) || 0;
+          totalLaborHours += workHours;
+          totalLaborRevenue += workTotal;
+
+          let earned = 0;
+          if (emp.paymentScheme === "percent_labor") {
+            earned = Math.round(workTotal * ((emp.laborPercent || 40) / 100));
+          } else if (emp.paymentScheme === "fixed_norm_hour") {
+            earned = Math.round(workHours * (emp.normHourRate || 900));
+          } else if (emp.paymentScheme === "combined") {
+            earned = Math.round(workTotal * ((emp.laborPercent || 30) / 100));
+          }
+          accruedLaborRub += earned;
+
+          details.push({
+            orderId: ord.id,
+            orderNumber: ord.orderNumber || "ЗН-—",
+            date: ord.createdAt || todayStr,
+            vehicle: `${ord.vehicle?.make || ""} ${ord.vehicle?.model || ""}`.trim() || "Автомобиль",
+            licensePlate: ord.vehicle?.licensePlate || "—",
+            clientName: ord.client?.name || "Частный клиент",
+            workName: w.name || "Слесарные работы",
+            laborHours: workHours,
+            ratePerHour: Number(w.ratePerHour) || 2500,
+            clientWorkTotal: workTotal,
+            earnedRub: earned,
+          });
+        }
+      });
+    });
+
+    let totalPartsRevenue = 0;
+    if (emp.paymentScheme === "combined" && (emp.partsPercent || 0) > 0) {
+      dateFiltered.forEach((ord) => {
+        if (
+          matchedOrderIds.has(ord.id) ||
+          (emp.role === "master_receiver" && (ord.masterName || "").includes(emp.name.split(" ")[0]))
+        ) {
+          totalPartsRevenue += Number(ord.totalParts) || 0;
+        }
+      });
+      const partsBonus = Math.round(totalPartsRevenue * ((emp.partsPercent || 0) / 100));
+      accruedLaborRub += partsBonus;
+    }
+
+    const schemeLabels: Record<PaymentScheme, string> = {
+      percent_labor: `${emp.laborPercent}% от стоимости работ`,
+      fixed_norm_hour: `${emp.normHourRate} ₽ за 1 Н/Ч`,
+      combined: `Оклад ${emp.baseSalary.toLocaleString()} ₽ + ${emp.laborPercent}% работ`,
+    };
+
+    const adj = manualAdjustments[emp.id] || { bonus: 0, deduction: 0, status: "pending" };
+    const baseSal = emp.paymentScheme === "combined" ? emp.baseSalary : 0;
+    const netPayout = Math.max(0, accruedLaborRub + baseSal + (adj.bonus || 0) - (adj.deduction || 0));
+
+    return {
+      employeeId: emp.id,
+      employeeName: emp.name,
+      role: emp.role,
+      roleTitle: emp.roleTitle || emp.name,
+      paymentScheme: emp.paymentScheme,
+      paymentSchemeLabel: schemeLabels[emp.paymentScheme] || "Сдельная",
+      ordersCount: matchedOrderIds.size,
+      totalLaborHours: Math.round(totalLaborHours * 10) / 10,
+      totalLaborRevenue,
+      totalPartsRevenue,
+      accruedLaborRub,
+      baseSalary: baseSal,
+      bonusRub: adj.bonus || 0,
+      deductionRub: adj.deduction || 0,
+      netPayoutRub: netPayout,
+      status: adj.status || "pending",
+      details,
+    };
+  });
+
+  const filteredSummaries =
+    opts.masterFilter && opts.masterFilter !== "all"
+      ? summaries.filter((s) => s.employeeId === opts.masterFilter || s.employeeName === opts.masterFilter)
+      : summaries;
+
+  const totalLaborRevenue = filteredSummaries.reduce((sum, s) => sum + s.totalLaborRevenue, 0);
+  const totalLaborHours = filteredSummaries.reduce((sum, s) => sum + s.totalLaborHours, 0);
+  const totalPayrollFund = filteredSummaries.reduce((sum, s) => sum + s.netPayoutRub, 0);
+  const netMarginWorks = Math.max(0, totalLaborRevenue - totalPayrollFund);
+
+  return {
+    summaries: filteredSummaries,
+    kpi: {
+      totalLaborRevenue,
+      totalLaborHours: Math.round(totalLaborHours * 10) / 10,
+      totalPayrollFund,
+      netMarginWorks,
+    },
+  };
+}

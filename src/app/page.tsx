@@ -12,6 +12,8 @@ import { BaySchedulerModule } from "@/components/BaySchedulerModule";
 import { WarehouseModule } from "@/components/WarehouseModule";
 import { ClientsGarageModule } from "@/components/ClientsGarageModule";
 import { PartsProcurementModule } from "@/components/PartsProcurementModule";
+import { SalaryProductivityModule } from "@/components/SalaryProductivityModule";
+import { StoSettingsModal } from "@/components/StoSettingsModal";
 import { LoginScreen } from "@/components/LoginScreen";
 import { useAuth } from "@/lib/auth-context";
 import { useTheme } from "@/lib/theme-context";
@@ -28,6 +30,7 @@ export default function Home() {
   const { currentBusiness } = useBusiness();
   const [currentTab, setCurrentTab] = useState<NavTab>("ai-chat");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isStoSettingsOpen, setIsStoSettingsOpen] = useState(false);
 
   const currentUsername = user?.username ? user.username.trim().toLowerCase() : "";
   const mailStorageKey = `geo_ai_mails_${currentUsername || "guest"}_v4`;
@@ -182,6 +185,8 @@ export default function Home() {
         return "Заказ-наряды";
       case "parts-procurement":
         return "Проценка автозапчастей";
+      case "payroll":
+        return "Выработка и Зарплата";
       case "bay-scheduler":
         return "Пост-планировщик";
       case "warehouse-parts":
@@ -285,12 +290,21 @@ export default function Home() {
 
         {currentTab === "parts-procurement" && <PartsProcurementModule />}
 
+        {currentTab === "payroll" && (
+          <SalaryProductivityModule onOpenSettings={() => setIsStoSettingsOpen(true)} />
+        )}
+
         {currentTab === "bay-scheduler" && <BaySchedulerModule />}
 
         {currentTab === "warehouse-parts" && <WarehouseModule />}
 
         {currentTab === "garage-clients" && <ClientsGarageModule />}
       </main>
+
+      <StoSettingsModal
+        isOpen={isStoSettingsOpen}
+        onClose={() => setIsStoSettingsOpen(false)}
+      />
     </div>
   );
 }

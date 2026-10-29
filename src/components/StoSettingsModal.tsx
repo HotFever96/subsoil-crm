@@ -11,14 +11,26 @@ import {
   CheckCircle2,
   Save,
   Users,
+  Stamp,
+  Percent,
+  Coins,
+  ShieldCheck,
+  Edit2,
 } from "lucide-react";
-import { StoCompanyRequisites } from "@/lib/auto-service-types";
+import {
+  StoCompanyRequisites,
+  ServiceEmployee,
+  EmployeeRole,
+  PaymentScheme,
+} from "@/lib/auto-service-types";
 import {
   SERVICE_COMPANY_REQUISITES,
+  DEFAULT_EMPLOYEES,
   getStoRequisites,
   saveStoRequisites,
 } from "@/lib/auto-service-data";
 import { useAuth } from "@/lib/auth-context";
+import { FacsimileUploader } from "./FacsimileUploader";
 
 interface StoSettingsModalProps {
   isOpen: boolean;
@@ -35,10 +47,33 @@ export const StoSettingsModal: React.FC<StoSettingsModalProps> = ({
   const [form, setForm] = useState<StoCompanyRequisites>(SERVICE_COMPANY_REQUISITES);
   const [newMechanicName, setNewMechanicName] = useState("");
   const [isSavedToast, setIsSavedToast] = useState(false);
+  const [isAddingEmp, setIsAddingEmp] = useState(false);
+  const [newEmpForm, setNewEmpForm] = useState<{
+    name: string;
+    role: EmployeeRole;
+    roleTitle: string;
+    phone: string;
+    paymentScheme: PaymentScheme;
+    laborPercent: number;
+    normHourRate: number;
+    baseSalary: number;
+    partsPercent: number;
+  }>({
+    name: "",
+    role: "mechanic",
+    roleTitle: "Автослесарь",
+    phone: "",
+    paymentScheme: "percent_labor",
+    laborPercent: 40,
+    normHourRate: 900,
+    baseSalary: 0,
+    partsPercent: 0,
+  });
 
   useEffect(() => {
     if (isOpen) {
-      setForm(getStoRequisites(currentUsername));
+      const loaded = getStoRequisites(currentUsername);
+      setForm(loaded);
     }
   }, [isOpen, currentUsername]);
 
@@ -69,21 +104,65 @@ export const StoSettingsModal: React.FC<StoSettingsModalProps> = ({
     }, 1200);
   };
 
-  const addMechanic = () => {
-    const trimmed = newMechanicName.trim();
+  const handleAddEmployee = () => {
+    const trimmed = newEmpForm.name.trim();
     if (!trimmed) return;
-    if (form.mechanics.includes(trimmed)) return;
+
+    const currentEmployees = form.employees || DEFAULT_EMPLOYEES;
+    const newEmp: ServiceEmployee = {
+      id: `emp-${Date.now()}`,
+      name: trimmed,
+      role: newEmpForm.role,
+      roleTitle: newEmpForm.roleTitle || "Сотрудник",
+      phone: newEmpForm.phone,
+      paymentScheme: newEmpForm.paymentScheme,
+      laborPercent: newEmpForm.laborPercent,
+      normHourRate: newEmpForm.normHourRate,
+      baseSalary: newEmpForm.baseSalary,
+      partsPercent: newEmpForm.partsPercent,
+      isActive: true,
+    };
+
+    const updatedEmployees = [...currentEmployees, newEmp];
+    const updatedMechanics = Array.from(new Set([...form.mechanics, trimmed]));
+
     setForm({
       ...form,
-      mechanics: [...form.mechanics, trimmed],
+      employees: updatedEmployees,
+      mechanics: updatedMechanics,
     });
-    setNewMechanicName("");
+
+    setNewEmpForm({
+      name: "",
+      role: "mechanic",
+      roleTitle: "Автослесарь",
+      phone: "",
+      paymentScheme: "percent_labor",
+      laborPercent: 40,
+      normHourRate: 900,
+      baseSalary: 0,
+      partsPercent: 0,
+    });
+    setIsAddingEmp(false);
   };
 
-  const removeMechanic = (index: number) => {
+  const handleUpdateEmpField = (empId: string, field: keyof ServiceEmployee, value: any) => {
+    const currentEmployees = form.employees || DEFAULT_EMPLOYEES;
+    const updated = currentEmployees.map((e) => (e.id === empId ? { ...e, [field]: value } : e));
     setForm({
       ...form,
-      mechanics: form.mechanics.filter((_, i) => i !== index),
+      employees: updated,
+      mechanics: updated.map((e) => e.name),
+    });
+  };
+
+  const handleRemoveEmployee = (empId: string) => {
+    const currentEmployees = form.employees || DEFAULT_EMPLOYEES;
+    const updated = currentEmployees.filter((e) => e.id !== empId);
+    setForm({
+      ...form,
+      employees: updated,
+      mechanics: updated.map((e) => e.name),
     });
   };
 
@@ -344,50 +423,267 @@ export const StoSettingsModal: React.FC<StoSettingsModalProps> = ({
             </div>
           </div>
 
-          {/* 4. Staff / Mechanics Directory */}
-          <div className="space-y-3 pt-3 border-t border-slate-200 dark:border-zinc-800">
-            <div className="flex items-center justify-between">
+          {/* 4. Facsimile (Stamp and Signature Cutout) */}
+          <div className="space-y-4 pt-3 border-t border-slate-200 dark:border-zinc-800">
+            <div>
               <h3 className="font-bold text-slate-800 dark:text-zinc-200 text-xs uppercase tracking-wider flex items-center space-x-1.5">
-                <Users className="w-3.5 h-3.5 text-rose-500" />
-                <span>Справочник слесарей и механиков ремзоны ({form.mechanics.length})</span>
+                <Stamp className="w-3.5 h-3.5 text-rose-500" />
+                <span>Оттиск печати и образец подписи руководителя (Факсимиле)</span>
               </h3>
+              <p className="text-[11px] text-slate-500 dark:text-zinc-400 mt-0.5">
+                Загрузите фото или скан печати и подписи на белом листе бумаги. Встроенный Canvas-процессор автоматически удалит бумажный фон, усилит пигмент чернил и обрежет пустые поля для реалистичного наложения на бланки А4.
+              </p>
             </div>
 
-            <div className="flex items-center space-x-2">
-              <input
-                type="text"
-                value={newMechanicName}
-                onChange={(e) => setNewMechanicName(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && addMechanic()}
-                placeholder="ФИО сотрудника (например: Григорьев К.П.)..."
-                className="flex-1 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900"
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FacsimileUploader
+                label="Оттиск круглой печати (М.П.)"
+                type="stamp"
+                currentValue={form.stampUrl}
+                onChange={(url) => setForm({ ...form, stampUrl: url })}
+                description="Скан или четкое фото оттиска печати ИП / СТО на белом листе"
               />
+
+              <FacsimileUploader
+                label="Образец подписи руководителя"
+                type="signature"
+                currentValue={form.signatureUrl}
+                onChange={(url) => setForm({ ...form, signatureUrl: url })}
+                description="Скан или фото росписи синей/черной ручкой на чистом листе"
+              />
+            </div>
+          </div>
+
+          {/* 5. Employees Motivation & Salary Schemes */}
+          <div className="space-y-4 pt-4 border-t border-slate-200 dark:border-zinc-800">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="font-bold text-slate-800 dark:text-zinc-200 text-xs uppercase tracking-wider flex items-center space-x-1.5">
+                  <Users className="w-3.5 h-3.5 text-rose-500" />
+                  <span>Сотрудники и схема мотивации (Выработка и расчет ЗП)</span>
+                </h3>
+                <p className="text-[11px] text-slate-500 dark:text-zinc-400 mt-0.5">
+                  Индивидуальные ставки для каждого слесаря, мастера и электрика. Автоматически используются в модуле «Выработка и Зарплата».
+                </p>
+              </div>
+
               <button
                 type="button"
-                onClick={addMechanic}
-                className="px-3 py-1.5 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-950 font-semibold flex items-center space-x-1 cursor-pointer"
+                onClick={() => setIsAddingEmp(!isAddingEmp)}
+                className="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-semibold flex items-center space-x-1 text-xs cursor-pointer shadow-xs"
               >
                 <Plus className="w-3.5 h-3.5" />
-                <span>Добавить</span>
+                <span>{isAddingEmp ? "Скрыть форму" : "Добавить мастера"}</span>
               </button>
             </div>
 
-            <div className="flex flex-wrap gap-2 pt-1">
-              {form.mechanics.map((m, idx) => (
-                <div
-                  key={idx}
-                  className="flex items-center space-x-2 px-3 py-1 rounded-lg bg-slate-100 dark:bg-zinc-800/80 border border-slate-200 dark:border-zinc-700 text-xs font-medium"
-                >
-                  <span>{m}</span>
+            {/* Add Employee Form Drawer */}
+            {isAddingEmp && (
+              <div className="p-4 rounded-xl border border-rose-500/30 bg-rose-500/5 dark:bg-rose-950/20 space-y-3 animate-in fade-in">
+                <div className="font-bold text-xs text-rose-700 dark:text-rose-300">
+                  Новый сотрудник и параметры начисления ЗП:
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div>
+                    <label className="text-[11px] font-semibold text-slate-600 dark:text-zinc-400">ФИО сотрудника *</label>
+                    <input
+                      type="text"
+                      value={newEmpForm.name}
+                      onChange={(e) => setNewEmpForm({ ...newEmpForm, name: e.target.value })}
+                      placeholder="Ковалев С.А."
+                      className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 font-medium"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-[11px] font-semibold text-slate-600 dark:text-zinc-400">Специализация / Роль</label>
+                    <select
+                      value={newEmpForm.role}
+                      onChange={(e) => {
+                        const r = e.target.value as EmployeeRole;
+                        const roleTitles: Record<EmployeeRole, string> = {
+                          mechanic: "Автослесарь-универсал",
+                          engine_specialist: "Моторист-агрегатчик",
+                          electrician: "Автоэлектрик-диагност",
+                          master_receiver: "Мастер-приемщик",
+                          suspension_specialist: "Слесарь по ходовой части",
+                          diagnostician: "Диагност",
+                        };
+                        setNewEmpForm({ ...newEmpForm, role: r, roleTitle: roleTitles[r] });
+                      }}
+                      className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900"
+                    >
+                      <option value="mechanic">Автослесарь-универсал</option>
+                      <option value="engine_specialist">Моторист-агрегатчик</option>
+                      <option value="electrician">Автоэлектрик-диагност</option>
+                      <option value="suspension_specialist">Слесарь по ходовой части</option>
+                      <option value="master_receiver">Мастер-приемщик</option>
+                      <option value="diagnostician">Диагност</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-[11px] font-semibold text-slate-600 dark:text-zinc-400">Схема начисления ЗП</label>
+                    <select
+                      value={newEmpForm.paymentScheme}
+                      onChange={(e) => setNewEmpForm({ ...newEmpForm, paymentScheme: e.target.value as PaymentScheme })}
+                      className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 font-semibold"
+                    >
+                      <option value="percent_labor">% от стоимости работ</option>
+                      <option value="fixed_norm_hour">Фиксированная за 1 нормо-час</option>
+                      <option value="combined">Комбинированная (Оклад + %)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
+                  {newEmpForm.paymentScheme === "percent_labor" && (
+                    <div>
+                      <label className="text-[11px] font-semibold text-slate-600 dark:text-zinc-400">% от стоимости работ</label>
+                      <input
+                        type="number"
+                        value={newEmpForm.laborPercent}
+                        onChange={(e) => setNewEmpForm({ ...newEmpForm, laborPercent: Number(e.target.value) || 0 })}
+                        className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 font-bold"
+                      />
+                    </div>
+                  )}
+
+                  {newEmpForm.paymentScheme === "fixed_norm_hour" && (
+                    <div>
+                      <label className="text-[11px] font-semibold text-slate-600 dark:text-zinc-400">₽ за 1 нормо-час (Н/Ч)</label>
+                      <input
+                        type="number"
+                        value={newEmpForm.normHourRate}
+                        onChange={(e) => setNewEmpForm({ ...newEmpForm, normHourRate: Number(e.target.value) || 0 })}
+                        className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 font-bold"
+                      />
+                    </div>
+                  )}
+
+                  {newEmpForm.paymentScheme === "combined" && (
+                    <>
+                      <div>
+                        <label className="text-[11px] font-semibold text-slate-600 dark:text-zinc-400">Фиксированный оклад (₽)</label>
+                        <input
+                          type="number"
+                          value={newEmpForm.baseSalary}
+                          onChange={(e) => setNewEmpForm({ ...newEmpForm, baseSalary: Number(e.target.value) || 0 })}
+                          className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 font-bold"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[11px] font-semibold text-slate-600 dark:text-zinc-400">% от работ</label>
+                        <input
+                          type="number"
+                          value={newEmpForm.laborPercent}
+                          onChange={(e) => setNewEmpForm({ ...newEmpForm, laborPercent: Number(e.target.value) || 0 })}
+                          className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[11px] font-semibold text-slate-600 dark:text-zinc-400">% от запчастей</label>
+                        <input
+                          type="number"
+                          value={newEmpForm.partsPercent}
+                          onChange={(e) => setNewEmpForm({ ...newEmpForm, partsPercent: Number(e.target.value) || 0 })}
+                          className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900"
+                        />
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                <div className="flex justify-end pt-2">
                   <button
                     type="button"
-                    onClick={() => removeMechanic(idx)}
-                    className="text-slate-400 hover:text-rose-500 p-0.5 cursor-pointer"
+                    onClick={handleAddEmployee}
+                    className="px-4 py-1.5 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-950 font-bold text-xs cursor-pointer shadow-sm"
                   >
-                    <X className="w-3.5 h-3.5" />
+                    Сохранить сотрудника
                   </button>
                 </div>
-              ))}
+              </div>
+            )}
+
+            {/* Existing Employees Table */}
+            <div className="border border-slate-200 dark:border-zinc-800 rounded-xl overflow-hidden bg-white dark:bg-zinc-900/50">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="bg-slate-50 dark:bg-zinc-800/80 text-slate-600 dark:text-zinc-400 border-b border-slate-200 dark:border-zinc-800">
+                    <th className="p-2.5 font-bold">ФИО мастера</th>
+                    <th className="p-2.5 font-bold">Должность</th>
+                    <th className="p-2.5 font-bold">Схема мотивации</th>
+                    <th className="p-2.5 font-bold text-right">Параметры ставки</th>
+                    <th className="p-2.5 w-10 text-center"></th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-zinc-800">
+                  {(form.employees || DEFAULT_EMPLOYEES).map((emp) => (
+                    <tr key={emp.id} className="hover:bg-slate-50 dark:hover:bg-zinc-800/40">
+                      <td className="p-2.5 font-bold text-slate-900 dark:text-zinc-100">
+                        {emp.name}
+                      </td>
+                      <td className="p-2.5 text-slate-600 dark:text-zinc-300">
+                        <span className="text-[11px] px-2 py-0.5 rounded-md bg-slate-100 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700">
+                          {emp.roleTitle || emp.role}
+                        </span>
+                      </td>
+                      <td className="p-2.5">
+                        <select
+                          value={emp.paymentScheme}
+                          onChange={(e) => handleUpdateEmpField(emp.id, "paymentScheme", e.target.value as PaymentScheme)}
+                          className="px-2 py-1 rounded bg-transparent border border-slate-200 dark:border-zinc-800 text-xs font-semibold text-rose-600 dark:text-rose-400"
+                        >
+                          <option value="percent_labor">% от стоимости работ</option>
+                          <option value="fixed_norm_hour">Фиксированная за 1 Н/Ч</option>
+                          <option value="combined">Комбинированная (Оклад + %)</option>
+                        </select>
+                      </td>
+                      <td className="p-2.5 text-right font-medium">
+                        {emp.paymentScheme === "percent_labor" && (
+                          <div className="flex items-center justify-end space-x-1">
+                            <input
+                              type="number"
+                              value={emp.laborPercent}
+                              onChange={(e) => handleUpdateEmpField(emp.id, "laborPercent", Number(e.target.value))}
+                              className="w-16 px-1.5 py-0.5 rounded border border-slate-200 dark:border-zinc-800 text-right font-bold"
+                            />
+                            <span className="text-slate-500 font-bold">%</span>
+                          </div>
+                        )}
+                        {emp.paymentScheme === "fixed_norm_hour" && (
+                          <div className="flex items-center justify-end space-x-1">
+                            <input
+                              type="number"
+                              value={emp.normHourRate}
+                              onChange={(e) => handleUpdateEmpField(emp.id, "normHourRate", Number(e.target.value))}
+                              className="w-20 px-1.5 py-0.5 rounded border border-slate-200 dark:border-zinc-800 text-right font-bold"
+                            />
+                            <span className="text-slate-500">₽ / Н-Ч</span>
+                          </div>
+                        )}
+                        {emp.paymentScheme === "combined" && (
+                          <div className="text-[11px] text-slate-600 dark:text-zinc-400">
+                            {emp.baseSalary?.toLocaleString()} ₽ оклад + {emp.laborPercent}%
+                          </div>
+                        )}
+                      </td>
+                      <td className="p-2.5 text-center">
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveEmployee(emp.id)}
+                          className="p-1 rounded text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 cursor-pointer"
+                          title="Удалить сотрудника"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>

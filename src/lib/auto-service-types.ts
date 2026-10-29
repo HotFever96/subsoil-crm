@@ -166,6 +166,67 @@ export interface VehicleInspectionData {
   damages: DamagePoint[];
 }
 
+export type EmployeeRole =
+  | "mechanic"              // Автослесарь
+  | "engine_specialist"      // Моторист-агрегатчик
+  | "electrician"          // Автоэлектрик-диагност
+  | "master_receiver"      // Мастер-приемщик
+  | "suspension_specialist" // Слесарь по ходовой части
+  | "diagnostician";       // Диагност
+
+export type PaymentScheme =
+  | "percent_labor"    // % от стоимости выполненных работ (например 40%)
+  | "fixed_norm_hour"  // Фиксированная ставка за 1 нормо-час (например 900 ₽)
+  | "combined";        // Оклад + % от работ + % от запчастей
+
+export interface ServiceEmployee {
+  id: string;
+  name: string;             // ФИО (например: Иванов М.С.)
+  role: EmployeeRole;       // Должность
+  roleTitle?: string;       // Читаемое название должности
+  phone?: string;
+  paymentScheme: PaymentScheme;
+  laborPercent: number;     // % от работ (например 40)
+  normHourRate: number;     // ₽ за 1 Н/Ч (например 900)
+  baseSalary: number;       // Оклад (например 45000)
+  partsPercent: number;     // % от запчастей (например 3)
+  isActive: boolean;
+}
+
+export interface MasterPayrollWorkDetail {
+  orderId: string;
+  orderNumber: string;
+  date: string;
+  vehicle: string;
+  licensePlate: string;
+  clientName: string;
+  workName: string;
+  laborHours: number;
+  ratePerHour: number;
+  clientWorkTotal: number;
+  earnedRub: number;
+}
+
+export interface MasterPayrollSummary {
+  employeeId: string;
+  employeeName: string;
+  role: string;
+  roleTitle: string;
+  paymentScheme: PaymentScheme;
+  paymentSchemeLabel: string;
+  ordersCount: number;
+  totalLaborHours: number;
+  totalLaborRevenue: number;   // Выручка СТО по работам
+  totalPartsRevenue: number;   // Выручка по запчастям
+  accruedLaborRub: number;     // Начислено по выработке
+  baseSalary: number;          // Оклад
+  bonusRub: number;            // Премия / Бонус
+  deductionRub: number;        // Удержания / Аванс / Штраф
+  netPayoutRub: number;        // ИТОГО К ВЫПЛАТЕ
+  status: "pending" | "paid";  // Статус выплаты
+  details: MasterPayrollWorkDetail[];
+}
+
 export interface StoCompanyRequisites {
   name: string;             // Полное наименование (например: ИП Водоватовский Антон Игоревич)
   brandName: string;        // Сокращенное наименование (например: ИП Водоватовский А.И. (СТО «Чайка-Сервис»))
@@ -188,6 +249,11 @@ export interface StoCompanyRequisites {
   director: string;
   directorBasis?: string;   // Действует на основании (Свидетельства)
   mechanics: string[];
+  employees?: ServiceEmployee[]; // Полный справочник сотрудников со ставками ЗП
+  stampUrl?: string;             // Прозрачный PNG оттиска печати
+  signatureUrl?: string;         // Прозрачный PNG образца подписи
+  facsimileDefaultEnabled?: boolean; // Включать факсимиле по умолчанию
+  scanModeDefaultEnabled?: boolean;  // Включать эффект скана
 }
 
 export interface WarehouseInvoiceItem {

@@ -28,6 +28,7 @@ import {
   Fuel,
   Edit,
   ClipboardCheck,
+  Stamp,
 } from "lucide-react";
 import {
   RepairOrder,
@@ -48,6 +49,7 @@ import {
   numberToWordsRu,
 } from "@/lib/auto-service-data";
 import { useAuth } from "@/lib/auth-context";
+import { generateDefaultStampDataUrl, generateDefaultSignatureDataUrl } from "@/lib/canvas-image-processor";
 import { ServiceDocumentModal } from "./ServiceDocumentModal";
 import { PartsProcurementModule } from "./PartsProcurementModule";
 import { PartSearchResult } from "@/lib/parts-procurement-types";
@@ -92,6 +94,8 @@ export const RepairOrdersModule: React.FC = () => {
   const [selectedDocTypeInEditor, setSelectedDocTypeInEditor] = useState<ServiceDocumentType>("work_order");
   const [isExportingDocx, setIsExportingDocx] = useState(false);
   const [archiveSavedToast, setArchiveSavedToast] = useState(false);
+  const [isEditorFacsimile, setIsEditorFacsimile] = useState(true);
+  const [isEditorScanMode, setIsEditorScanMode] = useState(false);
 
   // Form states for new/edit
   const [clientName, setClientName] = useState("");
@@ -1301,14 +1305,43 @@ export const RepairOrdersModule: React.FC = () => {
                       ))}
                     </div>
 
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-2 flex-wrap gap-y-1">
+                      {/* Facsimile & Scan Mode toggles */}
+                      <button
+                        type="button"
+                        onClick={() => setIsEditorFacsimile(!isEditorFacsimile)}
+                        className={`flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-colors ${
+                          isEditorFacsimile
+                            ? "bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30"
+                            : "bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-500"
+                        }`}
+                        title="Наложить печать и подпись (Факсимиле)"
+                      >
+                        <Stamp className="w-3.5 h-3.5" />
+                        <span>Факсимиле</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setIsEditorScanMode(!isEditorScanMode)}
+                        className={`flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-colors ${
+                          isEditorScanMode
+                            ? "bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/30"
+                            : "bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-500"
+                        }`}
+                        title="Эффект сканированного листа"
+                      >
+                        <FileText className="w-3.5 h-3.5" />
+                        <span>Скан</span>
+                      </button>
+
                       <button
                         type="button"
                         onClick={handleSaveToArchive}
                         className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 hover:bg-slate-100 dark:hover:bg-zinc-700 text-xs font-semibold cursor-pointer"
                       >
                         <FolderArchive className="w-3.5 h-3.5 text-amber-500" />
-                        <span>{archiveSavedToast ? "Сохранено в архив!" : "В Архив"}</span>
+                        <span>{archiveSavedToast ? "В архиве!" : "В Архив"}</span>
                       </button>
 
                       <button
@@ -1339,7 +1372,13 @@ export const RepairOrdersModule: React.FC = () => {
                   </div>
 
                   {/* Document Canvas Preview */}
-                  <div className="p-8 rounded-xl bg-white text-slate-900 border border-slate-300 shadow-md font-sans text-xs space-y-4 leading-relaxed">
+                  <div
+                    className={`p-8 rounded-xl text-slate-900 border border-slate-300 shadow-md font-sans text-xs space-y-4 leading-relaxed transition-all ${
+                      isEditorScanMode
+                        ? "bg-[#faf9f5] filter contrast-[1.03] brightness-[0.99] sepia-[0.03]"
+                        : "bg-white"
+                    }`}
+                  >
                     {/* Header with Brand Logo & Requisites */}
                     {selectedDocTypeInEditor === "invoice" ? (
                       <div className="mb-4 space-y-2.5">
@@ -1614,7 +1653,30 @@ export const RepairOrdersModule: React.FC = () => {
                           {selectedDocTypeInEditor === "invoice" ? "Предприниматель / Руководитель:" : "Исполнитель / Мастер-приемщик:"}
                         </p>
                         <p className="text-slate-600 mb-4">{stoReq.director} / {stoReq.masterReceiver}</p>
-                        <div className="border-b border-black w-44 mb-1" />
+
+                        <div className="relative inline-block">
+                          {isEditorFacsimile && (
+                            <>
+                              <img
+                                src={stoReq.signatureUrl || generateDefaultSignatureDataUrl()}
+                                alt="Подпись"
+                                className="absolute -top-7 left-2 w-32 h-12 object-contain pointer-events-none select-none z-10"
+                                style={{ mixBlendMode: "multiply" }}
+                              />
+                              <img
+                                src={stoReq.stampUrl || generateDefaultStampDataUrl()}
+                                alt="Оттиск печати"
+                                className="absolute -top-10 left-20 w-28 h-28 object-contain pointer-events-none select-none z-20"
+                                style={{
+                                  transform: "rotate(-2.5deg)",
+                                  mixBlendMode: "multiply",
+                                  opacity: 0.94,
+                                }}
+                              />
+                            </>
+                          )}
+                          <div className="border-b border-black w-48 mb-1" />
+                        </div>
                         <p className="text-[10px] text-slate-500">Подпись / М.П.</p>
                       </div>
                       <div>
@@ -1622,7 +1684,7 @@ export const RepairOrdersModule: React.FC = () => {
                           {selectedDocTypeInEditor === "payment_receipt" ? "Плательщик:" : "Заказчик (представитель):"}
                         </p>
                         <p className="text-slate-600 mb-4">{draftOrderForDoc.client?.name || "Заказчик"}</p>
-                        <div className="border-b border-black w-44 mb-1" />
+                        <div className="border-b border-black w-48 mb-1" />
                         <p className="text-[10px] text-slate-500">
                           {selectedDocTypeInEditor === "payment_receipt" ? "Оплату произвел" : "С объемом и стоимостью работ согласен"}
                         </p>

@@ -13,11 +13,14 @@ import {
   AlertCircle,
   Receipt,
   FileCheck,
+  Stamp,
+  Sliders,
 } from "lucide-react";
 import { RepairOrder, ServiceDocumentType } from "@/lib/auto-service-types";
 import { SERVICE_COMPANY_REQUISITES, formatCurrency, getStoRequisites, numberToWordsRu } from "@/lib/auto-service-data";
 import { exportAutoServiceDocx } from "@/lib/auto-service-docx";
 import { VehicleInspectionSchematic } from "./VehicleInspectionSchematic";
+import { generateDefaultStampDataUrl, generateDefaultSignatureDataUrl } from "@/lib/canvas-image-processor";
 
 interface ServiceDocumentModalProps {
   order: RepairOrder;
@@ -37,10 +40,14 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
   const [docType, setDocType] = useState<ServiceDocumentType>(initialType);
   const [isExportingDocx, setIsExportingDocx] = useState(false);
   const [archiveSaved, setArchiveSaved] = useState(false);
+  const [isFacsimile, setIsFacsimile] = useState(true);
+  const [isScanMode, setIsScanMode] = useState(false);
 
   if (!isOpen) return null;
 
   const req = getStoRequisites(order.username);
+  const stampImg = req.stampUrl || generateDefaultStampDataUrl();
+  const sigImg = req.signatureUrl || generateDefaultSignatureDataUrl();
 
   const handlePrint = () => {
     window.print();
@@ -179,33 +186,70 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
         </div>
 
         {/* Document Type Selector Tabs (Hidden on print) */}
-        <div className="px-6 py-2.5 border-b border-slate-200 dark:border-white/[0.06] bg-white dark:bg-[#0e141e] flex items-center space-x-1.5 overflow-x-auto shrink-0 print:hidden">
-          {tabs.map((tab) => {
-            const Icon = tab.icon;
-            const isActive = docType === tab.id;
-            return (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setDocType(tab.id)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all cursor-pointer flex items-center space-x-1.5 ${
-                  isActive
-                    ? "bg-red-600 text-white font-semibold shadow-2xs"
-                    : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/[0.04]"
-                }`}
-              >
-                <Icon className="w-3.5 h-3.5" />
-                <span>{tab.label}</span>
-              </button>
-            );
-          })}
+        <div className="px-6 py-2.5 border-b border-slate-200 dark:border-white/[0.06] bg-white dark:bg-[#0e141e] flex items-center justify-between overflow-x-auto shrink-0 print:hidden gap-3">
+          <div className="flex items-center space-x-1.5 overflow-x-auto">
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = docType === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setDocType(tab.id)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all cursor-pointer flex items-center space-x-1.5 ${
+                    isActive
+                      ? "bg-red-600 text-white font-semibold shadow-2xs"
+                      : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/[0.04]"
+                  }`}
+                >
+                  <Icon className="w-3.5 h-3.5" />
+                  <span>{tab.label}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Facsimile & Scan Mode Toggles */}
+          <div className="flex items-center space-x-2 shrink-0">
+            <button
+              type="button"
+              onClick={() => setIsFacsimile(!isFacsimile)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1.5 cursor-pointer transition-all ${
+                isFacsimile
+                  ? "bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30"
+                  : "bg-slate-100 dark:bg-white/[0.06] text-slate-500 hover:text-slate-800"
+              }`}
+              title="Наложить печать и подпись (Факсимиле)"
+            >
+              <Stamp className="w-3.5 h-3.5" />
+              <span>Факсимиле</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setIsScanMode(!isScanMode)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1.5 cursor-pointer transition-all ${
+                isScanMode
+                  ? "bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/30"
+                  : "bg-slate-100 dark:bg-white/[0.06] text-slate-500 hover:text-slate-800"
+              }`}
+              title="Эффект скана (Scan Mode)"
+            >
+              <FileText className="w-3.5 h-3.5" />
+              <span>Скан-эффект</span>
+            </button>
+          </div>
         </div>
 
         {/* Scrollable Printable A4 Canvas */}
         <div className="flex-1 overflow-y-auto p-6 sm:p-10 bg-slate-100 dark:bg-[#070b10] print:bg-white print:p-0">
           <div
             id="printable-service-doc"
-            className="max-w-3xl mx-auto bg-white text-slate-900 p-8 sm:p-12 shadow-md print:shadow-none print:p-0 rounded-xl print:rounded-none font-sans text-xs leading-relaxed"
+            className={`max-w-3xl mx-auto text-slate-900 p-8 sm:p-12 shadow-md print:shadow-none print:p-0 rounded-xl print:rounded-none font-sans text-xs leading-relaxed transition-all ${
+              isScanMode
+                ? "bg-[#faf9f5] border border-stone-300 filter contrast-[1.03] brightness-[0.99] sepia-[0.03]"
+                : "bg-white"
+            }`}
           >
             {/* Header with Brand Logo & Requisites */}
             {docType === "invoice" ? (
@@ -581,7 +625,34 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
                   {docType === "invoice" ? "Предприниматель / Руководитель:" : "Исполнитель / Мастер-приемщик:"}
                 </p>
                 <p className="text-slate-600 mb-6">{req.director} / {req.masterReceiver}</p>
-                <div className="border-b border-black w-44 mb-1" />
+
+                <div className="relative inline-block">
+                  {isFacsimile && (
+                    <>
+                      {sigImg && (
+                        <img
+                          src={sigImg}
+                          alt="Подпись"
+                          className="absolute -top-7 left-2 w-32 h-12 object-contain pointer-events-none select-none z-10"
+                          style={{ mixBlendMode: "multiply" }}
+                        />
+                      )}
+                      {stampImg && (
+                        <img
+                          src={stampImg}
+                          alt="Оттиск печати"
+                          className="absolute -top-10 left-20 w-28 h-28 object-contain pointer-events-none select-none z-20"
+                          style={{
+                            transform: "rotate(-2.5deg)",
+                            mixBlendMode: "multiply",
+                            opacity: 0.94,
+                          }}
+                        />
+                      )}
+                    </>
+                  )}
+                  <div className="border-b border-black w-48 mb-1" />
+                </div>
                 <p className="text-[10px] text-slate-500">Подпись / М.П.</p>
               </div>
 
@@ -590,7 +661,7 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
                   {docType === "payment_receipt" ? "Плательщик:" : "Заказчик (представитель):"}
                 </p>
                 <p className="text-slate-600 mb-6">{order.client.name}</p>
-                <div className="border-b border-black w-44 mb-1" />
+                <div className="border-b border-black w-48 mb-1" />
                 <p className="text-[10px] text-slate-500">
                   {docType === "payment_receipt" ? "Оплату произвел" : "С объемом и стоимостью работ согласен"}
                 </p>
