@@ -127,7 +127,7 @@ export const StoSettingsModal: React.FC<StoSettingsModalProps> = ({
                   type="text"
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  placeholder="ООО «Автотехцентр Чайка-Сервис»"
+                  placeholder="ИП Водоватовский Антон Игоревич"
                   className="mt-1 w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 font-medium"
                 />
               </div>
@@ -138,18 +138,18 @@ export const StoSettingsModal: React.FC<StoSettingsModalProps> = ({
                   type="text"
                   value={form.brandName}
                   onChange={(e) => setForm({ ...form, brandName: e.target.value })}
-                  placeholder="ЧАЙКА-СЕРВИС CRM"
+                  placeholder="ИП Водоватовский А.И. (СТО «Чайка-Сервис»)"
                   className="mt-1 w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 font-medium"
                 />
               </div>
 
               <div className="sm:col-span-2">
-                <label className="text-[11px] font-semibold text-slate-500">Фактический адрес автосервиса *</label>
+                <label className="text-[11px] font-semibold text-slate-500">Юридический и фактический адрес *</label>
                 <input
                   type="text"
                   value={form.address}
                   onChange={(e) => setForm({ ...form, address: e.target.value })}
-                  placeholder="г. Сургут, Нефтеюганское шоссе, д. 28/4"
+                  placeholder="629804, ЯНАО, г. Ноябрьск, ул. Магистральная"
                   className="mt-1 w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900"
                 />
               </div>
@@ -160,7 +160,7 @@ export const StoSettingsModal: React.FC<StoSettingsModalProps> = ({
                   type="text"
                   value={form.phone}
                   onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                  placeholder="+7 (3462) 77-88-99"
+                  placeholder="+7 (900) 400-09-00"
                   className="mt-1 w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900"
                 />
               </div>
@@ -171,43 +171,78 @@ export const StoSettingsModal: React.FC<StoSettingsModalProps> = ({
                   type="text"
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  placeholder="service@chaika-crm.ru"
+                  placeholder="vodovatovskiy@list.ru"
                   className="mt-1 w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900"
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <div>
                 <label className="text-[11px] font-semibold text-slate-500">ИНН *</label>
                 <input
                   type="text"
                   value={form.inn}
                   onChange={(e) => setForm({ ...form, inn: e.target.value })}
-                  placeholder="8602194820"
+                  placeholder="263112957774"
                   className="mt-1 w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 font-mono"
                 />
               </div>
 
               <div>
-                <label className="text-[11px] font-semibold text-slate-500">КПП</label>
-                <input
-                  type="text"
-                  value={form.kpp}
-                  onChange={(e) => setForm({ ...form, kpp: e.target.value })}
-                  placeholder="860201001"
-                  className="mt-1 w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 font-mono"
-                />
-              </div>
-
-              <div>
-                <label className="text-[11px] font-semibold text-slate-500">ОГРН</label>
+                <label className="text-[11px] font-semibold text-slate-500">ОГРНИП / ОГРН *</label>
                 <input
                   type="text"
                   value={form.ogrn}
                   onChange={(e) => setForm({ ...form, ogrn: e.target.value })}
-                  placeholder="1128602008412"
+                  placeholder="309264819700017"
                   className="mt-1 w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 font-mono"
+                />
+              </div>
+
+              <div>
+                <label className="text-[11px] font-semibold text-slate-500">ОКПО</label>
+                <input
+                  type="text"
+                  value={form.okpo || ""}
+                  onChange={(e) => setForm({ ...form, okpo: e.target.value })}
+                  placeholder="0165990910"
+                  className="mt-1 w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 font-mono"
+                />
+              </div>
+
+              <div>
+                <label className="text-[11px] font-semibold text-slate-500">ОКТМО</label>
+                <input
+                  type="text"
+                  value={form.oktmo || ""}
+                  onChange={(e) => setForm({ ...form, oktmo: e.target.value })}
+                  placeholder="71958000001"
+                  className="mt-1 w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 font-mono"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+              <div>
+                <label className="text-[11px] font-semibold text-slate-500">ОКВЭД</label>
+                <input
+                  type="text"
+                  value={form.okved || ""}
+                  onChange={(e) => setForm({ ...form, okved: e.target.value })}
+                  placeholder="45.20, 45.32"
+                  className="mt-1 w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900"
+                />
+              </div>
+
+              <div>
+                <label className="text-[11px] font-semibold text-slate-500">Система налогообложения</label>
+                <input
+                  type="text"
+                  value={form.taxSystem || ""}
+                  onChange={(e) => setForm({ ...form, taxSystem: e.target.value })}
+                  placeholder="УСН (Доходы), Патент. Без НДС"
+                  className="mt-1 w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900"
                 />
               </div>
             </div>
@@ -227,7 +262,7 @@ export const StoSettingsModal: React.FC<StoSettingsModalProps> = ({
                   type="text"
                   value={form.bankName}
                   onChange={(e) => setForm({ ...form, bankName: e.target.value })}
-                  placeholder="ПАО Сбербанк"
+                  placeholder="Филиал «Екатеринбургский» АО «АЛЬФА-БАНК»"
                   className="mt-1 w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900"
                 />
               </div>
@@ -238,7 +273,7 @@ export const StoSettingsModal: React.FC<StoSettingsModalProps> = ({
                   type="text"
                   value={form.bik}
                   onChange={(e) => setForm({ ...form, bik: e.target.value })}
-                  placeholder="047102651"
+                  placeholder="046577964"
                   className="mt-1 w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 font-mono"
                 />
               </div>
@@ -249,7 +284,7 @@ export const StoSettingsModal: React.FC<StoSettingsModalProps> = ({
                   type="text"
                   value={form.rs}
                   onChange={(e) => setForm({ ...form, rs: e.target.value })}
-                  placeholder="40702810867170014523"
+                  placeholder="40802810038310009505"
                   className="mt-1 w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 font-mono"
                 />
               </div>
@@ -260,7 +295,7 @@ export const StoSettingsModal: React.FC<StoSettingsModalProps> = ({
                   type="text"
                   value={form.ks}
                   onChange={(e) => setForm({ ...form, ks: e.target.value })}
-                  placeholder="30101810800000000651"
+                  placeholder="30101810100000000964"
                   className="mt-1 w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 font-mono"
                 />
               </div>

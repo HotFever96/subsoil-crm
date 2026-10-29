@@ -227,7 +227,7 @@ export default function Home() {
         <div className="flex items-center space-x-2">
           {currentTab === "ai-chat" && (
             <button
-              onClick={() => createNewChat()}
+              onClick={() => createNewChat(isChaika ? "service" : "geo")}
               className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
                 isChaika
                   ? "bg-rose-500/10 text-rose-500 hover:bg-rose-500/20"

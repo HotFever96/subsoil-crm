@@ -132,8 +132,9 @@ export interface ClientVehicleRecord {
 
 export type ServiceDocumentType =
   | "work_order"       // Заказ-наряд (Договор-заказ)
-  | "acceptance_act"   // Акт приема-передачи ТС
+  | "acceptance_act"   // Акт приема-передачи ТС (Акт осмотра)
   | "completion_act"   // Акт выполненных работ
+  | "payment_receipt"  // Квитанция к заказ-наряду / Чек об оплате
   | "invoice"          // Счет на оплату
   | "defect_sheet";    // Дефектовочная ведомость
 
@@ -166,21 +167,26 @@ export interface VehicleInspectionData {
 }
 
 export interface StoCompanyRequisites {
-  name: string;
-  brandName: string;
-  address: string;
+  name: string;             // Полное наименование (например: ИП Водоватовский Антон Игоревич)
+  brandName: string;        // Сокращенное наименование (например: ИП Водоватовский А.И. (СТО «Чайка-Сервис»))
+  address: string;          // Юридический и фактический адрес
   phone: string;
   email: string;
-  inn: string;
-  kpp: string;
-  ogrn: string;
-  bankName: string;
-  bik: string;
-  rs: string;
-  ks: string;
+  inn: string;              // ИНН
+  kpp?: string;             // КПП (для ИП не применимо / опционально)
+  ogrn: string;             // ОГРНИП / ОГРН
+  okpo?: string;            // ОКПО
+  oktmo?: string;           // ОКТМО
+  okved?: string;           // ОКВЭД
+  taxSystem?: string;       // Система налогообложения (УСН Доходы, Патент, Без НДС)
+  bankName: string;         // Наименование банка (Филиал «Екатеринбургский» АО «АЛЬФА-БАНК»)
+  bik: string;              // БИК
+  rs: string;               // Расчетный счет
+  ks: string;               // Корреспондентский счет
   defaultRatePerHour: number;
   masterReceiver: string;
   director: string;
+  directorBasis?: string;   // Действует на основании (Свидетельства)
   mechanics: string[];
 }
 

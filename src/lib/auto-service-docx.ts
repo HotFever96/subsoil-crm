@@ -34,10 +34,14 @@ export async function createAutoServiceDocx(order: RepairOrder, docType: Service
         return `АКТ ПРИЕМА-ПЕРЕДАЧИ ТС К ЗАКАЗ-НАРЯДУ № ${order.orderNumber}`;
       case "completion_act":
         return `АКТ ВЫПОЛНЕННЫХ РАБОТ № ${order.orderNumber}`;
+      case "payment_receipt":
+        return `КВИТАНЦИЯ К ЗАКАЗ-НАРЯДУ № ${order.orderNumber} (ЧЕК ОБ ОПЛАТЕ)`;
       case "invoice":
         return `СЧЕТ НА ОПЛАТУ № ${order.orderNumber}`;
       case "defect_sheet":
         return `ДЕФЕКТОВОЧНАЯ ВЕДОМОСТЬ № ${order.orderNumber}`;
+      default:
+        return `ДОКУМЕНТ К ЗАКАЗ-НАРЯДУ № ${order.orderNumber}`;
     }
   };
 

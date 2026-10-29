@@ -44,6 +44,8 @@ import {
   formatCurrency,
   getStatusMeta,
   getStoRequisites,
+  normalizeRepairOrder,
+  numberToWordsRu,
 } from "@/lib/auto-service-data";
 import { useAuth } from "@/lib/auth-context";
 import { ServiceDocumentModal } from "./ServiceDocumentModal";
@@ -127,22 +129,24 @@ export const RepairOrdersModule: React.FC = () => {
       localStorage.removeItem(`geo_ai_repair_orders_${currentUsername}_v1`);
     } catch {}
 
-    let loaded = getInitialOrders(currentUsername);
+    let loaded = getInitialOrders(currentUsername).map((o) => normalizeRepairOrder(o, currentUsername));
     try {
       const saved = localStorage.getItem(storageKey);
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed)) {
-          // Filter out any legacy mock entries
-          const cleaned = parsed.filter(
-            (o: any) =>
-              o.orderNumber !== "ЗН-СЕВ-0012" &&
-              o.orderNumber !== "ЗН-2026-0042" &&
-              o.orderNumber !== "ЗН-2026-0041" &&
-              o.orderNumber !== "ЗН-2026-0043" &&
-              !o.client?.name?.includes("Николаев") &&
-              !o.client?.name?.includes("ывыфвфы")
-          );
+          // Filter out any legacy mock entries and normalize
+          const cleaned = parsed
+            .filter(
+              (o: any) =>
+                o?.orderNumber !== "ЗН-СЕВ-0012" &&
+                o?.orderNumber !== "ЗН-2026-0042" &&
+                o?.orderNumber !== "ЗН-2026-0041" &&
+                o?.orderNumber !== "ЗН-2026-0043" &&
+                !o?.client?.name?.includes("Николаев") &&
+                !o?.client?.name?.includes("ывыфвфы")
+            )
+            .map((o: any) => normalizeRepairOrder(o, currentUsername));
           loaded = cleaned;
         }
       } else {
@@ -162,15 +166,17 @@ export const RepairOrdersModule: React.FC = () => {
       .then((r) => r.json())
       .then((data) => {
         if (data.success && Array.isArray(data.orders)) {
-          const cleanedRemote = data.orders.filter(
-            (o: any) =>
-              o.orderNumber !== "ЗН-СЕВ-0012" &&
-              o.orderNumber !== "ЗН-2026-0042" &&
-              o.orderNumber !== "ЗН-2026-0041" &&
-              o.orderNumber !== "ЗН-2026-0043" &&
-              !o.client?.name?.includes("Николаев") &&
-              !o.client?.name?.includes("ывыфвфы")
-          );
+          const cleanedRemote = data.orders
+            .filter(
+              (o: any) =>
+                o?.orderNumber !== "ЗН-СЕВ-0012" &&
+                o?.orderNumber !== "ЗН-2026-0042" &&
+                o?.orderNumber !== "ЗН-2026-0041" &&
+                o?.orderNumber !== "ЗН-2026-0043" &&
+                !o?.client?.name?.includes("Николаев") &&
+                !o?.client?.name?.includes("ывыфвфы")
+            )
+            .map((o: any) => normalizeRepairOrder(o, currentUsername));
           setOrders(cleanedRemote);
           try {
             localStorage.setItem(storageKey, JSON.stringify(cleanedRemote));
@@ -184,13 +190,19 @@ export const RepairOrdersModule: React.FC = () => {
         const saved = localStorage.getItem(storageKey);
         if (saved) {
           const parsed = JSON.parse(saved);
-          if (Array.isArray(parsed)) setOrders(parsed);
+          if (Array.isArray(parsed)) {
+            setOrders(parsed.map((o: any) => normalizeRepairOrder(o, currentUsername)));
+          }
         }
       } catch {}
     };
 
     window.addEventListener("geo_ai_order_updated", handleExternalOrderUpdate);
-    return () => window.removeEventListener("geo_ai_order_updated", handleExternalOrderUpdate);
+    window.addEventListener("geo_ai_repair_orders_updated", handleExternalOrderUpdate);
+    return () => {
+      window.removeEventListener("geo_ai_order_updated", handleExternalOrderUpdate);
+      window.removeEventListener("geo_ai_repair_orders_updated", handleExternalOrderUpdate);
+    };
   }, [currentUsername, storageKey]);
 
   const saveOrders = (updated: RepairOrder[]) => {
@@ -227,21 +239,22 @@ export const RepairOrdersModule: React.FC = () => {
   };
 
   const openEditOrderModal = (order: RepairOrder) => {
-    setEditingOrder(order);
-    setClientName(order.client.name || "");
-    setClientPhone(order.client.phone || "");
-    setClientInn(order.client.inn || "");
-    setVehicleMake(order.vehicle.make || "");
-    setVehicleModel(order.vehicle.model || "");
-    setLicensePlate(order.vehicle.licensePlate || "");
-    setVin(order.vehicle.vin || "");
-    setMileage(order.vehicle.mileage ? String(order.vehicle.mileage) : "");
-    setComplaints(order.vehicle.complaints || "");
-    setRecommendations(order.recommendations || "");
-    setOrderStatus(order.status || "in_progress");
-    setWorks(order.works || []);
-    setParts(order.parts || []);
-    setInspection(order.inspection || DEFAULT_INSPECTION_DATA);
+    const safe = normalizeRepairOrder(order, currentUsername);
+    setEditingOrder(safe);
+    setClientName(safe.client?.name || "");
+    setClientPhone(safe.client?.phone || "");
+    setClientInn(safe.client?.inn || "");
+    setVehicleMake(safe.vehicle?.make || "");
+    setVehicleModel(safe.vehicle?.model || "");
+    setLicensePlate(safe.vehicle?.licensePlate || "");
+    setVin(safe.vehicle?.vin || "");
+    setMileage(safe.vehicle?.mileage ? String(safe.vehicle.mileage) : "");
+    setComplaints(safe.vehicle?.complaints || "");
+    setRecommendations(safe.recommendations || "");
+    setOrderStatus(safe.status || "in_progress");
+    setWorks(safe.works || []);
+    setParts(safe.parts || []);
+    setInspection(safe.inspection || DEFAULT_INSPECTION_DATA);
     setEditorTab("works_parts");
     setIsEditorOpen(true);
   };
@@ -486,16 +499,16 @@ export const RepairOrdersModule: React.FC = () => {
     setTimeout(() => setArchiveSavedToast(false), 2000);
   };
 
-  const filteredOrders = orders.filter((o) => {
+  const filteredOrders = orders.map((o) => normalizeRepairOrder(o, currentUsername)).filter((o) => {
     if (selectedStatus !== "all" && o.status !== selectedStatus) return false;
     if (!searchQuery.trim()) return true;
     const q = searchQuery.toLowerCase();
     return (
-      o.orderNumber.toLowerCase().includes(q) ||
-      o.client.name.toLowerCase().includes(q) ||
-      o.vehicle.licensePlate.toLowerCase().includes(q) ||
-      o.vehicle.vin.toLowerCase().includes(q) ||
-      `${o.vehicle.make} ${o.vehicle.model}`.toLowerCase().includes(q)
+      (o.orderNumber || "").toLowerCase().includes(q) ||
+      (o.client?.name || "").toLowerCase().includes(q) ||
+      (o.vehicle?.licensePlate || "").toLowerCase().includes(q) ||
+      (o.vehicle?.vin || "").toLowerCase().includes(q) ||
+      `${o.vehicle?.make || ""} ${o.vehicle?.model || ""}`.toLowerCase().includes(q)
     );
   });
 
@@ -665,13 +678,13 @@ export const RepairOrdersModule: React.FC = () => {
 
                         <td className="py-3 px-4">
                           <div className="font-semibold text-slate-900 dark:text-slate-100">
-                            {ord.vehicle.make} {ord.vehicle.model}
+                            {ord.vehicle?.make || "Автомобиль"} {ord.vehicle?.model || ""}
                           </div>
                           <div className="flex items-center space-x-1.5 mt-0.5">
                             <span className="px-1.5 py-0.2 rounded font-mono font-bold text-[11px] bg-slate-100 dark:bg-zinc-800 text-slate-900 dark:text-white border border-slate-200 dark:border-zinc-700">
-                              {ord.vehicle.licensePlate}
+                              {ord.vehicle?.licensePlate || "Б/Н"}
                             </span>
-                            {ord.vehicle.vin && (
+                            {ord.vehicle?.vin && (
                               <span className="text-[11px] text-slate-400 truncate max-w-[120px]" title={ord.vehicle.vin}>
                                 {ord.vehicle.vin.slice(-6)}
                               </span>
@@ -680,8 +693,8 @@ export const RepairOrdersModule: React.FC = () => {
                         </td>
 
                         <td className="py-3 px-4">
-                          <div className="font-medium text-slate-900 dark:text-slate-100">{ord.client.name}</div>
-                          <div className="text-[11px] text-slate-400">{ord.client.phone}</div>
+                          <div className="font-medium text-slate-900 dark:text-slate-100">{ord.client?.name || "Клиент"}</div>
+                          <div className="text-[11px] text-slate-400">{ord.client?.phone || ""}</div>
                         </td>
 
                         <td className="py-3 px-4">
@@ -775,10 +788,10 @@ export const RepairOrdersModule: React.FC = () => {
                           <span className="font-mono text-[10px] text-slate-400">{ord.createdAt}</span>
                         </div>
                         <div>
-                          <div className="font-semibold text-xs text-slate-800 dark:text-zinc-200">{ord.vehicle.make} {ord.vehicle.model}</div>
-                          <div className="font-mono font-bold text-[11px] text-red-600 dark:text-red-400">{ord.vehicle.licensePlate}</div>
+                          <div className="font-semibold text-xs text-slate-800 dark:text-zinc-200">{ord.vehicle?.make || "Автомобиль"} {ord.vehicle?.model || ""}</div>
+                          <div className="font-mono font-bold text-[11px] text-red-600 dark:text-red-400">{ord.vehicle?.licensePlate || "Б/Н"}</div>
                         </div>
-                        <div className="text-[11px] text-slate-500 dark:text-zinc-400 truncate">{ord.client.name}</div>
+                        <div className="text-[11px] text-slate-500 dark:text-zinc-400 truncate">{ord.client?.name || "Клиент"}</div>
                         <div className="pt-2 border-t border-slate-100 dark:border-zinc-800 flex items-center justify-between">
                           <span className="text-[10px] text-slate-400">{ord.works?.length || 0} раб. • {ord.parts?.length || 0} запч.</span>
                           <span className="font-bold text-xs text-slate-900 dark:text-zinc-100">{formatCurrency(ord.grandTotal)}</span>
@@ -1266,11 +1279,12 @@ export const RepairOrdersModule: React.FC = () => {
                   <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800">
                     <div className="flex flex-wrap items-center gap-1.5">
                       {[
-                        { id: "work_order", label: "Договор-заказ-наряд" },
-                        { id: "acceptance_act", label: "Акт приема-передачи ТС" },
-                        { id: "defect_sheet", label: "Дефектовочная ведомость" },
-                        { id: "completion_act", label: "Акт выполненных работ" },
-                        { id: "invoice", label: "Счет на оплату" },
+                        { id: "work_order", label: "1. Заказ-наряд" },
+                        { id: "acceptance_act", label: "2. Акт приема ТС" },
+                        { id: "completion_act", label: "3. Акт выполненных работ" },
+                        { id: "payment_receipt", label: "4. Квитанция / Чек" },
+                        { id: "invoice", label: "5. Счет на оплату" },
+                        { id: "defect_sheet", label: "6. Дефектовка" },
                       ].map((t) => (
                         <button
                           key={t.id}
@@ -1325,56 +1339,180 @@ export const RepairOrdersModule: React.FC = () => {
                   </div>
 
                   {/* Document Canvas Preview */}
-                  <div className="p-8 rounded-xl bg-white text-slate-900 border border-slate-300 shadow-md font-sans text-xs space-y-5 leading-relaxed">
-                    {/* Header with Brand Logo */}
-                    <div className="border-b-2 border-red-600 pb-3 flex justify-between items-start gap-4">
-                      <div className="flex items-start space-x-3.5">
-                        <img
-                          src="/logo-chaika-white.png"
-                          alt="Чайка-Сервис"
-                          className="h-10 w-auto max-w-[150px] object-contain filter invert shrink-0"
-                        />
-                        <div>
-                          <h2 className="text-base font-extrabold text-red-600 uppercase tracking-wide">
-                            {stoReq.brandName}
-                          </h2>
-                          <p className="font-semibold">{stoReq.name}</p>
-                          <p className="text-[11px] text-slate-600">{stoReq.address} • Тел: {stoReq.phone}</p>
+                  <div className="p-8 rounded-xl bg-white text-slate-900 border border-slate-300 shadow-md font-sans text-xs space-y-4 leading-relaxed">
+                    {/* Header with Brand Logo & Requisites */}
+                    {selectedDocTypeInEditor === "invoice" ? (
+                      <div className="mb-4 space-y-2.5">
+                        <div className="flex items-center justify-between border-b pb-2">
+                          <div className="flex items-center space-x-3">
+                            <img
+                              src="/logo-chaika-white.png"
+                              alt="Чайка-Сервис"
+                              className="h-9 w-auto object-contain filter invert shrink-0"
+                            />
+                            <div>
+                              <span className="font-extrabold text-sm uppercase text-red-600">{stoReq.brandName}</span>
+                              <p className="text-[11px] text-slate-500">{stoReq.name}</p>
+                            </div>
+                          </div>
+                          <div className="text-right text-[11px] text-slate-500">
+                            Образец заполнения платежного поручения
+                          </div>
+                        </div>
+
+                        <table className="w-full border-collapse border border-black text-xs">
+                          <tbody>
+                            <tr>
+                              <td colSpan={2} rowSpan={2} className="border border-black p-2 align-top">
+                                <div className="text-[10px] text-slate-500">Банк получателя:</div>
+                                <div className="font-semibold">{stoReq.bankName}</div>
+                              </td>
+                              <td className="border border-black p-1.5 w-20 text-[10px] text-slate-500">БИК</td>
+                              <td className="border border-black p-1.5 font-mono font-semibold">{stoReq.bik}</td>
+                            </tr>
+                            <tr>
+                              <td className="border border-black p-1.5 text-[10px] text-slate-500">Сч. №</td>
+                              <td className="border border-black p-1.5 font-mono font-semibold">{stoReq.ks}</td>
+                            </tr>
+                            <tr>
+                              <td className="border border-black p-1.5 text-[10px] text-slate-500 w-32">
+                                ИНН {stoReq.inn}
+                              </td>
+                              <td className="border border-black p-1.5 text-[10px] text-slate-500">
+                                {stoReq.kpp ? `КПП ${stoReq.kpp}` : "КПП —"}
+                              </td>
+                              <td rowSpan={2} className="border border-black p-1.5 text-[10px] text-slate-500 align-top">
+                                Сч. №
+                              </td>
+                              <td rowSpan={2} className="border border-black p-1.5 font-mono font-semibold align-top">
+                                {stoReq.rs}
+                              </td>
+                            </tr>
+                            <tr>
+                              <td colSpan={2} className="border border-black p-2 align-top">
+                                <div className="text-[10px] text-slate-500">Получатель:</div>
+                                <div className="font-bold">{stoReq.name}</div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    ) : (
+                      <div className="border-b-2 border-red-600 pb-3 flex justify-between items-start gap-4">
+                        <div className="flex items-start space-x-3.5">
+                          <img
+                            src="/logo-chaika-white.png"
+                            alt="Чайка-Сервис"
+                            className="h-10 w-auto max-w-[150px] object-contain filter invert shrink-0"
+                          />
+                          <div>
+                            <h2 className="text-base font-extrabold text-red-600 uppercase tracking-wide">
+                              {stoReq.brandName}
+                            </h2>
+                            <p className="font-semibold">{stoReq.name}</p>
+                            <p className="text-[11px] text-slate-600">{stoReq.address} • Тел: {stoReq.phone}</p>
+                          </div>
+                        </div>
+                        <div className="text-right text-[11px] text-slate-600 shrink-0">
+                          <p>ИНН: <span className="font-bold">{stoReq.inn}</span> {stoReq.kpp ? `/ КПП: ${stoReq.kpp}` : ""} • ОГРНИП: {stoReq.ogrn}</p>
+                          <p>Р/с: {stoReq.rs} в {stoReq.bankName} (БИК: {stoReq.bik})</p>
                         </div>
                       </div>
-                      <div className="text-right text-[11px] text-slate-600 shrink-0">
-                        <p>ИНН: {stoReq.inn} / КПП: {stoReq.kpp} • ОГРН: {stoReq.ogrn}</p>
-                        <p>Р/с: {stoReq.rs} в {stoReq.bankName} (БИК: {stoReq.bik})</p>
-                      </div>
-                    </div>
+                    )}
 
-                    <div className="text-center my-3">
+                    <div className="text-center my-3 pb-2 border-b border-slate-200">
                       <h3 className="text-sm font-bold uppercase tracking-wider">
                         {selectedDocTypeInEditor === "work_order" && `ДОГОВОР-ЗАКАЗ-НАРЯД № ${draftOrderForDoc.orderNumber}`}
                         {selectedDocTypeInEditor === "acceptance_act" && `АКТ ПРИЕМА-ПЕРЕДАЧИ ТС К ЗАКАЗ-НАРЯДУ № ${draftOrderForDoc.orderNumber}`}
-                        {selectedDocTypeInEditor === "defect_sheet" && `ДЕФЕКТОВОЧНАЯ ВЕДОМОСТЬ № ${draftOrderForDoc.orderNumber}`}
                         {selectedDocTypeInEditor === "completion_act" && `АКТ ВЫПОЛНЕННЫХ РАБОТ № ${draftOrderForDoc.orderNumber}`}
+                        {selectedDocTypeInEditor === "payment_receipt" && `КВИТАНЦИЯ К ЗАКАЗ-НАРЯДУ № ${draftOrderForDoc.orderNumber} (ЧЕК ОБ ОПЛАТЕ)`}
                         {selectedDocTypeInEditor === "invoice" && `СЧЕТ НА ОПЛАТУ № ${draftOrderForDoc.orderNumber}`}
+                        {selectedDocTypeInEditor === "defect_sheet" && `ДЕФЕКТОВОЧНАЯ ВЕДОМОСТЬ № ${draftOrderForDoc.orderNumber}`}
                       </h3>
                       <p className="text-[11px] text-slate-500">от {draftOrderForDoc.createdAt} г.</p>
                     </div>
 
-                    {/* Parties */}
-                    <div className="grid grid-cols-2 gap-4 p-3 rounded-lg bg-slate-50 border border-slate-200">
-                      <div>
-                        <span className="font-bold text-[10px] uppercase text-slate-400">Заказчик:</span>
-                        <p className="font-bold text-slate-900">{draftOrderForDoc.client.name}</p>
-                        <p className="text-slate-600">Тел: {draftOrderForDoc.client.phone || "—"}</p>
-                        {draftOrderForDoc.client.inn && <p className="text-slate-600">ИНН: {draftOrderForDoc.client.inn}</p>}
+                    {/* Parties info */}
+                    {selectedDocTypeInEditor === "invoice" ? (
+                      <div className="space-y-1.5 text-xs mb-4">
+                        <div>
+                          <span className="font-bold">Поставщик (Исполнитель): </span>
+                          <span>{stoReq.name}, ИНН {stoReq.inn}, {stoReq.address}, тел.: {stoReq.phone}</span>
+                        </div>
+                        <div>
+                          <span className="font-bold">Покупатель (Заказчик): </span>
+                          <span>{draftOrderForDoc.client?.name || "Заказчик"}, {draftOrderForDoc.client?.inn ? `ИНН ${draftOrderForDoc.client.inn}, ` : ""}тел.: {draftOrderForDoc.client?.phone || "—"}</span>
+                        </div>
+                        <div>
+                          <span className="font-bold">Основание: </span>
+                          <span>Заказ-наряд № {draftOrderForDoc.orderNumber} на ремонт ТС {draftOrderForDoc.vehicle?.make} {draftOrderForDoc.vehicle?.model} ({draftOrderForDoc.vehicle?.licensePlate})</span>
+                        </div>
                       </div>
-                      <div>
-                        <span className="font-bold text-[10px] uppercase text-slate-400">Транспортное средство:</span>
-                        <p className="font-bold text-slate-900">{draftOrderForDoc.vehicle.make} {draftOrderForDoc.vehicle.model}</p>
-                        <p>Госномер: <strong className="font-mono">{draftOrderForDoc.vehicle.licensePlate}</strong></p>
-                        {draftOrderForDoc.vehicle.vin && <p className="text-[11px] font-mono text-slate-600">VIN: {draftOrderForDoc.vehicle.vin}</p>}
-                        <p className="text-slate-600">Пробег: {draftOrderForDoc.vehicle.mileage.toLocaleString()} км</p>
+                    ) : (
+                      <div className="grid grid-cols-2 gap-4 p-3 rounded-lg bg-slate-50 border border-slate-200">
+                        <div>
+                          <span className="font-bold text-[10px] uppercase text-slate-400">Заказчик (Плательщик):</span>
+                          <p className="font-bold text-slate-900">{draftOrderForDoc.client?.name || "Частный клиент"}</p>
+                          <p className="text-slate-600">Тел: {draftOrderForDoc.client?.phone || "—"}</p>
+                          {draftOrderForDoc.client?.inn && <p className="text-slate-600">ИНН: {draftOrderForDoc.client.inn}</p>}
+                        </div>
+                        <div>
+                          <span className="font-bold text-[10px] uppercase text-slate-400">Транспортное средство:</span>
+                          <p className="font-bold text-slate-900">{draftOrderForDoc.vehicle?.make} {draftOrderForDoc.vehicle?.model}</p>
+                          <p>Госномер: <strong className="font-mono">{draftOrderForDoc.vehicle?.licensePlate}</strong></p>
+                          {draftOrderForDoc.vehicle?.vin && <p className="text-[11px] font-mono text-slate-600">VIN: {draftOrderForDoc.vehicle.vin}</p>}
+                          <p className="text-slate-600">Пробег: {draftOrderForDoc.vehicle?.mileage ? draftOrderForDoc.vehicle.mileage.toLocaleString() : "—"} км</p>
+                        </div>
                       </div>
-                    </div>
+                    )}
+
+                    {/* PAYMENT RECEIPT SPECIFIC BODY */}
+                    {selectedDocTypeInEditor === "payment_receipt" && (
+                      <div className="space-y-4 mb-4">
+                        <div className="p-4 rounded-xl border-2 border-emerald-600 bg-emerald-50/40 space-y-3">
+                          <div className="flex items-center justify-between border-b border-emerald-200 pb-2">
+                            <span className="font-bold text-xs text-emerald-900 uppercase">Платежная информация</span>
+                            <span className="px-2.5 py-0.5 rounded-full bg-emerald-600 text-white font-mono font-bold text-xs tracking-wider">
+                              ОПЛАЧЕНО ПОЛНОСТЬЮ
+                            </span>
+                          </div>
+
+                          <table className="w-full text-xs">
+                            <tbody>
+                              <tr className="border-b border-emerald-100">
+                                <td className="py-1 text-slate-600 w-44">Основание платежа:</td>
+                                <td className="py-1 font-semibold text-slate-900">Оплата по заказ-наряду № {draftOrderForDoc.orderNumber} от {draftOrderForDoc.createdAt} г.</td>
+                              </tr>
+                              <tr className="border-b border-emerald-100">
+                                <td className="py-1 text-slate-600">Плательщик:</td>
+                                <td className="py-1 font-semibold text-slate-900">{draftOrderForDoc.client?.name}</td>
+                              </tr>
+                              <tr className="border-b border-emerald-100">
+                                <td className="py-1 text-slate-600">Способ оплаты:</td>
+                                <td className="py-1 font-semibold text-slate-900">Безналичный расчет / Банковская карта / СБП</td>
+                              </tr>
+                              <tr className="border-b border-emerald-100">
+                                <td className="py-1 text-slate-600">Налоговый режим:</td>
+                                <td className="py-1 font-medium text-slate-700">УСН (Доходы), Патент. НДС не облагается (пп. 37 п. 3 ст. 149 НК РФ)</td>
+                              </tr>
+                              <tr>
+                                <td className="py-1.5 font-bold text-slate-900 text-sm">Сумма к оплате:</td>
+                                <td className="py-1.5 font-extrabold text-emerald-700 text-base">{formatCurrency(draftOrderForDoc.grandTotal)}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+
+                          <div className="pt-2 border-t border-emerald-200 text-xs">
+                            <span className="font-bold text-slate-900">Сумма прописью: </span>
+                            <span className="italic font-medium text-slate-800">{numberToWordsRu(draftOrderForDoc.grandTotal)}</span>
+                          </div>
+                        </div>
+
+                        <div className="text-[11px] text-slate-500">
+                          Настоящая квитанция подтверждает факт поступления денежных средств в кассу / на расчетный счет предприятия в полном объеме.
+                        </div>
+                      </div>
+                    )}
 
                     {/* Acceptance Act Schematic & Damages embed */}
                     {selectedDocTypeInEditor === "acceptance_act" && (
@@ -1451,25 +1589,43 @@ export const RepairOrdersModule: React.FC = () => {
                       </div>
                     )}
 
-                    {/* Totals & Signatures */}
-                    <div className="pt-3 border-t-2 border-slate-300 flex justify-between items-end">
-                      <div className="text-[11px] text-slate-500">
-                        Гарантия: на работы — 30 дней, на оригинальные запчасти — 14 дней.
-                      </div>
-                      <div className="text-right">
-                        <span className="text-xs uppercase text-slate-500">Итого к оплате:</span>
-                        <div className="text-lg font-extrabold text-red-600">
+                    {/* Totals & Sum in words */}
+                    <div className="p-3 bg-slate-50 border border-slate-300 rounded-lg space-y-1.5">
+                      <div className="flex justify-between items-center">
+                        <span className="font-extrabold text-sm text-slate-900">
+                          {selectedDocTypeInEditor === "invoice" ? "ВСЕГО К ОПЛАТЕ:" : "ИТОГО К ОПЛАТЕ:"}
+                        </span>
+                        <span className="font-black text-base text-red-600">
                           {formatCurrency(draftOrderForDoc.grandTotal)}
-                        </div>
+                        </span>
+                      </div>
+                      <div className="text-[11px] text-slate-600 border-t border-slate-200 pt-1.5">
+                        <span className="font-bold text-slate-900">Сумма прописью: </span>
+                        <span className="italic font-medium text-slate-800">{numberToWordsRu(draftOrderForDoc.grandTotal)}</span>
+                      </div>
+                      <div className="text-[10px] text-slate-500">
+                        НДС не облагается (в соответствии с пп. 37 п. 3 ст. 149 НК РФ, УСН / Патент).
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-8 pt-6 text-[11px]">
+                    <div className="grid grid-cols-2 gap-8 pt-4 border-t-2 border-slate-300 text-[11px]">
                       <div>
-                        <p>Мастер-приемщик: ____________________ / {stoReq.masterReceiver} /</p>
+                        <p className="font-bold">
+                          {selectedDocTypeInEditor === "invoice" ? "Предприниматель / Руководитель:" : "Исполнитель / Мастер-приемщик:"}
+                        </p>
+                        <p className="text-slate-600 mb-4">{stoReq.director} / {stoReq.masterReceiver}</p>
+                        <div className="border-b border-black w-44 mb-1" />
+                        <p className="text-[10px] text-slate-500">Подпись / М.П.</p>
                       </div>
-                      <div className="text-right">
-                        <p>Заказчик (представитель): ____________________ / {draftOrderForDoc.client.name} /</p>
+                      <div>
+                        <p className="font-bold">
+                          {selectedDocTypeInEditor === "payment_receipt" ? "Плательщик:" : "Заказчик (представитель):"}
+                        </p>
+                        <p className="text-slate-600 mb-4">{draftOrderForDoc.client?.name || "Заказчик"}</p>
+                        <div className="border-b border-black w-44 mb-1" />
+                        <p className="text-[10px] text-slate-500">
+                          {selectedDocTypeInEditor === "payment_receipt" ? "Оплату произвел" : "С объемом и стоимостью работ согласен"}
+                        </p>
                       </div>
                     </div>
                   </div>

@@ -13,28 +13,33 @@ import {
 } from "./auto-service-types";
 
 export const SERVICE_COMPANY_REQUISITES: StoCompanyRequisites = {
-  name: 'ООО «Автотехцентр Чайка-Сервис»',
-  brandName: 'ЧАЙКА-СЕРВИС CRM',
-  address: 'г. Сургут, Нефтеюганское шоссе, д. 28/4',
-  phone: '+7 (3462) 77-88-99',
-  email: 'service@chaika-crm.ru',
-  inn: '8602194820',
-  kpp: '860201001',
-  ogrn: '1128602008412',
-  bankName: 'ПАО Сбербанк',
-  bik: '047102651',
-  rs: '40702810867170014523',
-  ks: '30101810800000000651',
+  name: "ИП Водоватовский Антон Игоревич",
+  brandName: "ИП Водоватовский А.И. (СТО «Чайка-Сервис»)",
+  address: "629804, ЯНАО, г. Ноябрьск, ул. Магистральная",
+  phone: "+7 (900) 400-09-00",
+  email: "vodovatovskiy@list.ru",
+  inn: "263112957774",
+  kpp: "",
+  ogrn: "309264819700017",
+  okpo: "0165990910",
+  oktmo: "71958000001",
+  okved: "45.20, 45.32",
+  taxSystem: "УСН (Доходы), Патент. Без НДС (освобождение согласно пп. 37 п. 3 ст. 149 НК РФ)",
+  bankName: "Филиал «Екатеринбургский» АО «АЛЬФА-БАНК»",
+  bik: "046577964",
+  rs: "40802810038310009505",
+  ks: "30101810100000000964",
   defaultRatePerHour: 2500, // Рублей за 1 нормо-час
-  masterReceiver: 'Романов А.В.',
-  director: 'Чайковский В.И.',
-  mechanics: ['Иванов М.С.', 'Кузнецов П.А.', 'Сидоров Д.А.', 'Смирнов В.К.', 'Петров А.Н.'],
+  masterReceiver: "Водоватовский А.И.",
+  director: "Водоватовский Антон Игоревич",
+  directorBasis: "Свидетельства серии 26 № 003664718",
+  mechanics: ["Иванов М.С.", "Кузнецов П.А.", "Сидоров Д.А.", "Смирнов В.К.", "Петров А.Н."],
 };
 
 export function getStoRequisites(username?: string): StoCompanyRequisites {
   if (typeof window === "undefined") return SERVICE_COMPANY_REQUISITES;
   try {
-    const raw = localStorage.getItem(`geo_ai_sto_requisites_${username || "guest"}_v1`);
+    const raw = localStorage.getItem(`geo_ai_sto_requisites_${username || "guest"}_v2`);
     if (raw) {
       const parsed = JSON.parse(raw);
       if (parsed && typeof parsed === "object") {
@@ -52,7 +57,7 @@ export function getStoRequisites(username?: string): StoCompanyRequisites {
 export function saveStoRequisites(req: StoCompanyRequisites, username?: string): void {
   if (typeof window === "undefined") return;
   try {
-    localStorage.setItem(`geo_ai_sto_requisites_${username || "guest"}_v1`, JSON.stringify(req));
+    localStorage.setItem(`geo_ai_sto_requisites_${username || "guest"}_v2`, JSON.stringify(req));
     window.dispatchEvent(new CustomEvent("geo_ai_sto_requisites_updated"));
   } catch {}
 }
@@ -85,17 +90,20 @@ export const DEFAULT_SERVICE_BAYS: ServiceBay[] = [
 ];
 
 export function calculateOrderTotals(
-  works: OrderWorkItem[],
-  parts: OrderPartItem[]
+  works?: OrderWorkItem[],
+  parts?: OrderPartItem[]
 ): { totalWorks: number; totalParts: number; grandTotal: number } {
-  const totalWorks = works.reduce((sum, w) => {
-    const discountFactor = Math.max(0, 1 - (w.discountPercent || 0) / 100);
-    const itemTotal = (w.laborHours || 0) * (w.ratePerHour || 0) * discountFactor;
+  const safeWorks = Array.isArray(works) ? works : [];
+  const safeParts = Array.isArray(parts) ? parts : [];
+
+  const totalWorks = safeWorks.reduce((sum, w) => {
+    const discountFactor = Math.max(0, 1 - (Number(w?.discountPercent) || 0) / 100);
+    const itemTotal = (Number(w?.laborHours) || 0) * (Number(w?.ratePerHour) || 0) * discountFactor;
     return sum + Math.round(itemTotal);
   }, 0);
 
-  const totalParts = parts.reduce((sum, p) => {
-    const itemTotal = (p.qty || 0) * (p.salePrice || 0);
+  const totalParts = safeParts.reduce((sum, p) => {
+    const itemTotal = (Number(p?.qty) || 0) * (Number(p?.salePrice) || 0);
     return sum + Math.round(itemTotal);
   }, 0);
 
@@ -106,52 +114,248 @@ export function calculateOrderTotals(
   };
 }
 
-export function formatCurrency(amount: number): string {
+export function formatCurrency(amount: any): string {
+  const num = typeof amount === "number" && !isNaN(amount) ? amount : Number(amount) || 0;
   return new Intl.NumberFormat("ru-RU", {
     style: "currency",
     currency: "RUB",
     maximumFractionDigits: 0,
-  }).format(amount);
+  }).format(num);
 }
 
-export function getStatusMeta(status: OrderStatus): { label: string; bg: string; text: string; border: string } {
-  switch (status) {
-    case "estimate":
-      return {
-        label: "Заявка / Оценка",
-        bg: "bg-slate-100 dark:bg-slate-800/60",
-        text: "text-slate-700 dark:text-slate-300",
-        border: "border-slate-300 dark:border-slate-700",
-      };
-    case "in_progress":
-      return {
-        label: "В работе",
-        bg: "bg-amber-500/10",
-        text: "text-amber-600 dark:text-amber-400 font-semibold",
-        border: "border-amber-500/30",
-      };
-    case "parts_waiting":
-      return {
-        label: "Ожидание запчастей",
-        bg: "bg-purple-500/10",
-        text: "text-purple-600 dark:text-purple-400 font-semibold",
-        border: "border-purple-500/30",
-      };
-    case "ready":
-      return {
-        label: "Готов к выдаче",
-        bg: "bg-blue-500/10",
-        text: "text-blue-600 dark:text-blue-400 font-semibold",
-        border: "border-blue-500/30",
-      };
-    case "closed":
-      return {
-        label: "Закрыт / Оплачен",
-        bg: "bg-emerald-500/10",
-        text: "text-emerald-600 dark:text-emerald-400 font-semibold",
-        border: "border-emerald-500/30",
-      };
+export function getStatusMeta(status?: string | OrderStatus): { label: string; bg: string; text: string; border: string } {
+  const norm = String(status || "").toLowerCase();
+  if (norm === "estimate" || norm === "new" || norm === "draft") {
+    return {
+      label: "Заявка / Оценка",
+      bg: "bg-slate-100 dark:bg-slate-800/60",
+      text: "text-slate-700 dark:text-slate-300",
+      border: "border-slate-300 dark:border-slate-700",
+    };
   }
+  if (norm === "in_progress" || norm === "progress") {
+    return {
+      label: "В работе",
+      bg: "bg-amber-500/10",
+      text: "text-amber-600 dark:text-amber-400 font-semibold",
+      border: "border-amber-500/30",
+    };
+  }
+  if (norm === "parts_waiting" || norm === "waiting") {
+    return {
+      label: "Ожидание запчастей",
+      bg: "bg-purple-500/10",
+      text: "text-purple-600 dark:text-purple-400 font-semibold",
+      border: "border-purple-500/30",
+    };
+  }
+  if (norm === "ready") {
+    return {
+      label: "Готов к выдаче",
+      bg: "bg-blue-500/10",
+      text: "text-blue-600 dark:text-blue-400 font-semibold",
+      border: "border-blue-500/30",
+    };
+  }
+  if (norm === "closed" || norm === "completed" || norm === "done") {
+    return {
+      label: "Закрыт / Оплачен",
+      bg: "bg-emerald-500/10",
+      text: "text-emerald-600 dark:text-emerald-400 font-semibold",
+      border: "border-emerald-500/30",
+    };
+  }
+  // Safe default fallback
+  return {
+    label: "В работе",
+    bg: "bg-amber-500/10",
+    text: "text-amber-600 dark:text-amber-400 font-semibold",
+    border: "border-amber-500/30",
+  };
+}
+
+/**
+ * Deep normalizer for any RepairOrder object coming from AI chat, Supabase, or localStorage.
+ * Guarantees zero null/undefined crashes.
+ */
+export function normalizeRepairOrder(raw: any, username?: string): RepairOrder {
+  if (!raw || typeof raw !== "object") {
+    raw = {};
+  }
+
+  const rawStatus = String(raw.status || "in_progress").toLowerCase();
+  let status: OrderStatus = "in_progress";
+  if (["estimate", "in_progress", "parts_waiting", "ready", "closed"].includes(rawStatus)) {
+    status = rawStatus as OrderStatus;
+  }
+
+  const safeWorks: OrderWorkItem[] = Array.isArray(raw.works)
+    ? raw.works.map((w: any, idx: number) => ({
+        id: String(w?.id || `w-${idx + 1}`),
+        name: String(w?.name || "Слесарные работы"),
+        mechanic: String(w?.mechanic || w?.mechanicName || "Водоватовский А.И."),
+        laborHours: Number(w?.laborHours ?? w?.hours) || 1,
+        ratePerHour: Number(w?.ratePerHour ?? w?.hourlyRate ?? w?.rate) || 2500,
+        discountPercent: Number(w?.discountPercent) || 0,
+        total:
+          Number(w?.total) ||
+          Math.round(
+            (Number(w?.laborHours ?? w?.hours) || 1) *
+              (Number(w?.ratePerHour ?? w?.hourlyRate ?? w?.rate) || 2500) *
+              Math.max(0, 1 - (Number(w?.discountPercent) || 0) / 100)
+          ),
+      }))
+    : [];
+
+  const safeParts: OrderPartItem[] = Array.isArray(raw.parts)
+    ? raw.parts.map((p: any, idx: number) => ({
+        id: String(p?.id || `p-${idx + 1}`),
+        oem: String(p?.oem || p?.sku || "OEM").toUpperCase(),
+        name: String(p?.name || "Автозапчасть"),
+        qty: Number(p?.qty ?? p?.quantity) || 1,
+        unit: String(p?.unit || "шт"),
+        purchasePrice: Number(p?.purchasePrice ?? p?.price) || 0,
+        salePrice: Number(p?.salePrice ?? p?.price) || 0,
+        total: Number(p?.total) || (Number(p?.qty ?? p?.quantity) || 1) * (Number(p?.salePrice ?? p?.price) || 0),
+      }))
+    : [];
+
+  const totals = calculateOrderTotals(safeWorks, safeParts);
+
+  const rawVehicle = raw.vehicle || {};
+  const vehicle = {
+    make: String(rawVehicle.make || "Автомобиль"),
+    model: String(rawVehicle.model || ""),
+    licensePlate: String(rawVehicle.licensePlate || rawVehicle.plate || "Б/Н").toUpperCase(),
+    vin: String(rawVehicle.vin || "").toUpperCase(),
+    year: Number(rawVehicle.year) || 2022,
+    mileage: Number(rawVehicle.mileage) || 0,
+    color: rawVehicle.color ? String(rawVehicle.color) : undefined,
+    complaints: String(rawVehicle.complaints || raw.customerComplaint || "Диагностика и регламентное ТО"),
+  };
+
+  const rawClient = raw.client || {};
+  const client = {
+    id: rawClient.id ? String(rawClient.id) : undefined,
+    type: (rawClient.type === "legal" || rawClient.type === "LEGAL" ? "legal" : "individual") as "individual" | "legal",
+    name: String(rawClient.name || "Частный клиент"),
+    phone: String(rawClient.phone || "+7 (900) 000-00-00"),
+    inn: rawClient.inn ? String(rawClient.inn) : undefined,
+    email: rawClient.email ? String(rawClient.email) : undefined,
+    address: rawClient.address ? String(rawClient.address) : undefined,
+  };
+
+  const inspection = raw.inspection && typeof raw.inspection === "object"
+    ? {
+        vehicleBodyType: raw.inspection.vehicleBodyType === "van_truck" ? ("van_truck" as const) : ("car" as const),
+        fuelLevel: raw.inspection.fuelLevel || ("1/2" as const),
+        equipment: {
+          sts: raw.inspection.equipment?.sts ?? true,
+          keysCount: Number(raw.inspection.equipment?.keysCount) || 1,
+          spareWheel: raw.inspection.equipment?.spareWheel ?? true,
+          jack: raw.inspection.equipment?.jack ?? true,
+          firstAidKit: raw.inspection.equipment?.firstAidKit ?? false,
+          warningTriangle: raw.inspection.equipment?.warningTriangle ?? true,
+          dashcam: raw.inspection.equipment?.dashcam ?? false,
+        },
+        isDirty: Boolean(raw.inspection.isDirty),
+        damages: Array.isArray(raw.inspection.damages) ? raw.inspection.damages : [],
+      }
+    : {
+        vehicleBodyType: "car" as const,
+        fuelLevel: "1/2" as const,
+        equipment: { sts: true, keysCount: 1, spareWheel: true, jack: true, firstAidKit: false, warningTriangle: true, dashcam: false },
+        isDirty: false,
+        damages: [],
+      };
+
+  return {
+    id: String(raw.id || `ord-${Date.now()}`),
+    orderNumber: String(raw.orderNumber || `ЗН-${new Date().getFullYear().toString().slice(-2)}/${Math.floor(1000 + Math.random() * 9000)}`),
+    status,
+    createdAt: String(raw.createdAt || new Date().toISOString().slice(0, 10)),
+    closedAt: raw.closedAt ? String(raw.closedAt) : undefined,
+    scheduledDate: raw.scheduledDate ? String(raw.scheduledDate) : undefined,
+    scheduledTime: raw.scheduledTime ? String(raw.scheduledTime) : undefined,
+    bayId: raw.bayId ? String(raw.bayId) : undefined,
+    client,
+    vehicle,
+    works: safeWorks,
+    parts: safeParts,
+    inspection,
+    recommendations: raw.recommendations ? String(raw.recommendations) : undefined,
+    totalWorks: Number(raw.totalWorks ?? raw.worksTotal) || totals.totalWorks,
+    totalParts: Number(raw.totalParts ?? raw.partsTotal) || totals.totalParts,
+    grandTotal: Number(raw.grandTotal ?? raw.totalAmount) || totals.grandTotal,
+    paidAmount: Number(raw.paidAmount ?? raw.grandTotal ?? raw.totalAmount) || totals.grandTotal,
+    warrantyDaysWorks: Number(raw.warrantyDaysWorks) || 30,
+    warrantyDaysParts: Number(raw.warrantyDaysParts) || 14,
+    masterName: String(raw.masterName || "Водоватовский А.И."),
+    username: String(raw.username || username || "admin"),
+  };
+}
+
+/**
+ * Converts a numeric ruble amount to Russian words format for official accounting documents.
+ * Example: 15400 -> "Пятнадцать тысяч четыреста рублей 00 копеек"
+ */
+export function numberToWordsRu(amount: number): string {
+  const num = Math.floor(Math.abs(amount || 0));
+  const kopecks = Math.round((Math.abs(amount || 0) - num) * 100);
+  const kopStr = (kopecks < 10 ? "0" : "") + kopecks + " коп.";
+
+  if (num === 0) return `Ноль рублей ${kopStr}`;
+
+  const unitsM = ["", "один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять"];
+  const unitsF = ["", "одна", "две", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять"];
+  const teens = ["десять", "одиннадцать", "двенадцать", "тринадцать", "четырнадцать", "пятнадцать", "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать"];
+  const tens = ["", "", "двадцать", "тридцать", "сорок", "пятьдесят", "шестьдесят", "семьдесят", "восемьдесят", "девяносто"];
+  const hundreds = ["", "сто", "двести", "триста", "четыреста", "пятьсот", "шестьсот", "семьсот", "восемьсот", "девятьсот"];
+
+  function triToWords(tri: number, isFem: boolean): string {
+    const h = Math.floor(tri / 100);
+    const t = Math.floor((tri % 100) / 10);
+    const u = tri % 10;
+    const parts: string[] = [];
+    if (h > 0) parts.push(hundreds[h]);
+    if (t === 1) {
+      parts.push(teens[u]);
+    } else {
+      if (t > 1) parts.push(tens[t]);
+      if (u > 0) parts.push(isFem ? unitsF[u] : unitsM[u]);
+    }
+    return parts.join(" ");
+  }
+
+  function declension(n: number, one: string, two: string, five: string): string {
+    const n100 = n % 100;
+    const n10 = n % 10;
+    if (n100 >= 11 && n100 <= 19) return five;
+    if (n10 === 1) return one;
+    if (n10 >= 2 && n10 <= 4) return two;
+    return five;
+  }
+
+  const millions = Math.floor(num / 1000000);
+  const thousands = Math.floor((num % 1000000) / 1000);
+  const remainder = num % 1000;
+
+  const resultParts: string[] = [];
+  if (millions > 0) {
+    resultParts.push(triToWords(millions, false));
+    resultParts.push(declension(millions, "миллион", "миллиона", "миллионов"));
+  }
+  if (thousands > 0) {
+    resultParts.push(triToWords(thousands, true));
+    resultParts.push(declension(thousands, "тысяча", "тысячи", "тысяч"));
+  }
+  if (remainder > 0 || resultParts.length === 0) {
+    resultParts.push(triToWords(remainder, false));
+  }
+
+  const rubWord = declension(num, "рубль", "рубля", "рублей");
+  const fullText = resultParts.filter(Boolean).join(" ").trim() + " " + rubWord + " " + kopStr;
+  return fullText.charAt(0).toUpperCase() + fullText.slice(1);
 }
 
 export function getInitialOrders(_username?: string): RepairOrder[] {

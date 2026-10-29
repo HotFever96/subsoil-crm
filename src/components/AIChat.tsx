@@ -1107,7 +1107,16 @@ export const AIChat: React.FC = () => {
           {/* Scrollable messages container */}
           <div className="flex-1 overflow-y-auto">
             <div className="max-w-3xl mx-auto px-4 py-8 space-y-7">
-              {activeSession.messages.map((msg) => {
+              {activeSession.messages
+                .filter((msg) => {
+                  // In active dialogue, NEVER render welcome greetings
+                  const isWelcome =
+                    msg.id?.startsWith("msg-welcome-") ||
+                    msg.content?.includes("Я интеллектуальный помощник системы") ||
+                    msg.content?.includes("Я — Шеф-мастер СТО");
+                  return !isWelcome;
+                })
+                .map((msg) => {
                 const isAssistant = msg.role === "assistant";
                 return (
                   <div
@@ -1117,8 +1126,14 @@ export const AIChat: React.FC = () => {
                     }`}
                   >
                     {isAssistant && (
-                      <div className="w-8 h-8 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-500 dark:text-sky-400 flex items-center justify-center shrink-0 mt-1">
-                        <Bot className="w-4 h-4" />
+                      <div
+                        className={`w-8 h-8 rounded-full border flex items-center justify-center shrink-0 mt-1 ${
+                          isChaika
+                            ? "bg-rose-500/10 border-rose-500/20 text-rose-500 dark:text-rose-400"
+                            : "bg-sky-500/10 border border-sky-500/20 text-sky-500 dark:text-sky-400"
+                        }`}
+                      >
+                        {isChaika ? <Wrench className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
                       </div>
                     )}
 

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { callOpenRouter, MessageContent } from "@/lib/openrouter";
 import { ChatActionPayload } from "@/lib/supabase";
+import { normalizeRepairOrder } from "@/lib/auto-service-data";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://hrdchbltqfakgxxkjroy.supabase.co";
 const SUPABASE_KEY =
@@ -487,68 +488,44 @@ async function executeCrmActions(
           data: p,
         });
       } else if (act.type === "repair_order_create" || act.type === "create_repair_order") {
-        const p = act.payload;
+        const p = act.payload || {};
         const orderId = `ro-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
         const orderNumber =
           p.orderNumber ||
           `ЗН-${new Date().getFullYear().toString().slice(-2)}/${Math.floor(1000 + Math.random() * 9000)}`;
 
-        const works = Array.isArray(p.works)
-          ? p.works.map((w: any, idx: number) => ({
-              id: `w-${idx + 1}`,
-              name: w.name || "Работы",
-              catalogCode: w.catalogCode || "",
-              hours: Number(w.hours) || 1,
-              hourlyRate: Number(w.rate || w.hourlyRate) || 2000,
-              discountPercent: Number(w.discountPercent) || 0,
-              total: (Number(w.hours) || 1) * (Number(w.rate || w.hourlyRate) || 2000),
-              mechanicName: w.mechanic || w.mechanicName || "Иванов И.",
-            }))
-          : [];
+        const rawVehicleMake = p.vehicleMake || (p.vehicle && p.vehicle.make) || "Volkswagen";
+        const rawVehicleModel = p.vehicleModel || (p.vehicle && p.vehicle.model) || "Tiguan";
+        const rawVehiclePlate = p.vehiclePlate || p.licensePlate || (p.vehicle && (p.vehicle.licensePlate || p.vehicle.plate)) || "А123ВС89";
 
-        const parts = Array.isArray(p.parts)
-          ? p.parts.map((pt: any, idx: number) => ({
-              id: `p-${idx + 1}`,
-              sku: pt.sku || "N/A",
-              name: pt.name || "Деталь / расходник",
-              quantity: Number(pt.quantity) || 1,
-              unit: pt.unit || "шт.",
-              price: Number(pt.price) || 0,
-              discountPercent: Number(pt.discountPercent) || 0,
-              total: (Number(pt.quantity) || 1) * (Number(pt.price) || 0),
-            }))
-          : [];
-
-        const worksTotal = works.reduce((s: number, w: any) => s + w.total, 0);
-        const partsTotal = parts.reduce((s: number, pt: any) => s + pt.total, 0);
-        const totalAmount = worksTotal + partsTotal;
-
-        const repairOrder = {
+        const rawOrder = {
           id: orderId,
           orderNumber,
-          createdAt: new Date().toISOString(),
-          status: "IN_PROGRESS",
+          createdAt: new Date().toISOString().slice(0, 10),
+          status: "in_progress",
           client: {
             id: `c-${Date.now()}`,
-            name: p.clientName || "ООО «Транс-Логистик»",
-            phone: p.clientPhone || "+7 (999) 000-00-00",
-            type: "LEGAL",
+            name: p.clientName || (p.client && p.client.name) || "ООО «Транс-Логистик»",
+            phone: p.clientPhone || (p.client && p.client.phone) || "+7 (900) 400-09-00",
+            type: "legal",
+            inn: p.clientInn || (p.client && p.client.inn) || "",
           },
           vehicle: {
-            plate: (p.vehiclePlate || "А123ВС777").toUpperCase(),
-            vin: (p.vehicleVin || "XTA" + Math.random().toString(36).substring(2, 14)).toUpperCase(),
-            make: p.vehicleMake || "ГАЗель NEXT",
-            year: Number(p.vehicleYear) || 2023,
-            mileage: Number(p.mileage) || 75000,
+            make: rawVehicleMake,
+            model: rawVehicleModel,
+            licensePlate: String(rawVehiclePlate).toUpperCase(),
+            vin: (p.vehicleVin || (p.vehicle && p.vehicle.vin) || "XW8ZZZ5NZKG" + Math.floor(100000 + Math.random() * 900000)).toUpperCase(),
+            year: Number(p.vehicleYear || (p.vehicle && p.vehicle.year)) || 2021,
+            mileage: Number(p.mileage || (p.vehicle && p.vehicle.mileage)) || 85000,
+            complaints: p.customerComplaint || p.complaints || (p.vehicle && p.vehicle.complaints) || "Замена поворотного кулака и диагностика ходовой части",
           },
-          customerComplaint: p.customerComplaint || "Плановое ТО и диагностика",
-          works,
-          parts,
-          worksTotal,
-          partsTotal,
-          totalAmount,
-          assignedBayId: "bay-1",
+          works: Array.isArray(p.works) ? p.works : [],
+          parts: Array.isArray(p.parts) ? p.parts : [],
+          recommendations: p.recommendations || "Провести регулировку углов установки колес (сход-развал) после замены деталей подвески",
+          username: username || "admin",
         };
+
+        const repairOrder = normalizeRepairOrder(rawOrder, username);
 
         const res = await fetch(`${SUPABASE_URL}/rest/v1/chat_messages`, {
           method: "POST",
@@ -562,7 +539,7 @@ async function executeCrmActions(
               username,
               order_number: orderNumber,
               status: repairOrder.status,
-              vehicle: repairOrder.vehicle.plate,
+              vehicle: repairOrder.vehicle.licensePlate,
               client: repairOrder.client.name,
             },
           }),
@@ -572,7 +549,7 @@ async function executeCrmActions(
           executed.push({
             type: "REPAIR_ORDER_CREATED",
             title: `Заказ-наряд ${orderNumber}`,
-            details: `${repairOrder.vehicle.make} (${repairOrder.vehicle.plate}) • ${repairOrder.works.length} раб. • ${totalAmount.toLocaleString("ru-RU")} ₽`,
+            details: `${repairOrder.vehicle.make} ${repairOrder.vehicle.model} (${repairOrder.vehicle.licensePlate}) • ${repairOrder.works.length} раб. • ${repairOrder.grandTotal.toLocaleString("ru-RU")} ₽`,
             data: repairOrder,
           });
         }

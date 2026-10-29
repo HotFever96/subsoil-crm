@@ -27,7 +27,7 @@ import {
 } from "lucide-react";
 import { useTheme } from "@/lib/theme-context";
 import { useAuth } from "@/lib/auth-context";
-import { useChat } from "@/lib/chat-context";
+import { useChat, cleanChatTitle, detectChatWorkspace } from "@/lib/chat-context";
 import { useBusiness } from "@/lib/business-context";
 import { StoSettingsModal } from "./StoSettingsModal";
 
@@ -199,10 +199,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const navItems = isChaika ? chaikaNavItems : geoNavItems;
 
   const visibleSessions = sessions.filter((s) => {
+    const ws = s.workspace || detectChatWorkspace(s);
     if (isChaika) {
-      return s.workspace === "service";
+      return ws === "service";
     }
-    return !s.workspace || s.workspace === "geo";
+    return ws === "geo";
   });
 
   const handleNewChatClick = () => {
@@ -409,7 +410,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     >
                       <div className="flex items-center space-x-2.5 min-w-0 pr-1">
                         <MessageSquare className={`w-3.5 h-3.5 shrink-0 ${isActive ? (isChaika ? "text-rose-500" : "text-sky-500") : "text-slate-400"}`} />
-                        <span className="truncate text-xs">{sess.title}</span>
+                        <span className="truncate text-xs">{cleanChatTitle(sess.title)}</span>
                       </div>
 
                       {sessions.length > 1 && (

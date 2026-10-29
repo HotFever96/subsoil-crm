@@ -14,6 +14,71 @@ export interface ChatSession {
   workspace?: "geo" | "service";
 }
 
+export function cleanChatTitle(title: string): string {
+  if (!title) return "Новый чат";
+  let cleaned = title.trim();
+  // Remove markdown headers
+  cleaned = cleaned.replace(/^#+\s*/, "");
+  // Remove code blocks and JSON structures
+  cleaned = cleaned.replace(/```[a-z]*\s*[\s\S]*?```/gi, "");
+  cleaned = cleaned.replace(/\{[\s\S]*?\}/g, "");
+  // Remove wrapping quotes and brackets
+  cleaned = cleaned.replace(/^["'`]+|["'`]+$/g, "").trim();
+  // Fallback if empty or starts with JSON/code brackets
+  if (!cleaned || cleaned.startsWith("{") || cleaned.startsWith("[")) {
+    return "Диалог с ИИ";
+  }
+  if (cleaned.length > 40) {
+    cleaned = cleaned.slice(0, 38) + "...";
+  }
+  return cleaned;
+}
+
+export function detectChatWorkspace(chat: { title?: string; workspace?: string; messages?: ChatMessage[] }): "geo" | "service" {
+  if (chat.workspace === "service" || chat.workspace === "geo") {
+    return chat.workspace;
+  }
+  const textToScan = [
+    chat.title || "",
+    ...(chat.messages || []).slice(0, 8).map((m) => m.content || ""),
+  ].join(" ").toLowerCase();
+
+  const serviceKeywords = [
+    "нормо-час",
+    "нормочас",
+    "заказ-наряд",
+    "заказ наряд",
+    "зн-",
+    "поворотн",
+    "кулак",
+    "сцеплен",
+    "камаз",
+    "kamaz",
+    "tiguan",
+    "тигуан",
+    "запчаст",
+    "автосервис",
+    "чайка-сервис",
+    "росско",
+    "армтек",
+    "автодок",
+    "дефектовк",
+    "подвеск",
+    "vin",
+    "вин",
+    "пробег",
+    "шиномонтаж",
+    "сто ",
+  ];
+
+  for (const kw of serviceKeywords) {
+    if (textToScan.includes(kw)) {
+      return "service";
+    }
+  }
+  return "geo";
+}
+
 interface ChatContextType {
   sessions: ChatSession[];
   activeSessionId: string;
@@ -83,9 +148,12 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
             const validId = s.id && typeof s.id === "string" ? s.id : generateUniqueSessionId();
             if (!seenIds.has(validId)) {
               seenIds.add(validId);
+              const ws = s.workspace || detectChatWorkspace(s);
               loadedSessions.push({
                 ...s,
                 id: validId,
+                title: cleanChatTitle(s.title),
+                workspace: ws,
               });
             }
           });
@@ -104,12 +172,25 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // If no valid sessions exist, create exactly ONE fresh session with a unique ID
     if (loadedSessions.length === 0) {
       const freshId = generateUniqueSessionId();
+      const defaultWs = typeof document !== "undefined" && document.documentElement.getAttribute("data-business") === "chaika-service" ? "service" : "geo";
+      const isService = defaultWs === "service";
+
       const freshSession: ChatSession = {
         id: freshId,
-        title: "Новый чат",
+        title: isService ? "Чат по СТО" : "Новый чат",
         createdAt: "Сегодня",
         updatedAt: Date.now(),
-        messages: [getUserWelcomeMsg(currentUsername, user?.name)],
+        workspace: defaultWs,
+        messages: isService
+          ? [
+              {
+                id: `msg-welcome-service-${Date.now()}`,
+                role: "assistant",
+                content: `Здравствуйте, ${user?.name || "Мастер"}! Я — Шеф-мастер СТО «Чайка-Сервис CRM».\n\nГотов рассчитать нормо-часы, открыть заказ-наряд, выполнить проценку запчастей по оптовым складам (Росско, Армтек, Автодок) или провести дефектовку узлов.\n\nКакая задача по автопарку в работе?`,
+                created_at: new Date().toISOString(),
+              },
+            ]
+          : [getUserWelcomeMsg(currentUsername, user?.name)],
       };
       loadedSessions = [freshSession];
       setSessions([freshSession]);
@@ -159,8 +240,8 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
             if (!sessionMap.has(sessId)) {
               sessionMap.set(sessId, {
-                title: sessTitle,
-                messages: [getUserWelcomeMsg(currentUsername, user?.name)],
+                title: cleanChatTitle(sessTitle),
+                messages: [],
               });
             }
             sessionMap.get(sessId)!.messages.push(msg);
@@ -175,17 +256,23 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
                   const existingMsgIds = new Set(merged[existingIdx].messages.map((m) => m.id));
                   const newMsgs = val.messages.filter((m) => !existingMsgIds.has(m.id));
                   if (newMsgs.length > 0) {
+                    const updatedMsgs = [...merged[existingIdx].messages, ...newMsgs];
+                    const ws = merged[existingIdx].workspace || detectChatWorkspace({ title: merged[existingIdx].title, messages: updatedMsgs });
                     merged[existingIdx] = {
                       ...merged[existingIdx],
-                      messages: [...merged[existingIdx].messages, ...newMsgs],
+                      title: cleanChatTitle(merged[existingIdx].title || val.title),
+                      workspace: ws,
+                      messages: updatedMsgs,
                     };
                   }
                 } else {
+                  const ws = detectChatWorkspace({ title: val.title, messages: val.messages });
                   merged.unshift({
                     id: sessId,
-                    title: val.title,
+                    title: cleanChatTitle(val.title),
                     createdAt: "В облаке",
                     updatedAt: Date.now(),
+                    workspace: ws,
                     messages: val.messages,
                   });
                 }
@@ -218,9 +305,11 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [sessions, activeSessionId, isInitialized, currentUsername]);
 
   // Create a brand new distinct chat session with a unique ID and workspace tag
-  const createNewChat = (workspace: "geo" | "service" = "geo"): string => {
+  const createNewChat = (workspace?: "geo" | "service"): string => {
+    const defaultWs = typeof document !== "undefined" && document.documentElement.getAttribute("data-business") === "chaika-service" ? "service" : "geo";
+    const targetWs = workspace || defaultWs;
     const newId = generateUniqueSessionId();
-    const isService = workspace === "service";
+    const isService = targetWs === "service";
 
     const initialMessage: ChatMessage = isService
       ? {
@@ -236,7 +325,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
       title: isService ? "Чат по СТО" : "Новый чат",
       createdAt: "Сегодня",
       updatedAt: Date.now(),
-      workspace,
+      workspace: targetWs,
       messages: [initialMessage],
     };
 
@@ -254,13 +343,24 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const remaining = prev.filter((s) => s.id !== id);
       if (remaining.length === 0) {
         const brandNewId = generateUniqueSessionId();
+        const defaultWs = typeof document !== "undefined" && document.documentElement.getAttribute("data-business") === "chaika-service" ? "service" : "geo";
+        const isService = defaultWs === "service";
         const brandNew: ChatSession = {
           id: brandNewId,
-          title: "Новый чат",
+          title: isService ? "Чат по СТО" : "Новый чат",
           createdAt: "Сегодня",
           updatedAt: Date.now(),
-          workspace: "geo",
-          messages: [getUserWelcomeMsg(currentUsername, user?.name)],
+          workspace: defaultWs,
+          messages: isService
+            ? [
+                {
+                  id: `msg-welcome-service-${Date.now()}`,
+                  role: "assistant",
+                  content: `Здравствуйте, ${user?.name || "Мастер"}! Я — Шеф-мастер СТО «Чайка-Сервис CRM».\n\nГотов рассчитать нормо-часы, открыть заказ-наряд, выполнить проценку запчастей по оптовым складам (Росско, Армтек, Автодок) или провести дефектовку узлов.\n\nКакая задача по автопарку в работе?`,
+                  created_at: new Date().toISOString(),
+                },
+              ]
+            : [getUserWelcomeMsg(currentUsername, user?.name)],
         };
         setActiveSessionId(brandNewId);
         return [brandNew];
@@ -289,11 +389,14 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
       prev.map((s) => {
         // ONLY update the session with this exact sessionId
         if (s.id === sessionId) {
-          const title = newTitle !== undefined ? newTitle : s.title;
+          const rawTitle = newTitle !== undefined ? newTitle : s.title;
+          const title = cleanChatTitle(rawTitle);
+          const ws = s.workspace || detectChatWorkspace({ title, messages });
           return {
             ...s,
             messages,
             title,
+            workspace: ws,
             updatedAt: Date.now(),
           };
         }
@@ -303,7 +406,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Find any new unsynced messages and sync them to Supabase tagged with username
     const targetSession = sessions.find((s) => s.id === sessionId);
-    const sessionTitle = newTitle || targetSession?.title || "Диалог с ИИ";
+    const sessionTitle = cleanChatTitle(newTitle || targetSession?.title || "Диалог с ИИ");
 
     if (currentUsername) {
       messages.forEach((msg) => {
@@ -332,13 +435,24 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const clearAllChats = () => {
     const freshId = generateUniqueSessionId();
+    const defaultWs = typeof document !== "undefined" && document.documentElement.getAttribute("data-business") === "chaika-service" ? "service" : "geo";
+    const isService = defaultWs === "service";
     const fresh: ChatSession = {
       id: freshId,
-      title: "Новый чат",
+      title: isService ? "Чат по СТО" : "Новый чат",
       createdAt: "Сегодня",
       updatedAt: Date.now(),
-      workspace: "geo",
-      messages: [getUserWelcomeMsg(currentUsername, user?.name)],
+      workspace: defaultWs,
+      messages: isService
+        ? [
+            {
+              id: `msg-welcome-service-${Date.now()}`,
+              role: "assistant",
+              content: `Здравствуйте, ${user?.name || "Мастер"}! Я — Шеф-мастер СТО «Чайка-Сервис CRM».\n\nГотов рассчитать нормо-часы, открыть заказ-наряд, выполнить проценку запчастей по оптовым складам (Росско, Армтек, Автодок) или провести дефектовку узлов.\n\nКакая задача по автопарку в работе?`,
+              created_at: new Date().toISOString(),
+            },
+          ]
+        : [getUserWelcomeMsg(currentUsername, user?.name)],
     };
     setSessions([fresh]);
     setActiveSessionId(freshId);

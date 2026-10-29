@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { normalizeRepairOrder } from "@/lib/auto-service-data";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://hrdchbltqfakgxxkjroy.supabase.co";
 const SUPABASE_KEY =
@@ -528,7 +529,8 @@ export async function POST(req: NextRequest) {
       const orders = rows
         .map((r: any) => {
           try {
-            return typeof r.content === "string" ? JSON.parse(r.content) : r.content;
+            const parsed = typeof r.content === "string" ? JSON.parse(r.content) : r.content;
+            return parsed ? normalizeRepairOrder(parsed, username) : null;
           } catch {
             return null;
           }
