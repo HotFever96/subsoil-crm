@@ -15,6 +15,32 @@ const getHeaders = () => ({
   Authorization: `Bearer ${SUPABASE_KEY}`,
 });
 
+// Defensive SSRF prevention helper
+function isSafeExternalUrl(urlStr: string): boolean {
+  try {
+    const parsed = new URL(urlStr);
+    if (parsed.protocol !== "https:" && parsed.protocol !== "http:") return false;
+    const host = parsed.hostname.toLowerCase();
+    if (
+      host === "localhost" ||
+      host === "127.0.0.1" ||
+      host === "0.0.0.0" ||
+      host === "::1" ||
+      host === "169.254.169.254" || // Cloud instance metadata service
+      host.endsWith(".internal") ||
+      host.endsWith(".local") ||
+      /^10\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(host) ||
+      /^192\.168\.\d{1,3}\.\d{1,3}$/.test(host) ||
+      /^172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3}$/.test(host)
+    ) {
+      return false;
+    }
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
     if (!SUPABASE_KEY) {
@@ -37,6 +63,14 @@ export async function POST(req: NextRequest) {
     if (!username) {
       return NextResponse.json(
         { error: "Username is required for user-isolated data access" },
+        { status: 400 }
+      );
+    }
+
+    // Defensive input validation on username to prevent query injection
+    if (!/^[a-zA-Z0-9_\-\.@]{1,64}$/.test(username)) {
+      return NextResponse.json(
+        { error: "Invalid username format" },
         { status: 400 }
       );
     }
@@ -742,6 +776,12 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({
           success: false,
           error: "❌ Ошибка: укажите URL эндпоинта локального шлюза REST API",
+        });
+      }
+      if (supplier === "custom_rest" && endpointUrl && !isSafeExternalUrl(endpointUrl.trim())) {
+        return NextResponse.json({
+          success: false,
+          error: "❌ Недопустимый адрес эндпоинта: разрешены только внешние публичные URL-адреса (доступ к локальной сети и метаданным заблокирован).",
         });
       }
 

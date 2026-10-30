@@ -32,6 +32,13 @@ export function downloadUploadedFile(file: { name: string; previewUrl?: string; 
   if (typeof window === "undefined") return;
   const target = file.previewUrl || file.content;
   if (!target) return;
+
+  // Defensive sanitization: block javascript:, vbscript:, and malicious executable schemes
+  if (/^\s*(javascript|vbscript|data:text\/html|data:application\/javascript)/i.test(target)) {
+    console.warn("Blocked potentially unsafe file download URI");
+    return;
+  }
+
   const link = document.createElement("a");
   if (target.startsWith("data:") || target.startsWith("blob:")) {
     link.href = target;
@@ -39,7 +46,8 @@ export function downloadUploadedFile(file: { name: string; previewUrl?: string; 
     const blob = new Blob([target], { type: "text/plain;charset=utf-8" });
     link.href = URL.createObjectURL(blob);
   }
-  link.download = file.name;
+  // Sanitize filename to prevent path traversal or control characters
+  link.download = (file.name || "download").replace(/[\\\/:\*\?"<>\|]/g, "_");
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);

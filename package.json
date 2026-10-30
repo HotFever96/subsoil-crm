@@ -19,13 +19,16 @@
     "jspdf": "^4.2.1",
     "lucide-react": "^1.55.0",
     "mammoth": "^1.13.0",
-    "next": "16.4.0",
+    "next": "^16.4.3",
     "pptxgenjs": "^4.0.1",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "tailwind-merge": "^3.7.0",
     "unpdf": "^1.8.1",
-    "xlsx": "^0.18.5"
+    "xlsx": "npm:@e965/xlsx@^0.20.3"
+  },
+  "overrides": {
+    "image-size": "2.0.4"
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",
@@ -33,7 +36,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.4.0",
+    "eslint-config-next": "^16.4.3",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
