@@ -27,6 +27,8 @@ import {
   DollarSign,
   ChevronDown,
   ChevronRight,
+  Receipt,
+  PhoneCall,
 } from "lucide-react";
 import { useTheme } from "@/lib/theme-context";
 import { useAuth } from "@/lib/auth-context";
@@ -41,6 +43,8 @@ export type NavTab =
   | "calendar"
   | "archive"
   | "repair-orders"
+  | "invoices"
+  | "telephony"
   | "bay-scheduler"
   | "warehouse-parts"
   | "parts-procurement"
@@ -116,7 +120,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
     if (isChaika) {
       // Switching to geo-ai
-      if (["repair-orders", "bay-scheduler", "warehouse-parts", "parts-procurement", "garage-clients", "payroll"].includes(currentTab)) {
+      if (["repair-orders", "invoices", "telephony", "bay-scheduler", "warehouse-parts", "parts-procurement", "garage-clients", "payroll"].includes(currentTab)) {
         onSelectTab("ai-chat");
       }
     } else {
@@ -170,9 +174,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: ClipboardList,
     },
     {
+      id: "invoices" as NavTab,
+      label: "Счета на оплату",
+      icon: Receipt,
+    },
+    {
       id: "parts-procurement" as NavTab,
       label: "Проценка автозапчастей",
       icon: SearchCheck,
+    },
+    {
+      id: "telephony" as NavTab,
+      label: "ИИ-Телефония и Звонки",
+      icon: PhoneCall,
     },
     {
       id: "payroll" as NavTab,

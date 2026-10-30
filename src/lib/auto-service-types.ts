@@ -278,3 +278,36 @@ export interface WarehouseInvoice {
   createdAt: string;
   username: string;
 }
+
+export type InvoiceStatus = "unpaid" | "partially_paid" | "paid" | "cancelled";
+
+export interface InvoiceItem {
+  id: string;
+  name: string;
+  qty: number;
+  unit: string;
+  price: number;
+  total: number;
+  type?: "work" | "part" | "advance" | "other";
+}
+
+export interface CustomerInvoice {
+  id: string;
+  invoiceNumber: string; // e.g. "СЧ-2026-0042"
+  orderId?: string;
+  orderNumber?: string;
+  status: InvoiceStatus;
+  date: string; // YYYY-MM-DD
+  dueDate?: string;
+  client: OrderClient;
+  items: InvoiceItem[];
+  subtotal: number;
+  discountTotal?: number;
+  totalAmount: number;
+  paidAmount: number;
+  paidAt?: string;
+  paymentMethod?: string;
+  note?: string;
+  createdAt: string;
+  username: string;
+}

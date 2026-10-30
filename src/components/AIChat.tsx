@@ -31,7 +31,9 @@ import {
   Trash2,
   Wrench,
   SearchCheck,
+  Radio,
 } from "lucide-react";
+import { VoiceLiveModal } from "@/components/VoiceLiveModal";
 import { ChatMessage, ChatActionPayload } from "@/lib/supabase";
 import { MarkdownView } from "@/components/MarkdownView";
 import { useChat } from "@/lib/chat-context";
@@ -328,6 +330,9 @@ export const AIChat: React.FC = () => {
       }
     };
   }, []);
+
+  // Live Voice Mode («Моя волна» / Hands-Free)
+  const [isVoiceLiveOpen, setIsVoiceLiveOpen] = useState(false);
 
   // Voice input toggle (Speech-to-Text with ru-RU)
   const toggleVoiceInput = () => {
@@ -752,6 +757,66 @@ export const AIChat: React.FC = () => {
     }
   };
 
+  const handleVoiceLiveSend = async (text: string): Promise<string> => {
+    if (!text.trim() || !activeSession) return "";
+
+    const userMsg: ChatMessage = {
+      id: `msg-${Date.now()}`,
+      role: "user",
+      content: text.trim(),
+      created_at: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+    };
+
+    const currentMessages = activeSession.messages || [];
+    const updatedMessages = [...currentMessages, userMsg];
+    setSessionMessages(activeSession.id, updatedMessages);
+
+    try {
+      const storedKey = typeof window !== "undefined" ? localStorage.getItem("geonedra_openrouter_key") : null;
+      const storedModel = typeof window !== "undefined" ? localStorage.getItem("geonedra_openrouter_model") : null;
+
+      const res = await fetch("/api/legal-chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: updatedMessages.map((m) => ({ role: m.role, content: m.content })),
+          userMessage: text.trim(),
+          userName: user?.name,
+          username: user?.username,
+          apiKey: storedKey || undefined,
+          model: storedModel || undefined,
+          businessMode: currentBusiness,
+          voiceMode: true,
+        }),
+      });
+
+      const data = await res.json();
+      const content = data.content || "Извините, не удалось сформировать ответ.";
+
+      const assistantMsg: ChatMessage = {
+        id: `msg-${Date.now() + 1}`,
+        role: "assistant",
+        content,
+        created_at: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        actions: data.actions && Array.isArray(data.actions) && data.actions.length > 0 ? data.actions : undefined,
+      };
+
+      setSessionMessages(activeSession.id, [...updatedMessages, assistantMsg]);
+
+      // Strip code blocks and action tags for smooth speech
+      const cleanVoiceText = content
+        .replace(/```[\s\S]*?```/g, "")
+        .replace(/#+\s*/g, "")
+        .replace(/[*_`]/g, "")
+        .trim();
+
+      return cleanVoiceText || "Действие успешно выполнено.";
+    } catch (e) {
+      console.error("Live voice dialogue error:", e);
+      return "Ошибка связи с сервером. Пожалуйста, повторите фразу.";
+    }
+  };
+
   const handleCopy = (id: string, text: string) => {
     navigator.clipboard.writeText(text);
     setCopiedId(id);
@@ -824,7 +889,7 @@ export const AIChat: React.FC = () => {
       onDragLeave={handleDragLeave}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
-      className="flex-1 flex flex-col h-full overflow-hidden bg-white dark:bg-[#0c1015] transition-colors relative"
+      className="flex-1 flex flex-col h-full overflow-hidden bg-white/60 dark:bg-transparent backdrop-blur-xs transition-colors relative"
     >
       {/* Hidden file input */}
       <input
@@ -835,6 +900,39 @@ export const AIChat: React.FC = () => {
         onChange={handleFileInputChange}
         className="hidden"
       />
+
+      {/* Top Floating Glass Header Bar (Yandex Music / Pill UI aesthetic) */}
+      <div className="w-full px-4 sm:px-6 py-2.5 flex items-center justify-between z-20 shrink-0 border-b border-slate-200/50 dark:border-white/[0.06] bg-white/40 dark:bg-[#09090b]/40 backdrop-blur-xl">
+        <div className="flex items-center space-x-2.5">
+          <div className="flex items-center space-x-2 px-3 py-1 rounded-full bg-white/80 dark:bg-white/[0.06] border border-slate-200 dark:border-white/[0.08] backdrop-blur-md shadow-2xs">
+            <span className={`w-2 h-2 rounded-full ${isChaika ? "bg-rose-500 shadow-rose-500/50" : "bg-sky-500 shadow-sky-500/50"} shadow-md animate-pulse`} />
+            <span className="text-xs font-semibold text-slate-800 dark:text-zinc-200">
+              {isChaika ? "Шеф-мастер СТО" : "AI Action Hub"}
+            </span>
+          </div>
+          <span className="text-[11px] text-slate-500 dark:text-zinc-400 hidden sm:inline">
+            {isChaika ? "Нормо-часы, заказ-наряды, запчасти и звонки" : "Недропользование, почта, календарь и документы"}
+          </span>
+        </div>
+
+        <div className="flex items-center space-x-2.5">
+          {/* Live Voice Mode Button («Моя волна» / Hands-Free) */}
+          <button
+            type="button"
+            onClick={() => setIsVoiceLiveOpen(true)}
+            className="flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-violet-600/30 via-pink-600/30 to-amber-600/30 hover:from-violet-600/40 hover:via-pink-600/40 hover:to-amber-600/40 border border-white/20 text-white shadow-lg backdrop-blur-xl transition-all cursor-pointer group hover:scale-[1.03] active:scale-[0.98]"
+            title="Запустить непрерывный голосовой диалог без рук («Моя волна» Live)"
+          >
+            <div className="relative flex items-center justify-center">
+              <span className="w-2.5 h-2.5 rounded-full bg-pink-500 animate-ping absolute opacity-75" />
+              <Radio className="w-3.5 h-3.5 text-pink-400 group-hover:text-pink-300 relative z-10" />
+            </div>
+            <span className="text-xs font-semibold tracking-wide bg-gradient-to-r from-pink-300 via-purple-200 to-amber-200 bg-clip-text text-transparent">
+              🎙️ Голосовой режим (Live)
+            </span>
+          </button>
+        </div>
+      </div>
 
       {/* Drag & Drop Visual Glow Overlay */}
       {isDraggingOver && (
@@ -958,6 +1056,17 @@ export const AIChat: React.FC = () => {
                 </div>
 
                 <div className="pointer-events-auto flex items-center space-x-2">
+                  {/* Live Voice Mode Pill button */}
+                  <button
+                    type="button"
+                    onClick={() => setIsVoiceLiveOpen(true)}
+                    className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-violet-600/20 to-pink-600/20 hover:from-violet-600/30 hover:to-pink-600/30 border border-pink-500/30 text-pink-500 dark:text-pink-300 transition-all text-xs font-semibold cursor-pointer"
+                    title="Живой непрерывный голосовой диалог («Моя волна» Live)"
+                  >
+                    <Radio className="w-3.5 h-3.5 animate-pulse" />
+                    <span>Live</span>
+                  </button>
+
                   {/* Microphone Button (Speech-to-Text) */}
                   <button
                     type="button"
@@ -1385,6 +1494,17 @@ export const AIChat: React.FC = () => {
                 </div>
 
                 <div className="pointer-events-auto flex items-center space-x-1.5">
+                  {/* Live Voice Mode Pill button */}
+                  <button
+                    type="button"
+                    onClick={() => setIsVoiceLiveOpen(true)}
+                    className="flex items-center space-x-1 px-2.5 py-1 rounded-full bg-gradient-to-r from-violet-600/20 to-pink-600/20 hover:from-violet-600/30 hover:to-pink-600/30 border border-pink-500/30 text-pink-500 dark:text-pink-300 transition-all text-[11px] font-semibold cursor-pointer"
+                    title="Живой непрерывный голосовой диалог («Моя волна» Live)"
+                  >
+                    <Radio className="w-3 h-3 animate-pulse" />
+                    <span>Live</span>
+                  </button>
+
                   {/* Microphone Button (Speech-to-Text) */}
                   <button
                     type="button"
@@ -1428,6 +1548,12 @@ export const AIChat: React.FC = () => {
           </div>
         </div>
       )}
+      {/* Live Voice Mode («Моя волна» / Hands-Free) Modal */}
+      <VoiceLiveModal
+        isOpen={isVoiceLiveOpen}
+        onClose={() => setIsVoiceLiveOpen(false)}
+        onSendMessage={handleVoiceLiveSend}
+      />
     </div>
   );
 };

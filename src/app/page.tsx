@@ -13,6 +13,9 @@ import { WarehouseModule } from "@/components/WarehouseModule";
 import { ClientsGarageModule } from "@/components/ClientsGarageModule";
 import { PartsProcurementModule } from "@/components/PartsProcurementModule";
 import { SalaryProductivityModule } from "@/components/SalaryProductivityModule";
+import { CustomerInvoicesModule } from "@/components/CustomerInvoicesModule";
+import { TelephonyModule } from "@/components/TelephonyModule";
+import { AmbientMesh } from "@/components/AmbientMesh";
 import { StoSettingsModal } from "@/components/StoSettingsModal";
 import { LoginScreen } from "@/components/LoginScreen";
 import { useAuth } from "@/lib/auth-context";
@@ -183,8 +186,12 @@ export default function Home() {
         return "Электронный архив";
       case "repair-orders":
         return "Заказ-наряды";
+      case "invoices":
+        return "Счета на оплату";
       case "parts-procurement":
         return "Проценка автозапчастей";
+      case "telephony":
+        return "ИИ-Телефония";
       case "payroll":
         return "Выработка и Зарплата";
       case "bay-scheduler":
@@ -213,7 +220,10 @@ export default function Home() {
   const isChaika = currentBusiness === "chaika-service";
 
   return (
-    <div className="flex flex-col md:flex-row h-screen w-screen overflow-hidden bg-white dark:bg-[#0c1015] text-slate-900 dark:text-slate-100 transition-colors">
+    <div className="flex flex-col md:flex-row h-screen w-screen overflow-hidden bg-white dark:bg-[#09090b] text-slate-900 dark:text-slate-100 transition-colors relative">
+      {/* Yandex Music / Моя Волна GPU Ambient Mesh Background Aura */}
+      <AmbientMesh />
+
       {/* Mobile Top Header (Visible only on mobile < md) */}
       <header className="md:hidden flex items-center justify-between px-4 py-3 border-b border-slate-200 dark:border-white/[0.08] bg-[#f8fafc] dark:bg-[#090d12] shrink-0 z-30">
         <div className="flex items-center space-x-3">
@@ -288,7 +298,11 @@ export default function Home() {
 
         {currentTab === "repair-orders" && <RepairOrdersModule />}
 
+        {currentTab === "invoices" && <CustomerInvoicesModule />}
+
         {currentTab === "parts-procurement" && <PartsProcurementModule />}
+
+        {currentTab === "telephony" && <TelephonyModule />}
 
         {currentTab === "payroll" && (
           <SalaryProductivityModule onOpenSettings={() => setIsStoSettingsOpen(true)} />

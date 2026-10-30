@@ -608,6 +608,7 @@ export async function POST(req: NextRequest) {
       images,
       attachments,
       businessMode,
+      voiceMode,
     } = body;
 
     const currentUsername = (rawUsername || "").trim().toLowerCase();
@@ -681,14 +682,23 @@ export async function POST(req: NextRequest) {
 
     // Style instruction
     let styleInstruction = "";
-    const promptLower = String(userMessage || "").toLowerCase();
-    const isBrief = mode === "brief" || /коротко|кратко|в двух словах|тезисно|без воды|сжато/.test(promptLower);
-    const isDetailed = mode === "detailed" || /развернуто|подробно|детально|глубокий анализ|полный отчет/.test(promptLower);
+    if (voiceMode) {
+      styleInstruction = `\n\n[РЕЖИМ ГОЛОСОВОГО ДИАЛОГА "МОЯ ВОЛНА" / HANDS-FREE]:
+Ты общаешься с пользователем в режиме живого непрерывного голосового диалога через микрофон и динамик (например, когда он за рулем, в ремзоне или заняты руки).
+- Отвечай предельно ЛАКОНИЧНО, ЕСТЕСТВЕННО и ЖИВО — строго 1-3 емких предложения.
+- Тон: теплый, уверенный, доброжелательный голос умной девушки-ассистентки («Алина»).
+- КАТЕГОРИЧЕСКИ ЗАПРЕЩЕНО использовать markdown-таблицы, списки с дефисами или цифрами, звездочки (*, **), решетки (#, ##), ссылки или технические блоки, которые искажаются при озвучке синтезатором речи.
+- Если нужно подтвердить действие (запись в календарь, расчет ЗН, счет), подтверди его одной понятной фразой: "Записала в календарь на пятницу" или "Поняла, рассчитала и сохранила заказ-наряд".`;
+    } else {
+      const promptLower = String(userMessage || "").toLowerCase();
+      const isBrief = mode === "brief" || /коротко|кратко|в двух словах|тезисно|без воды|сжато/.test(promptLower);
+      const isDetailed = mode === "detailed" || /развернуто|подробно|детально|глубокий анализ|полный отчет/.test(promptLower);
 
-    if (isBrief) {
-      styleInstruction = "\n\n[РЕЖИМ ОТВЕТА: КРАТКО. Отвечай лаконично, тезисно, без лишних вступлений, сразу подтверждая выполненные действия.]";
-    } else if (isDetailed) {
-      styleInstruction = "\n\n[РЕЖИМ ОТВЕТА: РАЗВЕРНУТО. Предоставь глубокий, детальный анализ с нормативным обоснованием и полными пояснениями.]";
+      if (isBrief) {
+        styleInstruction = "\n\n[РЕЖИМ ОТВЕТА: КРАТКО. Отвечай лаконично, тезисно, без лишних вступлений, сразу подтверждая выполненные действия.]";
+      } else if (isDetailed) {
+        styleInstruction = "\n\n[РЕЖИМ ОТВЕТА: РАЗВЕРНУТО. Предоставь глубокий, детальный анализ с нормативным обоснованием и полными пояснениями.]";
+      }
     }
 
     const userGreetingInstruction = userName
