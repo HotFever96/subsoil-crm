@@ -29,6 +29,7 @@ import {
   Edit,
   ClipboardCheck,
   Stamp,
+  HelpCircle,
 } from "lucide-react";
 import {
   RepairOrder,
@@ -532,10 +533,19 @@ export const RepairOrdersModule: React.FC = () => {
               <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-700 dark:text-zinc-300">
                 {orders.length} записей
               </span>
+              <div className="relative group inline-block">
+                <button
+                  type="button"
+                  className="p-1 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 transition-colors cursor-pointer"
+                  title="Справка"
+                >
+                  <HelpCircle className="w-4 h-4" />
+                </button>
+                <div className="absolute left-0 top-full mt-1.5 hidden group-hover:block z-30 w-72 p-2.5 rounded-xl bg-slate-900/95 dark:bg-zinc-900/95 text-slate-100 text-xs shadow-xl border border-white/10 backdrop-blur-md pointer-events-none">
+                  Учет ремонтов, калькуляция нормо-часов, интерактивный акт осмотра кузова и пакет документов А4 (Заказ-наряд, Акт, Счет-фактура).
+                </div>
+              </div>
             </h1>
-            <p className="text-xs text-slate-500 dark:text-zinc-400">
-              Учет ремонтов, калькуляция нормо-часов, акты осмотра и пакет документов А4
-            </p>
           </div>
         </div>
 
@@ -1261,12 +1271,23 @@ export const RepairOrdersModule: React.FC = () => {
 
               {/* TAB 2: VEHICLE INSPECTION SCHEMATIC */}
               {editorTab === "inspection" && (
-                <div className="space-y-4">
-                  <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-900 dark:text-amber-200 flex items-center space-x-2 text-xs">
-                    <ShieldAlert className="w-4 h-4 text-amber-500 shrink-0" />
-                    <span>
-                      Кликайте по схеме кузова для фиксации царапин, сколов, вмятин и коррозии. Данные автоматически попадают в Акт приема-передачи ТС.
+                <div className="space-y-4 pb-28">
+                  <div className="flex items-center justify-between text-xs text-slate-500 dark:text-zinc-400 px-1">
+                    <span className="font-semibold text-slate-700 dark:text-zinc-300">
+                      Интерактивная карта повреждений и акт приема ТС
                     </span>
+                    <div className="relative group inline-block">
+                      <button
+                        type="button"
+                        className="p-1 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 transition-colors cursor-pointer"
+                        title="Справка по акту осмотра"
+                      >
+                        <HelpCircle className="w-4 h-4" />
+                      </button>
+                      <div className="absolute right-0 top-full mt-1 hidden group-hover:block z-30 w-64 p-2.5 rounded-xl bg-slate-900/95 dark:bg-zinc-900/95 text-slate-100 text-xs shadow-xl border border-white/10 backdrop-blur-md pointer-events-none">
+                        Кликайте по схеме кузова для фиксации царапин, сколов, вмятин и коррозии. Данные автоматически попадают в Акт приема-передачи ТС.
+                      </div>
+                    </div>
                   </div>
 
                   <VehicleInspectionSchematic

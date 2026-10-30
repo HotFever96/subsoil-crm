@@ -22,6 +22,7 @@ import {
   X,
   FileCheck,
   Building,
+  HelpCircle,
 } from "lucide-react";
 import {
   RepairOrder,
@@ -165,7 +166,7 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
   const employees = useMemo(() => {
     return stoReq.employees && stoReq.employees.length > 0
       ? stoReq.employees
-      : DEFAULT_EMPLOYEES;
+      : [];
   }, [stoReq]);
 
   const { summaries, kpi } = useMemo(() => {
@@ -231,13 +232,19 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
             <div>
               <h1 className="text-base font-bold text-slate-900 dark:text-zinc-100 flex items-center space-x-2">
                 <span>Выработка и Зарплата мастеров</span>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-600 dark:text-rose-400 font-semibold uppercase tracking-wider">
-                  Автодилер Модуль
-                </span>
+                <div className="relative group inline-block">
+                  <button
+                    type="button"
+                    className="p-1 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 transition-colors cursor-pointer"
+                    title="Справка"
+                  >
+                    <HelpCircle className="w-4 h-4" />
+                  </button>
+                  <div className="absolute left-0 top-full mt-1.5 hidden group-hover:block z-30 w-72 p-2.5 rounded-xl bg-slate-900/95 dark:bg-zinc-900/95 text-slate-100 text-xs shadow-xl border border-white/10 backdrop-blur-md pointer-events-none">
+                    Автоматический расчет сдельной выработки, учет закрытых нормо-часов, начисление премий и печать расчетных листков мастеров.
+                  </div>
+                </div>
               </h1>
-              <p className="text-xs text-slate-500 dark:text-zinc-400">
-                Автоматический учет выполненных заказ-нарядов, закрытых нормо-часов и начисление сдельной ЗП слесарям СТО
-              </p>
             </div>
           </div>
 
@@ -321,7 +328,33 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
 
       {/* Main Content Body */}
       <div className="p-6 space-y-6">
-        {/* KPI Cards Row */}
+        {employees.length === 0 ? (
+          <div className="p-12 text-center flex flex-col items-center justify-center max-w-lg mx-auto my-12 bg-white dark:bg-[#0c1015] rounded-3xl border border-slate-200 dark:border-zinc-800 shadow-sm space-y-4">
+            <div className="w-14 h-14 rounded-2xl bg-rose-500/10 text-rose-600 dark:text-rose-400 flex items-center justify-center">
+              <Users className="w-7 h-7" />
+            </div>
+            <div className="space-y-1.5">
+              <h3 className="text-base font-bold text-slate-900 dark:text-zinc-100">
+                Сотрудники еще не добавлены
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-zinc-400 leading-relaxed max-w-sm">
+                Добавьте мастеров и настройте схемы начисления ЗП в разделе "Ставки сотрудников"
+              </p>
+            </div>
+            {onOpenSettings && (
+              <button
+                type="button"
+                onClick={onOpenSettings}
+                className="px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition-all shadow-sm flex items-center space-x-2 cursor-pointer"
+              >
+                <Settings className="w-4 h-4" />
+                <span>Ставки сотрудников</span>
+              </button>
+            )}
+          </div>
+        ) : (
+          <>
+            {/* KPI Cards Row */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Card 1: Revenue from Labor */}
           <div className="p-4 rounded-2xl bg-white dark:bg-[#0c1015] border border-slate-200 dark:border-zinc-800 shadow-xs flex items-center justify-between">
@@ -541,6 +574,8 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
             </table>
           </div>
         </div>
+          </>
+        )}
       </div>
 
       {/* MODAL: PAYSLIP / РАСЧЕТНЫЙ ЛИСТОК А4 */}

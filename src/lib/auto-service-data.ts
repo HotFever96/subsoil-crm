@@ -16,73 +16,7 @@ import {
   PaymentScheme,
 } from "./auto-service-types";
 
-export const DEFAULT_EMPLOYEES: ServiceEmployee[] = [
-  {
-    id: "emp-1",
-    name: "Иванов М.С.",
-    role: "mechanic",
-    roleTitle: "Автослесарь-универсал",
-    phone: "+7 (922) 111-22-33",
-    paymentScheme: "percent_labor",
-    laborPercent: 40, // 40% от работ
-    normHourRate: 900,
-    baseSalary: 0,
-    partsPercent: 0,
-    isActive: true,
-  },
-  {
-    id: "emp-2",
-    name: "Кузнецов П.А.",
-    role: "engine_specialist",
-    roleTitle: "Моторист-агрегатчик",
-    phone: "+7 (922) 222-33-44",
-    paymentScheme: "fixed_norm_hour",
-    laborPercent: 0,
-    normHourRate: 1000, // 1000 руб за 1 Н/Ч
-    baseSalary: 0,
-    partsPercent: 0,
-    isActive: true,
-  },
-  {
-    id: "emp-3",
-    name: "Сидоров Д.А.",
-    role: "electrician",
-    roleTitle: "Автоэлектрик-диагност",
-    phone: "+7 (922) 333-44-55",
-    paymentScheme: "combined",
-    laborPercent: 30, // 30% от работ
-    normHourRate: 0,
-    baseSalary: 45000, // Оклад 45 000 руб
-    partsPercent: 3, // 3% от запчастей
-    isActive: true,
-  },
-  {
-    id: "emp-4",
-    name: "Смирнов В.К.",
-    role: "suspension_specialist",
-    roleTitle: "Слесарь по ходовой части",
-    phone: "+7 (922) 444-55-66",
-    paymentScheme: "percent_labor",
-    laborPercent: 35, // 35% от работ
-    normHourRate: 850,
-    baseSalary: 0,
-    partsPercent: 0,
-    isActive: true,
-  },
-  {
-    id: "emp-5",
-    name: "Петров А.Н.",
-    role: "master_receiver",
-    roleTitle: "Мастер-приемщик",
-    phone: "+7 (922) 555-66-77",
-    paymentScheme: "combined",
-    laborPercent: 10, // 10% от работ
-    normHourRate: 0,
-    baseSalary: 55000, // Оклад 55 000 руб
-    partsPercent: 5, // 5% от запчастей
-    isActive: true,
-  },
-];
+export const DEFAULT_EMPLOYEES: ServiceEmployee[] = [];
 
 export const SERVICE_COMPANY_REQUISITES: StoCompanyRequisites = {
   name: "ИП Водоватовский Антон Игоревич",
@@ -105,8 +39,8 @@ export const SERVICE_COMPANY_REQUISITES: StoCompanyRequisites = {
   masterReceiver: "Водоватовский А.И.",
   director: "Водоватовский Антон Игоревич",
   directorBasis: "Свидетельства серии 26 № 003664718",
-  mechanics: ["Иванов М.С.", "Кузнецов П.А.", "Сидоров Д.А.", "Смирнов В.К.", "Петров А.Н."],
-  employees: DEFAULT_EMPLOYEES,
+  mechanics: [],
+  employees: [],
   facsimileDefaultEnabled: true,
   scanModeDefaultEnabled: false,
 };
@@ -121,8 +55,8 @@ export function getStoRequisites(username?: string): StoCompanyRequisites {
         return {
           ...SERVICE_COMPANY_REQUISITES,
           ...parsed,
-          mechanics: Array.isArray(parsed.mechanics) && parsed.mechanics.length > 0 ? parsed.mechanics : SERVICE_COMPANY_REQUISITES.mechanics,
-          employees: Array.isArray(parsed.employees) && parsed.employees.length > 0 ? parsed.employees : DEFAULT_EMPLOYEES,
+          mechanics: Array.isArray(parsed.mechanics) ? parsed.mechanics : [],
+          employees: Array.isArray(parsed.employees) ? parsed.employees : [],
         };
       }
     }
@@ -504,7 +438,18 @@ export function calculateMasterPayroll(
   };
 } {
   const safeOrders = Array.isArray(orders) ? orders : [];
-  const safeEmployees = Array.isArray(employees) && employees.length > 0 ? employees : DEFAULT_EMPLOYEES;
+  const safeEmployees = Array.isArray(employees) ? employees : [];
+  if (safeEmployees.length === 0) {
+    return {
+      summaries: [],
+      kpi: {
+        totalLaborRevenue: 0,
+        totalLaborHours: 0,
+        totalPayrollFund: 0,
+        netMarginWorks: 0,
+      },
+    };
+  }
   const opts = options || {};
   const statusFilter = opts.statusFilter || "all_active";
   const periodFilter = opts.periodFilter || "month";

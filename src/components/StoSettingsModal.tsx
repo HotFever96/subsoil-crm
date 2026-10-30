@@ -620,7 +620,14 @@ export const StoSettingsModal: React.FC<StoSettingsModalProps> = ({
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 dark:divide-zinc-800">
-                  {(form.employees || DEFAULT_EMPLOYEES).map((emp) => (
+                  {(form.employees || []).length === 0 ? (
+                    <tr>
+                      <td colSpan={5} className="p-8 text-center text-slate-400">
+                        Список сотрудников пуст. Нажмите «+ Добавить сотрудника» выше для добавления мастера.
+                      </td>
+                    </tr>
+                  ) : (
+                    (form.employees || []).map((emp) => (
                     <tr key={emp.id} className="hover:bg-slate-50 dark:hover:bg-zinc-800/40">
                       <td className="p-2.5 font-bold text-slate-900 dark:text-zinc-100">
                         {emp.name}
@@ -681,7 +688,7 @@ export const StoSettingsModal: React.FC<StoSettingsModalProps> = ({
                         </button>
                       </td>
                     </tr>
-                  ))}
+                  )))}
                 </tbody>
               </table>
             </div>

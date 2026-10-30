@@ -271,11 +271,11 @@ export const VehicleInspectionSchematic: React.FC<VehicleInspectionSchematicProp
   // INTERACTIVE SCREEN VERSION (Inside Repair Order modal tab)
   // -------------------------------------------------------------
   const viewsList: Array<{ key: "top" | "side_left" | "side_right" | "front" | "rear"; title: string }> = [
-    { key: "top", title: "1. Вид сверху (Крыша, капот, багажник)" },
+    { key: "top", title: "1. Вид сверху" },
     { key: "side_left", title: "2. Левый борт" },
     { key: "side_right", title: "3. Правый борт" },
-    { key: "front", title: "4. Спереди (Капот, бампер, оптика)" },
-    { key: "rear", title: "5. Сзади (Крышка багажника/ворота, фонари)" },
+    { key: "front", title: "4. Спереди" },
+    { key: "rear", title: "5. Сзади" },
   ];
 
   return (
@@ -297,7 +297,7 @@ export const VehicleInspectionSchematic: React.FC<VehicleInspectionSchematicProp
               }`}
             >
               <Car className="w-3.5 h-3.5" />
-              <span>Легковой (Седан)</span>
+              <span>Легковой</span>
             </button>
             <button
               type="button"

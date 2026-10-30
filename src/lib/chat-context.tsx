@@ -22,26 +22,58 @@ export function cleanChatTitle(title: string): string {
   // Remove code blocks and JSON structures
   cleaned = cleaned.replace(/```[a-z]*\s*[\s\S]*?```/gi, "");
   cleaned = cleaned.replace(/\{[\s\S]*?\}/g, "");
+  cleaned = cleaned.replace(/["']?(?:heading|text|content)["']?\s*:\s*["']?/gi, "");
   // Remove wrapping quotes and brackets
   cleaned = cleaned.replace(/^["'`]+|["'`]+$/g, "").trim();
   // Fallback if empty or starts with JSON/code brackets
-  if (!cleaned || cleaned.startsWith("{") || cleaned.startsWith("[")) {
+  if (!cleaned || cleaned.startsWith("{") || cleaned.startsWith("[") || cleaned.startsWith("###")) {
     return "Диалог с ИИ";
   }
-  if (cleaned.length > 40) {
-    cleaned = cleaned.slice(0, 38) + "...";
+  if (cleaned.length > 36) {
+    cleaned = cleaned.slice(0, 34) + "...";
   }
   return cleaned;
 }
 
 export function detectChatWorkspace(chat: { title?: string; workspace?: string; messages?: ChatMessage[] }): "geo" | "service" {
+  const titleLower = (chat.title || "").toLowerCase();
+
+  const geoStrongKeywords = [
+    "сведения о н",
+    "недропольз",
+    "лицензи",
+    "геолог",
+    "карьер",
+    "месторожд",
+    "участок недр",
+    "пгин",
+    "тпр",
+    "пласт",
+    "скважин",
+    "запасы",
+    "маркшейд",
+  ];
+
+  for (const kw of geoStrongKeywords) {
+    if (titleLower.includes(kw)) {
+      return "geo";
+    }
+  }
+
   if (chat.workspace === "service" || chat.workspace === "geo") {
     return chat.workspace;
   }
+
   const textToScan = [
     chat.title || "",
     ...(chat.messages || []).slice(0, 8).map((m) => m.content || ""),
   ].join(" ").toLowerCase();
+
+  for (const kw of geoStrongKeywords) {
+    if (textToScan.includes(kw)) {
+      return "geo";
+    }
+  }
 
   const serviceKeywords = [
     "нормо-час",
@@ -69,6 +101,8 @@ export function detectChatWorkspace(chat: { title?: string; workspace?: string; 
     "пробег",
     "шиномонтаж",
     "сто ",
+    "шеф-мастер",
+    "шеф мастер",
   ];
 
   for (const kw of serviceKeywords) {
