@@ -209,11 +209,13 @@ export const TelephonyModule: React.FC = () => {
   // Launch live interactive phone simulator with explicit getUserMedia click gesture
   const handleStartCallSimulator = async (clientName = "Алексей Смирнов", car = "Газель Next") => {
     // Direct getUserMedia in click gesture
+    setShowMicBlockedModal(false);
     const micRes = await requestMicrophoneStream();
     if (!micRes.ok && micRes.errorType === "not_allowed") {
       setShowMicBlockedModal(true);
       return;
     }
+    setShowMicBlockedModal(false);
 
     setIsSimulatorOpen(true);
     setSimStep("dialing");

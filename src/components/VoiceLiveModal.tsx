@@ -255,6 +255,7 @@ export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
     const initMicrophone = async () => {
       let stream = initialStream || activeStreamRef.current;
       if (!stream) {
+        setShowMicBlockedModal(false);
         const micRes = await requestMicrophoneStream();
         if (isCancelled) return;
         if (!micRes.ok) {
@@ -263,16 +264,18 @@ export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
           }
           return;
         }
+        setShowMicBlockedModal(false);
         stream = micRes.stream || null;
       }
 
       if (!stream) return;
+      setShowMicBlockedModal(false);
       activeStreamRef.current = stream;
 
       const SpeechRecognition =
         (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
 
-      // Start Server MediaRecorder STT Fallback
+      // Start Server MediaRecorder STT Fallback with user voice activity detection
       const startRecorderFallback = () => {
         try {
           if (!stream) return;
@@ -283,8 +286,26 @@ export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
             ? "audio/mp4"
             : "audio/webm";
 
+          // Live audio analyser on user microphone stream for responsive visual pulsing
+          let userMicAnalyser: AnalyserNode | null = null;
+          try {
+            const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+            if (AudioContextClass) {
+              const ctx = new AudioContextClass();
+              const source = ctx.createMediaStreamSource(stream);
+              userMicAnalyser = ctx.createAnalyser();
+              userMicAnalyser.fftSize = 128;
+              userMicAnalyser.smoothingTimeConstant = 0.6;
+              source.connect(userMicAnalyser);
+            }
+          } catch {}
+
           const rec = new MediaRecorder(stream, { mimeType });
           mediaRecorderRef.current = rec;
+
+          let isSpeakingSentence = false;
+          let silenceStart = 0;
+          let vadInterval: any = null;
 
           rec.ondataavailable = (e) => {
             if (e.data && e.data.size > 0) {
@@ -293,20 +314,59 @@ export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
           };
 
           rec.onstop = async () => {
+            if (vadInterval) clearInterval(vadInterval);
             if (audioChunksRef.current.length > 0 && !isSpeakingRef.current) {
               const blob = new Blob(audioChunksRef.current, { type: mimeType });
+              audioChunksRef.current = [];
               try {
+                setVoiceState("thinking");
                 const text = await transcribeAudioWithServer(blob);
                 if (text && text.trim().length > 1) {
+                  setTranscript(text);
                   handleUserSpoke(text);
+                } else {
+                  setVoiceState("listening");
+                  if (rec.state === "inactive" && !isSpeakingRef.current && isOpen && !isMuted) {
+                    rec.start(250);
+                  }
                 }
               } catch (e) {
                 console.warn("ElevenLabs Scribe STT error in live mode:", e);
+                setVoiceState("listening");
+                if (rec.state === "inactive" && !isSpeakingRef.current && isOpen && !isMuted) {
+                  rec.start(250);
+                }
               }
             }
           };
 
-          rec.start(400);
+          rec.start(250);
+          setVoiceState("listening");
+
+          // Voice activity detection loop
+          vadInterval = setInterval(() => {
+            if (isSpeakingRef.current || !userMicAnalyser || isMuted) return;
+            const data = new Uint8Array(userMicAnalyser.frequencyBinCount);
+            userMicAnalyser.getByteFrequencyData(data);
+            let sum = 0;
+            for (let i = 0; i < data.length; i++) sum += data[i];
+            const avg = sum / data.length / 255;
+
+            if (avg > 0.02) {
+              setLiveVolume(Math.min(avg * 2.8, 1));
+            }
+
+            if (avg > 0.04) {
+              isSpeakingSentence = true;
+              silenceStart = Date.now();
+              setVoiceState("listening");
+            } else if (isSpeakingSentence && Date.now() - silenceStart > 1250) {
+              isSpeakingSentence = false;
+              if (rec.state === "recording") {
+                rec.stop();
+              }
+            }
+          }, 70);
         } catch (e) {
           console.warn("MediaRecorder init warning:", e);
         }
@@ -351,13 +411,11 @@ export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
           };
 
           recognition.onerror = (e: any) => {
-            // Strictly check for not-allowed; ignore normal silence/aborts
-            if (e.error === "not-allowed" || e.error === "service-not-allowed") {
-              setShowMicBlockedModal(true);
-            } else if (e.error === "network") {
-              // Switch to MediaRecorder + ElevenLabs Scribe STT
-              startRecorderFallback();
-            }
+            console.warn("SpeechRecognition error in live mode:", e.error);
+            if (e.error === "no-speech") return;
+            // CRITICAL: NEVER call setShowMicBlockedModal here!
+            // The user already gave microphone permission - switch to ElevenLabs STT fallback!
+            startRecorderFallback();
           };
 
           recognition.onend = () => {
@@ -606,6 +664,7 @@ export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
                   setIsMuted(true);
                   return;
                 }
+                setShowMicBlockedModal(false);
                 setVoiceState("listening");
                 try {
                   recognitionRef.current?.start();

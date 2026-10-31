@@ -357,6 +357,7 @@ export const AIChat: React.FC = () => {
 
   // Dedicated handler for Live Voice mode with synchronous user-gesture getUserMedia
   const handleOpenVoiceLive = async () => {
+    setShowMicBlockedModal(false);
     const micResult = await requestMicrophoneStream();
     if (!micResult.ok) {
       if (micResult.errorType === "not_allowed") {
@@ -367,6 +368,7 @@ export const AIChat: React.FC = () => {
       }
       return;
     }
+    setShowMicBlockedModal(false);
     activeMicStreamRef.current = micResult.stream || null;
     setIsVoiceLiveOpen(true);
   };
@@ -380,6 +382,7 @@ export const AIChat: React.FC = () => {
       return;
     }
 
+    setShowMicBlockedModal(false);
     // 1. Mandatory direct getUserMedia invocation in user gesture to prompt browser
     const micResult = await requestMicrophoneStream();
     if (!micResult.ok) {
@@ -392,6 +395,7 @@ export const AIChat: React.FC = () => {
       return;
     }
 
+    setShowMicBlockedModal(false);
     const stream = micResult.stream!;
     activeMicStreamRef.current = stream;
     baseTextRef.current = inputPrompt.trim();
@@ -480,21 +484,17 @@ export const AIChat: React.FC = () => {
 
       recognition.onerror = (event: any) => {
         console.warn("Speech recognition error:", event.error);
-        if (event.error === "not-allowed" || event.error === "service-not-allowed") {
-          setShowMicBlockedModal(true);
-          stopVoiceInput();
-        } else if (event.error === "no-speech") {
+        if (event.error === "no-speech") {
           return;
-        } else if (event.error === "network") {
-          console.log("Switching to ElevenLabs server-side STT due to network error");
-          try {
-            recognition.abort();
-          } catch {}
-          startServerRecordingFallback();
-        } else {
-          setSpeechError(`Ошибка распознавания: ${event.error}`);
-          stopVoiceInput();
         }
+        // In Chrome, webkitSpeechRecognition errors (including "not-allowed", "service-not-allowed", "network")
+        // do NOT mean the microphone hardware is blocked - they indicate Google's cloud speech service failure.
+        // We seamlessly fall back to MediaRecorder + ElevenLabs Scribe STT without showing any error modals!
+        console.log(`SpeechRecognition [${event.error}] -> switching to ElevenLabs Scribe STT fallback`);
+        try {
+          recognition.abort();
+        } catch {}
+        startServerRecordingFallback();
       };
 
       recognition.onend = () => {
