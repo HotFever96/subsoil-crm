@@ -76,6 +76,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const [selectedModel, setSelectedModel] = useState<string>("anthropic/claude-sonnet-4.6");
   const [isSavingSettings, setIsSavingSettings] = useState(false);
   const [isChatHistoryOpen, setIsChatHistoryOpen] = useState(true);
+  const [isFlipping, setIsFlipping] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -106,6 +107,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const isChaika = currentBusiness === "chaika-service";
 
   const handleToggleBusiness = () => {
+    setIsFlipping(true);
+    setTimeout(() => setIsFlipping(false), 500);
     toggleBusiness();
     const nextIsChaika = !isChaika;
     const targetWorkspace = nextIsChaika ? "service" : "geo";
@@ -287,53 +290,50 @@ export const Sidebar: React.FC<SidebarProps> = ({
         }`}
       >
         <div className="flex flex-col flex-1 min-h-0">
-          {/* Brand Header with Minimalist Mode Switcher */}
-          <div className="px-5 py-4 border-b border-slate-200/50 dark:border-white/[0.06] flex items-center justify-between">
+          {/* Brand Header with Large Centered Logo and Flip Switcher */}
+          <div className="relative px-3 py-4 border-b border-black/[0.04] dark:border-white/[0.06] flex items-center justify-center">
             <button
               type="button"
               onClick={handleToggleBusiness}
-              className="group flex items-center space-x-2.5 px-2.5 py-1.5 -mx-2.5 rounded-full hover:bg-slate-200/50 dark:hover:bg-white/[0.05] transition-all cursor-pointer text-left min-w-0"
-              title={isChaika ? "Переключить в GEO AI (Недропользование)" : "Переключить в ЧАЙКА-СЕРВИС (СТО и автопарк)"}
+              className="group w-full flex items-center justify-center space-x-3 px-2 py-1.5 rounded-2xl hover:bg-slate-200/50 dark:hover:bg-white/[0.04] transition-all cursor-pointer text-center select-none"
+              title={isChaika ? "Нажмите для переключения в GEO AI (Недропользование)" : "Нажмите для переключения в ЧАЙКА-СЕРВИС (СТО и автопарк)"}
             >
-              {isChaika ? (
-                <div className="flex items-center space-x-2 min-w-0">
-                  <div className="h-7 flex items-center shrink-0">
-                    <img
-                      src="/logo-chaika-white.png"
-                      alt="Чайка-Сервис"
-                      className="h-5.5 w-auto max-w-[125px] object-contain transition-all brightness-0 dark:brightness-100"
-                    />
-                  </div>
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-500 font-bold tracking-wider uppercase">
-                    СТО
-                  </span>
-                </div>
-              ) : (
-                <div className="flex items-center space-x-2 min-w-0">
+              {/* Large Centered Logo with Flip Animation */}
+              <div
+                className={`flex items-center justify-center transition-all duration-500 transform ${
+                  isFlipping ? "scale-90 [transform:rotateY(180deg)] opacity-60" : "scale-100 [transform:rotateY(0deg)] opacity-100"
+                } group-hover:scale-105`}
+              >
+                {isChaika ? (
+                  <img
+                    src={theme === "dark" ? "/logo-chaika-white.png" : "/logo-chaika-dark.png"}
+                    alt="Чайка-Сервис"
+                    className="h-8 sm:h-8.5 w-auto max-w-[160px] object-contain transition-all drop-shadow-xs"
+                  />
+                ) : (
                   <img
                     src={theme === "dark" ? "/geo-ai-logo-dark.png" : "/geo-ai-logo-light.png"}
                     alt="Geo AI"
-                    className="h-6 w-auto max-w-[130px] object-contain transition-all"
+                    className="h-8 sm:h-8.5 w-auto max-w-[160px] object-contain transition-all drop-shadow-xs"
                   />
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-sky-500/10 text-sky-500 font-bold tracking-wider uppercase">
-                    ГЕО
-                  </span>
-                </div>
-              )}
+                )}
+              </div>
 
               {/* Minimalist Switcher Icon */}
               <div
-                className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 transition-all bg-slate-200/60 dark:bg-white/[0.06] group-hover:bg-slate-300 dark:group-hover:bg-white/[0.14] text-slate-500 dark:text-zinc-400 group-hover:text-slate-900 dark:group-hover:text-white"
+                className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all bg-slate-200/60 dark:bg-white/[0.06] group-hover:bg-slate-300 dark:group-hover:bg-white/[0.14] text-slate-500 dark:text-zinc-400 group-hover:text-slate-900 dark:group-hover:text-white shadow-2xs ${
+                  isFlipping ? "rotate-180 scale-110" : ""
+                }`}
                 title="Сменить бизнес-режим"
               >
-                <ArrowLeftRight className="w-3 h-3 group-hover:rotate-180 transition-transform duration-300" />
+                <ArrowLeftRight className="w-3.5 h-3.5 group-hover:rotate-180 transition-transform duration-500" />
               </div>
             </button>
 
             {onCloseMobile && (
               <button
                 onClick={onCloseMobile}
-                className="md:hidden p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
+                className="absolute right-3 top-1/2 -translate-y-1/2 md:hidden p-1.5 rounded-full text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
                 title="Закрыть меню"
               >
                 <X className="w-5 h-5" />
