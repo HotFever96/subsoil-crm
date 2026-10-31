@@ -138,9 +138,9 @@ export function getStatusMeta(status?: string | OrderStatus): { label: string; b
   if (norm === "estimate" || norm === "new" || norm === "draft") {
     return {
       label: "Заявка / Оценка",
-      bg: "bg-slate-100 dark:bg-slate-800/60",
-      text: "text-slate-700 dark:text-slate-300",
-      border: "border-slate-300 dark:border-slate-700",
+      bg: "bg-zinc-100 dark:bg-zinc-800/60",
+      text: "text-zinc-700 dark:text-zinc-300",
+      border: "border-zinc-300 dark:border-zinc-700",
     };
   }
   if (norm === "in_progress" || norm === "progress") {

@@ -373,20 +373,20 @@ export function printOrSaveToPdf(title: string, htmlContent: string) {
         body {
           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
           line-height: 1.6;
-          color: #0f172a;
+          color: #09090b;
           margin: 40px;
           background: #ffffff;
         }
-        h1, h2, h3 { color: #0369a1; }
+        h1, h2, h3 { color: #0284c7; }
         h1 { border-bottom: 2px solid #0284c7; padding-bottom: 8px; margin-bottom: 20px; font-size: 24px; }
         h2 { font-size: 18px; margin-top: 24px; margin-bottom: 12px; }
         table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; }
-        th, td { border: 1px solid #cbd5e1; padding: 8px 12px; text-align: left; }
-        th { background: #f1f5f9; font-weight: 600; color: #1e293b; }
-        tr:nth-child(even) { background: #f8fafc; }
+        th, td { border: 1px solid #e4e4e7; padding: 8px 12px; text-align: left; }
+        th { background: #f4f4f5; font-weight: 600; color: #18181b; }
+        tr:nth-child(even) { background: #fafafa; }
         ul, ol { padding-left: 24px; margin: 12px 0; }
         li { margin-bottom: 6px; }
-        .meta { color: #64748b; font-size: 12px; margin-bottom: 24px; }
+        .meta { color: #71717a; font-size: 12px; margin-bottom: 24px; }
         @media print {
           body { margin: 20px; }
           @page { margin: 1.5cm; }

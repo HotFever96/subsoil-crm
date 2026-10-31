@@ -245,12 +245,12 @@ export const BaySchedulerModule: React.FC = () => {
             <CalendarIcon className="w-5 h-5" />
           </div>
           <div>
-            <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center space-x-2.5">
+            <h1 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-white flex items-center space-x-2.5">
               <span>Пост-планировщик</span>
               <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-rose-500/10 text-rose-500">
                 {bays.length} постов
               </span>
-              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-200/60 dark:bg-white/[0.06] text-slate-600 dark:text-zinc-400">
+              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-zinc-200/60 dark:bg-white/[0.06] text-zinc-600 dark:text-zinc-400">
                 {dayAppointments.length} записей на день
               </span>
             </h1>
@@ -263,7 +263,7 @@ export const BaySchedulerModule: React.FC = () => {
             <button
               type="button"
               onClick={handlePrevDay}
-              className="p-1.5 rounded-full hover:bg-slate-200/60 dark:hover:bg-white/[0.08] text-slate-600 dark:text-zinc-300 transition-colors cursor-pointer"
+              className="p-1.5 rounded-full hover:bg-zinc-200/60 dark:hover:bg-white/[0.08] text-zinc-600 dark:text-zinc-300 transition-colors cursor-pointer"
               title="Предыдущий день"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -272,12 +272,12 @@ export const BaySchedulerModule: React.FC = () => {
               type="date"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
-              className="px-2 py-1 text-xs font-semibold bg-transparent text-slate-900 dark:text-white focus:outline-hidden cursor-pointer"
+              className="px-2 py-1 text-xs font-semibold bg-transparent text-zinc-900 dark:text-white focus:outline-hidden cursor-pointer"
             />
             <button
               type="button"
               onClick={handleNextDay}
-              className="p-1.5 rounded-full hover:bg-slate-200/60 dark:hover:bg-white/[0.08] text-slate-600 dark:text-zinc-300 transition-colors cursor-pointer"
+              className="p-1.5 rounded-full hover:bg-zinc-200/60 dark:hover:bg-white/[0.08] text-zinc-600 dark:text-zinc-300 transition-colors cursor-pointer"
               title="Следующий день"
             >
               <ChevronRight className="w-4 h-4" />
@@ -308,20 +308,20 @@ export const BaySchedulerModule: React.FC = () => {
       <div className="flex-1 overflow-auto p-4 sm:p-6">
         <div className="min-w-[900px] border border-black/[0.05] dark:border-white/[0.08] rounded-3xl overflow-hidden bg-white/70 dark:bg-white/[0.03] backdrop-blur-2xl shadow-2xl shadow-black/20">
           {/* Header Row: Bays as columns */}
-          <div className="grid grid-cols-[100px_repeat(4,1fr)] bg-slate-50 dark:bg-white/[0.02] border-b border-slate-200 dark:border-white/[0.08] text-xs font-bold text-slate-700 dark:text-slate-300 sticky top-0 z-10">
-            <div className="p-3.5 border-r border-slate-200 dark:border-white/[0.08] flex items-center justify-center text-slate-400 font-mono">
+          <div className="grid grid-cols-[100px_repeat(4,1fr)] bg-zinc-50 dark:bg-white/[0.02] border-b border-zinc-200 dark:border-white/[0.08] text-xs font-bold text-zinc-700 dark:text-zinc-300 sticky top-0 z-10">
+            <div className="p-3.5 border-r border-zinc-200 dark:border-white/[0.08] flex items-center justify-center text-zinc-400 font-mono">
               Время
             </div>
             {bays.map((bay) => (
               <div
                 key={bay.id}
-                className="p-3.5 border-r border-slate-200 dark:border-white/[0.08] last:border-r-0 flex items-center justify-between"
+                className="p-3.5 border-r border-zinc-200 dark:border-white/[0.08] last:border-r-0 flex items-center justify-between"
                 style={{ borderTop: `3px solid ${bay.color}` }}
               >
                 <div className="truncate">
-                  <span className="font-extrabold text-slate-900 dark:text-white">{bay.name}</span>
+                  <span className="font-extrabold text-zinc-900 dark:text-white">{bay.name}</span>
                 </div>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-200/60 dark:bg-white/[0.06] text-slate-600 dark:text-slate-400">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-zinc-200/60 dark:bg-white/[0.06] text-zinc-600 dark:text-zinc-400">
                   {dayAppointments.filter((a) => a.bayId === bay.id).length} ТС
                 </span>
               </div>
@@ -329,15 +329,15 @@ export const BaySchedulerModule: React.FC = () => {
           </div>
 
           {/* Hourly Rows */}
-          <div className="divide-y divide-slate-100 dark:divide-white/[0.04]">
+          <div className="divide-y divide-zinc-100 dark:divide-white/[0.04]">
             {HOURS.map((hour) => {
               const currentHourNum = parseInt(hour.slice(0, 2), 10);
 
               return (
                 <div key={hour} className="grid grid-cols-[100px_repeat(4,1fr)] min-h-[68px]">
                   {/* Time label */}
-                  <div className="p-3 border-r border-slate-200 dark:border-white/[0.08] bg-slate-50/50 dark:bg-white/[0.01] flex items-start justify-center">
-                    <span className="font-mono text-xs font-semibold text-slate-500 dark:text-slate-400 flex items-center space-x-1">
+                  <div className="p-3 border-r border-zinc-200 dark:border-white/[0.08] bg-zinc-50/50 dark:bg-white/[0.01] flex items-start justify-center">
+                    <span className="font-mono text-xs font-semibold text-zinc-500 dark:text-zinc-400 flex items-center space-x-1">
                       <Clock className="w-3 h-3 text-red-500" />
                       <span>{hour}</span>
                     </span>
@@ -366,23 +366,23 @@ export const BaySchedulerModule: React.FC = () => {
                       return (
                         <div
                           key={bay.id}
-                          className="p-2 border-r border-slate-200 dark:border-white/[0.08] last:border-r-0 bg-red-500/[0.04] flex flex-col justify-between group relative"
+                          className="p-2 border-r border-zinc-200 dark:border-white/[0.08] last:border-r-0 bg-red-500/[0.04] flex flex-col justify-between group relative"
                         >
                           <div className="flex items-start justify-between gap-1">
                             <div className="min-w-0">
                               <div className="flex items-center space-x-1.5">
-                                <span className="font-bold text-xs text-slate-900 dark:text-white truncate">
+                                <span className="font-bold text-xs text-zinc-900 dark:text-white truncate">
                                   {matchingApt.vehicle}
                                 </span>
-                                <span className="px-1.5 py-0.5 rounded font-mono font-bold text-[10px] bg-slate-200/80 dark:bg-white/[0.1] text-slate-900 dark:text-slate-100">
+                                <span className="px-1.5 py-0.5 rounded font-mono font-bold text-[10px] bg-zinc-200/80 dark:bg-white/[0.1] text-zinc-900 dark:text-zinc-100">
                                   {matchingApt.licensePlate}
                                 </span>
                               </div>
-                              <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate mt-0.5">
+                              <div className="text-[11px] text-zinc-500 dark:text-zinc-400 truncate mt-0.5">
                                 Клиент: {matchingApt.clientName}
                               </div>
                               {matchingApt.description && (
-                                <div className="text-[10px] text-slate-600 dark:text-slate-300 italic truncate mt-0.5">
+                                <div className="text-[10px] text-zinc-600 dark:text-zinc-300 italic truncate mt-0.5">
                                   {matchingApt.description}
                                 </div>
                               )}
@@ -391,14 +391,14 @@ export const BaySchedulerModule: React.FC = () => {
                             <button
                               type="button"
                               onClick={(e) => handleDeleteAppointment(matchingApt.id, e)}
-                              className="text-slate-400 hover:text-rose-500 p-1 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer shrink-0"
+                              className="text-zinc-400 hover:text-rose-500 p-1 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer shrink-0"
                               title="Удалить запись"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
                             </button>
                           </div>
 
-                          <div className="mt-2 pt-1.5 border-t border-slate-200/60 dark:border-white/[0.06] flex items-center justify-between text-[10px]">
+                          <div className="mt-2 pt-1.5 border-t border-zinc-200/60 dark:border-white/[0.06] flex items-center justify-between text-[10px]">
                             <span className="font-semibold text-red-600 dark:text-red-400 flex items-center space-x-1">
                               <Clock className="w-3 h-3" />
                               <span>{matchingApt.startTime} - {matchingApt.endTime}</span>
@@ -429,9 +429,9 @@ export const BaySchedulerModule: React.FC = () => {
                       return (
                         <div
                           key={bay.id}
-                          className="p-2 border-r border-slate-200 dark:border-white/[0.08] last:border-r-0 bg-red-500/[0.02] flex items-center justify-center"
+                          className="p-2 border-r border-zinc-200 dark:border-white/[0.08] last:border-r-0 bg-red-500/[0.02] flex items-center justify-center"
                         >
-                          <span className="text-[10px] text-slate-400 italic font-medium flex items-center space-x-1">
+                          <span className="text-[10px] text-zinc-400 italic font-medium flex items-center space-x-1">
                             <Wrench className="w-3 h-3 text-red-400" />
                             <span>Продолжение работ: {spanningApt.vehicle} ({spanningApt.licensePlate})</span>
                           </span>
@@ -444,10 +444,10 @@ export const BaySchedulerModule: React.FC = () => {
                       <div
                         key={bay.id}
                         onClick={() => handleOpenSlot(bay.id, hour)}
-                        className="p-2 border-r border-slate-200 dark:border-white/[0.08] last:border-r-0 hover:bg-slate-100/70 dark:hover:bg-white/[0.02] transition-colors cursor-pointer flex items-center justify-center group"
+                        className="p-2 border-r border-zinc-200 dark:border-white/[0.08] last:border-r-0 hover:bg-zinc-100/70 dark:hover:bg-white/[0.02] transition-colors cursor-pointer flex items-center justify-center group"
                         title={`Нажмите, чтобы записать ТС на ${bay.name} в ${hour}`}
                       >
-                        <span className="text-[11px] text-slate-300 dark:text-white/[0.1] group-hover:text-red-500 font-semibold flex items-center space-x-1 transition-colors">
+                        <span className="text-[11px] text-zinc-300 dark:text-white/[0.1] group-hover:text-red-500 font-semibold flex items-center space-x-1 transition-colors">
                           <Plus className="w-3.5 h-3.5" />
                           <span className="opacity-0 group-hover:opacity-100">Записать</span>
                         </span>
@@ -463,27 +463,27 @@ export const BaySchedulerModule: React.FC = () => {
 
       {/* Appointment Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="w-full max-w-md bg-white dark:bg-[#0e141e] border border-slate-200 dark:border-white/[0.1] rounded-2xl shadow-2xl p-6 space-y-4 text-xs">
-            <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/[0.08] pb-3">
-              <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center space-x-2">
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="w-full max-w-md bg-white/95 dark:bg-zinc-950/90 backdrop-blur-2xl border border-black/[0.08] dark:border-white/10 rounded-3xl shadow-2xl p-6 space-y-4 text-xs">
+            <div className="flex items-center justify-between border-b border-zinc-200 dark:border-white/[0.08] pb-3">
+              <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100 flex items-center space-x-2">
                 <CalendarIcon className="w-4 h-4 text-red-500" />
                 <span>Запись на пост ремзоны</span>
               </h3>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-white cursor-pointer"
+                className="text-zinc-400 hover:text-zinc-600 dark:hover:text-white cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             <div>
-              <label className="text-slate-500 font-semibold">Пост ремзоны *</label>
+              <label className="text-zinc-500 font-semibold">Пост ремзоны *</label>
               <select
                 value={newBayId}
                 onChange={(e) => setNewBayId(e.target.value)}
-                className="mt-1 w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
+                className="mt-1 w-full px-3 py-2 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-zinc-900 dark:text-white"
               >
                 {bays.map((b) => (
                   <option key={b.id} value={b.id}>
@@ -495,67 +495,67 @@ export const BaySchedulerModule: React.FC = () => {
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-slate-500 font-semibold">Время начала *</label>
+                <label className="text-zinc-500 font-semibold">Время начала *</label>
                 <input
                   type="time"
                   value={newStartTime}
                   onChange={(e) => setNewStartTime(e.target.value)}
-                  className="mt-1 w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-mono"
+                  className="mt-1 w-full px-3 py-2 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-zinc-900 dark:text-white font-mono"
                 />
               </div>
               <div>
-                <label className="text-slate-500 font-semibold">Окончание *</label>
+                <label className="text-zinc-500 font-semibold">Окончание *</label>
                 <input
                   type="time"
                   value={newEndTime}
                   onChange={(e) => setNewEndTime(e.target.value)}
-                  className="mt-1 w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-mono"
+                  className="mt-1 w-full px-3 py-2 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-zinc-900 dark:text-white font-mono"
                 />
               </div>
             </div>
 
             <div>
-              <label className="text-slate-500 font-semibold">Клиент (ФИО / Название организации) *</label>
+              <label className="text-zinc-500 font-semibold">Клиент (ФИО / Название организации) *</label>
               <input
                 type="text"
                 value={newClientName}
                 onChange={(e) => setNewClientName(e.target.value)}
                 placeholder="ФИО владельца или название компании"
-                className="mt-1 w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
+                className="mt-1 w-full px-3 py-2 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-zinc-900 dark:text-white placeholder:text-zinc-500"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-slate-500 font-semibold">Марка и Модель авто *</label>
+                <label className="text-zinc-500 font-semibold">Марка и Модель авто *</label>
                 <input
                   type="text"
                   value={newVehicle}
                   onChange={(e) => setNewVehicle(e.target.value)}
                   placeholder="Например: ГАЗ 3302"
-                  className="mt-1 w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
+                  className="mt-1 w-full px-3 py-2 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-zinc-900 dark:text-white placeholder:text-zinc-500"
                 />
               </div>
               <div>
-                <label className="text-slate-500 font-semibold">Госномер *</label>
+                <label className="text-zinc-500 font-semibold">Госномер *</label>
                 <input
                   type="text"
                   value={newLicensePlate}
                   onChange={(e) => setNewLicensePlate(e.target.value.toUpperCase())}
                   placeholder="А000АА77"
-                  className="mt-1 w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-mono font-bold"
+                  className="mt-1 w-full px-3 py-2 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-zinc-900 dark:text-white placeholder:text-zinc-500 font-mono font-bold"
                 />
               </div>
             </div>
 
             <div>
-              <label className="text-slate-500 font-semibold">Вид работ / Жалобы клиента</label>
+              <label className="text-zinc-500 font-semibold">Вид работ / Жалобы клиента</label>
               <input
                 type="text"
                 value={newDescription}
                 onChange={(e) => setNewDescription(e.target.value)}
                 placeholder="Замена масла, диагностика ходовой, стук в подвеске..."
-                className="mt-1 w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
+                className="mt-1 w-full px-3 py-2 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-zinc-900 dark:text-white placeholder:text-zinc-500"
               />
             </div>
 
@@ -563,16 +563,16 @@ export const BaySchedulerModule: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setIsModalOpen(false)}
-                className="px-4 py-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/[0.06] cursor-pointer"
+                className="px-4 py-2 rounded-full text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-white/[0.06] cursor-pointer"
               >
                 Отмена
               </button>
               <button
                 type="button"
                 onClick={handleAddAppointment}
-                className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-semibold cursor-pointer shadow-sm"
+                className="px-5 py-2 rounded-full bg-red-600 hover:bg-red-500 text-white font-semibold cursor-pointer shadow-md shadow-red-600/20"
               >
-                Записать
+                Записать авто
               </button>
             </div>
           </div>

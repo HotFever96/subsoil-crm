@@ -324,7 +324,7 @@ export const CalendarModule: React.FC = () => {
           </div>
           <div>
             <div className="flex items-center space-x-2">
-              <h2 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+              <h2 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-white">
                 {MONTH_NAMES[month]} {year}
               </h2>
             </div>
@@ -337,20 +337,20 @@ export const CalendarModule: React.FC = () => {
           <div className="flex items-center space-x-1 border border-black/[0.05] dark:border-white/[0.08] rounded-full p-1 bg-white/60 dark:bg-white/[0.06] backdrop-blur-md">
             <button
               onClick={handlePrev}
-              className="p-1.5 rounded-full text-slate-500 hover:text-slate-900 dark:text-zinc-400 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
+              className="p-1.5 rounded-full text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white hover:bg-zinc-200/50 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
               title="Назад"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
             <button
               onClick={handleToday}
-              className="px-3 py-1 text-xs font-semibold text-slate-700 dark:text-zinc-200 hover:text-slate-950 dark:hover:text-white transition-colors cursor-pointer"
+              className="px-3 py-1 text-xs font-semibold text-zinc-700 dark:text-zinc-200 hover:text-zinc-950 dark:hover:text-white transition-colors cursor-pointer"
             >
               Сегодня
             </button>
             <button
               onClick={handleNext}
-              className="p-1.5 rounded-full text-slate-500 hover:text-slate-900 dark:text-zinc-400 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
+              className="p-1.5 rounded-full text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white hover:bg-zinc-200/50 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
               title="Вперед"
             >
               <ChevronRight className="w-4 h-4" />
@@ -364,7 +364,7 @@ export const CalendarModule: React.FC = () => {
               className={`px-3 py-1 rounded-full font-semibold transition-all cursor-pointer ${
                 viewMode === "month"
                   ? "bg-sky-600 text-white shadow-xs"
-                  : "text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white"
+                  : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
               }`}
             >
               Месяц
@@ -374,7 +374,7 @@ export const CalendarModule: React.FC = () => {
               className={`px-3 py-1 rounded-full font-semibold transition-all cursor-pointer ${
                 viewMode === "week"
                   ? "bg-sky-600 text-white shadow-xs"
-                  : "text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white"
+                  : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
               }`}
             >
               Неделя
@@ -384,7 +384,7 @@ export const CalendarModule: React.FC = () => {
               className={`px-3 py-1 rounded-full font-semibold transition-all cursor-pointer ${
                 viewMode === "day"
                   ? "bg-sky-600 text-white shadow-xs"
-                  : "text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white"
+                  : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
               }`}
             >
               День
@@ -408,11 +408,11 @@ export const CalendarModule: React.FC = () => {
         {viewMode === "month" && (
           <div className="h-full flex flex-col min-h-[580px] bg-white/70 dark:bg-white/[0.03] border border-black/[0.05] dark:border-white/[0.08] rounded-3xl overflow-hidden shadow-2xl backdrop-blur-2xl">
             {/* Weekdays header */}
-            <div className="grid grid-cols-7 border-b border-slate-200 dark:border-white/[0.08] bg-slate-50/70 dark:bg-white/[0.02]">
+            <div className="grid grid-cols-7 border-b border-zinc-200 dark:border-white/[0.08] bg-zinc-50/70 dark:bg-white/[0.02]">
               {WEEKDAY_NAMES.map((w, idx) => (
                 <div
                   key={idx}
-                  className="py-2.5 text-center text-xs font-semibold text-slate-500 dark:text-slate-400"
+                  className="py-2.5 text-center text-xs font-semibold text-zinc-500 dark:text-zinc-400"
                 >
                   {w}
                 </div>
@@ -420,7 +420,7 @@ export const CalendarModule: React.FC = () => {
             </div>
 
             {/* Month grid */}
-            <div className="flex-1 grid grid-cols-7 auto-rows-fr divide-x divide-y divide-slate-100 dark:divide-white/[0.04]">
+            <div className="flex-1 grid grid-cols-7 auto-rows-fr divide-x divide-y divide-zinc-100 dark:divide-white/[0.04]">
               {calendarCells.map((cell, idx) => {
                 const cellEvents = events.filter((e) => e.date === cell.dateString);
                 const isSelected = selectedDate === cell.dateString;
@@ -433,8 +433,8 @@ export const CalendarModule: React.FC = () => {
                     onDoubleClick={() => handleOpenCreateModal(cell.dateString)}
                     className={`min-h-[90px] p-1.5 sm:p-2 flex flex-col justify-between transition-colors cursor-pointer group ${
                       !cell.isCurrentMonth
-                        ? "bg-slate-50/40 dark:bg-black/20 text-slate-300 dark:text-slate-600"
-                        : "hover:bg-slate-50/70 dark:hover:bg-white/[0.02]"
+                        ? "bg-zinc-50/40 dark:bg-black/20 text-zinc-300 dark:text-zinc-600"
+                        : "hover:bg-zinc-50/70 dark:hover:bg-white/[0.02]"
                     } ${isSelected ? "ring-2 ring-inset ring-sky-500/40" : ""}`}
                   >
                     <div className="flex items-center justify-between mb-1">
@@ -443,15 +443,15 @@ export const CalendarModule: React.FC = () => {
                           isToday
                             ? "bg-sky-500 text-white font-bold"
                             : cell.isCurrentMonth
-                            ? "text-slate-700 dark:text-slate-300"
-                            : "text-slate-400 dark:text-slate-600"
+                            ? "text-zinc-700 dark:text-zinc-300"
+                            : "text-zinc-400 dark:text-zinc-600"
                         }`}
                       >
                         {cell.date.getDate()}
                       </span>
 
                       {cellEvents.length > 0 && (
-                        <span className="text-[10px] text-slate-400 font-mono">
+                        <span className="text-[10px] text-zinc-400 font-mono">
                           {cellEvents.length}
                         </span>
                       )}
@@ -498,12 +498,12 @@ export const CalendarModule: React.FC = () => {
               return (
                 <div
                   key={idx}
-                  className="bg-white dark:bg-[#131821] border border-slate-200 dark:border-white/[0.08] rounded-2xl p-3 flex flex-col justify-between shadow-2xs"
+                  className="bg-white/80 dark:bg-white/[0.03] border border-black/[0.06] dark:border-white/[0.08] backdrop-blur-xl rounded-2xl p-3 flex flex-col justify-between shadow-2xs"
                 >
-                  <div className="border-b border-slate-100 dark:border-white/[0.06] pb-2.5 mb-2.5 flex items-center justify-between">
+                  <div className="border-b border-zinc-100 dark:border-white/[0.06] pb-2.5 mb-2.5 flex items-center justify-between">
                     <div>
-                      <div className="text-xs font-semibold text-slate-400">{w.dayName}</div>
-                      <div className="text-base font-bold text-slate-900 dark:text-slate-100">
+                      <div className="text-xs font-semibold text-zinc-400">{w.dayName}</div>
+                      <div className="text-base font-bold text-zinc-900 dark:text-zinc-100">
                         {w.date.getDate()} {MONTH_NAMES[w.date.getMonth()].slice(0, 3)}
                       </div>
                     </div>
@@ -528,18 +528,18 @@ export const CalendarModule: React.FC = () => {
                           <span>{evt.time || "Весь день"}</span>
                           <span className="font-semibold uppercase tracking-wider">{evt.tag}</span>
                         </div>
-                        <div className="font-medium text-slate-900 dark:text-slate-100 line-clamp-2">
+                        <div className="font-medium text-zinc-900 dark:text-zinc-100 line-clamp-2">
                           {evt.title}
                         </div>
                         {evt.license_code && (
-                          <div className="mt-1 text-[10px] text-slate-400 truncate">
+                          <div className="mt-1 text-[10px] text-zinc-400 truncate">
                             {evt.license_code}
                           </div>
                         )}
                       </div>
                     ))}
                     {dayEvents.length === 0 && (
-                      <div className="text-[11px] text-slate-400 italic text-center py-6">
+                      <div className="text-[11px] text-zinc-400 italic text-center py-6">
                         Нет событий
                       </div>
                     )}
@@ -547,7 +547,7 @@ export const CalendarModule: React.FC = () => {
 
                   <button
                     onClick={() => handleOpenCreateModal(w.dateString)}
-                    className="w-full mt-2 py-1.5 rounded-lg border border-dashed border-slate-200 dark:border-white/[0.1] text-[11px] text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/[0.04] transition-colors flex items-center justify-center space-x-1 cursor-pointer"
+                    className="w-full mt-2 py-1.5 rounded-lg border border-dashed border-zinc-200 dark:border-white/[0.1] text-[11px] text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-white/[0.04] transition-colors flex items-center justify-center space-x-1 cursor-pointer"
                   >
                     <Plus className="w-3 h-3" />
                     <span>Добавить</span>
@@ -560,10 +560,10 @@ export const CalendarModule: React.FC = () => {
 
         {/* VIEW 3: DAY VIEW / AGENDA */}
         {viewMode === "day" && (
-          <div className="max-w-3xl mx-auto bg-white dark:bg-[#131821] border border-slate-200 dark:border-white/[0.08] rounded-2xl p-6 shadow-2xs space-y-6">
-            <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/[0.06] pb-4">
+          <div className="max-w-3xl mx-auto bg-white/80 dark:bg-white/[0.03] border border-black/[0.06] dark:border-white/[0.08] backdrop-blur-xl rounded-3xl p-6 shadow-2xs space-y-6">
+            <div className="flex items-center justify-between border-b border-zinc-100 dark:border-white/[0.06] pb-4">
               <div>
-                <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">
+                <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
                   {currentDate.toLocaleDateString("ru-RU", {
                     weekday: "long",
                     year: "numeric",
@@ -571,7 +571,7 @@ export const CalendarModule: React.FC = () => {
                     day: "numeric",
                   })}
                 </h3>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-zinc-500">
                   Список назначенных мероприятий и сроков на выбранную дату
                 </p>
               </div>
@@ -593,8 +593,8 @@ export const CalendarModule: React.FC = () => {
               if (dayEvts.length === 0) {
                 return (
                   <div className="text-center py-12 space-y-2">
-                    <CalendarDays className="w-10 h-10 text-slate-300 dark:text-slate-600 mx-auto" />
-                    <p className="text-sm text-slate-500">На этот день запланированных событий нет</p>
+                    <CalendarDays className="w-10 h-10 text-zinc-300 dark:text-zinc-600 mx-auto" />
+                    <p className="text-sm text-zinc-500">На этот день запланированных событий нет</p>
                     <button
                       onClick={() => handleOpenCreateModal(curDateStr)}
                       className="text-xs text-sky-500 hover:underline font-medium"
@@ -611,7 +611,7 @@ export const CalendarModule: React.FC = () => {
                     <div
                       key={evt.id}
                       onClick={() => handleOpenEditModal(evt)}
-                      className="p-4 rounded-xl border border-slate-200 dark:border-white/[0.08] bg-slate-50/50 dark:bg-white/[0.02] hover:border-sky-500/50 transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                      className="p-4 rounded-xl border border-zinc-200 dark:border-white/[0.08] bg-zinc-50/50 dark:bg-white/[0.02] hover:border-sky-500/50 transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3"
                     >
                       <div className="space-y-1">
                         <div className="flex items-center space-x-2">
@@ -623,17 +623,17 @@ export const CalendarModule: React.FC = () => {
                             {evt.tag}
                           </span>
                           {evt.time && (
-                            <span className="text-xs text-slate-500 flex items-center space-x-1">
+                            <span className="text-xs text-zinc-500 flex items-center space-x-1">
                               <Clock className="w-3 h-3" />
                               <span>{evt.time}</span>
                             </span>
                           )}
                         </div>
-                        <h4 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                        <h4 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
                           {evt.title}
                         </h4>
                         {evt.description && (
-                          <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                          <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
                             {evt.description}
                           </p>
                         )}
@@ -645,7 +645,7 @@ export const CalendarModule: React.FC = () => {
                             e.stopPropagation();
                             handleOpenEditModal(evt);
                           }}
-                          className="p-1.5 rounded-lg text-slate-400 hover:text-sky-500 hover:bg-sky-500/10 transition-colors"
+                          className="p-1.5 rounded-lg text-zinc-400 hover:text-sky-500 hover:bg-sky-500/10 transition-colors"
                           title="Редактировать"
                         >
                           <Edit2 className="w-3.5 h-3.5" />
@@ -655,7 +655,7 @@ export const CalendarModule: React.FC = () => {
                             e.stopPropagation();
                             handleDeleteEvent(evt.id);
                           }}
-                          className="p-1.5 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 transition-colors"
+                          className="p-1.5 rounded-lg text-zinc-400 hover:text-rose-500 hover:bg-rose-500/10 transition-colors"
                           title="Удалить"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -672,23 +672,23 @@ export const CalendarModule: React.FC = () => {
 
       {/* EVENT CREATE / EDIT MODAL */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="w-full max-w-md bg-white dark:bg-[#131821] border border-slate-200 dark:border-white/[0.08] rounded-2xl p-6 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/[0.08] pb-3">
-              <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100">
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="w-full max-w-md bg-white/95 dark:bg-zinc-950/90 backdrop-blur-2xl border border-black/[0.08] dark:border-white/10 rounded-3xl p-6 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-zinc-100 dark:border-white/[0.08] pb-3">
+              <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
                 {editingEvent ? "Редактировать событие" : "Новое событие"}
               </h3>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+                className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="space-y-3.5 text-xs text-slate-600 dark:text-slate-300">
+            <div className="space-y-3.5 text-xs text-zinc-600 dark:text-zinc-300">
               <div>
-                <label className="block text-slate-500 dark:text-slate-400 mb-1">
+                <label className="block text-zinc-500 dark:text-zinc-400 mb-1">
                   Название события *
                 </label>
                 <input
@@ -696,39 +696,39 @@ export const CalendarModule: React.FC = () => {
                   value={formTitle}
                   onChange={(e) => setFormTitle(e.target.value)}
                   placeholder="Например, Плановая проверка Росприроднадзора"
-                  className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-[#0c1015] border border-slate-200 dark:border-white/[0.08] text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:border-sky-500"
+                  className="w-full px-3 py-2 rounded-xl bg-zinc-50 dark:bg-[#0c1015] border border-zinc-200 dark:border-white/[0.08] text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:border-sky-500"
                   required
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-500 dark:text-slate-400 mb-1">Дата *</label>
+                  <label className="block text-zinc-500 dark:text-zinc-400 mb-1">Дата *</label>
                   <input
                     type="date"
                     value={formDate}
                     onChange={(e) => setFormDate(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-[#0c1015] border border-slate-200 dark:border-white/[0.08] text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-sky-500"
+                    className="w-full px-3 py-2 rounded-xl bg-zinc-50 dark:bg-[#0c1015] border border-zinc-200 dark:border-white/[0.08] text-xs text-zinc-900 dark:text-zinc-100 focus:outline-none focus:border-sky-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-500 dark:text-slate-400 mb-1">Время</label>
+                  <label className="block text-zinc-500 dark:text-zinc-400 mb-1">Время</label>
                   <input
                     type="time"
                     value={formTime}
                     onChange={(e) => setFormTime(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-[#0c1015] border border-slate-200 dark:border-white/[0.08] text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-sky-500"
+                    className="w-full px-3 py-2 rounded-xl bg-zinc-50 dark:bg-[#0c1015] border border-zinc-200 dark:border-white/[0.08] text-xs text-zinc-900 dark:text-zinc-100 focus:outline-none focus:border-sky-500"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-500 dark:text-slate-400 mb-1">Категория</label>
+                  <label className="block text-zinc-500 dark:text-zinc-400 mb-1">Категория</label>
                   <select
                     value={formTag}
                     onChange={(e) => setFormTag(e.target.value as CalendarEvent["tag"])}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-[#0c1015] border border-slate-200 dark:border-white/[0.08] text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-sky-500"
+                    className="w-full px-3 py-2 rounded-xl bg-zinc-50 dark:bg-[#0c1015] border border-zinc-200 dark:border-white/[0.08] text-xs text-zinc-900 dark:text-zinc-100 focus:outline-none focus:border-sky-500"
                   >
                     <option value="Дедлайн">Дедлайн</option>
                     <option value="Проверка">Проверка</option>
@@ -737,11 +737,11 @@ export const CalendarModule: React.FC = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-slate-500 dark:text-slate-400 mb-1">Приоритет</label>
+                  <label className="block text-zinc-500 dark:text-zinc-400 mb-1">Приоритет</label>
                   <select
                     value={formPriority}
                     onChange={(e) => setFormPriority(e.target.value as CalendarEvent["priority"])}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-[#0c1015] border border-slate-200 dark:border-white/[0.08] text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-sky-500"
+                    className="w-full px-3 py-2 rounded-xl bg-zinc-50 dark:bg-[#0c1015] border border-zinc-200 dark:border-white/[0.08] text-xs text-zinc-900 dark:text-zinc-100 focus:outline-none focus:border-sky-500"
                   >
                     <option value="CRITICAL">Критический (Красный)</option>
                     <option value="HIGH">Высокий (Оранжевый)</option>
@@ -751,18 +751,18 @@ export const CalendarModule: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-slate-500 dark:text-slate-400 mb-1">Описание</label>
+                <label className="block text-zinc-500 dark:text-zinc-400 mb-1">Описание</label>
                 <textarea
                   value={formDescription}
                   onChange={(e) => setFormDescription(e.target.value)}
                   rows={3}
                   placeholder="Дополнительные детали, требования, ответственные лица..."
-                  className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-[#0c1015] border border-slate-200 dark:border-white/[0.08] text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-sky-500 resize-none leading-relaxed"
+                  className="w-full px-3 py-2 rounded-xl bg-zinc-50 dark:bg-[#0c1015] border border-zinc-200 dark:border-white/[0.08] text-xs text-zinc-900 dark:text-zinc-100 focus:outline-none focus:border-sky-500 resize-none leading-relaxed"
                 />
               </div>
             </div>
 
-            <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-white/[0.08]">
+            <div className="flex items-center justify-between pt-2 border-t border-zinc-100 dark:border-white/[0.08]">
               {editingEvent ? (
                 <button
                   type="button"
@@ -779,7 +779,7 @@ export const CalendarModule: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-3.5 py-1.5 rounded-xl border border-slate-200 dark:border-white/[0.1] text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/[0.04] text-xs transition-colors cursor-pointer"
+                  className="px-3.5 py-1.5 rounded-xl border border-zinc-200 dark:border-white/[0.1] text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-white/[0.04] text-xs transition-colors cursor-pointer"
                 >
                   Отмена
                 </button>

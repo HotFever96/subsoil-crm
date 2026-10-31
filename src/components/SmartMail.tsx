@@ -460,12 +460,12 @@ export const SmartMail: React.FC<SmartMailProps> = ({
         <div className="space-y-3">
           {/* Mailbox Selector Dropdown */}
           <div className="relative" ref={dropdownRef}>
-            <label className="block text-[11px] font-medium text-slate-400 mb-1">
+            <label className="block text-[11px] font-medium text-zinc-400 mb-1">
               Активный ящик:
             </label>
             <button
               onClick={() => setIsMailboxDropdownOpen(!isMailboxDropdownOpen)}
-              className="w-full px-3 py-2 rounded-xl bg-white dark:bg-[#181d24] border border-slate-200 dark:border-white/[0.08] text-xs font-medium text-slate-800 dark:text-slate-100 flex items-center justify-between shadow-2xs hover:border-slate-300 dark:hover:border-white/[0.15] transition-all cursor-pointer"
+              className="w-full px-3 py-2 rounded-xl bg-white dark:bg-[#181d24] border border-zinc-200 dark:border-white/[0.08] text-xs font-medium text-zinc-800 dark:text-zinc-100 flex items-center justify-between shadow-2xs hover:border-zinc-300 dark:hover:border-white/[0.15] transition-all cursor-pointer"
             >
               <div className="flex items-center space-x-2 min-w-0">
                 {selectedMailboxId === "ALL" ? (
@@ -484,32 +484,32 @@ export const SmartMail: React.FC<SmartMailProps> = ({
                   </>
                 )}
               </div>
-              <ChevronDown className="w-3.5 h-3.5 text-slate-400 shrink-0 ml-1.5" />
+              <ChevronDown className="w-3.5 h-3.5 text-zinc-400 shrink-0 ml-1.5" />
             </button>
 
             {/* Dropdown Menu */}
             {isMailboxDropdownOpen && (
-              <div className="absolute top-full left-0 right-0 mt-1 z-30 bg-white dark:bg-[#181d24] border border-slate-200 dark:border-white/[0.08] rounded-xl shadow-xl py-1.5 text-xs">
+              <div className="absolute top-full left-0 right-0 mt-1 z-30 bg-white dark:bg-[#181d24] border border-zinc-200 dark:border-white/[0.08] rounded-xl shadow-xl py-1.5 text-xs">
                 {/* Option: All mailboxes */}
                 <button
                   onClick={() => {
                     setSelectedMailboxId("ALL");
                     setIsMailboxDropdownOpen(false);
                   }}
-                  className={`w-full px-3 py-2 text-left flex items-center justify-between hover:bg-slate-100 dark:hover:bg-white/[0.06] transition-colors cursor-pointer ${
-                    selectedMailboxId === "ALL" ? "bg-sky-500/10 text-sky-600 dark:text-sky-400 font-semibold" : "text-slate-700 dark:text-slate-200"
+                  className={`w-full px-3 py-2 text-left flex items-center justify-between hover:bg-zinc-100 dark:hover:bg-white/[0.06] transition-colors cursor-pointer ${
+                    selectedMailboxId === "ALL" ? "bg-sky-500/10 text-sky-600 dark:text-sky-400 font-semibold" : "text-zinc-700 dark:text-zinc-200"
                   }`}
                 >
                   <div className="flex items-center space-x-2">
                     <span className="w-2 h-2 rounded-full bg-sky-500" />
                     <span>Все ящики (Единая лента)</span>
                   </div>
-                  <span className="text-[10px] text-slate-400 font-mono">
+                  <span className="text-[10px] text-zinc-400 font-mono">
                     {mails.length}
                   </span>
                 </button>
 
-                {mailboxes.length > 0 && <div className="my-1 border-t border-slate-100 dark:border-white/[0.06]" />}
+                {mailboxes.length > 0 && <div className="my-1 border-t border-zinc-100 dark:border-white/[0.06]" />}
 
                 {/* Individual mailboxes */}
                 {mailboxes.map((mbx) => {
@@ -524,22 +524,22 @@ export const SmartMail: React.FC<SmartMailProps> = ({
                         setSelectedMailboxId(mbx.id);
                         setIsMailboxDropdownOpen(false);
                       }}
-                      className={`w-full px-3 py-2 text-left flex items-center justify-between hover:bg-slate-100 dark:hover:bg-white/[0.06] transition-colors cursor-pointer ${
-                        isSelected ? "bg-sky-500/10 text-sky-600 dark:text-sky-400 font-semibold" : "text-slate-700 dark:text-slate-200"
+                      className={`w-full px-3 py-2 text-left flex items-center justify-between hover:bg-zinc-100 dark:hover:bg-white/[0.06] transition-colors cursor-pointer ${
+                        isSelected ? "bg-sky-500/10 text-sky-600 dark:text-sky-400 font-semibold" : "text-zinc-700 dark:text-zinc-200"
                       }`}
                     >
                       <div className="flex items-center space-x-2 min-w-0">
                         <span className={`w-2 h-2 rounded-full ${dotColor} shrink-0`} />
                         <span className="truncate">[{mbx.name}]</span>
                       </div>
-                      <span className="text-[10px] text-slate-400 font-mono shrink-0 ml-2">
+                      <span className="text-[10px] text-zinc-400 font-mono shrink-0 ml-2">
                         {boxMailsCount}
                       </span>
                     </button>
                   );
                 })}
 
-                <div className="my-1 border-t border-slate-100 dark:border-white/[0.06]" />
+                <div className="my-1 border-t border-zinc-100 dark:border-white/[0.06]" />
 
                 {/* Manage mailboxes button */}
                 <button
@@ -577,15 +577,15 @@ export const SmartMail: React.FC<SmartMailProps> = ({
               }}
               className={`w-full text-left px-3 py-2 rounded-lg text-xs font-medium flex items-center justify-between transition-colors cursor-pointer ${
                 currentFolder === "INBOX"
-                  ? "bg-slate-200/80 dark:bg-white/[0.08] text-slate-900 dark:text-slate-100 font-semibold"
-                  : "text-slate-600 dark:text-slate-400 hover:bg-slate-200/40 dark:hover:bg-white/[0.04]"
+                  ? "bg-zinc-200/80 dark:bg-white/[0.08] text-zinc-900 dark:text-zinc-100 font-semibold"
+                  : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200/40 dark:hover:bg-white/[0.04]"
               }`}
             >
               <div className="flex items-center space-x-2.5">
-                <Inbox className="w-4 h-4 text-slate-400" />
+                <Inbox className="w-4 h-4 text-zinc-400" />
                 <span>Входящие</span>
               </div>
-              <span className="text-[11px] px-2 py-0.5 rounded-full bg-slate-200 dark:bg-white/[0.1] text-slate-700 dark:text-slate-300 font-mono">
+              <span className="text-[11px] px-2 py-0.5 rounded-full bg-zinc-200 dark:bg-white/[0.1] text-zinc-700 dark:text-zinc-300 font-mono">
                 {inboxCount}
               </span>
             </button>
@@ -597,15 +597,15 @@ export const SmartMail: React.FC<SmartMailProps> = ({
               }}
               className={`w-full text-left px-3 py-2 rounded-lg text-xs font-medium flex items-center justify-between transition-colors cursor-pointer ${
                 currentFolder === "SENT"
-                  ? "bg-slate-200/80 dark:bg-white/[0.08] text-slate-900 dark:text-slate-100 font-semibold"
-                  : "text-slate-600 dark:text-slate-400 hover:bg-slate-200/40 dark:hover:bg-white/[0.04]"
+                  ? "bg-zinc-200/80 dark:bg-white/[0.08] text-zinc-900 dark:text-zinc-100 font-semibold"
+                  : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200/40 dark:hover:bg-white/[0.04]"
               }`}
             >
               <div className="flex items-center space-x-2.5">
-                <Send className="w-4 h-4 text-slate-400" />
+                <Send className="w-4 h-4 text-zinc-400" />
                 <span>Исходящие</span>
               </div>
-              <span className="text-[11px] px-2 py-0.5 rounded-full bg-slate-200 dark:bg-white/[0.1] text-slate-700 dark:text-slate-300 font-mono">
+              <span className="text-[11px] px-2 py-0.5 rounded-full bg-zinc-200 dark:bg-white/[0.1] text-zinc-700 dark:text-zinc-300 font-mono">
                 {sentCount}
               </span>
             </button>
@@ -617,15 +617,15 @@ export const SmartMail: React.FC<SmartMailProps> = ({
               }}
               className={`w-full text-left px-3 py-2 rounded-lg text-xs font-medium flex items-center justify-between transition-colors cursor-pointer ${
                 currentFolder === "DRAFTS"
-                  ? "bg-slate-200/80 dark:bg-white/[0.08] text-slate-900 dark:text-slate-100 font-semibold"
-                  : "text-slate-600 dark:text-slate-400 hover:bg-slate-200/40 dark:hover:bg-white/[0.04]"
+                  ? "bg-zinc-200/80 dark:bg-white/[0.08] text-zinc-900 dark:text-zinc-100 font-semibold"
+                  : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200/40 dark:hover:bg-white/[0.04]"
               }`}
             >
               <div className="flex items-center space-x-2.5">
-                <FileEdit className="w-4 h-4 text-slate-400" />
+                <FileEdit className="w-4 h-4 text-zinc-400" />
                 <span>Черновики</span>
               </div>
-              <span className="text-[11px] px-2 py-0.5 rounded-full bg-slate-200 dark:bg-white/[0.1] text-slate-700 dark:text-slate-300 font-mono">
+              <span className="text-[11px] px-2 py-0.5 rounded-full bg-zinc-200 dark:bg-white/[0.1] text-zinc-700 dark:text-zinc-300 font-mono">
                 {draftsCount}
               </span>
             </button>
@@ -633,10 +633,10 @@ export const SmartMail: React.FC<SmartMailProps> = ({
         </div>
 
         {/* Bottom Section: Mailbox settings button & hint */}
-        <div className="space-y-2 pt-2 border-t border-slate-200/80 dark:border-white/[0.06]">
+        <div className="space-y-2 pt-2 border-t border-zinc-200/80 dark:border-white/[0.06]">
           <button
             onClick={() => setIsMailboxModalOpen(true)}
-            className="w-full text-left px-3 py-2 rounded-xl text-xs font-medium bg-slate-100 dark:bg-white/[0.04] hover:bg-slate-200/70 dark:hover:bg-white/[0.08] text-slate-700 dark:text-slate-300 transition-colors flex items-center justify-between cursor-pointer"
+            className="w-full text-left px-3 py-2 rounded-xl text-xs font-medium bg-zinc-100 dark:bg-white/[0.04] hover:bg-zinc-200/70 dark:hover:bg-white/[0.08] text-zinc-700 dark:text-zinc-300 transition-colors flex items-center justify-between cursor-pointer"
           >
             <div className="flex items-center space-x-2">
               <Mail className="w-3.5 h-3.5 text-sky-500" />
@@ -647,7 +647,7 @@ export const SmartMail: React.FC<SmartMailProps> = ({
             </span>
           </button>
 
-          <div className="p-2.5 rounded-lg bg-slate-200/40 dark:bg-white/[0.02] text-[10px] text-slate-500 dark:text-slate-400 leading-relaxed">
+          <div className="p-2.5 rounded-lg bg-zinc-200/40 dark:bg-white/[0.02] text-[10px] text-zinc-500 dark:text-zinc-400 leading-relaxed">
             Каждый ящик поддерживает индивидуальные IMAP/SMTP серверы и пароли приложений.
           </div>
         </div>
@@ -655,9 +655,9 @@ export const SmartMail: React.FC<SmartMailProps> = ({
 
       {/* 2. Mail List Column */}
       <div className="w-84 border-r border-black/[0.04] dark:border-white/[0.06] bg-white/40 dark:bg-black/20 backdrop-blur-xl flex flex-col overflow-y-auto shrink-0">
-        <div className="p-3.5 border-b border-slate-200 dark:border-white/[0.08] flex items-center justify-between shrink-0">
+        <div className="p-3.5 border-b border-zinc-200 dark:border-white/[0.08] flex items-center justify-between shrink-0">
           <div className="flex items-center space-x-2">
-            <span className="text-xs font-semibold text-slate-900 dark:text-slate-100 uppercase tracking-wider">
+            <span className="text-xs font-semibold text-zinc-900 dark:text-zinc-100 uppercase tracking-wider">
               {currentFolder === "INBOX" && `Входящие (${filteredMails.length})`}
               {currentFolder === "SENT" && `Исходящие (${filteredMails.length})`}
               {currentFolder === "DRAFTS" && `Черновики (${filteredMails.length})`}
@@ -675,7 +675,7 @@ export const SmartMail: React.FC<SmartMailProps> = ({
         </div>
 
         {filteredMails.length === 0 ? (
-          <div className="p-8 text-center text-xs text-slate-400 space-y-2">
+          <div className="p-8 text-center text-xs text-zinc-400 space-y-2">
             <div>В этой папке нет писем</div>
             {mailboxes.length === 0 && (
               <button
@@ -687,7 +687,7 @@ export const SmartMail: React.FC<SmartMailProps> = ({
             )}
           </div>
         ) : (
-          <div className="divide-y divide-slate-200 dark:divide-white/[0.06]">
+          <div className="divide-y divide-zinc-200 dark:divide-white/[0.06]">
             {filteredMails.map((mail) => {
               const isSelected = mail.id === currentMail?.id;
               const isApproved = mail.status === "APPROVED";
@@ -701,7 +701,7 @@ export const SmartMail: React.FC<SmartMailProps> = ({
                   className={`p-3.5 cursor-pointer transition-colors ${
                     isSelected
                       ? "bg-white dark:bg-[#181d24] border-l-2 border-sky-500 shadow-2xs"
-                      : "hover:bg-slate-100/60 dark:hover:bg-white/[0.03] border-l-2 border-transparent"
+                      : "hover:bg-zinc-100/60 dark:hover:bg-white/[0.03] border-l-2 border-transparent"
                   }`}
                 >
                   {/* Top line: Badge + Agency + Date */}
@@ -714,22 +714,22 @@ export const SmartMail: React.FC<SmartMailProps> = ({
                       >
                         [{badge.name}]
                       </span>
-                      <span className="font-medium text-slate-900 dark:text-slate-200 truncate">
+                      <span className="font-medium text-zinc-900 dark:text-zinc-200 truncate">
                         {mail.agency}
                       </span>
                     </div>
 
-                    <span className="text-[11px] text-slate-400 font-mono shrink-0">
+                    <span className="text-[11px] text-zinc-400 font-mono shrink-0">
                       {mail.date}
                     </span>
                   </div>
 
-                  <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2 leading-relaxed">
+                  <p className="text-xs text-zinc-600 dark:text-zinc-300 line-clamp-2 leading-relaxed">
                     {mail.subject}
                   </p>
 
                   <div className="mt-2 flex items-center justify-between text-[11px]">
-                    <span className="text-slate-400 font-mono text-[10px]">
+                    <span className="text-zinc-400 font-mono text-[10px]">
                       {mail.incoming_number}
                     </span>
                     <span
@@ -757,7 +757,7 @@ export const SmartMail: React.FC<SmartMailProps> = ({
       {currentMail ? (
         <div className="flex-1 flex flex-col h-full overflow-hidden bg-white/70 dark:bg-white/[0.02] backdrop-blur-2xl">
           {/* Header of selected letter */}
-          <div className="px-6 py-4 border-b border-slate-200 dark:border-white/[0.08] flex items-center justify-between shrink-0">
+          <div className="px-6 py-4 border-b border-zinc-200 dark:border-white/[0.08] flex items-center justify-between shrink-0">
             <div className="space-y-1.5 min-w-0 max-w-2xl">
               <div className="flex items-center space-x-2">
                 {/* Mailbox Badge in Header */}
@@ -771,17 +771,17 @@ export const SmartMail: React.FC<SmartMailProps> = ({
                 })()}
 
                 {currentMail.recipient_email && (
-                  <span className="text-[11px] text-slate-400 font-mono">
+                  <span className="text-[11px] text-zinc-400 font-mono">
                     Получатель: {currentMail.recipient_email}
                   </span>
                 )}
               </div>
 
-              <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100 truncate">
+              <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate">
                 {currentMail.subject}
               </h2>
 
-              <div className="flex items-center space-x-4 text-xs text-slate-500 dark:text-slate-400">
+              <div className="flex items-center space-x-4 text-xs text-zinc-500 dark:text-zinc-400">
                 <span className="flex items-center space-x-1">
                   <Building className="w-3.5 h-3.5" />
                   <span>{currentMail.agency}</span>
@@ -808,7 +808,7 @@ export const SmartMail: React.FC<SmartMailProps> = ({
               )}
 
               {currentMail.license_code && (
-                <span className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-white/[0.06] text-xs font-mono text-slate-600 dark:text-slate-300">
+                <span className="px-2.5 py-1 rounded-lg bg-zinc-100 dark:bg-white/[0.06] text-xs font-mono text-zinc-600 dark:text-zinc-300">
                   {currentMail.license_code}
                 </span>
               )}
@@ -832,7 +832,7 @@ export const SmartMail: React.FC<SmartMailProps> = ({
                   <button
                     type="button"
                     onClick={() => handleAddMailToCalendar(currentMail, detected)}
-                    className="px-3 py-1 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold text-xs transition-colors cursor-pointer shadow-2xs"
+                    className="px-3 py-1 rounded-lg bg-amber-500 hover:bg-amber-400 text-zinc-950 font-semibold text-xs transition-colors cursor-pointer shadow-2xs"
                   >
                     + Добавить в календарь
                   </button>
@@ -841,11 +841,11 @@ export const SmartMail: React.FC<SmartMailProps> = ({
             })()}
 
             {/* Original content */}
-            <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#181d24] border border-slate-200/80 dark:border-white/[0.06]">
-              <div className="text-[11px] font-medium text-slate-400 uppercase tracking-wider mb-2">
+            <div className="p-4 rounded-xl bg-zinc-50 dark:bg-[#181d24] border border-zinc-200/80 dark:border-white/[0.06]">
+              <div className="text-[11px] font-medium text-zinc-400 uppercase tracking-wider mb-2">
                 {currentFolder === "SENT" ? "Текст отправленного документа" : "Содержание письма"}
               </div>
-              <div className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed whitespace-pre-wrap">
+              <div className="text-xs sm:text-sm text-zinc-800 dark:text-zinc-200 leading-relaxed whitespace-pre-wrap">
                 {currentMail.incoming_content}
               </div>
             </div>
@@ -856,7 +856,7 @@ export const SmartMail: React.FC<SmartMailProps> = ({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     <span className="w-2 h-2 rounded-full bg-sky-500" />
-                    <span className="text-xs font-semibold text-slate-900 dark:text-slate-100">
+                    <span className="text-xs font-semibold text-zinc-900 dark:text-zinc-100">
                       {currentMail.ai_draft.title}
                     </span>
                   </div>
@@ -865,7 +865,7 @@ export const SmartMail: React.FC<SmartMailProps> = ({
                     <button
                       onClick={handleRegenerateReply}
                       disabled={isRegenerating}
-                      className="px-2.5 py-1 rounded-lg text-xs bg-slate-100 dark:bg-white/[0.06] hover:bg-slate-200 dark:hover:bg-white/[0.1] text-slate-700 dark:text-slate-300 transition-colors flex items-center space-x-1 cursor-pointer"
+                      className="px-2.5 py-1 rounded-lg text-xs bg-zinc-100 dark:bg-white/[0.06] hover:bg-zinc-200 dark:hover:bg-white/[0.1] text-zinc-700 dark:text-zinc-300 transition-colors flex items-center space-x-1 cursor-pointer"
                       title="Пересчитать через ИИ"
                     >
                       <RotateCw className={`w-3.5 h-3.5 ${isRegenerating ? "animate-spin" : ""}`} />
@@ -875,7 +875,7 @@ export const SmartMail: React.FC<SmartMailProps> = ({
                     {!isEditing && (
                       <button
                         onClick={handleStartEdit}
-                        className="px-2.5 py-1 rounded-lg text-xs bg-slate-100 dark:bg-white/[0.06] hover:bg-slate-200 dark:hover:bg-white/[0.1] text-slate-700 dark:text-slate-300 transition-colors flex items-center space-x-1 cursor-pointer"
+                        className="px-2.5 py-1 rounded-lg text-xs bg-zinc-100 dark:bg-white/[0.06] hover:bg-zinc-200 dark:hover:bg-white/[0.1] text-zinc-700 dark:text-zinc-300 transition-colors flex items-center space-x-1 cursor-pointer"
                       >
                         <Edit3 className="w-3.5 h-3.5" />
                         <span>Править</span>
@@ -885,7 +885,7 @@ export const SmartMail: React.FC<SmartMailProps> = ({
                     {currentFolder === "DRAFTS" ? (
                       <button
                         onClick={handleSendDraft}
-                        className="px-3.5 py-1 rounded-lg text-xs font-medium bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:opacity-90 transition-opacity flex items-center space-x-1.5 cursor-pointer shadow-2xs"
+                        className="px-3.5 py-1 rounded-lg text-xs font-medium bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:opacity-90 transition-opacity flex items-center space-x-1.5 cursor-pointer shadow-2xs"
                       >
                         <Send className="w-3.5 h-3.5" />
                         <span>Отправить по SMTP</span>
@@ -893,7 +893,7 @@ export const SmartMail: React.FC<SmartMailProps> = ({
                     ) : (
                       <button
                         onClick={handleApprove}
-                        className="px-3.5 py-1 rounded-lg text-xs font-medium bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:opacity-90 transition-opacity flex items-center space-x-1.5 cursor-pointer shadow-2xs"
+                        className="px-3.5 py-1 rounded-lg text-xs font-medium bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:opacity-90 transition-opacity flex items-center space-x-1.5 cursor-pointer shadow-2xs"
                       >
                         <Check className="w-3.5 h-3.5" />
                         <span>Утвердить ответ</span>
@@ -919,14 +919,14 @@ export const SmartMail: React.FC<SmartMailProps> = ({
                 {/* Legal basis list */}
                 {currentMail.ai_draft.legal_basis && (
                   <div className="space-y-1">
-                    <span className="text-[11px] font-medium text-slate-400">
+                    <span className="text-[11px] font-medium text-zinc-400">
                       Нормативное правовое обоснование:
                     </span>
                     <div className="flex flex-wrap gap-1.5">
                       {currentMail.ai_draft.legal_basis.map((item, idx) => (
                         <span
                           key={idx}
-                          className="px-2 py-0.5 rounded text-[11px] bg-slate-100 dark:bg-white/[0.06] text-slate-700 dark:text-slate-300"
+                          className="px-2 py-0.5 rounded text-[11px] bg-zinc-100 dark:bg-white/[0.06] text-zinc-700 dark:text-zinc-300"
                         >
                           {item}
                         </span>
@@ -941,10 +941,10 @@ export const SmartMail: React.FC<SmartMailProps> = ({
                     value={editedReply}
                     onChange={(e) => setEditedReply(e.target.value)}
                     rows={12}
-                    className="w-full p-3 rounded-lg bg-white dark:bg-[#12161c] border border-slate-300 dark:border-white/[0.1] text-xs sm:text-sm text-slate-900 dark:text-slate-100 leading-relaxed focus:outline-none focus:border-sky-500 resize-none"
+                    className="w-full p-3 rounded-lg bg-white dark:bg-[#12161c] border border-zinc-300 dark:border-white/[0.1] text-xs sm:text-sm text-zinc-900 dark:text-zinc-100 leading-relaxed focus:outline-none focus:border-sky-500 resize-none"
                   />
                 ) : (
-                  <div className="p-4 rounded-lg bg-white dark:bg-[#12161c] border border-slate-200 dark:border-white/[0.08] text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed whitespace-pre-wrap">
+                  <div className="p-4 rounded-lg bg-white dark:bg-[#12161c] border border-zinc-200 dark:border-white/[0.08] text-xs sm:text-sm text-zinc-800 dark:text-zinc-200 leading-relaxed whitespace-pre-wrap">
                     {editedReply || currentMail.ai_draft.reply_body}
                   </div>
                 )}
@@ -953,14 +953,14 @@ export const SmartMail: React.FC<SmartMailProps> = ({
           </div>
         </div>
       ) : (
-        <div className="flex-1 flex flex-col items-center justify-center p-8 text-center text-slate-400 bg-white dark:bg-[#12161c]">
-          <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-white/[0.04] flex items-center justify-center text-slate-400 mb-3">
+        <div className="flex-1 flex flex-col items-center justify-center p-8 text-center text-zinc-400 bg-white dark:bg-[#12161c]">
+          <div className="w-12 h-12 rounded-full bg-zinc-100 dark:bg-white/[0.04] flex items-center justify-center text-zinc-400 mb-3">
             <Inbox className="w-6 h-6" />
           </div>
-          <p className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+          <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
             Письмо не выбрано
           </p>
-          <p className="text-xs text-slate-400 max-w-sm">
+          <p className="text-xs text-zinc-400 max-w-sm">
             Выберите письмо из списка слева или создайте новое официальное обращение, нажав «+ Написать».
           </p>
           {mailboxes.length === 0 && (
@@ -977,15 +977,15 @@ export const SmartMail: React.FC<SmartMailProps> = ({
       {/* Compose Letter Modal */}
       {showComposeModal && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="w-full max-w-lg bg-white dark:bg-[#181d24] border border-slate-200 dark:border-white/[0.08] rounded-xl p-5 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/[0.08] pb-3">
-              <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 flex items-center space-x-2">
+          <div className="w-full max-w-lg bg-white dark:bg-[#181d24] border border-zinc-200 dark:border-white/[0.08] rounded-xl p-5 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-zinc-100 dark:border-white/[0.08] pb-3">
+              <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 flex items-center space-x-2">
                 <FileText className="w-4 h-4 text-sky-500" />
                 <span>Новое официальное письмо / Черновик</span>
               </h3>
               <button
                 onClick={() => setShowComposeModal(false)}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+                className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -994,14 +994,14 @@ export const SmartMail: React.FC<SmartMailProps> = ({
             <form onSubmit={handleCreateDraft} className="space-y-3 text-xs">
               {/* Mailbox selector for sender */}
               <div>
-                <label className="block text-slate-500 dark:text-slate-400 mb-1">
+                <label className="block text-zinc-500 dark:text-zinc-400 mb-1">
                   От кого (Почтовый ящик):
                 </label>
                 {mailboxes.length > 0 ? (
                   <select
                     value={composeMailboxId}
                     onChange={(e) => setComposeMailboxId(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-[#12161c] border border-slate-200 dark:border-white/[0.08] text-slate-900 dark:text-slate-100 focus:outline-none focus:border-sky-500/50"
+                    className="w-full px-3 py-2 rounded-lg bg-zinc-50 dark:bg-[#12161c] border border-zinc-200 dark:border-white/[0.08] text-zinc-900 dark:text-zinc-100 focus:outline-none focus:border-sky-500/50"
                   >
                     {mailboxes.map((mbx) => (
                       <option key={mbx.id} value={mbx.id}>
@@ -1010,7 +1010,7 @@ export const SmartMail: React.FC<SmartMailProps> = ({
                     ))}
                   </select>
                 ) : (
-                  <div className="p-2.5 rounded-lg bg-slate-100 dark:bg-white/[0.04] text-slate-500 dark:text-slate-400 text-xs flex items-center justify-between">
+                  <div className="p-2.5 rounded-lg bg-zinc-100 dark:bg-white/[0.04] text-zinc-500 dark:text-zinc-400 text-xs flex items-center justify-between">
                     <span>Основной системный ящик (ящики не добавлены)</span>
                     <button
                       type="button"
@@ -1027,7 +1027,7 @@ export const SmartMail: React.FC<SmartMailProps> = ({
               </div>
 
               <div>
-                <label className="block text-slate-500 dark:text-slate-400 mb-1">
+                <label className="block text-zinc-500 dark:text-zinc-400 mb-1">
                   Адресат (Ведомство / Организация):
                 </label>
                 <input
@@ -1036,12 +1036,12 @@ export const SmartMail: React.FC<SmartMailProps> = ({
                   placeholder="например: Департамент по недропользованию (Центрнедра)"
                   value={composeAgency}
                   onChange={(e) => setComposeAgency(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-[#12161c] border border-slate-200 dark:border-white/[0.08] text-slate-900 dark:text-slate-100 focus:outline-none focus:border-sky-500/50"
+                  className="w-full px-3 py-2 rounded-lg bg-zinc-50 dark:bg-[#12161c] border border-zinc-200 dark:border-white/[0.08] text-zinc-900 dark:text-zinc-100 focus:outline-none focus:border-sky-500/50"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-500 dark:text-slate-400 mb-1">
+                <label className="block text-zinc-500 dark:text-zinc-400 mb-1">
                   Тема письма:
                 </label>
                 <input
@@ -1050,12 +1050,12 @@ export const SmartMail: React.FC<SmartMailProps> = ({
                   placeholder="например: О направлении отчета по форме 70-тп"
                   value={composeSubject}
                   onChange={(e) => setComposeSubject(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-[#12161c] border border-slate-200 dark:border-white/[0.08] text-slate-900 dark:text-slate-100 focus:outline-none focus:border-sky-500/50"
+                  className="w-full px-3 py-2 rounded-lg bg-zinc-50 dark:bg-[#12161c] border border-zinc-200 dark:border-white/[0.08] text-zinc-900 dark:text-zinc-100 focus:outline-none focus:border-sky-500/50"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-500 dark:text-slate-400 mb-1">
+                <label className="block text-zinc-500 dark:text-zinc-400 mb-1">
                   Текст документа:
                 </label>
                 <textarea
@@ -1063,7 +1063,7 @@ export const SmartMail: React.FC<SmartMailProps> = ({
                   placeholder="Введите текст или тезисы обращения..."
                   value={composeBody}
                   onChange={(e) => setComposeBody(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-[#12161c] border border-slate-200 dark:border-white/[0.08] text-slate-900 dark:text-slate-100 focus:outline-none focus:border-sky-500/50 resize-none leading-relaxed"
+                  className="w-full px-3 py-2 rounded-lg bg-zinc-50 dark:bg-[#12161c] border border-zinc-200 dark:border-white/[0.08] text-zinc-900 dark:text-zinc-100 focus:outline-none focus:border-sky-500/50 resize-none leading-relaxed"
                 />
               </div>
 
@@ -1071,7 +1071,7 @@ export const SmartMail: React.FC<SmartMailProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowComposeModal(false)}
-                  className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/[0.1] text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/[0.04] cursor-pointer"
+                  className="px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-white/[0.1] text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-white/[0.04] cursor-pointer"
                 >
                   Отмена
                 </button>

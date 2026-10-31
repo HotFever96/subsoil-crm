@@ -363,11 +363,11 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
             </div>
             <div>
               <div className="flex items-center space-x-2.5">
-                <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+                <h1 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-white">
                   Проценка автозапчастей
                 </h1>
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
                 Мульти-поиск по артикулу (OEM), VIN и кросс-кодам с расчетом себестоимости и наценки
               </p>
             </div>
@@ -376,9 +376,9 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
           <div className="flex items-center space-x-3">
             <button
               onClick={() => setIsSettingsOpen(true)}
-              className="flex items-center space-x-2 px-3.5 py-2 rounded-xl border border-slate-200 dark:border-white/[0.08] hover:bg-slate-100 dark:hover:bg-white/[0.04] text-xs font-semibold text-slate-700 dark:text-slate-200 transition-colors cursor-pointer"
+              className="flex items-center space-x-2 px-3.5 py-2 rounded-xl border border-zinc-200 dark:border-white/[0.08] hover:bg-zinc-100 dark:hover:bg-white/[0.04] text-xs font-semibold text-zinc-700 dark:text-zinc-200 transition-colors cursor-pointer"
             >
-              <Settings className="w-4 h-4 text-slate-400" />
+              <Settings className="w-4 h-4 text-zinc-400" />
               <span>Шлюзы API поставщиков</span>
             </button>
           </div>
@@ -421,11 +421,11 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
         </div>
 
         {searchMode === "ai_catalog" ? (
-          <span className="text-[11px] text-slate-500 dark:text-slate-400 flex items-center space-x-1">
+          <span className="text-[11px] text-zinc-500 dark:text-zinc-400 flex items-center space-x-1">
             <span>💡 Подбор кросс-номеров и ориентировочных цен без фейковых остатков</span>
           </span>
         ) : (
-          <span className="text-[11px] text-slate-500 dark:text-slate-400 flex items-center space-x-1">
+          <span className="text-[11px] text-zinc-500 dark:text-zinc-400 flex items-center space-x-1">
             <span>🌐 Запрос к подключенным шлюзам дистрибьюторов</span>
           </span>
         )}
@@ -469,21 +469,21 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
       <div className="p-4 rounded-3xl bg-white/60 dark:bg-white/[0.04] border border-white/[0.08] backdrop-blur-2xl space-y-3.5 shadow-xl">
         {/* Search input with Speech-to-Text and Submit */}
         <div className="relative flex items-center">
-          <Search className="w-4 h-4 absolute left-4 text-slate-400 pointer-events-none" />
+          <Search className="w-4 h-4 absolute left-4 text-zinc-400 pointer-events-none" />
           <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && performSearch()}
             placeholder="Введите артикул OEM (например, 2108-1006040 или OC90), VIN или название детали..."
-            className="w-full pl-11 pr-36 py-3 rounded-full border border-white/[0.1] bg-white/70 dark:bg-white/[0.05] backdrop-blur-2xl text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-hidden focus:border-rose-500 focus:ring-1 focus:ring-rose-500 shadow-xl transition-all"
+            className="w-full pl-11 pr-36 py-3 rounded-full border border-white/[0.1] bg-white/70 dark:bg-white/[0.05] backdrop-blur-2xl text-sm text-zinc-900 dark:text-white placeholder:text-zinc-400 focus:outline-hidden focus:border-rose-500 focus:ring-1 focus:ring-rose-500 shadow-xl transition-all"
           />
           <div className="absolute right-2 flex items-center space-x-1.5">
             {query && (
               <button
                 type="button"
                 onClick={() => setQuery("")}
-                className="p-1.5 text-slate-400 hover:text-white cursor-pointer rounded-full"
+                className="p-1.5 text-zinc-400 hover:text-white cursor-pointer rounded-full"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -494,7 +494,7 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
               className={`p-2 rounded-full transition-all cursor-pointer ${
                 isListening
                   ? "bg-rose-500 text-white animate-pulse"
-                  : "text-slate-400 hover:text-slate-200 hover:bg-white/[0.08]"
+                  : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.08]"
               }`}
               title="Голосовой ввод запроса (ru-RU)"
             >
@@ -519,10 +519,10 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
         </div>
 
         {/* Margin Controls and Client Screen Toggle */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-2.5 border-t border-slate-200/60 dark:border-white/[0.06]">
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-2.5 border-t border-zinc-200/60 dark:border-white/[0.06]">
           {/* Markup selector */}
           <div className="flex items-center space-x-2">
-            <span className="text-xs font-semibold text-slate-600 dark:text-slate-400 flex items-center space-x-1">
+            <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-400 flex items-center space-x-1">
               <Percent className="w-3.5 h-3.5 text-rose-500" />
               <span>Наценка СТО:</span>
             </span>
@@ -538,7 +538,7 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
                   className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${
                     markupPercent === pct
                       ? "bg-rose-600 text-white shadow-sm shadow-rose-600/30"
-                      : "bg-white/40 dark:bg-white/[0.04] text-slate-700 dark:text-slate-300 hover:bg-white/70 dark:hover:bg-white/[0.09] border border-white/[0.07]"
+                      : "bg-white/40 dark:bg-white/[0.04] text-zinc-700 dark:text-zinc-300 hover:bg-white/70 dark:hover:bg-white/[0.09] border border-white/[0.07]"
                   }`}
                 >
                   +{pct}%
@@ -555,7 +555,7 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
               className={`flex items-center space-x-2 px-3.5 py-1.5 rounded-full border text-xs font-semibold transition-all cursor-pointer ${
                 isClientScreenMode
                   ? "bg-emerald-500/15 border-emerald-500/40 text-emerald-600 dark:text-emerald-300 shadow-sm"
-                  : "bg-white/40 dark:bg-white/[0.04] border-white/[0.08] text-slate-700 dark:text-slate-300 hover:bg-white/70 dark:hover:bg-white/[0.09]"
+                  : "bg-white/40 dark:bg-white/[0.04] border-white/[0.08] text-zinc-700 dark:text-zinc-300 hover:bg-white/70 dark:hover:bg-white/[0.09]"
               }`}
               title="Режим экрана клиента: скрывает оптовую себестоимость и маржу, оставляя только розничные цены"
             >
@@ -566,7 +566,7 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
                 </>
               ) : (
                 <>
-                  <Eye className="w-4 h-4 text-slate-400" />
+                  <Eye className="w-4 h-4 text-zinc-400" />
                   <span>Показать клиенту (Скрыть закупку)</span>
                 </>
               )}
@@ -589,12 +589,12 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
         {recommendations && (recommendations.fastest || recommendations.bestValue || recommendations.maxMargin) && (
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+              <span className="text-xs font-bold uppercase tracking-wider text-zinc-500">
                 ⭐ Умные ИИ-рекомендации Чайка-Сервис
               </span>
               {searchResponse?.detectedPart && (
-                <span className="text-xs text-slate-500 font-medium">
-                  {searchResponse.detectedPart.vehicle} • OEM: <strong className="font-mono text-slate-700 dark:text-slate-200">{searchResponse.detectedPart.oem}</strong>
+                <span className="text-xs text-zinc-500 font-medium">
+                  {searchResponse.detectedPart.vehicle} • OEM: <strong className="font-mono text-zinc-700 dark:text-zinc-200">{searchResponse.detectedPart.oem}</strong>
                 </span>
               )}
             </div>
@@ -609,15 +609,15 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
                         <Zap className="w-3 h-3 text-amber-500" />
                         <span>БЫСТРЕЕ ВСЕГО</span>
                       </span>
-                      <span className="text-[10px] font-semibold text-slate-400">
+                      <span className="text-[10px] font-semibold text-zinc-400">
                         {recommendations.fastest.supplierName}
                       </span>
                     </div>
 
-                    <div className="font-bold text-sm text-slate-900 dark:text-white truncate">
+                    <div className="font-bold text-sm text-zinc-900 dark:text-white truncate">
                       {recommendations.fastest.brand} {recommendations.fastest.oem}
                     </div>
-                    <div className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">
+                    <div className="text-xs text-zinc-500 dark:text-zinc-400 truncate mt-0.5">
                       {recommendations.fastest.name}
                     </div>
 
@@ -632,11 +632,11 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
                   <div className="mt-4 pt-3 border-t border-amber-500/20 flex items-center justify-between">
                     <div>
                       {!isClientScreenMode && (
-                        <div className="text-[10px] text-slate-400">
+                        <div className="text-[10px] text-zinc-400">
                           Опт: {formatCurrency(recommendations.fastest.purchasePrice)}
                         </div>
                       )}
-                      <div className="text-base font-extrabold text-slate-900 dark:text-white">
+                      <div className="text-base font-extrabold text-zinc-900 dark:text-white">
                         {formatCurrency(recommendations.fastest.salePrice)}
                       </div>
                     </div>
@@ -645,7 +645,7 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
                       <button
                         type="button"
                         onClick={() => handleOrderToWarehouse(recommendations.fastest!)}
-                        className="p-1.5 rounded-xl border border-amber-500/30 hover:bg-amber-500/10 text-slate-700 dark:text-slate-300 transition-colors cursor-pointer"
+                        className="p-1.5 rounded-xl border border-amber-500/30 hover:bg-amber-500/10 text-zinc-700 dark:text-zinc-300 transition-colors cursor-pointer"
                         title="Заказать на склад"
                       >
                         <Package className="w-3.5 h-3.5" />
@@ -672,21 +672,21 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
                         <Award className="w-3 h-3 text-red-500" />
                         <span>ТОП ЦЕНА / КАЧЕСТВО</span>
                       </span>
-                      <span className="text-[10px] font-semibold text-slate-400">
+                      <span className="text-[10px] font-semibold text-zinc-400">
                         {recommendations.bestValue.supplierName}
                       </span>
                     </div>
 
-                    <div className="font-bold text-sm text-slate-900 dark:text-white truncate">
+                    <div className="font-bold text-sm text-zinc-900 dark:text-white truncate">
                       {recommendations.bestValue.brand} {recommendations.bestValue.oem}
                     </div>
-                    <div className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">
+                    <div className="text-xs text-zinc-500 dark:text-zinc-400 truncate mt-0.5">
                       {recommendations.bestValue.name}
                     </div>
 
                     <div className="mt-3 flex items-center space-x-2 text-xs">
                       <Clock className="w-3.5 h-3.5 text-red-500 shrink-0" />
-                      <span className="font-semibold text-slate-700 dark:text-slate-300">
+                      <span className="font-semibold text-zinc-700 dark:text-zinc-300">
                         {recommendations.bestValue.deliveryLabel} ({recommendations.bestValue.stockQty} шт.)
                       </span>
                     </div>
@@ -695,7 +695,7 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
                   <div className="mt-4 pt-3 border-t border-red-500/20 flex items-center justify-between">
                     <div>
                       {!isClientScreenMode && (
-                        <div className="text-[10px] text-slate-400">
+                        <div className="text-[10px] text-zinc-400">
                           Опт: {formatCurrency(recommendations.bestValue.purchasePrice)}
                         </div>
                       )}
@@ -708,7 +708,7 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
                       <button
                         type="button"
                         onClick={() => handleOrderToWarehouse(recommendations.bestValue!)}
-                        className="p-1.5 rounded-xl border border-red-500/30 hover:bg-red-500/10 text-slate-700 dark:text-slate-300 transition-colors cursor-pointer"
+                        className="p-1.5 rounded-xl border border-red-500/30 hover:bg-red-500/10 text-zinc-700 dark:text-zinc-300 transition-colors cursor-pointer"
                         title="Заказать на склад"
                       >
                         <Package className="w-3.5 h-3.5" />
@@ -735,21 +735,21 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
                         <DollarSign className="w-3 h-3 text-emerald-500" />
                         <span>МАКСИМУМ МАРЖИ</span>
                       </span>
-                      <span className="text-[10px] font-semibold text-slate-400">
+                      <span className="text-[10px] font-semibold text-zinc-400">
                         {recommendations.maxMargin.supplierName}
                       </span>
                     </div>
 
-                    <div className="font-bold text-sm text-slate-900 dark:text-white truncate">
+                    <div className="font-bold text-sm text-zinc-900 dark:text-white truncate">
                       {recommendations.maxMargin.brand} {recommendations.maxMargin.oem}
                     </div>
-                    <div className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">
+                    <div className="text-xs text-zinc-500 dark:text-zinc-400 truncate mt-0.5">
                       {recommendations.maxMargin.name}
                     </div>
 
                     <div className="mt-3 flex items-center space-x-2 text-xs">
                       <Clock className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-                      <span className="font-semibold text-slate-700 dark:text-slate-300">
+                      <span className="font-semibold text-zinc-700 dark:text-zinc-300">
                         {recommendations.maxMargin.deliveryLabel} ({recommendations.maxMargin.stockQty} шт.)
                       </span>
                     </div>
@@ -762,7 +762,7 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
                           Маржа: +{formatCurrency(recommendations.maxMargin.marginAmount)}
                         </div>
                       )}
-                      <div className="text-base font-extrabold text-slate-900 dark:text-white">
+                      <div className="text-base font-extrabold text-zinc-900 dark:text-white">
                         {formatCurrency(recommendations.maxMargin.salePrice)}
                       </div>
                     </div>
@@ -771,7 +771,7 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
                       <button
                         type="button"
                         onClick={() => handleOrderToWarehouse(recommendations.maxMargin!)}
-                        className="p-1.5 rounded-xl border border-emerald-500/30 hover:bg-emerald-500/10 text-slate-700 dark:text-slate-300 transition-colors cursor-pointer"
+                        className="p-1.5 rounded-xl border border-emerald-500/30 hover:bg-emerald-500/10 text-zinc-700 dark:text-zinc-300 transition-colors cursor-pointer"
                         title="Заказать на склад"
                       >
                         <Package className="w-3.5 h-3.5" />
@@ -796,17 +796,17 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
         <div className="space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center space-x-3">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+              <span className="text-xs font-bold uppercase tracking-wider text-zinc-500">
                 Все предложения поставщиков ({sortedResults.length})
               </span>
 
               {/* Stock only filter */}
-              <label className="flex items-center space-x-1.5 text-xs text-slate-600 dark:text-slate-400 cursor-pointer select-none">
+              <label className="flex items-center space-x-1.5 text-xs text-zinc-600 dark:text-zinc-400 cursor-pointer select-none">
                 <input
                   type="checkbox"
                   checked={onlyInStock}
                   onChange={(e) => setOnlyInStock(e.target.checked)}
-                  className="rounded border-slate-300 text-red-500 focus:ring-red-400"
+                  className="rounded border-zinc-300 text-red-500 focus:ring-red-400"
                 />
                 <span>Только в наличии</span>
               </label>
@@ -817,7 +817,7 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
               <select
                 value={supplierFilter}
                 onChange={(e) => setSupplierFilter(e.target.value)}
-                className="px-3.5 py-1.5 rounded-full border border-white/[0.09] bg-white/60 dark:bg-white/[0.05] backdrop-blur-2xl text-xs font-semibold text-slate-700 dark:text-zinc-300 focus:outline-hidden"
+                className="px-3.5 py-1.5 rounded-full border border-white/[0.09] bg-white/60 dark:bg-white/[0.05] backdrop-blur-2xl text-xs font-semibold text-zinc-700 dark:text-zinc-300 focus:outline-hidden"
               >
                 <option value="all">Все поставщики</option>
                 <option value="warehouse">Свой склад (СТО)</option>
@@ -831,7 +831,7 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
               <select
                 value={typeFilter}
                 onChange={(e) => setTypeFilter(e.target.value)}
-                className="px-3.5 py-1.5 rounded-full border border-white/[0.09] bg-white/60 dark:bg-white/[0.05] backdrop-blur-2xl text-xs font-semibold text-slate-700 dark:text-zinc-300 focus:outline-hidden"
+                className="px-3.5 py-1.5 rounded-full border border-white/[0.09] bg-white/60 dark:bg-white/[0.05] backdrop-blur-2xl text-xs font-semibold text-zinc-700 dark:text-zinc-300 focus:outline-hidden"
               >
                 <option value="all">Любой тип</option>
                 <option value="original">Оригинал (OEM)</option>
@@ -842,7 +842,7 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
-                className="px-3.5 py-1.5 rounded-full border border-white/[0.09] bg-white/60 dark:bg-white/[0.05] backdrop-blur-2xl text-xs font-semibold text-slate-700 dark:text-zinc-300 focus:outline-hidden"
+                className="px-3.5 py-1.5 rounded-full border border-white/[0.09] bg-white/60 dark:bg-white/[0.05] backdrop-blur-2xl text-xs font-semibold text-zinc-700 dark:text-zinc-300 focus:outline-hidden"
               >
                 <option value="delivery">Сортировка: Быстрая доставка</option>
                 <option value="price_asc">Сортировка: Сначала дешевле</option>
@@ -857,7 +857,7 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
-                  <tr className="bg-white/40 dark:bg-white/[0.03] border-b border-white/[0.06] text-slate-500 dark:text-zinc-400 font-semibold">
+                  <tr className="bg-white/40 dark:bg-white/[0.03] border-b border-white/[0.06] text-zinc-500 dark:text-zinc-400 font-semibold">
                     <th className="py-3 px-4">Поставщик</th>
                     <th className="py-3 px-4">Бренд & Артикул</th>
                     <th className="py-3 px-4">Наименование детали</th>
@@ -871,10 +871,10 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
                     <th className="py-3 px-4 text-center">Действие</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-white/[0.04]">
+                <tbody className="divide-y divide-zinc-100 dark:divide-white/[0.04]">
                   {sortedResults.length === 0 ? (
                     <tr>
-                      <td colSpan={isClientScreenMode ? 9 : 11} className="py-12 text-center text-slate-400">
+                      <td colSpan={isClientScreenMode ? 9 : 11} className="py-12 text-center text-zinc-400">
                         Позиций по заданным фильтрам не найдено
                       </td>
                     </tr>
@@ -886,7 +886,7 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
                       return (
                         <tr
                           key={item.id}
-                          className={`hover:bg-slate-50/70 dark:hover:bg-white/[0.02] transition-colors ${
+                          className={`hover:bg-zinc-50/70 dark:hover:bg-white/[0.02] transition-colors ${
                             isWarehouse ? "bg-emerald-500/[0.02]" : ""
                           }`}
                         >
@@ -902,7 +902,7 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
                                   ? "bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20"
                                   : item.supplierBadgeColor === "blue"
                                   ? "bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/20"
-                                  : "bg-slate-100 dark:bg-white/[0.06] text-slate-700 dark:text-slate-300"
+                                  : "bg-zinc-100 dark:bg-white/[0.06] text-zinc-700 dark:text-zinc-300"
                               }`}
                             >
                               {isWarehouse ? <Package className="w-3 h-3" /> : <Building2 className="w-3 h-3" />}
@@ -912,17 +912,17 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
 
                           {/* Brand & OEM */}
                           <td className="py-3 px-4">
-                            <div className="font-bold text-slate-900 dark:text-white flex items-center space-x-1.5">
+                            <div className="font-bold text-zinc-900 dark:text-white flex items-center space-x-1.5">
                               <span>{item.brand}</span>
                             </div>
                             <div className="flex items-center space-x-1 mt-0.5">
-                              <span className="font-mono text-[11px] text-slate-500 dark:text-slate-400 select-all">
+                              <span className="font-mono text-[11px] text-zinc-500 dark:text-zinc-400 select-all">
                                 {item.oem}
                               </span>
                               <button
                                 type="button"
                                 onClick={() => handleCopyOem(item.oem)}
-                                className="p-0.5 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 cursor-pointer"
+                                className="p-0.5 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 cursor-pointer"
                                 title="Скопировать артикул"
                               >
                                 {isCopied ? <Check className="w-3 h-3 text-emerald-500" /> : <Copy className="w-3 h-3" />}
@@ -931,7 +931,7 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
                           </td>
 
                           {/* Part Name */}
-                          <td className="py-3 px-4 max-w-xs truncate text-slate-700 dark:text-slate-300 font-medium">
+                          <td className="py-3 px-4 max-w-xs truncate text-zinc-700 dark:text-zinc-300 font-medium">
                             {item.name}
                             {item.warehouseLocation && (
                               <div className="text-[10px] text-emerald-600 font-normal">
@@ -948,7 +948,7 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
                                   ? "bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20"
                                   : item.type === "cross_premium"
                                   ? "bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20"
-                                  : "bg-slate-100 dark:bg-white/[0.06] text-slate-600 dark:text-slate-400"
+                                  : "bg-zinc-100 dark:bg-white/[0.06] text-zinc-600 dark:text-zinc-400"
                               }`}
                             >
                               {item.typeLabel}
@@ -958,24 +958,24 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
                           {/* Delivery probability */}
                           <td className="py-3 px-4 text-center">
                             <div className="flex items-center justify-center space-x-1.5">
-                              <div className="w-10 h-1.5 rounded-full bg-slate-200 dark:bg-white/[0.1] overflow-hidden">
+                              <div className="w-10 h-1.5 rounded-full bg-zinc-200 dark:bg-white/[0.1] overflow-hidden">
                                 <div
                                   className="h-full bg-emerald-500 rounded-full"
                                   style={{ width: `${item.deliveryProbability}%` }}
                                 />
                               </div>
-                              <span className="font-semibold text-[11px] text-slate-600 dark:text-slate-400">
+                              <span className="font-semibold text-[11px] text-zinc-600 dark:text-zinc-400">
                                 {item.deliveryProbability}%
                               </span>
                             </div>
                           </td>
 
                           {/* Stock Qty */}
-                          <td className="py-3 px-4 text-center font-bold text-slate-900 dark:text-slate-100">
+                          <td className="py-3 px-4 text-center font-bold text-zinc-900 dark:text-zinc-100">
                             {item.stockQty > 0 ? (
                               <span>{item.stockQty} шт.</span>
                             ) : (
-                              <span className="text-slate-400 font-normal">Под заказ</span>
+                              <span className="text-zinc-400 font-normal">Под заказ</span>
                             )}
                           </td>
 
@@ -987,7 +987,7 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
                                   ? "text-emerald-600 dark:text-emerald-400"
                                   : item.deliveryHours <= 4
                                   ? "text-amber-600 dark:text-amber-400"
-                                  : "text-slate-600 dark:text-slate-300"
+                                  : "text-zinc-600 dark:text-zinc-300"
                               }`}
                             >
                               <Truck className="w-3.5 h-3.5 shrink-0" />
@@ -997,13 +997,13 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
 
                           {/* Wholesale Purchase Price (Hidden in Client mode) */}
                           {!isClientScreenMode && (
-                            <td className="py-3 px-4 text-right font-medium text-slate-600 dark:text-slate-400">
+                            <td className="py-3 px-4 text-right font-medium text-zinc-600 dark:text-zinc-400">
                               {formatCurrency(item.purchasePrice)}
                             </td>
                           )}
 
                           {/* Retail Price for Client */}
-                          <td className="py-3 px-4 text-right font-bold text-slate-900 dark:text-white text-sm">
+                          <td className="py-3 px-4 text-right font-bold text-zinc-900 dark:text-white text-sm">
                             {formatCurrency(item.salePrice)}
                           </td>
 
@@ -1029,10 +1029,10 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
                               <button
                                 type="button"
                                 onClick={() => handleOrderToWarehouse(item)}
-                                className="px-2 py-1.5 rounded-lg border border-slate-300 dark:border-white/[0.1] hover:bg-slate-100 dark:hover:bg-white/[0.05] text-slate-700 dark:text-slate-300 font-semibold text-xs flex items-center space-x-1 transition-colors cursor-pointer"
+                                className="px-2 py-1.5 rounded-lg border border-zinc-300 dark:border-white/[0.1] hover:bg-zinc-100 dark:hover:bg-white/[0.05] text-zinc-700 dark:text-zinc-300 font-semibold text-xs flex items-center space-x-1 transition-colors cursor-pointer"
                                 title="Заказать на склад СТО"
                               >
-                                <Package className="w-3.5 h-3.5 text-slate-400" />
+                                <Package className="w-3.5 h-3.5 text-zinc-400" />
                                 <span>Склад</span>
                               </button>
                             </div>
@@ -1050,44 +1050,44 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
 
       {/* Modal: Select Repair Order */}
       {isOrderSelectModalOpen && selectedPartForOrder && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="relative w-full max-w-lg rounded-3xl bg-white dark:bg-[#131821] border border-slate-200 dark:border-white/[0.1] shadow-2xl p-6 flex flex-col max-h-[85vh]">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-white/[0.08]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md">
+          <div className="relative w-full max-w-lg rounded-3xl bg-white/95 dark:bg-zinc-950/90 backdrop-blur-2xl border border-black/[0.08] dark:border-white/10 shadow-2xl p-6 flex flex-col max-h-[85vh]">
+            <div className="flex items-center justify-between pb-3 border-b border-zinc-200 dark:border-white/[0.08]">
               <div className="flex items-center space-x-2">
                 <Package className="w-5 h-5 text-red-500" />
-                <h3 className="font-bold text-base text-slate-900 dark:text-white">
+                <h3 className="font-bold text-base text-zinc-900 dark:text-white">
                   Добавление детали в Заказ-наряд
                 </h3>
               </div>
               <button
                 onClick={() => setIsOrderSelectModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {/* Selected item overview */}
-            <div className="my-4 p-3.5 rounded-2xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200/80 dark:border-white/[0.06] text-xs space-y-1">
-              <div className="font-bold text-slate-900 dark:text-white">
+            <div className="my-4 p-3.5 rounded-2xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/80 dark:border-white/[0.06] text-xs space-y-1">
+              <div className="font-bold text-zinc-900 dark:text-white">
                 {selectedPartForOrder.brand} {selectedPartForOrder.oem} — {selectedPartForOrder.name}
               </div>
-              <div className="flex items-center justify-between text-slate-500">
+              <div className="flex items-center justify-between text-zinc-500">
                 <span>Поставщик: {selectedPartForOrder.supplierName}</span>
-                <span className="font-bold text-slate-900 dark:text-white text-sm">
+                <span className="font-bold text-zinc-900 dark:text-white text-sm">
                   {formatCurrency(selectedPartForOrder.salePrice)}
                 </span>
               </div>
             </div>
 
-            <div className="text-xs font-semibold text-slate-500 mb-2">
+            <div className="text-xs font-semibold text-zinc-500 mb-2">
               Выберите активный заказ-наряд клиента:
             </div>
 
             {/* List of open repair orders */}
             <div className="flex-1 overflow-y-auto space-y-2 pr-1">
               {repairOrders.filter((o) => o.status !== "closed").length === 0 ? (
-                <div className="py-8 text-center text-xs text-slate-400">
+                <div className="py-8 text-center text-xs text-zinc-400">
                   Нет открытых заказ-нарядов. Создайте заказ-наряд в разделе «Заказ-наряды».
                 </div>
               ) : (
@@ -1098,18 +1098,18 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
                       key={ord.id}
                       type="button"
                       onClick={() => handleConfirmAddToOrder(ord)}
-                      className="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-white/[0.08] hover:border-red-500/50 hover:bg-red-500/[0.03] transition-all cursor-pointer flex items-center justify-between group"
+                      className="w-full text-left p-3 rounded-xl border border-zinc-200 dark:border-white/[0.08] hover:border-red-500/50 hover:bg-red-500/[0.03] transition-all cursor-pointer flex items-center justify-between group"
                     >
                       <div>
-                        <div className="font-bold text-xs text-slate-900 dark:text-white group-hover:text-red-500 transition-colors">
+                        <div className="font-bold text-xs text-zinc-900 dark:text-white group-hover:text-red-500 transition-colors">
                           {ord.orderNumber} • {ord.vehicle.make} {ord.vehicle.model} ({ord.vehicle.licensePlate})
                         </div>
-                        <div className="text-[11px] text-slate-400 mt-0.5">
+                        <div className="text-[11px] text-zinc-400 mt-0.5">
                           Клиент: {ord.client.name} • Текущая сумма: {formatCurrency(ord.grandTotal)}
                         </div>
                       </div>
 
-                      <div className="p-1 rounded-lg bg-slate-100 dark:bg-white/[0.06] group-hover:bg-red-500 group-hover:text-white text-slate-500 transition-all">
+                      <div className="p-1 rounded-lg bg-zinc-100 dark:bg-white/[0.06] group-hover:bg-red-500 group-hover:text-white text-zinc-500 transition-all">
                         <Plus className="w-4 h-4" />
                       </div>
                     </button>

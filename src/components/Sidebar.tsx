@@ -283,7 +283,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Main Sidebar (Fixed slide-out on mobile, static flex on desktop) */}
       <aside
-        className={`w-72 border-r border-slate-200/80 dark:border-white/[0.08] bg-slate-50/90 dark:bg-[#09090b]/85 backdrop-blur-2xl flex flex-col justify-between shrink-0 select-none transition-all h-full z-50 ${
+        className={`w-72 border-r border-zinc-200/80 dark:border-white/[0.08] bg-white/80 dark:bg-[#09090b]/85 backdrop-blur-2xl flex flex-col justify-between shrink-0 select-none transition-all h-full z-50 ${
           isMobileOpen
             ? "fixed inset-y-0 left-0 shadow-2xl flex"
             : "hidden md:flex"
@@ -295,7 +295,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <button
               type="button"
               onClick={handleToggleBusiness}
-              className="group w-full flex items-center justify-center space-x-3 px-2 py-1.5 rounded-2xl hover:bg-slate-200/50 dark:hover:bg-white/[0.04] transition-all cursor-pointer text-center select-none"
+              className="group w-full flex items-center justify-center space-x-3 px-2 py-1.5 rounded-2xl hover:bg-zinc-200/50 dark:hover:bg-white/[0.04] transition-all cursor-pointer text-center select-none"
               title={isChaika ? "Нажмите для переключения в GEO AI (Недропользование)" : "Нажмите для переключения в ЧАЙКА-СЕРВИС (СТО и автопарк)"}
             >
               {/* Large Centered Logo with Flip Animation */}
@@ -321,7 +321,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
               {/* Minimalist Switcher Icon */}
               <div
-                className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all bg-slate-200/60 dark:bg-white/[0.06] group-hover:bg-slate-300 dark:group-hover:bg-white/[0.14] text-slate-500 dark:text-zinc-400 group-hover:text-slate-900 dark:group-hover:text-white shadow-2xs ${
+                className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all bg-zinc-200/60 dark:bg-white/[0.06] group-hover:bg-zinc-300 dark:group-hover:bg-white/[0.14] text-zinc-500 dark:text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-white shadow-2xs ${
                   isFlipping ? "rotate-180 scale-110" : ""
                 }`}
                 title="Сменить бизнес-режим"
@@ -333,7 +333,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             {onCloseMobile && (
               <button
                 onClick={onCloseMobile}
-                className="absolute right-3 top-1/2 -translate-y-1/2 md:hidden p-1.5 rounded-full text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
+                className="absolute right-3 top-1/2 -translate-y-1/2 md:hidden p-1.5 rounded-full text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-200/60 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
                 title="Закрыть меню"
               >
                 <X className="w-5 h-5" />
@@ -346,12 +346,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <div className="px-3 pt-3 pb-1">
               <button
                 onClick={handleNewChatClick}
-                className="w-full text-left px-3 py-2.5 rounded-xl text-sm font-medium transition-all flex items-center space-x-3 cursor-pointer bg-white dark:bg-[#131821] hover:bg-slate-100 dark:hover:bg-white/[0.06] text-slate-800 dark:text-slate-100 border border-slate-200/90 dark:border-white/[0.08] shadow-2xs group"
+                className="w-full text-left px-3 py-2.5 rounded-xl text-sm font-medium transition-all flex items-center space-x-3 cursor-pointer bg-white/80 dark:bg-white/[0.04] hover:bg-zinc-100 dark:hover:bg-white/[0.08] text-zinc-800 dark:text-zinc-100 border border-zinc-200/90 dark:border-white/[0.08] shadow-2xs group"
               >
                 <div className="w-5 h-5 rounded-lg flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform bg-sky-500/10 dark:bg-sky-500/15 text-sky-500">
                   <Plus className="w-3.5 h-3.5" />
                 </div>
-                <span className="font-medium text-slate-800 dark:text-slate-100">
+                <span className="font-medium text-zinc-800 dark:text-zinc-100">
                   Новый чат
                 </span>
               </button>
@@ -367,22 +367,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <button
                   key={item.id}
                   onClick={() => handleTabClick(item.id)}
-                  className={`w-full text-left px-3.5 py-2.5 rounded-2xl text-[13px] font-medium transition-all flex items-center justify-between cursor-pointer ${
+                  className={`w-full text-left px-3.5 py-2 rounded-2xl text-[14.5px] transition-all flex items-center justify-between cursor-pointer antialiased ${
                     isActive
                       ? isChaika
-                        ? "bg-rose-500/10 dark:bg-rose-500/15 text-rose-600 dark:text-rose-400 font-semibold shadow-xs backdrop-blur-md"
-                        : "bg-sky-500/10 dark:bg-white/[0.08] text-sky-700 dark:text-white font-semibold shadow-xs backdrop-blur-md"
-                      : "text-slate-600 dark:text-zinc-400 hover:text-slate-950 dark:hover:text-zinc-100 hover:bg-slate-200/50 dark:hover:bg-white/[0.04]"
+                        ? "bg-gradient-to-r from-red-500/20 to-red-500/5 border border-red-500/30 text-zinc-950 dark:text-white font-semibold shadow-xs backdrop-blur-md"
+                        : "bg-gradient-to-r from-sky-500/20 to-sky-500/5 border border-sky-500/30 text-zinc-950 dark:text-white font-semibold shadow-xs backdrop-blur-md"
+                      : "text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white hover:bg-zinc-200/50 dark:hover:bg-white/[0.06] font-medium"
                   }`}
                 >
                   <div className="flex items-center space-x-3 min-w-0">
                     <Icon
-                      className={`w-4 h-4 shrink-0 ${
+                      className={`w-4 h-4 shrink-0 transition-colors ${
                         isActive
                           ? isChaika
-                            ? "text-rose-500 dark:text-rose-400"
+                            ? "text-red-500 dark:text-red-400"
                             : "text-sky-500 dark:text-sky-400"
-                          : "text-slate-400 dark:text-slate-500"
+                          : "text-zinc-400 dark:text-zinc-400 group-hover:text-zinc-800 dark:group-hover:text-zinc-200"
                       }`}
                     />
                     <span className="truncate">{item.label}</span>
@@ -392,7 +392,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     <span
                       className={`text-[11px] px-2 py-0.5 rounded-full font-medium ml-2 shrink-0 ${
                         isChaika
-                          ? "bg-rose-500/15 text-rose-600 dark:text-rose-400"
+                          ? "bg-red-500/15 text-red-600 dark:text-red-400"
                           : "bg-sky-500/15 text-sky-600 dark:text-sky-400"
                       }`}
                     >
@@ -405,22 +405,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </nav>
 
           {/* Divider */}
-          <div className="mx-3 border-t border-slate-200 dark:border-white/[0.06] my-1" />
+          <div className="mx-3 border-t border-zinc-200 dark:border-white/[0.06] my-1" />
 
           {/* Dialogue History Accordion */}
           <div className="flex-1 overflow-y-auto px-3 py-1 space-y-1 min-h-0">
             <div
-              className="flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-slate-200/50 dark:hover:bg-white/[0.04] transition-colors cursor-pointer select-none"
+              className="flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-zinc-200/50 dark:hover:bg-white/[0.04] transition-colors cursor-pointer select-none"
               onClick={() => setIsChatHistoryOpen(!isChatHistoryOpen)}
             >
-              <div className="flex items-center space-x-1.5 text-[11px] font-bold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">
+              <div className="flex items-center space-x-1.5 text-[11px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                 {isChatHistoryOpen ? (
                   <ChevronDown className="w-3.5 h-3.5" />
                 ) : (
                   <ChevronRight className="w-3.5 h-3.5" />
                 )}
                 <span>{isChaika ? "Диалоги СТО" : "История диалогов"}</span>
-                <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-slate-200/80 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400 font-semibold lowercase">
+                <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-zinc-200/80 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 font-semibold lowercase">
                   {visibleSessions.length}
                 </span>
               </div>
@@ -430,7 +430,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   e.stopPropagation();
                   handleNewChatClick();
                 }}
-                className="p-1 rounded-md text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-white/[0.08] transition-colors cursor-pointer"
+                className="p-1 rounded-md text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-200/60 dark:hover:bg-white/[0.08] transition-colors cursor-pointer"
                 title="Новый диалог"
               >
                 <Plus className="w-3.5 h-3.5" />
@@ -440,7 +440,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             {isChatHistoryOpen && (
               <div className="space-y-0.5 pt-0.5">
                 {visibleSessions.length === 0 ? (
-                  <div className="px-2 py-3 text-center text-xs text-slate-400 dark:text-zinc-600">
+                  <div className="px-2 py-3 text-center text-xs text-zinc-400 dark:text-zinc-600">
                     Нет сохраненных диалогов
                   </div>
                 ) : (
@@ -453,13 +453,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         className={`group w-full px-2.5 py-2 rounded-xl text-xs cursor-pointer flex items-center justify-between transition-colors border ${
                           isActive
                             ? isChaika
-                              ? "bg-rose-500/10 border-rose-500/30 text-rose-600 dark:text-rose-300 font-semibold shadow-2xs"
-                              : "bg-slate-200/90 dark:bg-white/[0.08] border-slate-300 dark:border-zinc-700 text-slate-950 dark:text-slate-100 font-medium shadow-2xs"
-                            : "border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/40 dark:hover:bg-white/[0.04]"
+                              ? "bg-gradient-to-r from-red-500/20 to-red-500/5 border-red-500/30 text-zinc-950 dark:text-white font-semibold shadow-2xs"
+                              : "bg-gradient-to-r from-sky-500/20 to-sky-500/5 border-sky-500/30 text-zinc-950 dark:text-white font-semibold shadow-2xs"
+                            : "border-transparent text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-200/40 dark:hover:bg-white/[0.04]"
                         }`}
                       >
                         <div className="flex items-center space-x-2.5 min-w-0 pr-1">
-                          <MessageSquare className={`w-3.5 h-3.5 shrink-0 ${isActive ? (isChaika ? "text-rose-500" : "text-sky-500") : "text-slate-400"}`} />
+                          <MessageSquare className={`w-3.5 h-3.5 shrink-0 ${isActive ? (isChaika ? "text-red-500" : "text-sky-500") : "text-zinc-400"}`} />
                           <span className="truncate text-xs">{cleanChatTitle(sess.title)}</span>
                         </div>
 
@@ -469,7 +469,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                             e.stopPropagation();
                             deleteSession(sess.id);
                           }}
-                          className="opacity-40 group-hover:opacity-100 text-slate-400 hover:text-rose-500 p-1 rounded transition-opacity cursor-pointer shrink-0"
+                          className="opacity-40 group-hover:opacity-100 text-zinc-400 hover:text-rose-500 p-1 rounded transition-opacity cursor-pointer shrink-0"
                           title="Удалить чат"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -485,7 +485,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         {/* Footer: Compact Unified User Capsule with Icon Actions */}
         <div className="p-3 border-t border-black/[0.05] dark:border-white/[0.06] shrink-0">
-          <div className="px-2.5 py-2 rounded-2xl bg-slate-200/50 dark:bg-white/[0.05] border border-black/[0.04] dark:border-white/[0.06] backdrop-blur-xl flex items-center justify-between">
+          <div className="px-2.5 py-2 rounded-2xl bg-zinc-200/50 dark:bg-white/[0.05] border border-black/[0.04] dark:border-white/[0.06] backdrop-blur-xl flex items-center justify-between">
             {/* User Info (Clicking opens Settings) */}
             <button
               type="button"
@@ -493,11 +493,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
               className="flex items-center space-x-2 min-w-0 hover:opacity-80 transition-opacity cursor-pointer text-left mr-1.5 group"
               title="Настройки профиля и системы"
             >
-              <div className="w-7 h-7 rounded-full bg-slate-300/80 dark:bg-white/[0.1] flex items-center justify-center text-slate-700 dark:text-zinc-200 shrink-0 group-hover:scale-105 transition-transform">
+              <div className="w-7 h-7 rounded-full bg-zinc-300/80 dark:bg-white/[0.1] flex items-center justify-center text-zinc-700 dark:text-zinc-200 shrink-0 group-hover:scale-105 transition-transform">
                 <User className="w-3.5 h-3.5" />
               </div>
               <div className="min-w-0">
-                <div className="text-xs font-semibold text-slate-900 dark:text-white truncate">
+                <div className="text-xs font-semibold text-zinc-900 dark:text-white truncate">
                   {user?.name || "Пользователь"}
                 </div>
               </div>
@@ -509,7 +509,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <button
                 type="button"
                 onClick={handleOpenSettings}
-                className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-300/50 dark:hover:bg-white/[0.08] transition-colors cursor-pointer"
+                className="w-7 h-7 rounded-lg flex items-center justify-center text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-300/50 dark:hover:bg-white/[0.08] transition-colors cursor-pointer"
                 title={isChaika ? "Настройки реквизитов, сотрудников и профиля СТО" : "Настройки профиля и системы"}
               >
                 <Settings className="w-3.5 h-3.5" />
@@ -519,7 +519,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <button
                 type="button"
                 onClick={toggleTheme}
-                className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-300/50 dark:hover:bg-white/[0.08] transition-colors cursor-pointer"
+                className="w-7 h-7 rounded-lg flex items-center justify-center text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-300/50 dark:hover:bg-white/[0.08] transition-colors cursor-pointer"
                 title={theme === "dark" ? "Переключить на светлую тему" : "Переключить на темную тему"}
               >
                 {theme === "dark" ? (
@@ -533,7 +533,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <button
                 type="button"
                 onClick={logout}
-                className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 transition-colors cursor-pointer"
+                className="w-7 h-7 rounded-lg flex items-center justify-center text-zinc-400 hover:text-rose-500 hover:bg-rose-500/10 transition-colors cursor-pointer"
                 title="Выйти из системы"
               >
                 <LogOut className="w-3.5 h-3.5" />
@@ -546,22 +546,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Settings Modal */}
       {showSettingsModal && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="w-full max-w-md bg-white dark:bg-[#131821] border border-slate-200 dark:border-white/[0.08] rounded-2xl p-5 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/[0.08] pb-3">
-              <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+          <div className="w-full max-w-md bg-white/95 dark:bg-zinc-950/90 backdrop-blur-2xl border border-black/[0.08] dark:border-white/10 rounded-3xl p-5 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-zinc-100 dark:border-white/[0.08] pb-3">
+              <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
                 Настройки профиля и системы
               </h3>
               <button
                 onClick={() => setShowSettingsModal(false)}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+                className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="space-y-4 text-xs text-slate-600 dark:text-slate-300">
+            <div className="space-y-4 text-xs text-zinc-600 dark:text-zinc-300">
               <div>
-                <label className="block text-slate-700 dark:text-slate-300 font-medium mb-1.5">
+                <label className="block text-zinc-700 dark:text-zinc-300 font-medium mb-1.5">
                   Ваше имя:
                 </label>
                 <input
@@ -569,38 +569,38 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   value={nameInput}
                   onChange={(e) => setNameInput(e.target.value)}
                   placeholder="Как к вам обращаться?"
-                  className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-[#0c1015] border border-slate-200 dark:border-white/[0.08] text-slate-900 dark:text-slate-100 focus:outline-none focus:border-sky-500/50"
+                  className="w-full px-3 py-2 rounded-xl bg-zinc-50 dark:bg-zinc-900/80 border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white placeholder:text-zinc-500 focus:outline-none focus:border-sky-500/50"
                 />
-                <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-1">
+                <p className="text-[11px] text-zinc-400 dark:text-zinc-500 mt-1">
                   Логин аккаунта ({user?.username}) защищен. Имя отображается в панели и используется ИИ при обращении к вам.
                 </p>
               </div>
 
               <div>
-                <label className="block text-slate-700 dark:text-slate-300 font-medium mb-1.5">
+                <label className="block text-zinc-700 dark:text-zinc-300 font-medium mb-1.5">
                   Основная модель ИИ:
                 </label>
                 <select
                   id="openrouter-model-select"
                   value={selectedModel}
                   onChange={(e) => setSelectedModel(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-[#0c1015] border border-slate-200 dark:border-white/[0.08] text-slate-900 dark:text-slate-100 focus:outline-none focus:border-sky-500/50 text-xs font-medium cursor-pointer"
+                  className="w-full px-3 py-2 rounded-xl bg-zinc-50 dark:bg-zinc-900/80 border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:border-sky-500/50 text-xs font-medium cursor-pointer"
                 >
                   <option value="anthropic/claude-sonnet-4.6">Claude Sonnet 4.6 (Основной флагман, рекомендуется)</option>
                   <option value="openai/gpt-5.4">OpenAI GPT-5.4 (Резервный флагман)</option>
                   <option value="google/gemini-3.8-flash">Google Gemini 4 Argon (Высокопроизводительный резерв)</option>
                 </select>
-                <p className="text-[10px] text-slate-400 mt-1">
+                <p className="text-[10px] text-zinc-400 mt-1">
                   Выбранная модель сохраняется в облаке Supabase и используется как приоритетная с автоматическим отказоустойчивым резервированием.
                 </p>
               </div>
 
-              <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#0c1015] border border-slate-200 dark:border-white/[0.08] flex items-center justify-between">
+              <div className="p-3 rounded-2xl bg-zinc-50 dark:bg-zinc-900/80 border border-zinc-200 dark:border-white/10 flex items-center justify-between">
                 <div>
-                  <div className="font-medium text-slate-800 dark:text-slate-200">
+                  <div className="font-medium text-zinc-800 dark:text-zinc-200">
                     Почтовые ящики (Мульти-IMAP)
                   </div>
-                  <div className="text-[11px] text-slate-400 mt-0.5">
+                  <div className="text-[11px] text-zinc-400 mt-0.5">
                     Управление подключениями IMAP/SMTP для недропользования
                   </div>
                 </div>
@@ -610,7 +610,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     setShowSettingsModal(false);
                     onSelectTab("smart-mail");
                   }}
-                  className="px-3 py-1.5 rounded-lg bg-sky-500/10 text-sky-600 dark:text-sky-400 hover:bg-sky-500/20 text-xs font-medium transition-colors cursor-pointer shrink-0 ml-2"
+                  className="px-3 py-1.5 rounded-full bg-sky-500/10 text-sky-600 dark:text-sky-400 hover:bg-sky-500/20 text-xs font-medium transition-colors cursor-pointer shrink-0 ml-2"
                 >
                   В Умную почту
                 </button>
@@ -649,7 +649,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   setIsSavingSettings(false);
                   setShowSettingsModal(false);
                 }}
-                className="px-4 py-1.5 rounded-lg bg-sky-500 hover:bg-sky-400 text-white font-medium text-xs transition-colors cursor-pointer"
+                className="px-5 py-2 rounded-full bg-sky-500 hover:bg-sky-400 text-white font-medium text-xs transition-colors cursor-pointer shadow-md shadow-sky-500/20"
               >
                 {isSavingSettings ? "Сохранение..." : "Сохранить"}
               </button>

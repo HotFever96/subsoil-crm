@@ -67,10 +67,10 @@ export const FileArtifactCard: React.FC<FileArtifactCardProps> = ({
                 <FileSpreadsheet className="w-5 h-5" />
               </div>
               <div className="min-w-0">
-                <h4 className="text-sm font-semibold text-slate-900 dark:text-slate-100 truncate">
+                <h4 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate">
                   {excelData.filename}
                 </h4>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
+                <p className="text-xs text-zinc-500 dark:text-zinc-400">
                   Таблица Excel (.xlsx) • {excelData.sheets.length} лист(ов) • {totalRows} строк
                 </p>
               </div>
@@ -80,7 +80,7 @@ export const FileArtifactCard: React.FC<FileArtifactCardProps> = ({
               <button
                 type="button"
                 onClick={() => setIsPreviewOpen(true)}
-                className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/[0.1] hover:bg-slate-100 dark:hover:bg-slate-700 text-xs font-medium flex items-center space-x-1.5 transition-colors cursor-pointer shadow-2xs"
+                className="px-3 py-1.5 rounded-lg bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-white/[0.1] hover:bg-zinc-100 dark:hover:bg-zinc-700 text-xs font-medium flex items-center space-x-1.5 transition-colors cursor-pointer shadow-2xs"
               >
                 <Eye className="w-3.5 h-3.5" />
                 <span>Просмотр</span>
@@ -109,16 +109,16 @@ export const FileArtifactCard: React.FC<FileArtifactCardProps> = ({
 
         {/* Excel Preview Modal */}
         {isPreviewOpen && (
-          <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-            <div className="w-full max-w-4xl max-h-[85vh] bg-white dark:bg-[#131821] border border-slate-200 dark:border-white/[0.1] rounded-2xl shadow-2xl flex flex-col overflow-hidden">
-              <div className="px-5 py-4 border-b border-slate-200 dark:border-white/[0.08] flex items-center justify-between shrink-0">
+          <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-4">
+            <div className="w-full max-w-4xl max-h-[85vh] bg-white/95 dark:bg-zinc-950/90 backdrop-blur-2xl border border-black/[0.08] dark:border-white/10 rounded-3xl shadow-2xl flex flex-col overflow-hidden">
+              <div className="px-5 py-4 border-b border-zinc-200 dark:border-white/[0.08] flex items-center justify-between shrink-0">
                 <div className="flex items-center space-x-2.5 min-w-0">
                   <FileSpreadsheet className="w-5 h-5 text-emerald-500 shrink-0" />
                   <div>
-                    <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 truncate">
+                    <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate">
                       {excelData.filename}
                     </h3>
-                    <p className="text-xs text-slate-400">
+                    <p className="text-xs text-zinc-400">
                       Предварительный просмотр таблицы • Всего {totalRows} записей
                     </p>
                   </div>
@@ -127,14 +127,14 @@ export const FileArtifactCard: React.FC<FileArtifactCardProps> = ({
                 <div className="flex items-center space-x-2">
                   <button
                     onClick={handleDownload}
-                    className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium flex items-center space-x-1.5 cursor-pointer"
+                    className="px-3 py-1.5 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium flex items-center space-x-1.5 cursor-pointer shadow-md shadow-emerald-600/20"
                   >
                     <Download className="w-3.5 h-3.5" />
                     <span>Скачать .xlsx</span>
                   </button>
                   <button
                     onClick={() => setIsPreviewOpen(false)}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+                    className="p-1.5 rounded-full text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 cursor-pointer"
                   >
                     <X className="w-5 h-5" />
                   </button>
@@ -143,15 +143,15 @@ export const FileArtifactCard: React.FC<FileArtifactCardProps> = ({
 
               {/* Sheet tabs if multiple */}
               {excelData.sheets.length > 1 && (
-                <div className="px-5 pt-2 border-b border-slate-100 dark:border-white/[0.04] flex space-x-2 overflow-x-auto shrink-0 bg-slate-50 dark:bg-[#0e1218]">
+                <div className="px-5 pt-2 border-b border-zinc-100 dark:border-white/[0.04] flex space-x-2 overflow-x-auto shrink-0 bg-zinc-50 dark:bg-zinc-900/50">
                   {excelData.sheets.map((s, idx) => (
                     <button
                       key={idx}
                       onClick={() => setActiveSheetIndex(idx)}
-                      className={`px-3 py-1.5 text-xs font-medium rounded-t-lg border-b-2 cursor-pointer transition-colors ${
+                      className={`px-3 py-1.5 text-xs font-medium rounded-t-xl border-b-2 cursor-pointer transition-colors ${
                         activeSheetIndex === idx
-                          ? "border-emerald-500 text-emerald-600 dark:text-emerald-400 bg-white dark:bg-[#131821]"
-                          : "border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-200"
+                          ? "border-emerald-500 text-emerald-600 dark:text-emerald-400 bg-white dark:bg-zinc-900/80"
+                          : "border-transparent text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200"
                       }`}
                     >
                       {s.name} ({s.rows.length})
@@ -163,30 +163,30 @@ export const FileArtifactCard: React.FC<FileArtifactCardProps> = ({
               {/* Table Data */}
               <div className="flex-1 overflow-auto p-4 min-h-0">
                 {activeSheet ? (
-                  <div className="overflow-x-auto border border-slate-200 dark:border-white/[0.08] rounded-xl">
+                  <div className="overflow-x-auto border border-zinc-200 dark:border-white/[0.08] rounded-xl">
                     <table className="w-full text-xs text-left border-collapse">
                       {activeSheet.headers && activeSheet.headers.length > 0 && (
-                        <thead className="bg-slate-100 dark:bg-white/[0.04] text-slate-700 dark:text-slate-200 border-b border-slate-200 dark:border-white/[0.08] sticky top-0">
+                        <thead className="bg-zinc-100 dark:bg-white/[0.04] text-zinc-700 dark:text-zinc-200 border-b border-zinc-200 dark:border-white/[0.08] sticky top-0">
                           <tr>
-                            <th className="py-2.5 px-3 font-semibold w-10 text-slate-400 text-center border-r border-slate-200 dark:border-white/[0.08]">
+                            <th className="py-2.5 px-3 font-semibold w-10 text-zinc-400 text-center border-r border-zinc-200 dark:border-white/[0.08]">
                               #
                             </th>
                             {activeSheet.headers.map((h, i) => (
-                              <th key={i} className="py-2.5 px-3 font-semibold border-r border-slate-200 dark:border-white/[0.08] last:border-r-0 whitespace-nowrap">
+                              <th key={i} className="py-2.5 px-3 font-semibold border-r border-zinc-200 dark:border-white/[0.08] last:border-r-0 whitespace-nowrap">
                                 {h}
                               </th>
                             ))}
                           </tr>
                         </thead>
                       )}
-                      <tbody className="divide-y divide-slate-200 dark:divide-white/[0.06] text-slate-800 dark:text-slate-200">
+                      <tbody className="divide-y divide-zinc-200 dark:divide-white/[0.06] text-zinc-800 dark:text-zinc-200">
                         {activeSheet.rows.map((row, rIdx) => (
-                          <tr key={rIdx} className="hover:bg-slate-50 dark:hover:bg-white/[0.02]">
-                            <td className="py-2 px-3 text-center text-slate-400 font-mono border-r border-slate-200 dark:border-white/[0.08] bg-slate-50/50 dark:bg-white/[0.01]">
+                          <tr key={rIdx} className="hover:bg-zinc-50 dark:hover:bg-white/[0.02]">
+                            <td className="py-2 px-3 text-center text-zinc-400 font-mono border-r border-zinc-200 dark:border-white/[0.08] bg-zinc-50/50 dark:bg-white/[0.01]">
                               {rIdx + 1}
                             </td>
                             {row.map((cell, cIdx) => (
-                              <td key={cIdx} className="py-2 px-3 border-r border-slate-200 dark:border-white/[0.08] last:border-r-0 whitespace-nowrap">
+                              <td key={cIdx} className="py-2 px-3 border-r border-zinc-200 dark:border-white/[0.08] last:border-r-0 whitespace-nowrap">
                                 {String(cell ?? "")}
                               </td>
                             ))}
@@ -196,7 +196,7 @@ export const FileArtifactCard: React.FC<FileArtifactCardProps> = ({
                     </table>
                   </div>
                 ) : (
-                  <p className="text-xs text-slate-400 text-center py-8">Нет данных для отображения</p>
+                  <p className="text-xs text-zinc-400 text-center py-8">Нет данных для отображения</p>
                 )}
               </div>
             </div>
@@ -224,10 +224,10 @@ export const FileArtifactCard: React.FC<FileArtifactCardProps> = ({
                 <Presentation className="w-5 h-5" />
               </div>
               <div className="min-w-0">
-                <h4 className="text-sm font-semibold text-slate-900 dark:text-slate-100 truncate">
+                <h4 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate">
                   {presentationData.filename}
                 </h4>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
+                <p className="text-xs text-zinc-500 dark:text-zinc-400">
                   Презентация PowerPoint (.pptx) • {presentationData.slides.length} слайдов • Формат 16:9
                 </p>
               </div>
@@ -237,7 +237,7 @@ export const FileArtifactCard: React.FC<FileArtifactCardProps> = ({
               <button
                 type="button"
                 onClick={() => setIsPreviewOpen(true)}
-                className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/[0.1] hover:bg-slate-100 dark:hover:bg-slate-700 text-xs font-medium flex items-center space-x-1.5 transition-colors cursor-pointer shadow-2xs"
+                className="px-3 py-1.5 rounded-lg bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-white/[0.1] hover:bg-zinc-100 dark:hover:bg-zinc-700 text-xs font-medium flex items-center space-x-1.5 transition-colors cursor-pointer shadow-2xs"
               >
                 <Eye className="w-3.5 h-3.5" />
                 <span>Смотреть слайды</span>
@@ -266,16 +266,16 @@ export const FileArtifactCard: React.FC<FileArtifactCardProps> = ({
 
         {/* Presentation Slide Carousel Modal */}
         {isPreviewOpen && (
-          <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-4">
-            <div className="w-full max-w-4xl bg-[#0f172a] border border-white/[0.1] rounded-2xl shadow-2xl flex flex-col overflow-hidden text-white">
-              <div className="px-5 py-4 border-b border-white/[0.08] flex items-center justify-between shrink-0 bg-[#0a101d]">
+          <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-4">
+            <div className="w-full max-w-4xl bg-zinc-950 border border-white/10 rounded-3xl shadow-2xl flex flex-col overflow-hidden text-white">
+              <div className="px-5 py-4 border-b border-white/[0.08] flex items-center justify-between shrink-0 bg-zinc-900/60">
                 <div className="flex items-center space-x-2.5 min-w-0">
                   <Presentation className="w-5 h-5 text-amber-400 shrink-0" />
                   <div className="min-w-0">
-                    <h3 className="text-sm font-semibold truncate text-slate-100">
+                    <h3 className="text-sm font-semibold truncate text-zinc-100">
                       {presentationData.title}
                     </h3>
-                    <p className="text-xs text-slate-400">
+                    <p className="text-xs text-zinc-400">
                       Слайд {activeSlideIndex + 1} из {presentationData.slides.length}
                     </p>
                   </div>
@@ -284,14 +284,14 @@ export const FileArtifactCard: React.FC<FileArtifactCardProps> = ({
                 <div className="flex items-center space-x-2">
                   <button
                     onClick={handleDownload}
-                    className="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-medium flex items-center space-x-1.5 cursor-pointer"
+                    className="px-3 py-1.5 rounded-full bg-amber-600 hover:bg-amber-500 text-white text-xs font-medium flex items-center space-x-1.5 cursor-pointer shadow-md shadow-amber-600/20"
                   >
                     <Download className="w-3.5 h-3.5" />
                     <span>Скачать .pptx</span>
                   </button>
                   <button
                     onClick={() => setIsPreviewOpen(false)}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-white cursor-pointer"
+                    className="p-1.5 rounded-full text-zinc-400 hover:text-white cursor-pointer"
                   >
                     <X className="w-5 h-5" />
                   </button>
@@ -299,7 +299,7 @@ export const FileArtifactCard: React.FC<FileArtifactCardProps> = ({
               </div>
 
               {/* Active Slide Canvas Preview */}
-              <div className="p-8 sm:p-12 flex flex-col justify-center min-h-[380px] bg-gradient-to-br from-[#0f172a] to-[#1e293b] relative">
+              <div className="p-8 sm:p-12 flex flex-col justify-center min-h-[380px] bg-gradient-to-br from-zinc-950 to-zinc-900 relative">
                 {currentSlide && (
                   <div className="max-w-2xl mx-auto w-full space-y-6">
                     <div className="border-l-4 border-sky-400 pl-4">
@@ -311,14 +311,14 @@ export const FileArtifactCard: React.FC<FileArtifactCardProps> = ({
                     {currentSlide.bullets && currentSlide.bullets.length > 0 ? (
                       <ul className="space-y-3 pl-2">
                         {currentSlide.bullets.map((b, idx) => (
-                          <li key={idx} className="flex items-start space-x-3 text-slate-200 text-base leading-relaxed">
+                          <li key={idx} className="flex items-start space-x-3 text-zinc-200 text-base leading-relaxed">
                             <span className="w-2 h-2 rounded-full bg-sky-400 mt-2 shrink-0" />
                             <span>{b}</span>
                           </li>
                         ))}
                       </ul>
                     ) : currentSlide.content ? (
-                      <p className="text-slate-200 text-base leading-relaxed pl-2 whitespace-pre-wrap">
+                      <p className="text-zinc-200 text-base leading-relaxed pl-2 whitespace-pre-wrap">
                         {currentSlide.content}
                       </p>
                     ) : null}
@@ -344,8 +344,8 @@ export const FileArtifactCard: React.FC<FileArtifactCardProps> = ({
                       onClick={() => setActiveSlideIndex(idx)}
                       className={`w-6 h-6 rounded-md text-xs font-medium transition-colors cursor-pointer ${
                         activeSlideIndex === idx
-                          ? "bg-amber-500 text-slate-950 font-bold"
-                          : "bg-white/10 text-slate-400 hover:bg-white/20 hover:text-white"
+                          ? "bg-amber-500 text-zinc-950 font-bold"
+                          : "bg-white/10 text-zinc-400 hover:bg-white/20 hover:text-white"
                       }`}
                     >
                       {idx + 1}
@@ -404,10 +404,10 @@ export const FileArtifactCard: React.FC<FileArtifactCardProps> = ({
                 <FileText className="w-5 h-5" />
               </div>
               <div className="min-w-0">
-                <h4 className="text-sm font-semibold text-slate-900 dark:text-slate-100 truncate">
+                <h4 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate">
                   {documentData.filename}
                 </h4>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
+                <p className="text-xs text-zinc-500 dark:text-zinc-400">
                   Документ • {documentData.sections.length} раздел(ов) • Доступен экспорт в Word и PDF
                 </p>
               </div>
@@ -417,7 +417,7 @@ export const FileArtifactCard: React.FC<FileArtifactCardProps> = ({
               <button
                 type="button"
                 onClick={() => setIsPreviewOpen(true)}
-                className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/[0.1] hover:bg-slate-100 dark:hover:bg-slate-700 text-xs font-medium flex items-center space-x-1.5 transition-colors cursor-pointer shadow-2xs"
+                className="px-3 py-1.5 rounded-lg bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-white/[0.1] hover:bg-zinc-100 dark:hover:bg-zinc-700 text-xs font-medium flex items-center space-x-1.5 transition-colors cursor-pointer shadow-2xs"
               >
                 <Eye className="w-3.5 h-3.5" />
                 <span>Просмотр</span>
@@ -456,37 +456,37 @@ export const FileArtifactCard: React.FC<FileArtifactCardProps> = ({
 
         {/* Document Preview Modal */}
         {isPreviewOpen && (
-          <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-            <div className="w-full max-w-3xl max-h-[85vh] bg-white dark:bg-[#131821] border border-slate-200 dark:border-white/[0.1] rounded-2xl shadow-2xl flex flex-col overflow-hidden">
-              <div className="px-5 py-4 border-b border-slate-200 dark:border-white/[0.08] flex items-center justify-between shrink-0">
+          <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-4">
+            <div className="w-full max-w-3xl max-h-[85vh] bg-white/95 dark:bg-zinc-950/90 backdrop-blur-2xl border border-black/[0.08] dark:border-white/10 rounded-3xl shadow-2xl flex flex-col overflow-hidden">
+              <div className="px-5 py-4 border-b border-zinc-200 dark:border-white/[0.08] flex items-center justify-between shrink-0">
                 <div className="flex items-center space-x-2.5 min-w-0">
                   <FileText className="w-5 h-5 text-sky-500 shrink-0" />
                   <div>
-                    <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 truncate">
+                    <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate">
                       {documentData.title}
                     </h3>
-                    <p className="text-xs text-slate-400">Предварительный просмотр документа</p>
+                    <p className="text-xs text-zinc-400">Предварительный просмотр документа</p>
                   </div>
                 </div>
 
                 <div className="flex items-center space-x-2">
                   <button
                     onClick={handlePrintPdf}
-                    className="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-medium flex items-center space-x-1.5 cursor-pointer"
+                    className="px-3 py-1.5 rounded-full bg-rose-600 hover:bg-rose-500 text-white text-xs font-medium flex items-center space-x-1.5 cursor-pointer shadow-md shadow-rose-600/20"
                   >
                     <Printer className="w-3.5 h-3.5" />
                     <span>В PDF</span>
                   </button>
                   <button
                     onClick={handleDownloadDocx}
-                    className="px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-medium flex items-center space-x-1.5 cursor-pointer"
+                    className="px-3 py-1.5 rounded-full bg-sky-600 hover:bg-sky-500 text-white text-xs font-medium flex items-center space-x-1.5 cursor-pointer shadow-md shadow-sky-600/20"
                   >
                     <Download className="w-3.5 h-3.5" />
                     <span>Скачать .docx</span>
                   </button>
                   <button
                     onClick={() => setIsPreviewOpen(false)}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+                    className="p-1.5 rounded-full text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 cursor-pointer"
                   >
                     <X className="w-5 h-5" />
                   </button>
@@ -494,20 +494,20 @@ export const FileArtifactCard: React.FC<FileArtifactCardProps> = ({
               </div>
 
               {/* Document Body */}
-              <div className="flex-1 overflow-auto p-6 space-y-6 text-sm text-slate-800 dark:text-slate-200 min-h-0 bg-slate-50/50 dark:bg-[#0c1015]">
-                <div className="max-w-2xl mx-auto bg-white dark:bg-[#131821] p-8 rounded-xl border border-slate-200/80 dark:border-white/[0.08] shadow-sm space-y-5">
+              <div className="flex-1 overflow-auto p-6 space-y-6 text-sm text-zinc-800 dark:text-zinc-200 min-h-0 bg-zinc-50/50 dark:bg-zinc-950">
+                <div className="max-w-2xl mx-auto bg-white/90 dark:bg-zinc-900/80 p-8 rounded-2xl border border-zinc-200/80 dark:border-white/[0.08] shadow-sm space-y-5">
                   <div>
-                    <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
+                    <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
                       {documentData.title}
                     </h1>
                     {documentData.subtitle && (
-                      <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 italic">
+                      <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1 italic">
                         {documentData.subtitle}
                       </p>
                     )}
                   </div>
 
-                  <div className="border-t border-slate-100 dark:border-white/[0.06] pt-4 space-y-5">
+                  <div className="border-t border-zinc-100 dark:border-white/[0.06] pt-4 space-y-5">
                     {documentData.sections.map((sec, idx) => (
                       <div key={idx} className="space-y-2">
                         {sec.heading && (

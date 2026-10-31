@@ -433,7 +433,7 @@ export const ElectronicArchive: React.FC = () => {
         );
       default:
         return (
-          <span className="px-2 py-0.5 rounded text-[11px] font-medium bg-slate-500/10 text-slate-600 dark:text-slate-400">
+          <span className="px-2 py-0.5 rounded text-[11px] font-medium bg-zinc-500/10 text-zinc-600 dark:text-zinc-400">
             Загружено пользователем
           </span>
         );
@@ -451,7 +451,7 @@ export const ElectronicArchive: React.FC = () => {
       case "pdf":
         return <FileText className="w-5 h-5 text-rose-500" />;
       default:
-        return <File className="w-5 h-5 text-slate-400" />;
+        return <File className="w-5 h-5 text-zinc-400" />;
     }
   };
 
@@ -470,15 +470,15 @@ export const ElectronicArchive: React.FC = () => {
             <FolderArchive className="w-5 h-5" />
           </div>
           <div>
-            <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center space-x-2.5">
+            <h1 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-white flex items-center space-x-2.5">
               <span>Электронный архив</span>
-              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-200/60 dark:bg-white/[0.06] text-slate-600 dark:text-zinc-400">
+              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-zinc-200/60 dark:bg-white/[0.06] text-zinc-600 dark:text-zinc-400">
                 {filteredItems.length} документов
               </span>
               <div className="relative group inline-block">
                 <button
                   type="button"
-                  className="p-1 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 transition-colors cursor-pointer"
+                  className="p-1 rounded-full text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors cursor-pointer"
                   title="Справка"
                 >
                   <HelpCircle className="w-4 h-4" />
@@ -503,7 +503,7 @@ export const ElectronicArchive: React.FC = () => {
                   ? isChaika
                     ? "bg-rose-600 text-white shadow-md font-semibold"
                     : "bg-sky-600 text-white shadow-md font-semibold"
-                  : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
+                  : "text-zinc-500 hover:text-zinc-900 dark:hover:text-white"
               }`}
               title="Таблица (компактный список)"
             >
@@ -516,7 +516,7 @@ export const ElectronicArchive: React.FC = () => {
                   ? isChaika
                     ? "bg-rose-600 text-white shadow-md font-semibold"
                     : "bg-sky-600 text-white shadow-md font-semibold"
-                  : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
+                  : "text-zinc-500 hover:text-zinc-900 dark:hover:text-white"
               }`}
               title="Сетка карточек"
             >
@@ -564,7 +564,7 @@ export const ElectronicArchive: React.FC = () => {
                     ? isChaika
                       ? "bg-rose-600 text-white shadow-md shadow-rose-600/20 font-bold"
                       : "bg-sky-600 text-white shadow-md shadow-sky-600/20 font-bold"
-                    : "bg-white/50 dark:bg-white/[0.04] text-slate-600 dark:text-zinc-400 hover:text-white border border-black/[0.04] dark:border-white/[0.06]"
+                    : "bg-white/50 dark:bg-white/[0.04] text-zinc-600 dark:text-zinc-400 hover:text-white border border-black/[0.04] dark:border-white/[0.06]"
                 }`}
               >
                 <span>{cat.label}</span>
@@ -572,7 +572,7 @@ export const ElectronicArchive: React.FC = () => {
                   className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
                     isActive
                       ? "bg-white/20 text-white"
-                      : "bg-slate-200 dark:bg-white/[0.1] text-slate-500 dark:text-zinc-400"
+                      : "bg-zinc-200 dark:bg-white/[0.1] text-zinc-500 dark:text-zinc-400"
                   }`}
                 >
                   {count}
@@ -584,18 +584,18 @@ export const ElectronicArchive: React.FC = () => {
 
         {/* Search input */}
         <div className="relative min-w-[260px]">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <Search className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
             placeholder="Поиск по названию или тегам..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-8 py-1.5 rounded-full bg-white/60 dark:bg-white/[0.06] border border-black/[0.05] dark:border-white/[0.08] text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-hidden backdrop-blur-md"
+            className="w-full pl-9 pr-8 py-1.5 rounded-full bg-white/60 dark:bg-white/[0.06] border border-black/[0.05] dark:border-white/[0.08] text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-hidden backdrop-blur-md"
           />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery("")}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 cursor-pointer"
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -607,13 +607,13 @@ export const ElectronicArchive: React.FC = () => {
       <div className="flex-1 overflow-y-auto p-6">
         {filteredItems.length === 0 ? (
           <div className="h-full min-h-[300px] flex flex-col items-center justify-center text-center p-8">
-            <div className="w-14 h-14 rounded-2xl bg-slate-100 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] flex items-center justify-center text-slate-400 mb-3.5">
+            <div className="w-14 h-14 rounded-2xl bg-zinc-100 dark:bg-white/[0.04] border border-zinc-200 dark:border-white/[0.08] flex items-center justify-center text-zinc-400 mb-3.5">
               <FolderArchive className="w-7 h-7" />
             </div>
-            <h3 className="text-base font-semibold text-slate-800 dark:text-slate-200">
+            <h3 className="text-base font-semibold text-zinc-800 dark:text-zinc-200">
               {searchQuery ? "Ничего не найдено" : "В этой категории пока нет документов"}
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mt-1">
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 max-w-sm mt-1">
               {searchQuery
                 ? `По запросу «${searchQuery}» совпадений не обнаружено. Попробуйте изменить формулировку.`
                 : isChaika
@@ -639,7 +639,7 @@ export const ElectronicArchive: React.FC = () => {
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
-                  <tr className="bg-slate-50 dark:bg-zinc-900/60 text-slate-500 dark:text-zinc-400 border-b border-slate-200 dark:border-zinc-800">
+                  <tr className="bg-zinc-50 dark:bg-zinc-900/60 text-zinc-500 dark:text-zinc-400 border-b border-zinc-200 dark:border-zinc-800">
                     <th className="p-3 font-semibold w-12 text-center">Формат</th>
                     <th className="p-3 font-semibold">Название документа</th>
                     <th className="p-3 font-semibold">Источник / Теги</th>
@@ -648,27 +648,27 @@ export const ElectronicArchive: React.FC = () => {
                     <th className="p-3 font-semibold text-right w-36">Действия</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-zinc-800/80">
+                <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800/80">
                   {filteredItems.map((item) => {
                     const isDownloaded = downloadSuccessId === item.id;
                     return (
                       <tr
                         key={item.id}
-                        className="hover:bg-slate-50/80 dark:hover:bg-zinc-800/40 transition-colors group cursor-pointer"
+                        className="hover:bg-zinc-50/80 dark:hover:bg-zinc-800/40 transition-colors group cursor-pointer"
                         onClick={() => setPreviewItem(item)}
                       >
                         <td className="p-3 text-center">
-                          <div className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-white/[0.05] border border-slate-200/60 dark:border-white/[0.06] flex items-center justify-center mx-auto">
+                          <div className="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-white/[0.05] border border-zinc-200/60 dark:border-white/[0.06] flex items-center justify-center mx-auto">
                             {getFileTypeIcon(item.fileType)}
                           </div>
                         </td>
 
                         <td className="p-3">
-                          <div className="font-semibold text-slate-900 dark:text-slate-100 group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors truncate max-w-md">
+                          <div className="font-semibold text-zinc-900 dark:text-zinc-100 group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors truncate max-w-md">
                             {item.name}
                           </div>
                           {item.metadata?.description && (
-                            <div className="text-[11px] text-slate-400 truncate max-w-md mt-0.5">
+                            <div className="text-[11px] text-zinc-400 truncate max-w-md mt-0.5">
                               {item.metadata.description}
                             </div>
                           )}
@@ -680,7 +680,7 @@ export const ElectronicArchive: React.FC = () => {
                             {item.metadata?.tags?.slice(0, 2).map((t, idx) => (
                               <span
                                 key={idx}
-                                className="px-2 py-0.5 rounded text-[10px] bg-slate-100 dark:bg-white/[0.04] text-slate-500 dark:text-slate-400"
+                                className="px-2 py-0.5 rounded text-[10px] bg-zinc-100 dark:bg-white/[0.04] text-zinc-500 dark:text-zinc-400"
                               >
                                 #{t}
                               </span>
@@ -688,11 +688,11 @@ export const ElectronicArchive: React.FC = () => {
                           </div>
                         </td>
 
-                        <td className="p-3 text-right font-mono text-slate-600 dark:text-zinc-400">
+                        <td className="p-3 text-right font-mono text-zinc-600 dark:text-zinc-400">
                           {item.size}
                         </td>
 
-                        <td className="p-3 text-center text-slate-500 dark:text-zinc-400">
+                        <td className="p-3 text-center text-zinc-500 dark:text-zinc-400">
                           {item.createdAt}
                         </td>
 
@@ -701,7 +701,7 @@ export const ElectronicArchive: React.FC = () => {
                             <button
                               type="button"
                               onClick={() => setPreviewItem(item)}
-                              className="p-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.06] cursor-pointer"
+                              className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-white/[0.06] cursor-pointer"
                               title="Свойства"
                             >
                               <Eye className="w-3.5 h-3.5" />
@@ -723,7 +723,7 @@ export const ElectronicArchive: React.FC = () => {
                             <button
                               type="button"
                               onClick={() => handleDelete(item.id)}
-                              className="p-1.5 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 cursor-pointer"
+                              className="p-1.5 rounded-lg text-zinc-400 hover:text-rose-500 hover:bg-rose-500/10 cursor-pointer"
                               title="Удалить"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
@@ -745,7 +745,7 @@ export const ElectronicArchive: React.FC = () => {
               return (
                 <div
                   key={item.id}
-                  className={`rounded-2xl border border-slate-200/90 dark:border-white/[0.08] bg-white dark:bg-[#111722] p-4.5 transition-all flex flex-col justify-between group shadow-xs ${
+                  className={`rounded-2xl border border-zinc-200/90 dark:border-white/[0.08] bg-white dark:bg-[#111722] p-4.5 transition-all flex flex-col justify-between group shadow-xs ${
                     isChaika ? "hover:border-rose-500/40" : "hover:border-sky-500/40"
                   }`}
                 >
@@ -753,12 +753,12 @@ export const ElectronicArchive: React.FC = () => {
                     {/* Header: File icon + Source badge + Menu */}
                     <div className="flex items-start justify-between gap-2 mb-3">
                       <div className="flex items-center space-x-3 min-w-0">
-                        <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-white/[0.05] border border-slate-200/60 dark:border-white/[0.06] flex items-center justify-center shrink-0">
+                        <div className="w-10 h-10 rounded-xl bg-zinc-100 dark:bg-white/[0.05] border border-zinc-200/60 dark:border-white/[0.06] flex items-center justify-center shrink-0">
                           {getFileTypeIcon(item.fileType)}
                         </div>
                         <div className="min-w-0">
                           <h4
-                            className={`text-sm font-semibold text-slate-900 dark:text-slate-100 truncate cursor-pointer transition-colors ${
+                            className={`text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate cursor-pointer transition-colors ${
                               isChaika
                                 ? "hover:text-rose-600 dark:hover:text-rose-400"
                                 : "hover:text-sky-600 dark:hover:text-sky-400"
@@ -768,7 +768,7 @@ export const ElectronicArchive: React.FC = () => {
                           >
                             {item.name}
                           </h4>
-                          <p className="text-[11px] text-slate-400 flex items-center space-x-1.5 mt-0.5">
+                          <p className="text-[11px] text-zinc-400 flex items-center space-x-1.5 mt-0.5">
                             <span>{item.size}</span>
                             <span>•</span>
                             <span>{item.createdAt}</span>
@@ -778,7 +778,7 @@ export const ElectronicArchive: React.FC = () => {
 
                       <button
                         onClick={() => handleDelete(item.id)}
-                        className="text-slate-400 hover:text-rose-500 p-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                        className="text-zinc-400 hover:text-rose-500 p-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                         title="Удалить из архива"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -787,7 +787,7 @@ export const ElectronicArchive: React.FC = () => {
 
                     {/* Description & Tags */}
                     {item.metadata?.description && (
-                      <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2 mb-3 leading-relaxed">
+                      <p className="text-xs text-zinc-600 dark:text-zinc-300 line-clamp-2 mb-3 leading-relaxed">
                         {item.metadata.description}
                       </p>
                     )}
@@ -797,7 +797,7 @@ export const ElectronicArchive: React.FC = () => {
                       {item.metadata?.tags?.map((t, idx) => (
                         <span
                           key={idx}
-                          className="px-2 py-0.5 rounded text-[11px] bg-slate-100 dark:bg-white/[0.04] text-slate-500 dark:text-slate-400"
+                          className="px-2 py-0.5 rounded text-[11px] bg-zinc-100 dark:bg-white/[0.04] text-zinc-500 dark:text-zinc-400"
                         >
                           #{t}
                         </span>
@@ -806,11 +806,11 @@ export const ElectronicArchive: React.FC = () => {
                   </div>
 
                   {/* Actions Footer */}
-                  <div className="pt-3 border-t border-slate-100 dark:border-white/[0.06] flex items-center justify-between gap-2">
+                  <div className="pt-3 border-t border-zinc-100 dark:border-white/[0.06] flex items-center justify-between gap-2">
                     <button
                       type="button"
                       onClick={() => setPreviewItem(item)}
-                      className="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/[0.06] transition-colors flex items-center space-x-1.5 cursor-pointer"
+                      className="px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-white/[0.06] transition-colors flex items-center space-x-1.5 cursor-pointer"
                     >
                       <Eye className="w-3.5 h-3.5" />
                       <span>Свойства</span>
@@ -845,23 +845,23 @@ export const ElectronicArchive: React.FC = () => {
 
       {/* Preview / Metadata Modal */}
       {previewItem && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="w-full max-w-lg bg-white dark:bg-[#0e141e] border border-slate-200 dark:border-white/[0.1] rounded-2xl shadow-2xl overflow-hidden flex flex-col">
-            <div className="px-6 py-4 border-b border-slate-200 dark:border-white/[0.08] flex items-center justify-between bg-slate-50 dark:bg-[#0a0f18]">
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="w-full max-w-lg bg-white/95 dark:bg-zinc-950/90 backdrop-blur-2xl border border-black/[0.08] dark:border-white/10 rounded-3xl shadow-2xl overflow-hidden flex flex-col">
+            <div className="px-6 py-4 border-b border-zinc-200 dark:border-white/[0.08] flex items-center justify-between bg-zinc-50 dark:bg-zinc-900/60">
               <div className="flex items-center space-x-3 min-w-0">
                 {getFileTypeIcon(previewItem.fileType)}
                 <div className="min-w-0">
-                  <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 truncate">
+                  <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100 truncate">
                     {previewItem.name}
                   </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400">
                     Паспорт документа в архиве
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setPreviewItem(null)}
-                className="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+                className="p-1 rounded-lg text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -869,34 +869,34 @@ export const ElectronicArchive: React.FC = () => {
 
             <div className="p-6 space-y-4 text-xs">
               <div className="space-y-1">
-                <span className="text-slate-400 font-medium uppercase tracking-wider text-[10px]">Описание</span>
-                <p className="text-slate-800 dark:text-slate-200 text-sm leading-relaxed">
+                <span className="text-zinc-400 font-medium uppercase tracking-wider text-[10px]">Описание</span>
+                <p className="text-zinc-800 dark:text-zinc-200 text-sm leading-relaxed">
                   {previewItem.metadata?.description || "Описание не указано"}
                 </p>
               </div>
 
               <div className="grid grid-cols-2 gap-3 pt-2">
-                <div className="p-3 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200/60 dark:border-white/[0.06]">
-                  <span className="text-slate-400 text-[10px] font-semibold uppercase">Размер</span>
-                  <p className="text-slate-900 dark:text-white font-medium mt-0.5">{previewItem.size}</p>
+                <div className="p-3 rounded-xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/60 dark:border-white/[0.06]">
+                  <span className="text-zinc-400 text-[10px] font-semibold uppercase">Размер</span>
+                  <p className="text-zinc-900 dark:text-white font-medium mt-0.5">{previewItem.size}</p>
                 </div>
-                <div className="p-3 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200/60 dark:border-white/[0.06]">
-                  <span className="text-slate-400 text-[10px] font-semibold uppercase">Дата создания</span>
-                  <p className="text-slate-900 dark:text-white font-medium mt-0.5">{previewItem.createdAt}</p>
+                <div className="p-3 rounded-xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/60 dark:border-white/[0.06]">
+                  <span className="text-zinc-400 text-[10px] font-semibold uppercase">Дата создания</span>
+                  <p className="text-zinc-900 dark:text-white font-medium mt-0.5">{previewItem.createdAt}</p>
                 </div>
               </div>
 
-              <div className="p-3 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200/60 dark:border-white/[0.06] space-y-1">
-                <span className="text-slate-400 text-[10px] font-semibold uppercase">Источник данных</span>
+              <div className="p-3 rounded-xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/60 dark:border-white/[0.06] space-y-1">
+                <span className="text-zinc-400 text-[10px] font-semibold uppercase">Источник данных</span>
                 <div>{getSourceBadge(previewItem.source)}</div>
               </div>
 
               {previewItem.content && (
                 <div className="space-y-1 pt-1">
-                  <span className="text-slate-400 font-medium uppercase tracking-wider text-[10px]">
+                  <span className="text-zinc-400 font-medium uppercase tracking-wider text-[10px]">
                     Текстовый слой / Превью
                   </span>
-                  <div className="p-3 rounded-xl bg-slate-100 dark:bg-[#070b10] text-slate-700 dark:text-slate-300 max-h-36 overflow-y-auto font-mono text-[11px] leading-relaxed">
+                  <div className="p-3 rounded-xl bg-zinc-100 dark:bg-[#070b10] text-zinc-700 dark:text-zinc-300 max-h-36 overflow-y-auto font-mono text-[11px] leading-relaxed">
                     {previewItem.content.slice(0, 500)}
                     {previewItem.content.length > 500 ? "..." : ""}
                   </div>
@@ -904,11 +904,11 @@ export const ElectronicArchive: React.FC = () => {
               )}
             </div>
 
-            <div className="px-6 py-3.5 border-t border-slate-200 dark:border-white/[0.08] bg-slate-50 dark:bg-[#0a0f18] flex items-center justify-end space-x-2">
+            <div className="px-6 py-3.5 border-t border-zinc-200 dark:border-white/[0.08] bg-zinc-50 dark:bg-[#0a0f18] flex items-center justify-end space-x-2">
               <button
                 type="button"
                 onClick={() => setPreviewItem(null)}
-                className="px-4 py-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-200/60 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
+                className="px-4 py-2 rounded-xl text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200/60 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
               >
                 Закрыть
               </button>

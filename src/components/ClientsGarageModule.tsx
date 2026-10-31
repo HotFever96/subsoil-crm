@@ -400,9 +400,9 @@ export const ClientsGarageModule: React.FC = () => {
             <Users className="w-5 h-5" />
           </div>
           <div>
-            <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center space-x-2.5">
+            <h1 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-white flex items-center space-x-2.5">
               <span>Контрагенты и Автопарк</span>
-              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-200/60 dark:bg-white/[0.06] text-slate-600 dark:text-zinc-400">
+              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-zinc-200/60 dark:bg-white/[0.06] text-zinc-600 dark:text-zinc-400">
                 {allClientsList.length} контрагентов
               </span>
             </h1>
@@ -411,13 +411,13 @@ export const ClientsGarageModule: React.FC = () => {
 
         <div className="flex items-center space-x-3">
           <div className="relative min-w-[260px]">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <Search className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               type="text"
               placeholder="Поиск по клиенту, госномеру, марке..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 rounded-full bg-white/60 dark:bg-white/[0.06] border border-black/[0.05] dark:border-white/[0.08] text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-hidden backdrop-blur-md"
+              className="w-full pl-9 pr-4 py-2 rounded-full bg-white/60 dark:bg-white/[0.06] border border-black/[0.05] dark:border-white/[0.08] text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-hidden backdrop-blur-md"
             />
           </div>
 
@@ -437,10 +437,10 @@ export const ClientsGarageModule: React.FC = () => {
         {/* Left Column: Clients List */}
         <div className="w-full md:w-80 lg:w-96 border-r border-black/[0.04] dark:border-white/[0.06] bg-white/50 dark:bg-black/20 backdrop-blur-xl overflow-y-auto divide-y divide-black/[0.03] dark:divide-white/[0.04]">
           {filteredClients.length === 0 ? (
-            <div className="p-8 text-center text-slate-400 text-xs">
+            <div className="p-8 text-center text-zinc-400 text-xs">
               <Users className="w-8 h-8 mx-auto mb-2 opacity-30" />
-              <p className="font-semibold text-slate-600 dark:text-slate-300">База контрагентов пуста</p>
-              <p className="text-[11px] text-slate-400 mt-1">
+              <p className="font-semibold text-zinc-600 dark:text-zinc-300">База контрагентов пуста</p>
+              <p className="text-[11px] text-zinc-400 mt-1">
                 Нажмите «+ Добавить клиента» в шапке для внесения первого контрагента
               </p>
             </div>
@@ -454,19 +454,19 @@ export const ClientsGarageModule: React.FC = () => {
                   className={`p-4 transition-colors cursor-pointer ${
                     isSelected
                       ? "bg-red-500/10 border-l-4 border-red-500"
-                      : "hover:bg-slate-50 dark:hover:bg-white/[0.02]"
+                      : "hover:bg-zinc-50 dark:hover:bg-white/[0.02]"
                   }`}
                 >
                   <div className="flex items-start justify-between">
-                    <div className="font-bold text-xs text-slate-900 dark:text-slate-100">
+                    <div className="font-bold text-xs text-zinc-900 dark:text-zinc-100">
                       {client.name}
                     </div>
-                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-white/[0.06] text-slate-500">
+                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-white/[0.06] text-zinc-500">
                       {client.vehicles.length} ТС
                     </span>
                   </div>
 
-                  <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 flex items-center space-x-1">
+                  <div className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-1 flex items-center space-x-1">
                     <Phone className="w-3 h-3" />
                     <span>{client.phone || "Телефон не указан"}</span>
                   </div>
@@ -475,7 +475,7 @@ export const ClientsGarageModule: React.FC = () => {
                     {client.vehicles.map((v) => (
                       <span
                         key={v.licensePlate}
-                        className="px-1.5 py-0.5 rounded font-mono font-bold text-[10px] bg-slate-100 dark:bg-white/[0.06] text-slate-800 dark:text-slate-200"
+                        className="px-1.5 py-0.5 rounded font-mono font-bold text-[10px] bg-zinc-100 dark:bg-white/[0.06] text-zinc-800 dark:text-zinc-200"
                       >
                         {v.licensePlate}
                       </span>
@@ -484,7 +484,7 @@ export const ClientsGarageModule: React.FC = () => {
 
                   <div className="text-[11px] text-red-600 dark:text-red-400 font-bold mt-2 flex items-center justify-between">
                     <span>Выручка: {formatCurrency(client.totalSpent)}</span>
-                    <span className="text-[10px] text-slate-400 font-normal">
+                    <span className="text-[10px] text-zinc-400 font-normal">
                       {client.orders.length} заказов
                     </span>
                   </div>
@@ -499,21 +499,21 @@ export const ClientsGarageModule: React.FC = () => {
           {activeClient ? (
             <>
               {/* Client Profile Header */}
-              <div className="p-5 rounded-2xl bg-white dark:bg-[#0e141e] border border-slate-200 dark:border-white/[0.08] shadow-2xs">
+              <div className="p-5 rounded-3xl bg-white/80 dark:bg-white/[0.03] border border-black/[0.06] dark:border-white/[0.08] backdrop-blur-xl shadow-2xs">
                 <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                   <div>
                     <div className="flex items-center space-x-2.5">
-                      <h2 className="text-base font-bold text-slate-900 dark:text-slate-100">
+                      <h2 className="text-base font-bold text-zinc-900 dark:text-zinc-100">
                         {activeClient.name}
                       </h2>
-                      <span className="text-[11px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-white/[0.06] text-slate-600 dark:text-slate-300 font-medium">
+                      <span className="text-[11px] px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-white/[0.06] text-zinc-600 dark:text-zinc-300 font-medium">
                         {activeClient.type === "legal" ? "Юридическое лицо / ИП" : "Физическое лицо"}
                       </span>
                     </div>
 
-                    <div className="text-xs text-slate-500 dark:text-slate-400 mt-1.5 flex flex-wrap items-center gap-3">
+                    <div className="text-xs text-zinc-500 dark:text-zinc-400 mt-1.5 flex flex-wrap items-center gap-3">
                       <span className="flex items-center space-x-1">
-                        <Phone className="w-3.5 h-3.5 text-slate-400" />
+                        <Phone className="w-3.5 h-3.5 text-zinc-400" />
                         <span>{activeClient.phone || "—"}</span>
                       </span>
                       {activeClient.inn && (
@@ -524,17 +524,17 @@ export const ClientsGarageModule: React.FC = () => {
 
                   <div className="flex items-center space-x-3">
                     <div className="text-right">
-                      <span className="text-[10px] uppercase font-bold text-slate-400">Общая сумма ремонтов:</span>
+                      <span className="text-[10px] uppercase font-bold text-zinc-400">Общая сумма ремонтов:</span>
                       <div className="text-lg font-extrabold text-red-600 dark:text-red-400">
                         {formatCurrency(activeClient.totalSpent)}
                       </div>
                     </div>
 
-                    <div className="flex items-center space-x-1 pl-2 border-l border-slate-200 dark:border-white/[0.08]">
+                    <div className="flex items-center space-x-1 pl-2 border-l border-zinc-200 dark:border-white/[0.08]">
                       <button
                         type="button"
                         onClick={() => handleOpenEditClientModal(activeClient)}
-                        className="p-2 rounded-xl border border-slate-200 dark:border-white/[0.08] hover:bg-slate-100 dark:hover:bg-white/[0.04] text-slate-600 dark:text-slate-300 cursor-pointer"
+                        className="p-2 rounded-xl border border-zinc-200 dark:border-white/[0.08] hover:bg-zinc-100 dark:hover:bg-white/[0.04] text-zinc-600 dark:text-zinc-300 cursor-pointer"
                         title="Редактировать клиента"
                       >
                         <Edit className="w-4 h-4" />
@@ -542,7 +542,7 @@ export const ClientsGarageModule: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => handleDeleteClient(activeClient)}
-                        className="p-2 rounded-xl border border-slate-200 dark:border-white/[0.08] hover:bg-rose-50 dark:hover:bg-rose-500/10 text-slate-400 hover:text-rose-500 cursor-pointer"
+                        className="p-2 rounded-xl border border-zinc-200 dark:border-white/[0.08] hover:bg-rose-50 dark:hover:bg-rose-500/10 text-zinc-400 hover:text-rose-500 cursor-pointer"
                         title="Удалить клиента"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -555,7 +555,7 @@ export const ClientsGarageModule: React.FC = () => {
               {/* Garage Cards */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-bold text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center space-x-1.5">
+                  <h3 className="font-bold text-xs uppercase tracking-wider text-zinc-500 dark:text-zinc-400 flex items-center space-x-1.5">
                     <Car className="w-4 h-4 text-red-500" />
                     <span>Автомобили в автопарке ({activeClient.vehicles.length})</span>
                   </h3>
@@ -571,7 +571,7 @@ export const ClientsGarageModule: React.FC = () => {
                 </div>
 
                 {activeClient.vehicles.length === 0 ? (
-                  <div className="p-6 rounded-2xl bg-white dark:bg-[#0e141e] border border-slate-200 dark:border-white/[0.08] text-center text-slate-400 text-xs">
+                  <div className="p-6 rounded-3xl bg-white/80 dark:bg-white/[0.03] border border-black/[0.06] dark:border-white/[0.08] backdrop-blur-xl text-center text-zinc-400 text-xs">
                     Автомобилей пока не добавлено. Нажмите «Добавить автомобиль», чтобы привязать ТС к контрагенту.
                   </div>
                 ) : (
@@ -579,20 +579,20 @@ export const ClientsGarageModule: React.FC = () => {
                     {activeClient.vehicles.map((v) => (
                       <div
                         key={v.licensePlate}
-                        className="p-4 rounded-xl bg-white dark:bg-[#0e141e] border border-slate-200 dark:border-white/[0.08] shadow-2xs space-y-2 group"
+                        className="p-4 rounded-2xl bg-white/80 dark:bg-white/[0.03] border border-black/[0.06] dark:border-white/[0.08] backdrop-blur-xl shadow-2xs space-y-2 group"
                       >
                         <div className="flex items-center justify-between">
-                          <span className="font-bold text-sm text-slate-900 dark:text-slate-100">
+                          <span className="font-bold text-sm text-zinc-900 dark:text-zinc-100">
                             {v.make} {v.model}
                           </span>
                           <div className="flex items-center space-x-1.5">
-                            <span className="px-2 py-0.5 rounded font-mono font-bold text-xs bg-slate-100 dark:bg-white/[0.08] text-slate-950 dark:text-white border border-slate-200 dark:border-white/[0.1]">
+                            <span className="px-2 py-0.5 rounded font-mono font-bold text-xs bg-zinc-100 dark:bg-white/[0.08] text-zinc-950 dark:text-white border border-zinc-200 dark:border-white/[0.1]">
                               {v.licensePlate}
                             </span>
                             <button
                               type="button"
                               onClick={() => handleDeleteVehicleFromClient(v.licensePlate)}
-                              className="text-slate-400 hover:text-rose-500 p-1 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                              className="text-zinc-400 hover:text-rose-500 p-1 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                               title="Удалить ТС"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
@@ -600,10 +600,10 @@ export const ClientsGarageModule: React.FC = () => {
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-600 dark:text-slate-400">
+                        <div className="grid grid-cols-2 gap-2 text-[11px] text-zinc-600 dark:text-zinc-400">
                           <div>Год: <strong>{v.year}</strong></div>
                           <div>Пробег: <strong>{v.mileage ? v.mileage.toLocaleString() : "0"} км</strong></div>
-                          <div className="col-span-2 font-mono text-[10px] text-slate-500 truncate">
+                          <div className="col-span-2 font-mono text-[10px] text-zinc-500 truncate">
                             VIN: {v.vin}
                           </div>
                         </div>
@@ -615,29 +615,29 @@ export const ClientsGarageModule: React.FC = () => {
 
               {/* Repair Orders History */}
               <div className="space-y-3">
-                <h3 className="font-bold text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center space-x-1.5">
+                <h3 className="font-bold text-xs uppercase tracking-wider text-zinc-500 dark:text-zinc-400 flex items-center space-x-1.5">
                   <History className="w-4 h-4 text-red-500" />
                   <span>История заказ-нарядов ({activeClient.orders.length})</span>
                 </h3>
 
                 {activeClient.orders.length === 0 ? (
-                  <div className="p-6 rounded-2xl bg-white dark:bg-[#0e141e] border border-slate-200 dark:border-white/[0.08] text-center text-slate-400 text-xs">
+                  <div className="p-6 rounded-3xl bg-white/80 dark:bg-white/[0.03] border border-black/[0.06] dark:border-white/[0.08] backdrop-blur-xl text-center text-zinc-400 text-xs">
                     Заказ-нарядов по данному клиенту пока нет.
                   </div>
                 ) : (
-                  <div className="bg-white dark:bg-[#0e141e] rounded-xl border border-slate-200 dark:border-white/[0.08] shadow-2xs divide-y divide-slate-100 dark:divide-white/[0.04]">
+                  <div className="bg-white/80 dark:bg-white/[0.03] rounded-2xl border border-black/[0.06] dark:border-white/[0.08] backdrop-blur-xl shadow-2xs divide-y divide-zinc-100 dark:divide-white/[0.04]">
                     {activeClient.orders.map((ord) => (
                       <div key={ord.id} className="p-4 flex items-center justify-between text-xs">
                         <div className="space-y-1">
                           <div className="flex items-center space-x-2">
-                            <span className="font-bold text-slate-900 dark:text-slate-100">{ord.orderNumber}</span>
-                            <span className="text-[11px] text-slate-400">• {ord.createdAt}</span>
-                            <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-slate-100 dark:bg-white/[0.06]">
+                            <span className="font-bold text-zinc-900 dark:text-zinc-100">{ord.orderNumber}</span>
+                            <span className="text-[11px] text-zinc-400">• {ord.createdAt}</span>
+                            <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-white/[0.06]">
                               {ord.vehicle.licensePlate}
                             </span>
                           </div>
-                          <p className="text-slate-600 dark:text-slate-300 italic">{ord.vehicle.complaints || "Ремонт"}</p>
-                          <p className="text-[11px] text-slate-400">
+                          <p className="text-zinc-600 dark:text-zinc-300 italic">{ord.vehicle.complaints || "Ремонт"}</p>
+                          <p className="text-[11px] text-zinc-400">
                             {ord.works.length} работ • {ord.parts.length} запчастей
                           </p>
                         </div>
@@ -646,7 +646,7 @@ export const ClientsGarageModule: React.FC = () => {
                           <div className="font-bold text-sm text-red-600 dark:text-red-400">
                             {formatCurrency(ord.grandTotal)}
                           </div>
-                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-white/[0.05] text-slate-500">
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-white/[0.05] text-zinc-500">
                             {ord.status === "closed" ? "Закрыт / Оплачен" : ord.status === "ready" ? "Готов к выдаче" : ord.status === "parts_waiting" ? "Ожидание запчастей" : "В работе"}
                           </span>
                         </div>
@@ -657,7 +657,7 @@ export const ClientsGarageModule: React.FC = () => {
               </div>
             </>
           ) : (
-            <div className="h-full flex items-center justify-center text-slate-400 text-xs">
+            <div className="h-full flex items-center justify-center text-zinc-400 text-xs">
               Выберите контрагента из списка слева
             </div>
           )}
@@ -666,28 +666,28 @@ export const ClientsGarageModule: React.FC = () => {
 
       {/* Client Modal (Create or Edit) */}
       {isClientModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="w-full max-w-md bg-white dark:bg-[#0e141e] border border-slate-200 dark:border-white/[0.1] rounded-2xl shadow-2xl p-6 space-y-4 text-xs">
-            <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/[0.08] pb-3">
-              <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center space-x-2">
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="w-full max-w-md bg-white/95 dark:bg-zinc-950/90 backdrop-blur-2xl border border-black/[0.08] dark:border-white/10 rounded-3xl shadow-2xl p-6 space-y-4 text-xs">
+            <div className="flex items-center justify-between border-b border-zinc-200 dark:border-white/[0.08] pb-3">
+              <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100 flex items-center space-x-2">
                 <Users className="w-4 h-4 text-red-500" />
                 <span>{editingClientId ? "Редактирование контрагента" : "Новый контрагент"}</span>
               </h3>
-              <button onClick={() => setIsClientModalOpen(false)} className="text-slate-400 hover:text-white cursor-pointer">
+              <button onClick={() => setIsClientModalOpen(false)} className="text-zinc-400 hover:text-white cursor-pointer">
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             <div>
-              <label className="text-slate-500 font-semibold">Тип клиента</label>
+              <label className="text-zinc-500 font-semibold">Тип клиента</label>
               <div className="grid grid-cols-2 gap-2 mt-1">
                 <button
                   type="button"
                   onClick={() => setClientType("individual")}
-                  className={`py-2 rounded-xl font-bold border transition-colors cursor-pointer ${
+                  className={`py-2 rounded-2xl font-bold border transition-colors cursor-pointer ${
                     clientType === "individual"
                       ? "border-red-500 bg-red-500/10 text-red-600 dark:text-red-400"
-                      : "border-slate-200 dark:border-white/[0.1] text-slate-600 dark:text-slate-400"
+                      : "border-zinc-200 dark:border-white/10 text-zinc-600 dark:text-zinc-400"
                   }`}
                 >
                   Физическое лицо
@@ -695,10 +695,10 @@ export const ClientsGarageModule: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setClientType("legal")}
-                  className={`py-2 rounded-xl font-bold border transition-colors cursor-pointer ${
+                  className={`py-2 rounded-2xl font-bold border transition-colors cursor-pointer ${
                     clientType === "legal"
                       ? "border-red-500 bg-red-500/10 text-red-600 dark:text-red-400"
-                      : "border-slate-200 dark:border-white/[0.1] text-slate-600 dark:text-slate-400"
+                      : "border-zinc-200 dark:border-white/10 text-zinc-600 dark:text-zinc-400"
                   }`}
                 >
                   Юрлицо / ИП
@@ -707,7 +707,7 @@ export const ClientsGarageModule: React.FC = () => {
             </div>
 
             <div>
-              <label className="text-slate-500 font-semibold">
+              <label className="text-zinc-500 font-semibold">
                 {clientType === "legal" ? "Название организации / ИП *" : "ФИО владельца *"}
               </label>
               <input
@@ -715,37 +715,37 @@ export const ClientsGarageModule: React.FC = () => {
                 value={clientName}
                 onChange={(e) => setClientName(e.target.value)}
                 placeholder={clientType === "legal" ? "ООО «ТрансАвто» или ИП Иванов И.И." : "Иванов Иван Иванович"}
-                className="mt-1 w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
+                className="mt-1 w-full px-3 py-2 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-zinc-900 dark:text-white placeholder:text-zinc-500"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-slate-500 font-semibold">Телефон *</label>
+                <label className="text-zinc-500 font-semibold">Телефон *</label>
                 <input
                   type="text"
                   value={clientPhone}
                   onChange={(e) => setClientPhone(e.target.value)}
                   placeholder="+7 (999) 000-00-00"
-                  className="mt-1 w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
+                  className="mt-1 w-full px-3 py-2 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-zinc-900 dark:text-white placeholder:text-zinc-500"
                 />
               </div>
 
               <div>
-                <label className="text-slate-500 font-semibold">ИНН (для юрлиц)</label>
+                <label className="text-zinc-500 font-semibold">ИНН (для юрлиц)</label>
                 <input
                   type="text"
                   value={clientInn}
                   onChange={(e) => setClientInn(e.target.value)}
                   placeholder="7700000000"
-                  className="mt-1 w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-mono"
+                  className="mt-1 w-full px-3 py-2 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-zinc-900 dark:text-white placeholder:text-zinc-500 font-mono"
                 />
               </div>
             </div>
 
             {!editingClientId && (
-              <div className="pt-2 border-t border-slate-200/80 dark:border-white/[0.08] space-y-2.5">
-                <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex items-center space-x-1">
+              <div className="pt-2 border-t border-zinc-200/80 dark:border-white/[0.08] space-y-2.5">
+                <span className="text-[11px] font-bold text-zinc-700 dark:text-zinc-300 flex items-center space-x-1">
                   <Car className="w-3.5 h-3.5 text-red-500" />
                   <span>Первый автомобиль контрагента (опционально)</span>
                 </span>
@@ -757,7 +757,7 @@ export const ClientsGarageModule: React.FC = () => {
                       value={carMake}
                       onChange={(e) => setCarMake(e.target.value)}
                       placeholder="Марка (ГАЗ)"
-                      className="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900"
+                      className="w-full px-2.5 py-1.5 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-zinc-900 dark:text-white placeholder:text-zinc-500"
                     />
                   </div>
                   <div>
@@ -766,7 +766,7 @@ export const ClientsGarageModule: React.FC = () => {
                       value={carModel}
                       onChange={(e) => setCarModel(e.target.value)}
                       placeholder="Модель (3302)"
-                      className="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900"
+                      className="w-full px-2.5 py-1.5 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-zinc-900 dark:text-white placeholder:text-zinc-500"
                     />
                   </div>
                 </div>
@@ -778,7 +778,7 @@ export const ClientsGarageModule: React.FC = () => {
                       value={carPlate}
                       onChange={(e) => setCarPlate(e.target.value.toUpperCase())}
                       placeholder="Госномер (А000АА77)"
-                      className="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 font-mono font-bold"
+                      className="w-full px-2.5 py-1.5 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-zinc-900 dark:text-white placeholder:text-zinc-500 font-mono font-bold"
                     />
                   </div>
                   <div>
@@ -787,7 +787,7 @@ export const ClientsGarageModule: React.FC = () => {
                       value={carVin}
                       onChange={(e) => setCarVin(e.target.value.toUpperCase())}
                       placeholder="VIN номер"
-                      className="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 font-mono text-[11px]"
+                      className="w-full px-2.5 py-1.5 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-zinc-900 dark:text-white placeholder:text-zinc-500 font-mono text-[11px]"
                     />
                   </div>
                 </div>
@@ -798,14 +798,14 @@ export const ClientsGarageModule: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setIsClientModalOpen(false)}
-                className="px-4 py-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/[0.06] cursor-pointer"
+                className="px-4 py-2 rounded-full text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-white/[0.06] cursor-pointer"
               >
                 Отмена
               </button>
               <button
                 type="button"
                 onClick={handleSaveClient}
-                className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-semibold cursor-pointer shadow-sm"
+                className="px-5 py-2 rounded-full bg-red-600 hover:bg-red-500 text-white font-semibold cursor-pointer shadow-md shadow-red-600/20"
               >
                 {editingClientId ? "Сохранить" : "Добавить клиента"}
               </button>
@@ -816,84 +816,84 @@ export const ClientsGarageModule: React.FC = () => {
 
       {/* Add Car Modal for existing client */}
       {isAddCarModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="w-full max-w-md bg-white dark:bg-[#0e141e] border border-slate-200 dark:border-white/[0.1] rounded-2xl shadow-2xl p-6 space-y-4 text-xs">
-            <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/[0.08] pb-3">
-              <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center space-x-2">
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="w-full max-w-md bg-white/95 dark:bg-zinc-950/90 backdrop-blur-2xl border border-black/[0.08] dark:border-white/10 rounded-3xl shadow-2xl p-6 space-y-4 text-xs">
+            <div className="flex items-center justify-between border-b border-zinc-200 dark:border-white/[0.08] pb-3">
+              <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100 flex items-center space-x-2">
                 <Car className="w-4 h-4 text-red-500" />
                 <span>Добавление автомобиля в автопарк</span>
               </h3>
-              <button onClick={() => setIsAddCarModalOpen(false)} className="text-slate-400 hover:text-white cursor-pointer">
+              <button onClick={() => setIsAddCarModalOpen(false)} className="text-zinc-400 hover:text-white cursor-pointer">
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-slate-500 font-semibold">Марка авто *</label>
+                <label className="text-zinc-500 font-semibold">Марка авто *</label>
                 <input
                   type="text"
                   value={newCarMake}
                   onChange={(e) => setNewCarMake(e.target.value)}
                   placeholder="ГАЗ / КАМАЗ / Toyota"
-                  className="mt-1 w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
+                  className="mt-1 w-full px-3 py-2 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-zinc-900 dark:text-white placeholder:text-zinc-500"
                 />
               </div>
 
               <div>
-                <label className="text-slate-500 font-semibold">Модель авто</label>
+                <label className="text-zinc-500 font-semibold">Модель авто</label>
                 <input
                   type="text"
                   value={newCarModel}
                   onChange={(e) => setNewCarModel(e.target.value)}
                   placeholder="Газель Next"
-                  className="mt-1 w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
+                  className="mt-1 w-full px-3 py-2 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-zinc-900 dark:text-white placeholder:text-zinc-500"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-slate-500 font-semibold">Госномер *</label>
+                <label className="text-zinc-500 font-semibold">Госномер *</label>
                 <input
                   type="text"
                   value={newCarPlate}
                   onChange={(e) => setNewCarPlate(e.target.value.toUpperCase())}
                   placeholder="А000АА77"
-                  className="mt-1 w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-mono font-bold"
+                  className="mt-1 w-full px-3 py-2 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-zinc-900 dark:text-white placeholder:text-zinc-500 font-mono font-bold"
                 />
               </div>
 
               <div>
-                <label className="text-slate-500 font-semibold">Год выпуска</label>
+                <label className="text-zinc-500 font-semibold">Год выпуска</label>
                 <input
                   type="number"
                   value={newCarYear}
                   onChange={(e) => setNewCarYear(Number(e.target.value))}
-                  className="mt-1 w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-mono"
+                  className="mt-1 w-full px-3 py-2 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-zinc-900 dark:text-white placeholder:text-zinc-500 font-mono"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-slate-500 font-semibold">VIN номер</label>
+                <label className="text-zinc-500 font-semibold">VIN номер</label>
                 <input
                   type="text"
                   value={newCarVin}
                   onChange={(e) => setNewCarVin(e.target.value.toUpperCase())}
                   placeholder="17 знаков"
-                  className="mt-1 w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-mono"
+                  className="mt-1 w-full px-3 py-2 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-zinc-900 dark:text-white placeholder:text-zinc-500 font-mono"
                 />
               </div>
 
               <div>
-                <label className="text-slate-500 font-semibold">Пробег (км)</label>
+                <label className="text-zinc-500 font-semibold">Пробег (км)</label>
                 <input
                   type="number"
                   value={newCarMileage}
                   onChange={(e) => setNewCarMileage(Number(e.target.value))}
-                  className="mt-1 w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-mono"
+                  className="mt-1 w-full px-3 py-2 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-zinc-900 dark:text-white placeholder:text-zinc-500 font-mono"
                 />
               </div>
             </div>
@@ -902,14 +902,14 @@ export const ClientsGarageModule: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setIsAddCarModalOpen(false)}
-                className="px-4 py-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/[0.06] cursor-pointer"
+                className="px-4 py-2 rounded-full text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-white/[0.06] cursor-pointer"
               >
                 Отмена
               </button>
               <button
                 type="button"
                 onClick={handleAddCarToActiveClient}
-                className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-semibold cursor-pointer shadow-sm"
+                className="px-5 py-2 rounded-full bg-red-600 hover:bg-red-500 text-white font-semibold cursor-pointer shadow-md shadow-red-600/20"
               >
                 Добавить в автопарк
               </button>

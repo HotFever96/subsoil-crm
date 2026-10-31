@@ -520,7 +520,7 @@ export const RepairOrdersModule: React.FC = () => {
   const statuses: OrderStatus[] = ["estimate", "in_progress", "parts_waiting", "ready", "closed"];
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-transparent overflow-hidden text-slate-900 dark:text-zinc-100">
+    <div className="flex-1 flex flex-col h-full bg-transparent overflow-hidden text-zinc-900 dark:text-zinc-100">
       {/* Top Header - Yandex Music Pill & Glass Style */}
       <div className="px-6 py-4.5 border-b border-white/[0.08] bg-white/40 dark:bg-black/30 backdrop-blur-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">
         <div className="flex items-center space-x-3.5">
@@ -528,15 +528,15 @@ export const RepairOrdersModule: React.FC = () => {
             <Wrench className="w-5 h-5" />
           </div>
           <div>
-            <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center space-x-2.5">
+            <h1 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-white flex items-center space-x-2.5">
               <span>Заказ-наряды</span>
-              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-white/10 dark:bg-white/[0.06] border border-white/10 text-slate-700 dark:text-zinc-300">
+              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-white/10 dark:bg-white/[0.06] border border-white/10 text-zinc-700 dark:text-zinc-300">
                 {orders.length} записей
               </span>
               <div className="relative group inline-block">
                 <button
                   type="button"
-                  className="p-1 rounded-full text-slate-400 hover:text-white transition-colors cursor-pointer"
+                  className="p-1 rounded-full text-zinc-400 hover:text-white transition-colors cursor-pointer"
                   title="Справка"
                 >
                   <HelpCircle className="w-4 h-4" />
@@ -557,7 +557,7 @@ export const RepairOrdersModule: React.FC = () => {
               className={`p-1.5 px-3 rounded-full text-xs font-semibold flex items-center space-x-1.5 transition-all cursor-pointer ${
                 viewMode === "table"
                   ? "bg-rose-600 text-white shadow-md shadow-rose-600/25"
-                  : "text-slate-500 hover:text-white"
+                  : "text-zinc-500 hover:text-white"
               }`}
               title="Табличный вид"
             >
@@ -569,7 +569,7 @@ export const RepairOrdersModule: React.FC = () => {
               className={`p-1.5 px-3 rounded-full text-xs font-semibold flex items-center space-x-1.5 transition-all cursor-pointer ${
                 viewMode === "kanban"
                   ? "bg-rose-600 text-white shadow-md shadow-rose-600/25"
-                  : "text-slate-500 hover:text-white"
+                  : "text-zinc-500 hover:text-white"
               }`}
               title="Канбан-доска"
             >
@@ -598,7 +598,7 @@ export const RepairOrdersModule: React.FC = () => {
             className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
               selectedStatus === "all"
                 ? "bg-rose-600 text-white shadow-md shadow-rose-600/20 scale-102"
-                : "bg-white/40 dark:bg-white/[0.05] text-slate-600 dark:text-zinc-300 hover:bg-white/70 dark:hover:bg-white/[0.1] border border-white/[0.07]"
+                : "bg-white/40 dark:bg-white/[0.05] text-zinc-600 dark:text-zinc-300 hover:bg-white/70 dark:hover:bg-white/[0.1] border border-white/[0.07]"
             }`}
           >
             Все ({orders.length})
@@ -614,7 +614,7 @@ export const RepairOrdersModule: React.FC = () => {
                 className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer flex items-center space-x-1.5 ${
                   isActive
                     ? "bg-rose-600 text-white shadow-md shadow-rose-600/20 scale-102"
-                    : "bg-white/40 dark:bg-white/[0.05] text-slate-600 dark:text-zinc-300 hover:bg-white/70 dark:hover:bg-white/[0.1] border border-white/[0.07]"
+                    : "bg-white/40 dark:bg-white/[0.05] text-zinc-600 dark:text-zinc-300 hover:bg-white/70 dark:hover:bg-white/[0.1] border border-white/[0.07]"
                 }`}
               >
                 <span>{meta.label}</span>
@@ -628,13 +628,13 @@ export const RepairOrdersModule: React.FC = () => {
 
         {/* Search Input */}
         <div className="relative min-w-[280px]">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <Search className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
             placeholder="Поиск по номеру, госномеру, VIN, клиенту..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-8 py-2 rounded-full bg-white/60 dark:bg-white/[0.05] border border-white/[0.09] backdrop-blur-2xl text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-hidden focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-all"
+            className="w-full pl-10 pr-8 py-2 rounded-full bg-white/60 dark:bg-white/[0.05] border border-white/[0.09] backdrop-blur-2xl text-xs text-zinc-900 dark:text-white placeholder:text-zinc-400 focus:outline-hidden focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-all"
           />
         </div>
       </div>
@@ -646,10 +646,10 @@ export const RepairOrdersModule: React.FC = () => {
             <div className="w-14 h-14 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 mb-3.5">
               <Wrench className="w-7 h-7" />
             </div>
-            <h3 className="text-base font-semibold text-slate-800 dark:text-zinc-200">
+            <h3 className="text-base font-semibold text-zinc-800 dark:text-zinc-200">
               {searchQuery ? "Заказ-наряды не найдены" : "Список заказ-нарядов пуст"}
             </h3>
-            <p className="text-xs text-slate-500 dark:text-zinc-400 max-w-sm mt-1">
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 max-w-sm mt-1">
               Создайте заказ-наряд вручную или поручите открытие ИИ-шеф-мастеру прямо в чате.
             </p>
             <button
@@ -662,11 +662,11 @@ export const RepairOrdersModule: React.FC = () => {
           </div>
         ) : viewMode === "table" ? (
           /* TABLE VIEW WITH ROW CLICK EDITING (Yandex Music Tracklist Aesthetic) */
-          <div className="bg-white/60 dark:bg-white/[0.04] rounded-3xl border border-slate-200/60 dark:border-white/[0.08] backdrop-blur-2xl shadow-xl overflow-hidden">
+          <div className="bg-white/60 dark:bg-white/[0.04] rounded-3xl border border-zinc-200/60 dark:border-white/[0.08] backdrop-blur-2xl shadow-xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
-                  <tr className="bg-white/40 dark:bg-white/[0.03] border-b border-slate-200/50 dark:border-white/[0.06] text-slate-500 dark:text-zinc-400 font-semibold">
+                  <tr className="bg-white/40 dark:bg-white/[0.03] border-b border-zinc-200/50 dark:border-white/[0.06] text-zinc-500 dark:text-zinc-400 font-semibold">
                     <th className="py-3 px-4">Номер и дата</th>
                     <th className="py-3 px-4">Автомобиль и госномер</th>
                     <th className="py-3 px-4">Клиент</th>
@@ -678,30 +678,30 @@ export const RepairOrdersModule: React.FC = () => {
                     <th className="py-3 px-4 text-right">Действия</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-zinc-800/80 text-slate-800 dark:text-zinc-200">
+                <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800/80 text-zinc-800 dark:text-zinc-200">
                   {filteredOrders.map((ord) => {
                     const statusMeta = getStatusMeta(ord.status);
                     return (
                       <tr
                         key={ord.id}
                         onClick={() => openEditOrderModal(ord)}
-                        className="hover:bg-slate-50/80 dark:hover:bg-zinc-900/50 transition-colors group cursor-pointer"
+                        className="hover:bg-zinc-50/80 dark:hover:bg-zinc-900/50 transition-colors group cursor-pointer"
                       >
                         <td className="py-3 px-4 font-medium">
-                          <div className="font-bold text-slate-900 dark:text-slate-100">{ord.orderNumber}</div>
-                          <div className="text-[11px] text-slate-400">{ord.createdAt}</div>
+                          <div className="font-bold text-zinc-900 dark:text-zinc-100">{ord.orderNumber}</div>
+                          <div className="text-[11px] text-zinc-400">{ord.createdAt}</div>
                         </td>
 
                         <td className="py-3 px-4">
-                          <div className="font-semibold text-slate-900 dark:text-slate-100">
+                          <div className="font-semibold text-zinc-900 dark:text-zinc-100">
                             {ord.vehicle?.make || "Автомобиль"} {ord.vehicle?.model || ""}
                           </div>
                           <div className="flex items-center space-x-1.5 mt-0.5">
-                            <span className="px-1.5 py-0.2 rounded font-mono font-bold text-[11px] bg-slate-100 dark:bg-zinc-800 text-slate-900 dark:text-white border border-slate-200 dark:border-zinc-700">
+                            <span className="px-1.5 py-0.2 rounded font-mono font-bold text-[11px] bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700">
                               {ord.vehicle?.licensePlate || "Б/Н"}
                             </span>
                             {ord.vehicle?.vin && (
-                              <span className="text-[11px] text-slate-400 truncate max-w-[120px]" title={ord.vehicle.vin}>
+                              <span className="text-[11px] text-zinc-400 truncate max-w-[120px]" title={ord.vehicle.vin}>
                                 {ord.vehicle.vin.slice(-6)}
                               </span>
                             )}
@@ -709,8 +709,8 @@ export const RepairOrdersModule: React.FC = () => {
                         </td>
 
                         <td className="py-3 px-4">
-                          <div className="font-medium text-slate-900 dark:text-slate-100">{ord.client?.name || "Клиент"}</div>
-                          <div className="text-[11px] text-slate-400">{ord.client?.phone || ""}</div>
+                          <div className="font-medium text-zinc-900 dark:text-zinc-100">{ord.client?.name || "Клиент"}</div>
+                          <div className="text-[11px] text-zinc-400">{ord.client?.phone || ""}</div>
                         </td>
 
                         <td className="py-3 px-4">
@@ -721,12 +721,12 @@ export const RepairOrdersModule: React.FC = () => {
 
                         <td className="py-3 px-4 text-right font-medium">
                           {formatCurrency(ord.totalWorks)}
-                          <div className="text-[10px] text-slate-400">{ord.works?.length || 0} поз.</div>
+                          <div className="text-[10px] text-zinc-400">{ord.works?.length || 0} поз.</div>
                         </td>
 
                         <td className="py-3 px-4 text-right font-medium">
                           {formatCurrency(ord.totalParts)}
-                          <div className="text-[10px] text-slate-400">{ord.parts?.length || 0} дет.</div>
+                          <div className="text-[10px] text-zinc-400">{ord.parts?.length || 0} дет.</div>
                         </td>
 
                         <td className="py-3 px-4 text-right font-bold text-red-600 dark:text-red-400 text-sm">
@@ -755,7 +755,7 @@ export const RepairOrdersModule: React.FC = () => {
                             <button
                               type="button"
                               onClick={() => openEditOrderModal(ord)}
-                              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors"
+                              className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
                               title="Редактировать заказ-наряд"
                             >
                               <Edit className="w-4 h-4" />
@@ -763,7 +763,7 @@ export const RepairOrdersModule: React.FC = () => {
                             <button
                               type="button"
                               onClick={(e) => handleDeleteOrder(ord.id, e)}
-                              className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/20 transition-colors"
+                              className="p-1.5 rounded-lg text-zinc-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/20 transition-colors"
                               title="Удалить"
                             >
                               <Trash2 className="w-4 h-4" />
@@ -784,10 +784,10 @@ export const RepairOrdersModule: React.FC = () => {
               const meta = getStatusMeta(st);
               const columnOrders = filteredOrders.filter((o) => o.status === st);
               return (
-                <div key={st} className="flex flex-col bg-white/40 dark:bg-white/[0.03] rounded-3xl border border-slate-200/50 dark:border-white/[0.06] backdrop-blur-2xl p-3.5 min-h-[450px]">
-                  <div className="flex items-center justify-between pb-2.5 mb-2.5 border-b border-slate-200/60 dark:border-white/[0.06]">
-                    <span className="font-bold text-xs text-slate-800 dark:text-zinc-200">{meta.label}</span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 font-bold">
+                <div key={st} className="flex flex-col bg-white/40 dark:bg-white/[0.03] rounded-3xl border border-zinc-200/50 dark:border-white/[0.06] backdrop-blur-2xl p-3.5 min-h-[450px]">
+                  <div className="flex items-center justify-between pb-2.5 mb-2.5 border-b border-zinc-200/60 dark:border-white/[0.06]">
+                    <span className="font-bold text-xs text-zinc-800 dark:text-zinc-200">{meta.label}</span>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 font-bold">
                       {columnOrders.length}
                     </span>
                   </div>
@@ -797,20 +797,20 @@ export const RepairOrdersModule: React.FC = () => {
                       <div
                         key={ord.id}
                         onClick={() => openEditOrderModal(ord)}
-                        className="p-3.5 rounded-2xl bg-white dark:bg-white/[0.06] border border-slate-200/70 dark:border-white/[0.08] hover:border-rose-500/50 hover:shadow-lg dark:hover:shadow-rose-950/20 cursor-pointer transition-all space-y-2"
+                        className="p-3.5 rounded-2xl bg-white dark:bg-white/[0.06] border border-zinc-200/70 dark:border-white/[0.08] hover:border-rose-500/50 hover:shadow-lg dark:hover:shadow-rose-950/20 cursor-pointer transition-all space-y-2"
                       >
                         <div className="flex items-center justify-between">
-                          <span className="font-bold text-xs text-slate-900 dark:text-slate-100">{ord.orderNumber}</span>
-                          <span className="font-mono text-[10px] text-slate-400">{ord.createdAt}</span>
+                          <span className="font-bold text-xs text-zinc-900 dark:text-zinc-100">{ord.orderNumber}</span>
+                          <span className="font-mono text-[10px] text-zinc-400">{ord.createdAt}</span>
                         </div>
                         <div>
-                          <div className="font-semibold text-xs text-slate-800 dark:text-zinc-200">{ord.vehicle?.make || "Автомобиль"} {ord.vehicle?.model || ""}</div>
+                          <div className="font-semibold text-xs text-zinc-800 dark:text-zinc-200">{ord.vehicle?.make || "Автомобиль"} {ord.vehicle?.model || ""}</div>
                           <div className="font-mono font-bold text-[11px] text-red-600 dark:text-red-400">{ord.vehicle?.licensePlate || "Б/Н"}</div>
                         </div>
-                        <div className="text-[11px] text-slate-500 dark:text-zinc-400 truncate">{ord.client?.name || "Клиент"}</div>
-                        <div className="pt-2 border-t border-slate-100 dark:border-zinc-800 flex items-center justify-between">
-                          <span className="text-[10px] text-slate-400">{ord.works?.length || 0} раб. • {ord.parts?.length || 0} запч.</span>
-                          <span className="font-bold text-xs text-slate-900 dark:text-zinc-100">{formatCurrency(ord.grandTotal)}</span>
+                        <div className="text-[11px] text-zinc-500 dark:text-zinc-400 truncate">{ord.client?.name || "Клиент"}</div>
+                        <div className="pt-2 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
+                          <span className="text-[10px] text-zinc-400">{ord.works?.length || 0} раб. • {ord.parts?.length || 0} запч.</span>
+                          <span className="font-bold text-xs text-zinc-900 dark:text-zinc-100">{formatCurrency(ord.grandTotal)}</span>
                         </div>
                       </div>
                     ))}
@@ -825,19 +825,19 @@ export const RepairOrdersModule: React.FC = () => {
       {/* FULL REPAIR ORDER MODAL: 3 WORK TABS */}
       {isEditorOpen && (
         <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-0 sm:p-4 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-zinc-900/90 dark:backdrop-blur-2xl w-full max-w-5xl h-full sm:h-[92vh] sm:rounded-2xl rounded-none shadow-2xl border-0 sm:border border-slate-200 dark:border-white/[0.08] flex flex-col overflow-hidden">
+          <div className="bg-white dark:bg-zinc-900/90 dark:backdrop-blur-2xl w-full max-w-5xl h-full sm:h-[92vh] sm:rounded-2xl rounded-none shadow-2xl border-0 sm:border border-zinc-200 dark:border-white/[0.08] flex flex-col overflow-hidden">
             {/* Modal Header & Tabs */}
-            <div className="px-4 sm:px-6 py-3 border-b border-slate-200 dark:border-white/[0.08] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 bg-slate-50/80 dark:bg-white/[0.02] shrink-0">
+            <div className="px-4 sm:px-6 py-3 border-b border-zinc-200 dark:border-white/[0.08] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 bg-zinc-50/80 dark:bg-white/[0.02] shrink-0">
               <div className="flex items-center justify-between sm:justify-start space-x-3">
                 <div className="flex items-center space-x-2.5">
                   <div className="p-2 rounded-xl bg-red-600/10 text-red-600 font-bold shrink-0">
                     <Wrench className="w-4 h-4 sm:w-5 sm:h-5" />
                   </div>
                   <div className="min-w-0">
-                    <h2 className="text-sm font-bold text-slate-900 dark:text-zinc-100 truncate">
+                    <h2 className="text-sm font-bold text-zinc-900 dark:text-zinc-100 truncate">
                       {editingOrder ? `Редактирование: ${editingOrder.orderNumber}` : "Новый заказ-наряд"}
                     </h2>
-                    <p className="text-[11px] text-slate-500 dark:text-zinc-400 truncate">
+                    <p className="text-[11px] text-zinc-500 dark:text-zinc-400 truncate">
                       {licensePlate ? `${vehicleMake} ${vehicleModel} (${licensePlate})` : "Заполните данные заказчика и ТС"}
                     </p>
                   </div>
@@ -846,21 +846,21 @@ export const RepairOrdersModule: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setIsEditorOpen(false)}
-                  className="sm:hidden p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 cursor-pointer"
+                  className="sm:hidden p-1.5 rounded-lg text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
               {/* 3 WORK TABS with mobile horizontal scroll */}
-              <div className="flex items-center space-x-1 overflow-x-auto whitespace-nowrap bg-slate-100 dark:bg-white/[0.04] p-1 rounded-xl border border-slate-200/80 dark:border-white/[0.06] scrollbar-none">
+              <div className="flex items-center space-x-1 overflow-x-auto whitespace-nowrap bg-zinc-100 dark:bg-white/[0.04] p-1 rounded-xl border border-zinc-200/80 dark:border-white/[0.06] scrollbar-none">
                 <button
                   type="button"
                   onClick={() => setEditorTab("works_parts")}
                   className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer shrink-0 ${
                     editorTab === "works_parts"
                       ? "bg-white dark:bg-zinc-800 text-rose-600 dark:text-rose-400 shadow-xs"
-                      : "text-slate-600 dark:text-zinc-400 hover:text-slate-900"
+                      : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900"
                   }`}
                 >
                   <Wrench className="w-3.5 h-3.5" />
@@ -872,7 +872,7 @@ export const RepairOrdersModule: React.FC = () => {
                   className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer shrink-0 ${
                     editorTab === "inspection"
                       ? "bg-white dark:bg-zinc-800 text-rose-600 dark:text-rose-400 shadow-xs"
-                      : "text-slate-600 dark:text-zinc-400 hover:text-slate-900"
+                      : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900"
                   }`}
                 >
                   <Car className="w-3.5 h-3.5" />
@@ -889,7 +889,7 @@ export const RepairOrdersModule: React.FC = () => {
                   className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer shrink-0 ${
                     editorTab === "documents"
                       ? "bg-white dark:bg-zinc-800 text-rose-600 dark:text-rose-400 shadow-xs"
-                      : "text-slate-600 dark:text-zinc-400 hover:text-slate-900"
+                      : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900"
                   }`}
                 >
                   <Printer className="w-3.5 h-3.5" />
@@ -900,7 +900,7 @@ export const RepairOrdersModule: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setIsEditorOpen(false)}
-                className="hidden sm:block p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 cursor-pointer"
+                className="hidden sm:block p-1.5 rounded-lg text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -1040,7 +1040,7 @@ export const RepairOrdersModule: React.FC = () => {
                   {/* 1. Works Table (Norm-Hours) */}
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <div className="font-bold text-slate-900 dark:text-zinc-100 text-xs uppercase tracking-wider">
+                      <div className="font-bold text-zinc-900 dark:text-zinc-100 text-xs uppercase tracking-wider">
                         1. Выполняемые работы (Нормо-часы)
                       </div>
                       <button
@@ -1053,10 +1053,10 @@ export const RepairOrdersModule: React.FC = () => {
                       </button>
                     </div>
 
-                    <div className="border border-slate-200 dark:border-zinc-800 rounded-xl overflow-hidden bg-white dark:bg-zinc-900">
+                    <div className="border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden bg-white dark:bg-zinc-900">
                       <table className="w-full text-left text-xs border-collapse">
                         <thead>
-                          <tr className="bg-slate-100 dark:bg-zinc-800/80 text-slate-600 dark:text-zinc-400 font-semibold">
+                          <tr className="bg-zinc-100 dark:bg-zinc-800/80 text-zinc-600 dark:text-zinc-400 font-semibold">
                             <th className="p-2.5">Наименование работы</th>
                             <th className="p-2.5 w-44">Мастер / Исполнитель</th>
                             <th className="p-2.5 w-20 text-center">Н/Ч</th>
@@ -1066,10 +1066,10 @@ export const RepairOrdersModule: React.FC = () => {
                             <th className="p-2.5 w-8"></th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-100 dark:divide-zinc-800">
+                        <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
                           {works.length === 0 ? (
                             <tr>
-                              <td colSpan={7} className="p-4 text-center text-slate-400">
+                              <td colSpan={7} className="p-4 text-center text-zinc-400">
                                 Работы не добавлены. Нажмите «Добавить работу».
                               </td>
                             </tr>
@@ -1082,14 +1082,14 @@ export const RepairOrdersModule: React.FC = () => {
                                     value={w.name}
                                     onChange={(e) => updateWorkRow(idx, "name", e.target.value)}
                                     placeholder="Замена масла в ДВС..."
-                                    className="w-full px-2 py-1 rounded bg-transparent border border-slate-200 dark:border-zinc-800 text-slate-900 dark:text-zinc-100"
+                                    className="w-full px-2 py-1 rounded bg-transparent border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100"
                                   />
                                 </td>
                                 <td className="p-1.5">
                                   <select
                                     value={w.mechanic}
                                     onChange={(e) => updateWorkRow(idx, "mechanic", e.target.value)}
-                                    className="w-full px-2 py-1 rounded bg-transparent border border-slate-200 dark:border-zinc-800 text-slate-900 dark:text-zinc-100 cursor-pointer"
+                                    className="w-full px-2 py-1 rounded bg-transparent border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 cursor-pointer"
                                   >
                                     {(stoReq.mechanics || []).map((m) => (
                                       <option key={m} value={m} className="bg-white dark:bg-zinc-900">
@@ -1105,7 +1105,7 @@ export const RepairOrdersModule: React.FC = () => {
                                     step="0.1"
                                     value={w.laborHours}
                                     onChange={(e) => updateWorkRow(idx, "laborHours", Number(e.target.value))}
-                                    className="w-full px-2 py-1 text-center rounded bg-transparent border border-slate-200 dark:border-zinc-800 text-slate-900 dark:text-zinc-100 font-bold"
+                                    className="w-full px-2 py-1 text-center rounded bg-transparent border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 font-bold"
                                   />
                                 </td>
                                 <td className="p-1.5">
@@ -1113,7 +1113,7 @@ export const RepairOrdersModule: React.FC = () => {
                                     type="number"
                                     value={w.ratePerHour}
                                     onChange={(e) => updateWorkRow(idx, "ratePerHour", Number(e.target.value))}
-                                    className="w-full px-2 py-1 text-right rounded bg-transparent border border-slate-200 dark:border-zinc-800 text-slate-900 dark:text-zinc-100"
+                                    className="w-full px-2 py-1 text-right rounded bg-transparent border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100"
                                   />
                                 </td>
                                 <td className="p-1.5">
@@ -1121,17 +1121,17 @@ export const RepairOrdersModule: React.FC = () => {
                                     type="number"
                                     value={w.discountPercent}
                                     onChange={(e) => updateWorkRow(idx, "discountPercent", Number(e.target.value))}
-                                    className="w-full px-2 py-1 text-center rounded bg-transparent border border-slate-200 dark:border-zinc-800 text-slate-900 dark:text-zinc-100"
+                                    className="w-full px-2 py-1 text-center rounded bg-transparent border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100"
                                   />
                                 </td>
-                                <td className="p-1.5 text-right font-bold text-slate-900 dark:text-zinc-100">
+                                <td className="p-1.5 text-right font-bold text-zinc-900 dark:text-zinc-100">
                                   {w.total.toLocaleString()}
                                 </td>
                                 <td className="p-1.5 text-center">
                                   <button
                                     type="button"
                                     onClick={() => removeWorkRow(idx)}
-                                    className="text-slate-400 hover:text-rose-500 cursor-pointer p-1"
+                                    className="text-zinc-400 hover:text-rose-500 cursor-pointer p-1"
                                   >
                                     <X className="w-3.5 h-3.5" />
                                   </button>
@@ -1147,7 +1147,7 @@ export const RepairOrdersModule: React.FC = () => {
                   {/* 2. Parts Table */}
                   <div className="space-y-3">
                     <div className="flex flex-wrap items-center justify-between gap-2">
-                      <div className="font-bold text-slate-900 dark:text-zinc-100 text-xs uppercase tracking-wider">
+                      <div className="font-bold text-zinc-900 dark:text-zinc-100 text-xs uppercase tracking-wider">
                         2. Запчасти и материалы
                       </div>
                       <div className="flex items-center space-x-2">
@@ -1170,7 +1170,7 @@ export const RepairOrdersModule: React.FC = () => {
                         <button
                           type="button"
                           onClick={addPartRow}
-                          className="flex items-center space-x-1 px-2.5 py-1.5 text-xs text-slate-600 dark:text-zinc-400 hover:text-red-600 dark:hover:text-red-400 font-semibold cursor-pointer"
+                          className="flex items-center space-x-1 px-2.5 py-1.5 text-xs text-zinc-600 dark:text-zinc-400 hover:text-red-600 dark:hover:text-red-400 font-semibold cursor-pointer"
                         >
                           <Plus className="w-3.5 h-3.5" />
                           <span>Вручную</span>
@@ -1178,10 +1178,10 @@ export const RepairOrdersModule: React.FC = () => {
                       </div>
                     </div>
 
-                    <div className="border border-slate-200 dark:border-zinc-800 rounded-xl overflow-hidden bg-white dark:bg-zinc-900">
+                    <div className="border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden bg-white dark:bg-zinc-900">
                       <table className="w-full text-left text-xs border-collapse">
                         <thead>
-                          <tr className="bg-slate-100 dark:bg-zinc-800/80 text-slate-600 dark:text-zinc-400 font-semibold">
+                          <tr className="bg-zinc-100 dark:bg-zinc-800/80 text-zinc-600 dark:text-zinc-400 font-semibold">
                             <th className="p-2.5 w-36">Артикул OEM</th>
                             <th className="p-2.5">Наименование детали / материала</th>
                             <th className="p-2.5 w-20 text-center">Кол-во</th>
@@ -1190,10 +1190,10 @@ export const RepairOrdersModule: React.FC = () => {
                             <th className="p-2.5 w-8"></th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-100 dark:divide-zinc-800">
+                        <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
                           {parts.length === 0 ? (
                             <tr>
-                              <td colSpan={6} className="p-4 text-center text-slate-400">
+                              <td colSpan={6} className="p-4 text-center text-zinc-400">
                                 Запчасти не выбраны. Выберите деталь со склада или выполните проценку по API.
                               </td>
                             </tr>
@@ -1206,7 +1206,7 @@ export const RepairOrdersModule: React.FC = () => {
                                     value={p.oem}
                                     onChange={(e) => updatePartRow(idx, "oem", e.target.value)}
                                     placeholder="504091562"
-                                    className="w-full px-2 py-1 font-mono text-[11px] rounded bg-transparent border border-slate-200 dark:border-zinc-800 text-slate-900 dark:text-zinc-100"
+                                    className="w-full px-2 py-1 font-mono text-[11px] rounded bg-transparent border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100"
                                   />
                                 </td>
                                 <td className="p-1.5">
@@ -1215,7 +1215,7 @@ export const RepairOrdersModule: React.FC = () => {
                                     value={p.name}
                                     onChange={(e) => updatePartRow(idx, "name", e.target.value)}
                                     placeholder="Фильтр масляный..."
-                                    className="w-full px-2 py-1 rounded bg-transparent border border-slate-200 dark:border-zinc-800 text-slate-900 dark:text-zinc-100"
+                                    className="w-full px-2 py-1 rounded bg-transparent border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100"
                                   />
                                 </td>
                                 <td className="p-1.5">
@@ -1223,7 +1223,7 @@ export const RepairOrdersModule: React.FC = () => {
                                     type="number"
                                     value={p.qty}
                                     onChange={(e) => updatePartRow(idx, "qty", Number(e.target.value))}
-                                    className="w-full px-2 py-1 text-center rounded bg-transparent border border-slate-200 dark:border-zinc-800 text-slate-900 dark:text-zinc-100 font-bold"
+                                    className="w-full px-2 py-1 text-center rounded bg-transparent border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 font-bold"
                                   />
                                 </td>
                                 <td className="p-1.5">
@@ -1231,17 +1231,17 @@ export const RepairOrdersModule: React.FC = () => {
                                     type="number"
                                     value={p.salePrice}
                                     onChange={(e) => updatePartRow(idx, "salePrice", Number(e.target.value))}
-                                    className="w-full px-2 py-1 text-right rounded bg-transparent border border-slate-200 dark:border-zinc-800 text-slate-900 dark:text-zinc-100"
+                                    className="w-full px-2 py-1 text-right rounded bg-transparent border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100"
                                   />
                                 </td>
-                                <td className="p-1.5 text-right font-bold text-slate-900 dark:text-zinc-100">
+                                <td className="p-1.5 text-right font-bold text-zinc-900 dark:text-zinc-100">
                                   {p.total.toLocaleString()}
                                 </td>
                                 <td className="p-1.5 text-center">
                                   <button
                                     type="button"
                                     onClick={() => removePartRow(idx)}
-                                    className="text-slate-400 hover:text-rose-500 cursor-pointer p-1"
+                                    className="text-zinc-400 hover:text-rose-500 cursor-pointer p-1"
                                   >
                                     <X className="w-3.5 h-3.5" />
                                   </button>
@@ -1255,8 +1255,8 @@ export const RepairOrdersModule: React.FC = () => {
                   </div>
 
                   {/* Mandatory Recommendations field */}
-                  <div className="p-4 rounded-xl bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 space-y-2">
-                    <label className="text-xs font-bold text-slate-900 dark:text-zinc-100 uppercase tracking-wider flex items-center space-x-1.5">
+                  <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 space-y-2">
+                    <label className="text-xs font-bold text-zinc-900 dark:text-zinc-100 uppercase tracking-wider flex items-center space-x-1.5">
                       <AlertCircle className="w-4 h-4 text-amber-500" />
                       <span>Рекомендации мастерской / Выявленные дефекты *</span>
                     </label>
@@ -1265,7 +1265,7 @@ export const RepairOrdersModule: React.FC = () => {
                       value={recommendations}
                       onChange={(e) => setRecommendations(e.target.value)}
                       placeholder="Рекомендуется замена тормозных дисков при следующем ТО, проверка уровня масла в КПП через 1000 км..."
-                      className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs text-slate-900 dark:text-zinc-100"
+                      className="w-full px-3 py-2 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs text-zinc-900 dark:text-zinc-100"
                     />
                   </div>
                 </div>
@@ -1274,19 +1274,19 @@ export const RepairOrdersModule: React.FC = () => {
               {/* TAB 2: VEHICLE INSPECTION SCHEMATIC */}
               {editorTab === "inspection" && (
                 <div className="space-y-4 pb-28">
-                  <div className="flex items-center justify-between text-xs text-slate-500 dark:text-zinc-400 px-1">
-                    <span className="font-semibold text-slate-700 dark:text-zinc-300">
+                  <div className="flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400 px-1">
+                    <span className="font-semibold text-zinc-700 dark:text-zinc-300">
                       Интерактивная карта повреждений и акт приема ТС
                     </span>
                     <div className="relative group inline-block">
                       <button
                         type="button"
-                        className="p-1 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 transition-colors cursor-pointer"
+                        className="p-1 rounded-full text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors cursor-pointer"
                         title="Справка по акту осмотра"
                       >
                         <HelpCircle className="w-4 h-4" />
                       </button>
-                      <div className="absolute right-0 top-full mt-1 hidden group-hover:block z-30 w-64 p-2.5 rounded-xl bg-slate-900/95 dark:bg-zinc-900/95 text-slate-100 text-xs shadow-xl border border-white/10 backdrop-blur-md pointer-events-none">
+                      <div className="absolute right-0 top-full mt-1 hidden group-hover:block z-30 w-64 p-2.5 rounded-xl bg-zinc-900/95 dark:bg-zinc-900/95 text-zinc-100 text-xs shadow-xl border border-white/10 backdrop-blur-md pointer-events-none">
                         Кликайте по схеме кузова для фиксации царапин, сколов, вмятин и коррозии. Данные автоматически попадают в Акт приема-передачи ТС.
                       </div>
                     </div>
@@ -1303,7 +1303,7 @@ export const RepairOrdersModule: React.FC = () => {
               {editorTab === "documents" && (
                 <div className="space-y-4">
                   {/* Document Type Selector Bar */}
-                  <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800">
+                  <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
                     <div className="flex flex-wrap items-center gap-1.5">
                       {[
                         { id: "work_order", label: "1. Заказ-наряд" },
@@ -1320,7 +1320,7 @@ export const RepairOrdersModule: React.FC = () => {
                           className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                             selectedDocTypeInEditor === t.id
                               ? "bg-red-600 text-white font-bold shadow-2xs"
-                              : "bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-700 dark:text-zinc-300"
+                              : "bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300"
                           }`}
                         >
                           {t.label}
@@ -1336,7 +1336,7 @@ export const RepairOrdersModule: React.FC = () => {
                         className={`flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-colors ${
                           isEditorFacsimile
                             ? "bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30"
-                            : "bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-500"
+                            : "bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-500"
                         }`}
                         title="Наложить печать и подпись (Факсимиле)"
                       >
@@ -1350,7 +1350,7 @@ export const RepairOrdersModule: React.FC = () => {
                         className={`flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-colors ${
                           isEditorScanMode
                             ? "bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/30"
-                            : "bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-500"
+                            : "bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-500"
                         }`}
                         title="Эффект сканированного листа"
                       >
@@ -1361,7 +1361,7 @@ export const RepairOrdersModule: React.FC = () => {
                       <button
                         type="button"
                         onClick={handleSaveToArchive}
-                        className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 hover:bg-slate-100 dark:hover:bg-zinc-700 text-xs font-semibold cursor-pointer"
+                        className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 text-xs font-semibold cursor-pointer"
                       >
                         <FolderArchive className="w-3.5 h-3.5 text-amber-500" />
                         <span>{archiveSavedToast ? "В архиве!" : "В Архив"}</span>
@@ -1377,7 +1377,7 @@ export const RepairOrdersModule: React.FC = () => {
                             setIsExportingDocx(false);
                           }
                         }}
-                        className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 hover:bg-slate-100 dark:hover:bg-zinc-700 text-xs font-semibold cursor-pointer"
+                        className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 text-xs font-semibold cursor-pointer"
                       >
                         <FileDown className="w-3.5 h-3.5 text-blue-500" />
                         <span>{isExportingDocx ? "Экспорт..." : "Word (.docx)"}</span>
@@ -1386,7 +1386,7 @@ export const RepairOrdersModule: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => window.print()}
-                        className="flex items-center space-x-1.5 px-4 py-1.5 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-950 text-xs font-bold shadow-sm cursor-pointer"
+                        className="flex items-center space-x-1.5 px-4 py-1.5 rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-zinc-950 text-xs font-bold shadow-sm cursor-pointer"
                       >
                         <Printer className="w-3.5 h-3.5" />
                         <span>Печать А4</span>
@@ -1396,7 +1396,7 @@ export const RepairOrdersModule: React.FC = () => {
 
                   {/* Document Canvas Preview */}
                   <div
-                    className={`p-8 rounded-xl text-slate-900 border border-slate-300 shadow-md font-sans text-xs space-y-4 leading-relaxed transition-all ${
+                    className={`p-8 rounded-xl text-zinc-900 border border-zinc-300 shadow-md font-sans text-xs space-y-4 leading-relaxed transition-all ${
                       isEditorScanMode
                         ? "bg-[#faf9f5] filter contrast-[1.03] brightness-[0.99] sepia-[0.03]"
                         : "bg-white"
@@ -1414,10 +1414,10 @@ export const RepairOrdersModule: React.FC = () => {
                             />
                             <div>
                               <span className="font-extrabold text-sm uppercase text-red-600">{stoReq.brandName}</span>
-                              <p className="text-[11px] text-slate-500">{stoReq.name}</p>
+                              <p className="text-[11px] text-zinc-500">{stoReq.name}</p>
                             </div>
                           </div>
-                          <div className="text-right text-[11px] text-slate-500">
+                          <div className="text-right text-[11px] text-zinc-500">
                             Образец заполнения платежного поручения
                           </div>
                         </div>
@@ -1426,24 +1426,24 @@ export const RepairOrdersModule: React.FC = () => {
                           <tbody>
                             <tr>
                               <td colSpan={2} rowSpan={2} className="border border-black p-2 align-top">
-                                <div className="text-[10px] text-slate-500">Банк получателя:</div>
+                                <div className="text-[10px] text-zinc-500">Банк получателя:</div>
                                 <div className="font-semibold">{stoReq.bankName}</div>
                               </td>
-                              <td className="border border-black p-1.5 w-20 text-[10px] text-slate-500">БИК</td>
+                              <td className="border border-black p-1.5 w-20 text-[10px] text-zinc-500">БИК</td>
                               <td className="border border-black p-1.5 font-mono font-semibold">{stoReq.bik}</td>
                             </tr>
                             <tr>
-                              <td className="border border-black p-1.5 text-[10px] text-slate-500">Сч. №</td>
+                              <td className="border border-black p-1.5 text-[10px] text-zinc-500">Сч. №</td>
                               <td className="border border-black p-1.5 font-mono font-semibold">{stoReq.ks}</td>
                             </tr>
                             <tr>
-                              <td className="border border-black p-1.5 text-[10px] text-slate-500 w-32">
+                              <td className="border border-black p-1.5 text-[10px] text-zinc-500 w-32">
                                 ИНН {stoReq.inn}
                               </td>
-                              <td className="border border-black p-1.5 text-[10px] text-slate-500">
+                              <td className="border border-black p-1.5 text-[10px] text-zinc-500">
                                 {stoReq.kpp ? `КПП ${stoReq.kpp}` : "КПП —"}
                               </td>
-                              <td rowSpan={2} className="border border-black p-1.5 text-[10px] text-slate-500 align-top">
+                              <td rowSpan={2} className="border border-black p-1.5 text-[10px] text-zinc-500 align-top">
                                 Сч. №
                               </td>
                               <td rowSpan={2} className="border border-black p-1.5 font-mono font-semibold align-top">
@@ -1452,7 +1452,7 @@ export const RepairOrdersModule: React.FC = () => {
                             </tr>
                             <tr>
                               <td colSpan={2} className="border border-black p-2 align-top">
-                                <div className="text-[10px] text-slate-500">Получатель:</div>
+                                <div className="text-[10px] text-zinc-500">Получатель:</div>
                                 <div className="font-bold">{stoReq.name}</div>
                               </td>
                             </tr>
@@ -1472,17 +1472,17 @@ export const RepairOrdersModule: React.FC = () => {
                               {stoReq.brandName}
                             </h2>
                             <p className="font-semibold">{stoReq.name}</p>
-                            <p className="text-[11px] text-slate-600">{stoReq.address} • Тел: {stoReq.phone}</p>
+                            <p className="text-[11px] text-zinc-600">{stoReq.address} • Тел: {stoReq.phone}</p>
                           </div>
                         </div>
-                        <div className="text-right text-[11px] text-slate-600 shrink-0">
+                        <div className="text-right text-[11px] text-zinc-600 shrink-0">
                           <p>ИНН: <span className="font-bold">{stoReq.inn}</span> {stoReq.kpp ? `/ КПП: ${stoReq.kpp}` : ""} • ОГРНИП: {stoReq.ogrn}</p>
                           <p>Р/с: {stoReq.rs} в {stoReq.bankName} (БИК: {stoReq.bik})</p>
                         </div>
                       </div>
                     )}
 
-                    <div className="text-center my-3 pb-2 border-b border-slate-200">
+                    <div className="text-center my-3 pb-2 border-b border-zinc-200">
                       <h3 className="text-sm font-bold uppercase tracking-wider">
                         {selectedDocTypeInEditor === "work_order" && `ДОГОВОР-ЗАКАЗ-НАРЯД № ${draftOrderForDoc.orderNumber}`}
                         {selectedDocTypeInEditor === "acceptance_act" && `АКТ ПРИЕМА-ПЕРЕДАЧИ ТС К ЗАКАЗ-НАРЯДУ № ${draftOrderForDoc.orderNumber}`}
@@ -1491,7 +1491,7 @@ export const RepairOrdersModule: React.FC = () => {
                         {selectedDocTypeInEditor === "invoice" && `СЧЕТ НА ОПЛАТУ № ${draftOrderForDoc.orderNumber}`}
                         {selectedDocTypeInEditor === "defect_sheet" && `ДЕФЕКТОВОЧНАЯ ВЕДОМОСТЬ № ${draftOrderForDoc.orderNumber}`}
                       </h3>
-                      <p className="text-[11px] text-slate-500">от {draftOrderForDoc.createdAt} г.</p>
+                      <p className="text-[11px] text-zinc-500">от {draftOrderForDoc.createdAt} г.</p>
                     </div>
 
                     {/* Parties info */}
@@ -1511,19 +1511,19 @@ export const RepairOrdersModule: React.FC = () => {
                         </div>
                       </div>
                     ) : (
-                      <div className="grid grid-cols-2 gap-4 p-3 rounded-lg bg-slate-50 border border-slate-200">
+                      <div className="grid grid-cols-2 gap-4 p-3 rounded-lg bg-zinc-50 border border-zinc-200">
                         <div>
-                          <span className="font-bold text-[10px] uppercase text-slate-400">Заказчик (Плательщик):</span>
-                          <p className="font-bold text-slate-900">{draftOrderForDoc.client?.name || "Частный клиент"}</p>
-                          <p className="text-slate-600">Тел: {draftOrderForDoc.client?.phone || "—"}</p>
-                          {draftOrderForDoc.client?.inn && <p className="text-slate-600">ИНН: {draftOrderForDoc.client.inn}</p>}
+                          <span className="font-bold text-[10px] uppercase text-zinc-400">Заказчик (Плательщик):</span>
+                          <p className="font-bold text-zinc-900">{draftOrderForDoc.client?.name || "Частный клиент"}</p>
+                          <p className="text-zinc-600">Тел: {draftOrderForDoc.client?.phone || "—"}</p>
+                          {draftOrderForDoc.client?.inn && <p className="text-zinc-600">ИНН: {draftOrderForDoc.client.inn}</p>}
                         </div>
                         <div>
-                          <span className="font-bold text-[10px] uppercase text-slate-400">Транспортное средство:</span>
-                          <p className="font-bold text-slate-900">{draftOrderForDoc.vehicle?.make} {draftOrderForDoc.vehicle?.model}</p>
+                          <span className="font-bold text-[10px] uppercase text-zinc-400">Транспортное средство:</span>
+                          <p className="font-bold text-zinc-900">{draftOrderForDoc.vehicle?.make} {draftOrderForDoc.vehicle?.model}</p>
                           <p>Госномер: <strong className="font-mono">{draftOrderForDoc.vehicle?.licensePlate}</strong></p>
-                          {draftOrderForDoc.vehicle?.vin && <p className="text-[11px] font-mono text-slate-600">VIN: {draftOrderForDoc.vehicle.vin}</p>}
-                          <p className="text-slate-600">Пробег: {draftOrderForDoc.vehicle?.mileage ? draftOrderForDoc.vehicle.mileage.toLocaleString() : "—"} км</p>
+                          {draftOrderForDoc.vehicle?.vin && <p className="text-[11px] font-mono text-zinc-600">VIN: {draftOrderForDoc.vehicle.vin}</p>}
+                          <p className="text-zinc-600">Пробег: {draftOrderForDoc.vehicle?.mileage ? draftOrderForDoc.vehicle.mileage.toLocaleString() : "—"} км</p>
                         </div>
                       </div>
                     )}
@@ -1542,35 +1542,35 @@ export const RepairOrdersModule: React.FC = () => {
                           <table className="w-full text-xs">
                             <tbody>
                               <tr className="border-b border-emerald-100">
-                                <td className="py-1 text-slate-600 w-44">Основание платежа:</td>
-                                <td className="py-1 font-semibold text-slate-900">Оплата по заказ-наряду № {draftOrderForDoc.orderNumber} от {draftOrderForDoc.createdAt} г.</td>
+                                <td className="py-1 text-zinc-600 w-44">Основание платежа:</td>
+                                <td className="py-1 font-semibold text-zinc-900">Оплата по заказ-наряду № {draftOrderForDoc.orderNumber} от {draftOrderForDoc.createdAt} г.</td>
                               </tr>
                               <tr className="border-b border-emerald-100">
-                                <td className="py-1 text-slate-600">Плательщик:</td>
-                                <td className="py-1 font-semibold text-slate-900">{draftOrderForDoc.client?.name}</td>
+                                <td className="py-1 text-zinc-600">Плательщик:</td>
+                                <td className="py-1 font-semibold text-zinc-900">{draftOrderForDoc.client?.name}</td>
                               </tr>
                               <tr className="border-b border-emerald-100">
-                                <td className="py-1 text-slate-600">Способ оплаты:</td>
-                                <td className="py-1 font-semibold text-slate-900">Безналичный расчет / Банковская карта / СБП</td>
+                                <td className="py-1 text-zinc-600">Способ оплаты:</td>
+                                <td className="py-1 font-semibold text-zinc-900">Безналичный расчет / Банковская карта / СБП</td>
                               </tr>
                               <tr className="border-b border-emerald-100">
-                                <td className="py-1 text-slate-600">Налоговый режим:</td>
-                                <td className="py-1 font-medium text-slate-700">УСН (Доходы), Патент. НДС не облагается (пп. 37 п. 3 ст. 149 НК РФ)</td>
+                                <td className="py-1 text-zinc-600">Налоговый режим:</td>
+                                <td className="py-1 font-medium text-zinc-700">УСН (Доходы), Патент. НДС не облагается (пп. 37 п. 3 ст. 149 НК РФ)</td>
                               </tr>
                               <tr>
-                                <td className="py-1.5 font-bold text-slate-900 text-sm">Сумма к оплате:</td>
+                                <td className="py-1.5 font-bold text-zinc-900 text-sm">Сумма к оплате:</td>
                                 <td className="py-1.5 font-extrabold text-emerald-700 text-base">{formatCurrency(draftOrderForDoc.grandTotal)}</td>
                               </tr>
                             </tbody>
                           </table>
 
                           <div className="pt-2 border-t border-emerald-200 text-xs">
-                            <span className="font-bold text-slate-900">Сумма прописью: </span>
-                            <span className="italic font-medium text-slate-800">{numberToWordsRu(draftOrderForDoc.grandTotal)}</span>
+                            <span className="font-bold text-zinc-900">Сумма прописью: </span>
+                            <span className="italic font-medium text-zinc-800">{numberToWordsRu(draftOrderForDoc.grandTotal)}</span>
                           </div>
                         </div>
 
-                        <div className="text-[11px] text-slate-500">
+                        <div className="text-[11px] text-zinc-500">
                           Настоящая квитанция подтверждает факт поступления денежных средств в кассу / на расчетный счет предприятия в полном объеме.
                         </div>
                       </div>
@@ -1578,7 +1578,7 @@ export const RepairOrdersModule: React.FC = () => {
 
                     {/* Acceptance Act Schematic & Damages embed */}
                     {selectedDocTypeInEditor === "acceptance_act" && (
-                      <div className="border border-slate-300 p-2.5 rounded-lg bg-white">
+                      <div className="border border-zinc-300 p-2.5 rounded-lg bg-white">
                         <VehicleInspectionSchematic inspection={draftOrderForDoc.inspection} readOnly={true} isPrint={true} />
                       </div>
                     )}
@@ -1586,25 +1586,25 @@ export const RepairOrdersModule: React.FC = () => {
                     {/* Works table */}
                     {(selectedDocTypeInEditor === "work_order" || selectedDocTypeInEditor === "completion_act" || selectedDocTypeInEditor === "invoice") && (
                       <div className="space-y-1">
-                        <div className="font-bold text-slate-900 text-xs">Выполненные работы:</div>
-                        <table className="w-full text-left border-collapse border border-slate-300">
+                        <div className="font-bold text-zinc-900 text-xs">Выполненные работы:</div>
+                        <table className="w-full text-left border-collapse border border-zinc-300">
                           <thead>
-                            <tr className="bg-slate-100 text-slate-700 text-[11px]">
-                              <th className="p-2 border border-slate-300">№</th>
-                              <th className="p-2 border border-slate-300">Работа</th>
-                              <th className="p-2 border border-slate-300 w-16 text-center">Н/Ч</th>
-                              <th className="p-2 border border-slate-300 w-24 text-right">Ставка</th>
-                              <th className="p-2 border border-slate-300 w-24 text-right">Сумма</th>
+                            <tr className="bg-zinc-100 text-zinc-700 text-[11px]">
+                              <th className="p-2 border border-zinc-300">№</th>
+                              <th className="p-2 border border-zinc-300">Работа</th>
+                              <th className="p-2 border border-zinc-300 w-16 text-center">Н/Ч</th>
+                              <th className="p-2 border border-zinc-300 w-24 text-right">Ставка</th>
+                              <th className="p-2 border border-zinc-300 w-24 text-right">Сумма</th>
                             </tr>
                           </thead>
                           <tbody>
                             {works.map((w, i) => (
                               <tr key={i}>
-                                <td className="p-1.5 border border-slate-300 text-center">{i + 1}</td>
-                                <td className="p-1.5 border border-slate-300 font-medium">{w.name}</td>
-                                <td className="p-1.5 border border-slate-300 text-center font-bold">{w.laborHours}</td>
-                                <td className="p-1.5 border border-slate-300 text-right">{w.ratePerHour} ₽</td>
-                                <td className="p-1.5 border border-slate-300 text-right font-bold">{w.total.toLocaleString()} ₽</td>
+                                <td className="p-1.5 border border-zinc-300 text-center">{i + 1}</td>
+                                <td className="p-1.5 border border-zinc-300 font-medium">{w.name}</td>
+                                <td className="p-1.5 border border-zinc-300 text-center font-bold">{w.laborHours}</td>
+                                <td className="p-1.5 border border-zinc-300 text-right">{w.ratePerHour} ₽</td>
+                                <td className="p-1.5 border border-zinc-300 text-right font-bold">{w.total.toLocaleString()} ₽</td>
                               </tr>
                             ))}
                           </tbody>
@@ -1615,27 +1615,27 @@ export const RepairOrdersModule: React.FC = () => {
                     {/* Parts table */}
                     {(selectedDocTypeInEditor === "work_order" || selectedDocTypeInEditor === "completion_act" || selectedDocTypeInEditor === "invoice") && parts.length > 0 && (
                       <div className="space-y-1 pt-2">
-                        <div className="font-bold text-slate-900 text-xs">Запасные части и расходные материалы:</div>
-                        <table className="w-full text-left border-collapse border border-slate-300">
+                        <div className="font-bold text-zinc-900 text-xs">Запасные части и расходные материалы:</div>
+                        <table className="w-full text-left border-collapse border border-zinc-300">
                           <thead>
-                            <tr className="bg-slate-100 text-slate-700 text-[11px]">
-                              <th className="p-2 border border-slate-300">№</th>
-                              <th className="p-2 border border-slate-300">Артикул</th>
-                              <th className="p-2 border border-slate-300">Наименование</th>
-                              <th className="p-2 border border-slate-300 w-16 text-center">Кол-во</th>
-                              <th className="p-2 border border-slate-300 w-24 text-right">Цена</th>
-                              <th className="p-2 border border-slate-300 w-24 text-right">Сумма</th>
+                            <tr className="bg-zinc-100 text-zinc-700 text-[11px]">
+                              <th className="p-2 border border-zinc-300">№</th>
+                              <th className="p-2 border border-zinc-300">Артикул</th>
+                              <th className="p-2 border border-zinc-300">Наименование</th>
+                              <th className="p-2 border border-zinc-300 w-16 text-center">Кол-во</th>
+                              <th className="p-2 border border-zinc-300 w-24 text-right">Цена</th>
+                              <th className="p-2 border border-zinc-300 w-24 text-right">Сумма</th>
                             </tr>
                           </thead>
                           <tbody>
                             {parts.map((p, i) => (
                               <tr key={i}>
-                                <td className="p-1.5 border border-slate-300 text-center">{i + 1}</td>
-                                <td className="p-1.5 border border-slate-300 font-mono text-[11px]">{p.oem || "—"}</td>
-                                <td className="p-1.5 border border-slate-300 font-medium">{p.name}</td>
-                                <td className="p-1.5 border border-slate-300 text-center font-bold">{p.qty} {p.unit}</td>
-                                <td className="p-1.5 border border-slate-300 text-right">{p.salePrice} ₽</td>
-                                <td className="p-1.5 border border-slate-300 text-right font-bold">{p.total.toLocaleString()} ₽</td>
+                                <td className="p-1.5 border border-zinc-300 text-center">{i + 1}</td>
+                                <td className="p-1.5 border border-zinc-300 font-mono text-[11px]">{p.oem || "—"}</td>
+                                <td className="p-1.5 border border-zinc-300 font-medium">{p.name}</td>
+                                <td className="p-1.5 border border-zinc-300 text-center font-bold">{p.qty} {p.unit}</td>
+                                <td className="p-1.5 border border-zinc-300 text-right">{p.salePrice} ₽</td>
+                                <td className="p-1.5 border border-zinc-300 text-right font-bold">{p.total.toLocaleString()} ₽</td>
                               </tr>
                             ))}
                           </tbody>
@@ -1645,37 +1645,37 @@ export const RepairOrdersModule: React.FC = () => {
 
                     {/* Defect sheet items */}
                     {selectedDocTypeInEditor === "defect_sheet" && (
-                      <div className="p-3 rounded-lg border border-slate-300 bg-slate-50 space-y-2">
+                      <div className="p-3 rounded-lg border border-zinc-300 bg-zinc-50 space-y-2">
                         <div className="font-bold text-xs">Выявленные дефекты узлов и агрегатов:</div>
-                        <p className="italic text-slate-800">{recommendations || complaints || "Дефектов не зафиксировано."}</p>
+                        <p className="italic text-zinc-800">{recommendations || complaints || "Дефектов не зафиксировано."}</p>
                       </div>
                     )}
 
                     {/* Totals & Sum in words */}
-                    <div className="p-3 bg-slate-50 border border-slate-300 rounded-lg space-y-1.5">
+                    <div className="p-3 bg-zinc-50 border border-zinc-300 rounded-lg space-y-1.5">
                       <div className="flex justify-between items-center">
-                        <span className="font-extrabold text-sm text-slate-900">
+                        <span className="font-extrabold text-sm text-zinc-900">
                           {selectedDocTypeInEditor === "invoice" ? "ВСЕГО К ОПЛАТЕ:" : "ИТОГО К ОПЛАТЕ:"}
                         </span>
                         <span className="font-black text-base text-red-600">
                           {formatCurrency(draftOrderForDoc.grandTotal)}
                         </span>
                       </div>
-                      <div className="text-[11px] text-slate-600 border-t border-slate-200 pt-1.5">
-                        <span className="font-bold text-slate-900">Сумма прописью: </span>
-                        <span className="italic font-medium text-slate-800">{numberToWordsRu(draftOrderForDoc.grandTotal)}</span>
+                      <div className="text-[11px] text-zinc-600 border-t border-zinc-200 pt-1.5">
+                        <span className="font-bold text-zinc-900">Сумма прописью: </span>
+                        <span className="italic font-medium text-zinc-800">{numberToWordsRu(draftOrderForDoc.grandTotal)}</span>
                       </div>
-                      <div className="text-[10px] text-slate-500">
+                      <div className="text-[10px] text-zinc-500">
                         НДС не облагается (в соответствии с пп. 37 п. 3 ст. 149 НК РФ, УСН / Патент).
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-8 pt-4 border-t-2 border-slate-300 text-[11px]">
+                    <div className="grid grid-cols-2 gap-8 pt-4 border-t-2 border-zinc-300 text-[11px]">
                       <div>
                         <p className="font-bold">
                           {selectedDocTypeInEditor === "invoice" ? "Предприниматель / Руководитель:" : "Исполнитель / Мастер-приемщик:"}
                         </p>
-                        <p className="text-slate-600 mb-4">{stoReq.director} / {stoReq.masterReceiver}</p>
+                        <p className="text-zinc-600 mb-4">{stoReq.director} / {stoReq.masterReceiver}</p>
 
                         <div className="relative inline-block">
                           {isEditorFacsimile && (
@@ -1700,15 +1700,15 @@ export const RepairOrdersModule: React.FC = () => {
                           )}
                           <div className="border-b border-black w-48 mb-1" />
                         </div>
-                        <p className="text-[10px] text-slate-500">Подпись / М.П.</p>
+                        <p className="text-[10px] text-zinc-500">Подпись / М.П.</p>
                       </div>
                       <div>
                         <p className="font-bold">
                           {selectedDocTypeInEditor === "payment_receipt" ? "Плательщик:" : "Заказчик (представитель):"}
                         </p>
-                        <p className="text-slate-600 mb-4">{draftOrderForDoc.client?.name || "Заказчик"}</p>
+                        <p className="text-zinc-600 mb-4">{draftOrderForDoc.client?.name || "Заказчик"}</p>
                         <div className="border-b border-black w-48 mb-1" />
-                        <p className="text-[10px] text-slate-500">
+                        <p className="text-[10px] text-zinc-500">
                           {selectedDocTypeInEditor === "payment_receipt" ? "Оплату произвел" : "С объемом и стоимостью работ согласен"}
                         </p>
                       </div>
@@ -1719,18 +1719,18 @@ export const RepairOrdersModule: React.FC = () => {
             </div>
 
             {/* Modal Bottom Action Bar */}
-            <div className="px-6 py-3.5 border-t border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900/60 flex items-center justify-between shrink-0">
+            <div className="px-6 py-3.5 border-t border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 flex items-center justify-between shrink-0">
               {(() => {
                 const calculated = calculateOrderTotals(works, parts);
                 return (
                   <div className="flex items-center space-x-4">
                     <div>
-                      <span className="text-[10px] uppercase font-bold text-slate-400">Итого:</span>
+                      <span className="text-[10px] uppercase font-bold text-zinc-400">Итого:</span>
                       <div className="text-base font-extrabold text-red-600 dark:text-red-400">
                         {formatCurrency(calculated.grandTotal)}
                       </div>
                     </div>
-                    <div className="hidden sm:block text-[11px] text-slate-500 border-l border-slate-200 dark:border-zinc-800 pl-4">
+                    <div className="hidden sm:block text-[11px] text-zinc-500 border-l border-zinc-200 dark:border-zinc-800 pl-4">
                       Работы: <strong>{formatCurrency(calculated.totalWorks)}</strong> • Запчасти: <strong>{formatCurrency(calculated.totalParts)}</strong>
                     </div>
                   </div>
@@ -1741,7 +1741,7 @@ export const RepairOrdersModule: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setIsEditorOpen(false)}
-                  className="px-4 py-2 rounded-xl text-slate-600 dark:text-zinc-400 hover:bg-slate-200 dark:hover:bg-zinc-800 cursor-pointer"
+                  className="px-4 py-2 rounded-xl text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800 cursor-pointer"
                 >
                   Отмена
                 </button>
@@ -1761,30 +1761,30 @@ export const RepairOrdersModule: React.FC = () => {
       {/* MODAL 1: WAREHOUSE PART PICKER MODAL */}
       {isWarehousePickerOpen && (
         <div className="fixed inset-0 z-60 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-[#0c1015] w-full max-w-xl max-h-[80vh] rounded-2xl shadow-2xl border border-slate-200 dark:border-zinc-800 flex flex-col overflow-hidden text-xs">
-            <div className="p-4 border-b border-slate-200 dark:border-zinc-800 flex items-center justify-between bg-slate-50 dark:bg-zinc-900/60">
-              <div className="flex items-center space-x-2 font-bold text-slate-900 dark:text-zinc-100">
+          <div className="bg-white dark:bg-[#0c1015] w-full max-w-xl max-h-[80vh] rounded-2xl shadow-2xl border border-zinc-200 dark:border-zinc-800 flex flex-col overflow-hidden text-xs">
+            <div className="p-4 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between bg-zinc-50 dark:bg-zinc-900/60">
+              <div className="flex items-center space-x-2 font-bold text-zinc-900 dark:text-zinc-100">
                 <Boxes className="w-4 h-4 text-emerald-500" />
                 <span>Выбор детали со склада автосервиса</span>
               </div>
-              <button onClick={() => setIsWarehousePickerOpen(false)} className="text-slate-400 hover:text-slate-600">
+              <button onClick={() => setIsWarehousePickerOpen(false)} className="text-zinc-400 hover:text-zinc-600">
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="p-3 border-b border-slate-200 dark:border-zinc-800">
+            <div className="p-3 border-b border-zinc-200 dark:border-zinc-800">
               <input
                 type="text"
                 placeholder="Поиск по артикулу OEM или названию..."
                 value={warehouseSearch}
                 onChange={(e) => setWarehouseSearch(e.target.value)}
-                className="w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs"
+                className="w-full px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs"
               />
             </div>
 
             <div className="flex-1 overflow-y-auto p-3 space-y-1.5">
               {availableWarehouseParts.length === 0 ? (
-                <div className="text-center py-8 text-slate-400">
+                <div className="text-center py-8 text-zinc-400">
                   Склад пуст. Вы можете оприходовать детали через раздел «Складской учет».
                 </div>
               ) : (
@@ -1798,15 +1798,15 @@ export const RepairOrdersModule: React.FC = () => {
                     <div
                       key={p.id}
                       onClick={() => handleSelectWarehousePart(p)}
-                      className="p-2.5 rounded-lg border border-slate-200 dark:border-zinc-800 hover:border-emerald-500 hover:bg-emerald-50/20 flex items-center justify-between cursor-pointer transition-colors"
+                      className="p-2.5 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-emerald-500 hover:bg-emerald-50/20 flex items-center justify-between cursor-pointer transition-colors"
                     >
                       <div>
-                        <div className="font-bold text-slate-900 dark:text-zinc-100">{p.name}</div>
-                        <div className="text-[11px] font-mono text-slate-500">OEM: {p.oem} • Стеллаж: {p.location || "Основной"}</div>
+                        <div className="font-bold text-zinc-900 dark:text-zinc-100">{p.name}</div>
+                        <div className="text-[11px] font-mono text-zinc-500">OEM: {p.oem} • Стеллаж: {p.location || "Основной"}</div>
                       </div>
                       <div className="text-right">
                         <div className="font-bold text-emerald-600 dark:text-emerald-400">{formatCurrency(p.salePrice)}</div>
-                        <div className="text-[10px] text-slate-400">В наличии: {p.quantity} {p.unit}</div>
+                        <div className="text-[10px] text-zinc-400">В наличии: {p.quantity} {p.unit}</div>
                       </div>
                     </div>
                   ))
@@ -1819,17 +1819,17 @@ export const RepairOrdersModule: React.FC = () => {
       {/* MODAL 2: EMBEDDED API PROCUREMENT DRAWER */}
       {isProcurementModalOpen && (
         <div className="fixed inset-0 z-60 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-[#0c1015] w-full max-w-5xl h-[88vh] rounded-2xl shadow-2xl border border-slate-200 dark:border-zinc-800 flex flex-col overflow-hidden">
-            <div className="p-4 border-b border-slate-200 dark:border-zinc-800 flex items-center justify-between bg-slate-50 dark:bg-zinc-900/60">
+          <div className="bg-white dark:bg-[#0c1015] w-full max-w-5xl h-[88vh] rounded-2xl shadow-2xl border border-zinc-200 dark:border-zinc-800 flex flex-col overflow-hidden">
+            <div className="p-4 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between bg-zinc-50 dark:bg-zinc-900/60">
               <div className="flex items-center space-x-2">
                 <div className="p-1.5 rounded-lg bg-red-600/10 text-red-600">
                   <Search className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-slate-900 dark:text-zinc-100">
+                  <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">
                     ИИ-Проценка и быстрый подбор запчастей по оптовым складам
                   </h3>
-                  <p className="text-[11px] text-slate-500">
+                  <p className="text-[11px] text-zinc-500">
                     {vehicleMake ? `${vehicleMake} ${vehicleModel}` : "Поиск по складам поставщиков"} {licensePlate ? `(${licensePlate})` : ""} {vin ? `• VIN: ${vin}` : ""}
                   </p>
                 </div>
@@ -1837,7 +1837,7 @@ export const RepairOrdersModule: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setIsProcurementModalOpen(false)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 cursor-pointer"
+                className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>

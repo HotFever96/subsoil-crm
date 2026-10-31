@@ -31,7 +31,7 @@ export const LicenseRegistry: React.FC = () => {
       case "SUSPENDED":
         return "bg-rose-500/10 text-rose-400 border-rose-500/20";
       default:
-        return "bg-slate-800 text-slate-400 border-slate-700";
+        return "bg-zinc-800 text-zinc-400 border-zinc-700";
     }
   };
 
@@ -51,19 +51,19 @@ export const LicenseRegistry: React.FC = () => {
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden bg-[#0a0f18]">
       {/* Top Header */}
-      <div className="px-6 py-4 border-b border-slate-800/80 flex items-center justify-between bg-[#0e1522]">
+      <div className="px-6 py-4 border-b border-zinc-800/80 flex items-center justify-between bg-[#0e1522]">
         <div>
-          <h1 className="text-base font-semibold text-slate-100">
+          <h1 className="text-base font-semibold text-zinc-100">
             Реестр лицензий
           </h1>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-zinc-400 mt-0.5">
             Учет действующих лицензий на право пользования недрами
           </p>
         </div>
 
         <button
           onClick={() => alert("Форма внесения новой лицензии...")}
-          className="px-3.5 py-1.5 rounded-lg text-xs font-medium bg-sky-500 hover:bg-sky-400 text-slate-950 transition-colors flex items-center space-x-1"
+          className="px-3.5 py-1.5 rounded-lg text-xs font-medium bg-sky-500 hover:bg-sky-400 text-zinc-950 transition-colors flex items-center space-x-1"
         >
           <Plus className="w-3.5 h-3.5" />
           <span>Добавить лицензию</span>
@@ -71,15 +71,15 @@ export const LicenseRegistry: React.FC = () => {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="px-6 py-3 bg-[#0b111c] border-b border-slate-800/80 flex items-center justify-between gap-4">
+      <div className="px-6 py-3 bg-[#0b111c] border-b border-zinc-800/80 flex items-center justify-between gap-4">
         <div className="relative flex-1 max-w-sm">
-          <Search className="w-3.5 h-3.5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Поиск по номеру, участку или предприятию..."
-            className="w-full pl-9 pr-3 py-1.5 rounded-lg bg-[#0e1522] border border-slate-800 text-xs text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-sky-500/60"
+            className="w-full pl-9 pr-3 py-1.5 rounded-lg bg-[#0e1522] border border-zinc-800 text-xs text-zinc-200 placeholder:text-zinc-500 focus:outline-none focus:border-sky-500/60"
           />
         </div>
 
@@ -90,8 +90,8 @@ export const LicenseRegistry: React.FC = () => {
               onClick={() => setStatusFilter(st)}
               className={`px-2.5 py-1 rounded-md text-xs transition-colors ${
                 statusFilter === st
-                  ? "bg-slate-800 text-sky-300 font-medium"
-                  : "text-slate-400 hover:text-slate-200"
+                  ? "bg-zinc-800 text-sky-300 font-medium"
+                  : "text-zinc-400 hover:text-zinc-200"
               }`}
             >
               {st === "ALL" ? "Все" : getStatusLabel(st as any)}
@@ -106,7 +106,7 @@ export const LicenseRegistry: React.FC = () => {
           {filtered.map((lic) => (
             <div
               key={lic.id}
-              className="p-5 rounded-xl bg-[#0e1522] border border-slate-800 space-y-3 hover:border-slate-700 transition-colors"
+              className="p-5 rounded-xl bg-[#0e1522] border border-zinc-800 space-y-3 hover:border-zinc-700 transition-colors"
             >
               <div className="flex items-start justify-between">
                 <div>
@@ -122,28 +122,28 @@ export const LicenseRegistry: React.FC = () => {
                       {getStatusLabel(lic.status)}
                     </span>
                   </div>
-                  <h3 className="text-sm font-semibold text-slate-100">
+                  <h3 className="text-sm font-semibold text-zinc-100">
                     {lic.subsoil_plot}
                   </h3>
                 </div>
               </div>
 
               <div className="space-y-1.5 text-xs">
-                <div className="flex justify-between text-slate-300">
-                  <span className="text-slate-500">Недропользователь:</span>
-                  <span className="font-medium text-slate-200 text-right">{lic.holder}</span>
+                <div className="flex justify-between text-zinc-300">
+                  <span className="text-zinc-500">Недропользователь:</span>
+                  <span className="font-medium text-zinc-200 text-right">{lic.holder}</span>
                 </div>
-                <div className="flex justify-between text-slate-300">
-                  <span className="text-slate-500">Ископаемое:</span>
-                  <span className="text-slate-300 text-right">{lic.mineral_type}</span>
+                <div className="flex justify-between text-zinc-300">
+                  <span className="text-zinc-500">Ископаемое:</span>
+                  <span className="text-zinc-300 text-right">{lic.mineral_type}</span>
                 </div>
-                <div className="flex justify-between text-slate-300">
-                  <span className="text-slate-500">Регион:</span>
-                  <span className="text-slate-400 text-right">{lic.region}</span>
+                <div className="flex justify-between text-zinc-300">
+                  <span className="text-zinc-500">Регион:</span>
+                  <span className="text-zinc-400 text-right">{lic.region}</span>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between pt-2.5 border-t border-slate-800/80 text-[11px] text-slate-500">
+              <div className="flex items-center justify-between pt-2.5 border-t border-zinc-800/80 text-[11px] text-zinc-500">
                 <span>Срок: {lic.issue_date} – {lic.expiry_date}</span>
                 <span>{lic.curator}</span>
               </div>

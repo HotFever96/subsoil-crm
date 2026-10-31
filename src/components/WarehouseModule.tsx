@@ -352,9 +352,9 @@ export const WarehouseModule: React.FC = () => {
             <Boxes className="w-5 h-5" />
           </div>
           <div>
-            <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center space-x-2.5">
+            <h1 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-white flex items-center space-x-2.5">
               <span>Складской учет</span>
-              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-200/60 dark:bg-white/[0.06] text-slate-600 dark:text-zinc-400">
+              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-zinc-200/60 dark:bg-white/[0.06] text-zinc-600 dark:text-zinc-400">
                 {parts.length} позиций
               </span>
               {deficitCount > 0 && (
@@ -374,7 +374,7 @@ export const WarehouseModule: React.FC = () => {
             className={`px-4 py-2 rounded-full text-xs font-semibold flex items-center space-x-1.5 transition-all cursor-pointer border ${
               onlyDeficit
                 ? "bg-rose-500 text-white border-rose-500 shadow-lg shadow-rose-500/20"
-                : "bg-white/60 dark:bg-white/[0.06] text-slate-700 dark:text-zinc-300 border-black/[0.05] dark:border-white/[0.08]"
+                : "bg-white/60 dark:bg-white/[0.06] text-zinc-700 dark:text-zinc-300 border-black/[0.05] dark:border-white/[0.08]"
             }`}
           >
             <AlertTriangle className="w-3.5 h-3.5 text-amber-500" />
@@ -411,7 +411,7 @@ export const WarehouseModule: React.FC = () => {
               className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                 selectedCategory === c
                   ? "bg-rose-600 text-white font-bold shadow-md shadow-rose-600/20"
-                  : "bg-white/50 dark:bg-white/[0.04] text-slate-600 dark:text-zinc-400 hover:text-white border border-black/[0.04] dark:border-white/[0.06]"
+                  : "bg-white/50 dark:bg-white/[0.04] text-zinc-600 dark:text-zinc-400 hover:text-white border border-black/[0.04] dark:border-white/[0.06]"
               }`}
             >
               {c === "all" ? "Все категории" : c}
@@ -420,17 +420,17 @@ export const WarehouseModule: React.FC = () => {
         </div>
 
         <div className="flex items-center space-x-3">
-          <div className="text-xs font-semibold text-slate-500 dark:text-zinc-400 hidden lg:block">
-            Склад: <span className="text-slate-900 dark:text-white font-extrabold">{formatCurrency(totalStockWorth)}</span>
+          <div className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 hidden lg:block">
+            Склад: <span className="text-zinc-900 dark:text-white font-extrabold">{formatCurrency(totalStockWorth)}</span>
           </div>
           <div className="relative min-w-[260px]">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <Search className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               type="text"
               placeholder="Поиск по артикулу OEM, названию..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-1.5 rounded-full bg-white/60 dark:bg-white/[0.06] border border-black/[0.05] dark:border-white/[0.08] text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-hidden backdrop-blur-md"
+              className="w-full pl-9 pr-4 py-1.5 rounded-full bg-white/60 dark:bg-white/[0.06] border border-black/[0.05] dark:border-white/[0.08] text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-hidden backdrop-blur-md"
             />
           </div>
         </div>
@@ -441,7 +441,7 @@ export const WarehouseModule: React.FC = () => {
         <div className="bg-white/70 dark:bg-white/[0.03] rounded-3xl border border-black/[0.05] dark:border-white/[0.08] shadow-2xl backdrop-blur-2xl overflow-hidden">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="bg-slate-50 dark:bg-white/[0.02] border-b border-slate-200 dark:border-white/[0.08] text-slate-500 dark:text-slate-400 font-semibold">
+              <tr className="bg-zinc-50 dark:bg-white/[0.02] border-b border-zinc-200 dark:border-white/[0.08] text-zinc-500 dark:text-zinc-400 font-semibold">
                 <th className="py-3 px-4">Артикул OEM</th>
                 <th className="py-3 px-4">Наименование детали</th>
                 <th className="py-3 px-4">Категория</th>
@@ -454,13 +454,13 @@ export const WarehouseModule: React.FC = () => {
                 <th className="py-3 px-4 text-center">Действия</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-white/[0.04]">
+            <tbody className="divide-y divide-zinc-100 dark:divide-white/[0.04]">
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={10} className="py-12 text-center text-slate-400">
+                  <td colSpan={10} className="py-12 text-center text-zinc-400">
                     <Boxes className="w-8 h-8 mx-auto mb-2 opacity-30" />
-                    <p className="font-semibold text-slate-600 dark:text-slate-300">Склад пуст</p>
-                    <p className="text-xs text-slate-400 mt-0.5">
+                    <p className="font-semibold text-zinc-600 dark:text-zinc-300">Склад пуст</p>
+                    <p className="text-xs text-zinc-400 mt-0.5">
                       Оприходуйте первую позицию вручную или проведите приходную накладную от поставщика
                     </p>
                   </td>
@@ -469,17 +469,17 @@ export const WarehouseModule: React.FC = () => {
                 filtered.map((item) => {
                   const isDeficit = item.quantity <= item.minQuantity;
                   return (
-                    <tr key={item.id} className="hover:bg-slate-50/80 dark:hover:bg-white/[0.02] transition-colors">
-                      <td className="py-3 px-4 font-mono font-bold text-slate-900 dark:text-slate-100">
+                    <tr key={item.id} className="hover:bg-zinc-50/80 dark:hover:bg-white/[0.02] transition-colors">
+                      <td className="py-3 px-4 font-mono font-bold text-zinc-900 dark:text-zinc-100">
                         {item.oem}
                       </td>
 
-                      <td className="py-3 px-4 font-semibold text-slate-900 dark:text-slate-100">
+                      <td className="py-3 px-4 font-semibold text-zinc-900 dark:text-zinc-100">
                         {item.name}
                       </td>
 
-                      <td className="py-3 px-4 text-slate-500">
-                        <span className="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-white/[0.05] text-[11px]">
+                      <td className="py-3 px-4 text-zinc-500">
+                        <span className="px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-white/[0.05] text-[11px]">
                           {item.category}
                         </span>
                       </td>
@@ -496,11 +496,11 @@ export const WarehouseModule: React.FC = () => {
                         </span>
                       </td>
 
-                      <td className="py-3 px-4 text-center text-slate-400">
+                      <td className="py-3 px-4 text-center text-zinc-400">
                         {item.minQuantity} {item.unit}
                       </td>
 
-                      <td className="py-3 px-4 text-right font-medium text-slate-500">
+                      <td className="py-3 px-4 text-right font-medium text-zinc-500">
                         {formatCurrency(item.purchasePrice)}
                       </td>
 
@@ -508,7 +508,7 @@ export const WarehouseModule: React.FC = () => {
                         {formatCurrency(item.salePrice)}
                       </td>
 
-                      <td className="py-3 px-4 text-slate-500 text-[11px]">
+                      <td className="py-3 px-4 text-zinc-500 text-[11px]">
                         {item.location || "Основной склад"}
                       </td>
 
@@ -516,14 +516,14 @@ export const WarehouseModule: React.FC = () => {
                         <div className="flex items-center justify-center space-x-1">
                           <button
                             onClick={() => handleAdjustQty(item.id, -1)}
-                            className="w-6 h-6 rounded bg-slate-100 dark:bg-white/[0.08] hover:bg-slate-200 text-slate-700 dark:text-slate-200 flex items-center justify-center font-bold cursor-pointer"
+                            className="w-6 h-6 rounded bg-zinc-100 dark:bg-white/[0.08] hover:bg-zinc-200 text-zinc-700 dark:text-zinc-200 flex items-center justify-center font-bold cursor-pointer"
                             title="Списать 1"
                           >
                             -
                           </button>
                           <button
                             onClick={() => handleAdjustQty(item.id, 1)}
-                            className="w-6 h-6 rounded bg-slate-100 dark:bg-white/[0.08] hover:bg-slate-200 text-slate-700 dark:text-slate-200 flex items-center justify-center font-bold cursor-pointer"
+                            className="w-6 h-6 rounded bg-zinc-100 dark:bg-white/[0.08] hover:bg-zinc-200 text-zinc-700 dark:text-zinc-200 flex items-center justify-center font-bold cursor-pointer"
                             title="Оприходовать 1"
                           >
                             +
@@ -536,7 +536,7 @@ export const WarehouseModule: React.FC = () => {
                           <button
                             type="button"
                             onClick={() => handleOpenEditModal(item)}
-                            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
+                            className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
                             title="Редактировать позицию"
                           >
                             <Edit className="w-3.5 h-3.5" />
@@ -544,7 +544,7 @@ export const WarehouseModule: React.FC = () => {
                           <button
                             type="button"
                             onClick={() => handleDeletePart(item.id)}
-                            className="p-1.5 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-colors cursor-pointer"
+                            className="p-1.5 rounded-lg text-zinc-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-colors cursor-pointer"
                             title="Удалить со склада"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -562,36 +562,36 @@ export const WarehouseModule: React.FC = () => {
 
       {/* Single Item Add / Edit Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="w-full max-w-md bg-white dark:bg-[#0e141e] border border-slate-200 dark:border-white/[0.1] rounded-2xl shadow-2xl p-6 space-y-4 text-xs">
-            <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/[0.08] pb-3">
-              <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center space-x-2">
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="w-full max-w-md bg-white/95 dark:bg-zinc-950/90 backdrop-blur-2xl border border-black/[0.08] dark:border-white/10 rounded-3xl shadow-2xl p-6 space-y-4 text-xs">
+            <div className="flex items-center justify-between border-b border-zinc-200 dark:border-white/[0.08] pb-3">
+              <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100 flex items-center space-x-2">
                 <Boxes className="w-4 h-4 text-red-500" />
                 <span>{editingPartId ? "Редактирование позиции склада" : "Оприходование детали на склад"}</span>
               </h3>
-              <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-white cursor-pointer">
+              <button onClick={() => setIsModalOpen(false)} className="text-zinc-400 hover:text-white cursor-pointer">
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-slate-500 font-semibold">Артикул OEM *</label>
+                <label className="text-zinc-500 font-semibold">Артикул OEM *</label>
                 <input
                   type="text"
                   value={oem}
                   onChange={(e) => setOem(e.target.value.toUpperCase())}
                   placeholder="Например: 2108-1006040"
-                  className="mt-1 w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-mono font-bold"
+                  className="mt-1 w-full px-3 py-2 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-zinc-900 dark:text-white placeholder:text-zinc-500 font-mono font-bold"
                 />
               </div>
 
               <div>
-                <label className="text-slate-500 font-semibold">Категория</label>
+                <label className="text-zinc-500 font-semibold">Категория</label>
                 <select
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
-                  className="mt-1 w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
+                  className="mt-1 w-full px-3 py-2 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-zinc-900 dark:text-white"
                 >
                   <option value="Фильтры">Фильтры</option>
                   <option value="Тормозная система">Тормозная система</option>
@@ -605,82 +605,82 @@ export const WarehouseModule: React.FC = () => {
             </div>
 
             <div>
-              <label className="text-slate-500 font-semibold">Наименование детали *</label>
+              <label className="text-zinc-500 font-semibold">Наименование детали *</label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Полное название детали"
-                className="mt-1 w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
+                className="mt-1 w-full px-3 py-2 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-zinc-900 dark:text-white placeholder:text-zinc-500"
               />
             </div>
 
             <div className="grid grid-cols-3 gap-3">
               <div>
-                <label className="text-slate-500 font-semibold">Количество</label>
+                <label className="text-zinc-500 font-semibold">Количество</label>
                 <input
                   type="number"
                   min="0"
                   value={quantity}
                   onChange={(e) => setQuantity(Number(e.target.value))}
-                  className="mt-1 w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-bold"
+                  className="mt-1 w-full px-3 py-2 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-zinc-900 dark:text-white font-bold"
                 />
               </div>
 
               <div>
-                <label className="text-slate-500 font-semibold">Мин. остаток</label>
+                <label className="text-zinc-500 font-semibold">Мин. остаток</label>
                 <input
                   type="number"
                   min="0"
                   value={minQuantity}
                   onChange={(e) => setMinQuantity(Number(e.target.value))}
-                  className="mt-1 w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
+                  className="mt-1 w-full px-3 py-2 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-zinc-900 dark:text-white"
                 />
               </div>
 
               <div>
-                <label className="text-slate-500 font-semibold">Ед. изм.</label>
+                <label className="text-zinc-500 font-semibold">Ед. изм.</label>
                 <input
                   type="text"
                   value={unit}
                   onChange={(e) => setUnit(e.target.value)}
-                  className="mt-1 w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
+                  className="mt-1 w-full px-3 py-2 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-zinc-900 dark:text-white"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-slate-500 font-semibold">Закупка (Опт, ₽)</label>
+                <label className="text-zinc-500 font-semibold">Закупка (Опт, ₽)</label>
                 <input
                   type="number"
                   min="0"
                   value={purchasePrice}
                   onChange={(e) => setPurchasePrice(Number(e.target.value))}
-                  className="mt-1 w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
+                  className="mt-1 w-full px-3 py-2 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-zinc-900 dark:text-white"
                 />
               </div>
 
               <div>
-                <label className="text-slate-500 font-semibold">Продажа клиенту (₽)</label>
+                <label className="text-zinc-500 font-semibold">Продажа клиенту (₽)</label>
                 <input
                   type="number"
                   min="0"
                   value={salePrice}
                   onChange={(e) => setSalePrice(Number(e.target.value))}
-                  className="mt-1 w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-bold text-red-600 dark:text-red-400"
+                  className="mt-1 w-full px-3 py-2 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-zinc-900 dark:text-white font-bold text-red-600 dark:text-red-400"
                 />
               </div>
             </div>
 
             <div>
-              <label className="text-slate-500 font-semibold">Складская ячейка / Локация</label>
+              <label className="text-zinc-500 font-semibold">Складская ячейка / Локация</label>
               <input
                 type="text"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 placeholder="Стеллаж Б-3, полка 2"
-                className="mt-1 w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
+                className="mt-1 w-full px-3 py-2 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-zinc-900 dark:text-white placeholder:text-zinc-500"
               />
             </div>
 
@@ -688,14 +688,14 @@ export const WarehouseModule: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setIsModalOpen(false)}
-                className="px-4 py-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/[0.06] cursor-pointer"
+                className="px-4 py-2 rounded-full text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-white/[0.06] cursor-pointer"
               >
                 Отмена
               </button>
               <button
                 type="button"
                 onClick={handleSavePart}
-                className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-semibold cursor-pointer shadow-sm"
+                className="px-5 py-2 rounded-full bg-red-600 hover:bg-red-500 text-white font-semibold cursor-pointer shadow-md shadow-red-600/20"
               >
                 {editingPartId ? "Сохранить изменения" : "Оприходовать"}
               </button>
@@ -706,14 +706,14 @@ export const WarehouseModule: React.FC = () => {
 
       {/* Stock Reception (Приходная накладная) Modal */}
       {isInvoiceModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="w-full max-w-3xl bg-white dark:bg-[#0e141e] border border-slate-200 dark:border-white/[0.1] rounded-2xl shadow-2xl p-6 space-y-4 text-xs max-h-[90vh] flex flex-col">
-            <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/[0.08] pb-3 shrink-0">
-              <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center space-x-2">
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="w-full max-w-3xl bg-white/95 dark:bg-zinc-950/90 backdrop-blur-2xl border border-black/[0.08] dark:border-white/10 rounded-3xl shadow-2xl p-6 space-y-4 text-xs max-h-[90vh] flex flex-col">
+            <div className="flex items-center justify-between border-b border-zinc-200 dark:border-white/[0.08] pb-3 shrink-0">
+              <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100 flex items-center space-x-2">
                 <FileCheck className="w-4 h-4 text-red-500" />
                 <span>Приходная накладная от поставщика (Поступление на склад)</span>
               </h3>
-              <button onClick={() => setIsInvoiceModalOpen(false)} className="text-slate-400 hover:text-white cursor-pointer">
+              <button onClick={() => setIsInvoiceModalOpen(false)} className="text-zinc-400 hover:text-white cursor-pointer">
                 <X className="w-4 h-4" />
               </button>
             </div>
@@ -721,11 +721,11 @@ export const WarehouseModule: React.FC = () => {
             {/* Invoice Top Details */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 shrink-0">
               <div>
-                <label className="text-slate-500 font-semibold">Поставщик / Контрагент *</label>
+                <label className="text-zinc-500 font-semibold">Поставщик / Контрагент *</label>
                 <select
                   value={invoiceSupplier}
                   onChange={(e) => setInvoiceSupplier(e.target.value)}
-                  className="mt-1 w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-semibold"
+                  className="mt-1 w-full px-3 py-2 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-zinc-900 dark:text-white font-semibold"
                 >
                   <option value="Росско (Rossko)">Росско (Rossko)</option>
                   <option value="Армтек (Armtek)">Армтек (Armtek)</option>
@@ -737,32 +737,32 @@ export const WarehouseModule: React.FC = () => {
               </div>
 
               <div>
-                <label className="text-slate-500 font-semibold">Номер накладной (УПД) *</label>
+                <label className="text-zinc-500 font-semibold">Номер накладной (УПД) *</label>
                 <input
                   type="text"
                   value={invoiceNumber}
                   onChange={(e) => setInvoiceNumber(e.target.value)}
                   placeholder="Н-10492"
-                  className="mt-1 w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-mono font-bold"
+                  className="mt-1 w-full px-3 py-2 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-zinc-900 dark:text-white placeholder:text-zinc-500 font-mono font-bold"
                 />
               </div>
 
               <div>
-                <label className="text-slate-500 font-semibold">Дата накладной *</label>
+                <label className="text-zinc-500 font-semibold">Дата накладной *</label>
                 <input
                   type="date"
                   value={invoiceDate}
                   onChange={(e) => setInvoiceDate(e.target.value)}
-                  className="mt-1 w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-mono"
+                  className="mt-1 w-full px-3 py-2 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-zinc-900 dark:text-white font-mono"
                 />
               </div>
             </div>
 
             {/* Table of items */}
-            <div className="flex-1 overflow-y-auto border border-slate-200 dark:border-white/[0.08] rounded-xl">
+            <div className="flex-1 overflow-y-auto border border-zinc-200 dark:border-white/[0.08] rounded-2xl">
               <table className="w-full text-left text-xs">
                 <thead>
-                  <tr className="bg-slate-50 dark:bg-white/[0.02] border-b border-slate-200 dark:border-white/[0.08] text-slate-500 font-semibold sticky top-0">
+                  <tr className="bg-zinc-50 dark:bg-white/[0.02] border-b border-zinc-200 dark:border-white/[0.08] text-zinc-500 font-semibold sticky top-0">
                     <th className="py-2.5 px-3">Артикул OEM *</th>
                     <th className="py-2.5 px-3">Наименование *</th>
                     <th className="py-2.5 px-3 w-20 text-center">Кол-во</th>
@@ -772,19 +772,19 @@ export const WarehouseModule: React.FC = () => {
                     <th className="py-2.5 px-2 w-10 text-center"></th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-white/[0.04]">
+                <tbody className="divide-y divide-zinc-100 dark:divide-white/[0.04]">
                   {invoiceItems.map((item, idx) => {
                     const rowSum = (Number(item.quantity) || 0) * (Number(item.purchasePrice) || 0);
 
                     return (
-                      <tr key={item.id} className="hover:bg-slate-50/50 dark:hover:bg-white/[0.01]">
+                      <tr key={item.id} className="hover:bg-zinc-50/50 dark:hover:bg-white/[0.01]">
                         <td className="p-2">
                           <input
                             type="text"
                             value={item.oem}
                             onChange={(e) => handleUpdateInvoiceItem(idx, "oem", e.target.value.toUpperCase())}
                             placeholder="OEM"
-                            className="w-full px-2 py-1 rounded-lg border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 font-mono font-bold text-xs"
+                            className="w-full px-2 py-1.5 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 font-mono font-bold text-xs text-zinc-900 dark:text-white"
                           />
                         </td>
                         <td className="p-2">
@@ -793,7 +793,7 @@ export const WarehouseModule: React.FC = () => {
                             value={item.name}
                             onChange={(e) => handleUpdateInvoiceItem(idx, "name", e.target.value)}
                             placeholder="Наименование запчасти"
-                            className="w-full px-2 py-1 rounded-lg border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-xs"
+                            className="w-full px-2 py-1.5 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-xs text-zinc-900 dark:text-white"
                           />
                         </td>
                         <td className="p-2 text-center">
@@ -802,7 +802,7 @@ export const WarehouseModule: React.FC = () => {
                             min="1"
                             value={item.quantity}
                             onChange={(e) => handleUpdateInvoiceItem(idx, "quantity", Number(e.target.value))}
-                            className="w-full px-2 py-1 rounded-lg border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-center font-bold text-xs"
+                            className="w-full px-2 py-1.5 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-center font-bold text-xs text-zinc-900 dark:text-white"
                           />
                         </td>
                         <td className="p-2 text-right">
@@ -811,7 +811,7 @@ export const WarehouseModule: React.FC = () => {
                             min="0"
                             value={item.purchasePrice}
                             onChange={(e) => handleUpdateInvoiceItem(idx, "purchasePrice", Number(e.target.value))}
-                            className="w-full px-2 py-1 rounded-lg border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-right text-xs"
+                            className="w-full px-2 py-1.5 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-right text-xs text-zinc-900 dark:text-white"
                           />
                         </td>
                         <td className="p-2 text-right">
@@ -820,17 +820,17 @@ export const WarehouseModule: React.FC = () => {
                             min="0"
                             value={item.salePrice}
                             onChange={(e) => handleUpdateInvoiceItem(idx, "salePrice", Number(e.target.value))}
-                            className="w-full px-2 py-1 rounded-lg border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-right font-bold text-red-600 dark:text-red-400 text-xs"
+                            className="w-full px-2 py-1.5 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-right font-bold text-red-600 dark:text-red-400 text-xs"
                           />
                         </td>
-                        <td className="p-2 text-right font-mono font-semibold text-slate-900 dark:text-slate-100">
+                        <td className="p-2 text-right font-mono font-semibold text-zinc-900 dark:text-zinc-100">
                           {formatCurrency(rowSum)}
                         </td>
                         <td className="p-2 text-center">
                           <button
                             type="button"
                             onClick={() => handleRemoveInvoiceRow(idx)}
-                            className="text-slate-400 hover:text-rose-500 p-1 cursor-pointer"
+                            className="text-zinc-400 hover:text-rose-500 p-1 cursor-pointer"
                             title="Удалить строку"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -844,11 +844,11 @@ export const WarehouseModule: React.FC = () => {
             </div>
 
             {/* Footer row: Add item button & total sum */}
-            <div className="pt-2 flex items-center justify-between border-t border-slate-200 dark:border-white/[0.08] shrink-0">
+            <div className="pt-2 flex items-center justify-between border-t border-zinc-200 dark:border-white/[0.08] shrink-0">
               <button
                 type="button"
                 onClick={handleAddInvoiceRow}
-                className="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-white/[0.1] hover:bg-slate-100 dark:hover:bg-white/[0.05] text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center space-x-1.5 cursor-pointer"
+                className="px-4 py-2 rounded-full border border-zinc-200 dark:border-white/10 hover:bg-zinc-100 dark:hover:bg-white/[0.05] text-xs font-semibold text-zinc-700 dark:text-zinc-300 flex items-center space-x-1.5 cursor-pointer"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Добавить строку в накладную</span>
@@ -856,8 +856,8 @@ export const WarehouseModule: React.FC = () => {
 
               <div className="flex items-center space-x-4">
                 <div className="text-right">
-                  <span className="text-slate-400 text-[11px]">ИТОГО ПО НАКЛАДНОЙ:</span>
-                  <div className="text-base font-extrabold text-slate-900 dark:text-white">
+                  <span className="text-zinc-400 text-[11px]">ИТОГО ПО НАКЛАДНОЙ:</span>
+                  <div className="text-base font-extrabold text-zinc-900 dark:text-white">
                     {formatCurrency(
                       invoiceItems.reduce(
                         (sum, i) => sum + (Number(i.quantity) || 0) * (Number(i.purchasePrice) || 0),
@@ -871,14 +871,14 @@ export const WarehouseModule: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setIsInvoiceModalOpen(false)}
-                    className="px-4 py-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/[0.06] cursor-pointer"
+                    className="px-4 py-2 rounded-full text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-white/[0.06] cursor-pointer"
                   >
                     Отмена
                   </button>
                   <button
                     type="button"
                     onClick={handlePostInvoice}
-                    className="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold cursor-pointer shadow-md flex items-center space-x-1.5"
+                    className="px-5 py-2.5 rounded-full bg-red-600 hover:bg-red-500 text-white font-bold cursor-pointer shadow-md shadow-red-600/20 flex items-center space-x-1.5"
                   >
                     <FileCheck className="w-4 h-4" />
                     <span>Провести накладную</span>

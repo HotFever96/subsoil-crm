@@ -23,8 +23,8 @@ export const LoginScreen: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-screen flex items-center justify-center bg-[#f8fafc] dark:bg-[#0c1015] px-4 transition-colors relative bg-[radial-gradient(ellipse_70%_50%_at_50%_40%,rgba(14,165,233,0.1),transparent_70%)]">
-      <div className="w-full max-w-sm bg-white dark:bg-[#131821] border border-slate-200 dark:border-white/[0.08] rounded-2xl p-8 shadow-xl shadow-sky-950/5 dark:shadow-2xl space-y-6">
+    <div className="min-h-screen w-screen flex items-center justify-center bg-[#f8fafc] dark:bg-[#09090b] px-4 transition-colors relative bg-[radial-gradient(ellipse_70%_50%_at_50%_40%,rgba(14,165,233,0.1),transparent_70%)]">
+      <div className="w-full max-w-sm bg-white/95 dark:bg-zinc-950/90 backdrop-blur-2xl border border-black/[0.08] dark:border-white/10 rounded-3xl p-8 shadow-2xl space-y-6">
         {/* Brand */}
         <div className="text-center pb-1">
           <div className="flex justify-center">
@@ -47,11 +47,11 @@ export const LoginScreen: React.FC = () => {
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1.5">
-            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300">
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300">
               Имя пользователя
             </label>
             <div className="relative">
-              <User className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <User className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 value={username}
@@ -59,17 +59,17 @@ export const LoginScreen: React.FC = () => {
                 placeholder="Логин"
                 autoComplete="username"
                 required
-                className="w-full pl-9 pr-3 py-2 rounded-xl bg-slate-50 dark:bg-[#0c1015] border border-slate-200 dark:border-white/[0.08] text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/15"
+                className="w-full pl-9 pr-3 py-2 rounded-xl bg-zinc-50 dark:bg-[#0c1015] border border-zinc-200 dark:border-white/[0.08] text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/15"
               />
             </div>
           </div>
 
           <div className="space-y-1.5">
-            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300">
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300">
               Пароль
             </label>
             <div className="relative">
-              <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Lock className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="password"
                 value={password}
@@ -77,7 +77,7 @@ export const LoginScreen: React.FC = () => {
                 placeholder="Пароль"
                 autoComplete="current-password"
                 required
-                className="w-full pl-9 pr-3 py-2 rounded-xl bg-slate-50 dark:bg-[#0c1015] border border-slate-200 dark:border-white/[0.08] text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/15"
+                className="w-full pl-9 pr-3 py-2 rounded-xl bg-zinc-50 dark:bg-[#0c1015] border border-zinc-200 dark:border-white/[0.08] text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/15"
               />
             </div>
           </div>

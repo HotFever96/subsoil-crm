@@ -74,11 +74,11 @@ const ActionCardView: React.FC<{ action: ChatActionPayload }> = ({ action }) => 
             <CheckCircle2 className="w-3.5 h-3.5" />
             <span>Событие добавлено в Календарь</span>
           </div>
-          <div className="text-sm font-bold text-slate-900 dark:text-white truncate mt-0.5">
+          <div className="text-sm font-bold text-zinc-900 dark:text-white truncate mt-0.5">
             {action.title}
           </div>
           {action.details && (
-            <div className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
+            <div className="text-xs text-zinc-600 dark:text-zinc-300 mt-0.5">
               📅 {renderActionDetails(action.details)}
             </div>
           )}
@@ -98,11 +98,11 @@ const ActionCardView: React.FC<{ action: ChatActionPayload }> = ({ action }) => 
             <CheckCircle2 className="w-3.5 h-3.5" />
             <span>Событие перенесено в Календаре</span>
           </div>
-          <div className="text-sm font-bold text-slate-900 dark:text-white truncate mt-0.5">
+          <div className="text-sm font-bold text-zinc-900 dark:text-white truncate mt-0.5">
             {action.title}
           </div>
           {action.details && (
-            <div className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
+            <div className="text-xs text-zinc-600 dark:text-zinc-300 mt-0.5">
               🕒 {renderActionDetails(action.details)}
             </div>
           )}
@@ -122,7 +122,7 @@ const ActionCardView: React.FC<{ action: ChatActionPayload }> = ({ action }) => 
             <CheckCircle2 className="w-3.5 h-3.5" />
             <span>Событие удалено из Календаря</span>
           </div>
-          <div className="text-sm font-bold text-slate-900 dark:text-white truncate mt-0.5">
+          <div className="text-sm font-bold text-zinc-900 dark:text-white truncate mt-0.5">
             {action.title}
           </div>
         </div>
@@ -141,11 +141,11 @@ const ActionCardView: React.FC<{ action: ChatActionPayload }> = ({ action }) => 
             <CheckCircle2 className="w-3.5 h-3.5" />
             <span>Черновик сохранен в «Умной почте»</span>
           </div>
-          <div className="text-sm font-bold text-slate-900 dark:text-white truncate mt-0.5">
+          <div className="text-sm font-bold text-zinc-900 dark:text-white truncate mt-0.5">
             {action.title}
           </div>
           {action.details && (
-            <div className="text-xs text-slate-600 dark:text-slate-300 mt-0.5 truncate">
+            <div className="text-xs text-zinc-600 dark:text-zinc-300 mt-0.5 truncate">
               ✉️ Тема: {renderActionDetails(action.details)}
             </div>
           )}
@@ -165,11 +165,11 @@ const ActionCardView: React.FC<{ action: ChatActionPayload }> = ({ action }) => 
             <CheckCircle2 className="w-3.5 h-3.5" />
             <span>Заметка сохранена в долгосрочную память</span>
           </div>
-          <div className="text-sm font-bold text-slate-900 dark:text-white truncate mt-0.5">
+          <div className="text-sm font-bold text-zinc-900 dark:text-white truncate mt-0.5">
             {action.title}
           </div>
           {action.details && (
-            <div className="text-xs text-slate-600 dark:text-slate-300 mt-0.5 whitespace-pre-wrap">
+            <div className="text-xs text-zinc-600 dark:text-zinc-300 mt-0.5 whitespace-pre-wrap">
               📌 {renderActionDetails(action.details)}
             </div>
           )}
@@ -189,11 +189,11 @@ const ActionCardView: React.FC<{ action: ChatActionPayload }> = ({ action }) => 
             <CheckCircle2 className="w-3.5 h-3.5" />
             <span>Параметры переданы в модуль «Проектирование»</span>
           </div>
-          <div className="text-sm font-bold text-slate-900 dark:text-white truncate mt-0.5">
+          <div className="text-sm font-bold text-zinc-900 dark:text-white truncate mt-0.5">
             {action.title}
           </div>
           {action.details && (
-            <div className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
+            <div className="text-xs text-zinc-600 dark:text-zinc-300 mt-0.5">
               🏗️ {renderActionDetails(action.details)}
             </div>
           )}
@@ -213,11 +213,11 @@ const ActionCardView: React.FC<{ action: ChatActionPayload }> = ({ action }) => 
             <CheckCircle2 className="w-3.5 h-3.5" />
             <span>Заказ-наряд оформлен и сохранен в базе СТО</span>
           </div>
-          <div className="text-sm font-bold text-slate-900 dark:text-white truncate mt-0.5">
+          <div className="text-sm font-bold text-zinc-900 dark:text-white truncate mt-0.5">
             {action.title}
           </div>
           {action.details && (
-            <div className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
+            <div className="text-xs text-zinc-600 dark:text-zinc-300 mt-0.5">
               🔧 {renderActionDetails(action.details)}
             </div>
           )}
@@ -229,7 +229,7 @@ const ActionCardView: React.FC<{ action: ChatActionPayload }> = ({ action }) => 
   if (action.type === "PARTS_PROCUREMENT_QUOTE") {
     const qData = action.data;
     return (
-      <div className="p-3.5 rounded-2xl bg-gradient-to-r from-red-500/10 via-amber-500/10 to-orange-500/10 border border-red-500/30 text-slate-900 dark:text-slate-100 shadow-2xs my-2">
+      <div className="p-3.5 rounded-2xl bg-gradient-to-r from-red-500/10 via-amber-500/10 to-orange-500/10 border border-red-500/30 text-zinc-900 dark:text-zinc-100 shadow-2xs my-2">
         <div className="flex items-start justify-between">
           <div className="flex items-center space-x-2">
             <div className="p-2 rounded-xl bg-red-500/20 text-red-500 shrink-0">
@@ -244,27 +244,27 @@ const ActionCardView: React.FC<{ action: ChatActionPayload }> = ({ action }) => 
             </div>
           </div>
           {qData?.oem && (
-            <span className="font-mono text-xs px-2 py-0.5 rounded bg-black/5 dark:bg-white/10 text-slate-600 dark:text-slate-300">
+            <span className="font-mono text-xs px-2 py-0.5 rounded bg-black/5 dark:bg-white/10 text-zinc-600 dark:text-zinc-300">
               OEM: {qData.oem}
             </span>
           )}
         </div>
         {action.details && (
-          <div className="text-xs text-slate-600 dark:text-slate-300 mt-2">
+          <div className="text-xs text-zinc-600 dark:text-zinc-300 mt-2">
             📦 {renderActionDetails(action.details)}
           </div>
         )}
         {Array.isArray(qData?.quotes) && qData.quotes.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-3 pt-3 border-t border-slate-200/50 dark:border-white/[0.08]">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-3 pt-3 border-t border-zinc-200/50 dark:border-white/[0.08]">
             {qData.quotes.map((q: any, i: number) => (
-              <div key={i} className="p-2.5 rounded-xl bg-white/70 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.06] text-xs">
-                <div className="flex items-center justify-between font-bold text-slate-800 dark:text-slate-200">
+              <div key={i} className="p-2.5 rounded-xl bg-white/70 dark:bg-white/[0.04] border border-zinc-200 dark:border-white/[0.06] text-xs">
+                <div className="flex items-center justify-between font-bold text-zinc-800 dark:text-zinc-200">
                   <span>{q.brand}</span>
                   <span className="text-red-500 font-mono">
                     {(q.clientPrice || q.purchasePrice || 0).toLocaleString()} ₽
                   </span>
                 </div>
-                <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 truncate">
+                <div className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5 truncate">
                   {q.supplierName || "Поставщик"} • {q.deliveryDays === 0 ? "Сегодня" : `${q.deliveryDays} дн.`}
                 </div>
               </div>
@@ -840,7 +840,7 @@ export const AIChat: React.FC = () => {
     return (
       <div
         key={file.id}
-        className="group relative flex items-center space-x-2.5 rounded-xl bg-white dark:bg-[#1a212d] border border-slate-200 dark:border-white/[0.1] px-2.5 py-1.5 text-xs text-slate-800 dark:text-slate-200 shadow-2xs"
+        className="group relative flex items-center space-x-2.5 rounded-xl bg-white dark:bg-[#1a212d] border border-zinc-200 dark:border-white/[0.1] px-2.5 py-1.5 text-xs text-zinc-800 dark:text-zinc-200 shadow-2xs"
       >
         {file.type === "image" && file.previewUrl ? (
           <img
@@ -861,20 +861,20 @@ export const AIChat: React.FC = () => {
             <FileText className="w-4 h-4" />
           </div>
         ) : (
-          <div className="w-7 h-7 rounded-lg bg-slate-500/15 text-slate-500 flex items-center justify-center shrink-0">
+          <div className="w-7 h-7 rounded-lg bg-zinc-500/15 text-zinc-500 flex items-center justify-center shrink-0">
             <FileText className="w-4 h-4" />
           </div>
         )}
         <div className="flex flex-col min-w-0 pr-4">
           <span className="truncate max-w-[130px] font-medium">{file.name}</span>
-          <span className="text-[10px] text-slate-400">
+          <span className="text-[10px] text-zinc-400">
             {file.type === "excel" ? "Excel" : file.type === "pdf" ? "PDF" : file.type === "word" ? "Word" : file.size} • {file.size}
           </span>
         </div>
         <button
           type="button"
           onClick={() => removeAttachment(file.id)}
-          className="absolute right-1 top-1 text-slate-400 hover:text-rose-500 p-0.5 rounded-full transition-colors cursor-pointer"
+          className="absolute right-1 top-1 text-zinc-400 hover:text-rose-500 p-0.5 rounded-full transition-colors cursor-pointer"
           title="Удалить"
         >
           <X className="w-3.5 h-3.5" />
@@ -907,10 +907,10 @@ export const AIChat: React.FC = () => {
           <div className="w-16 h-16 rounded-2xl bg-sky-500/20 border border-sky-500/40 text-sky-500 dark:text-sky-400 flex items-center justify-center mb-4 shadow-lg animate-bounce">
             <UploadCloud className="w-8 h-8" />
           </div>
-          <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1.5">
+          <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-1.5">
             Перетащите файлы сюда
           </h3>
-          <p className="text-xs text-slate-600 dark:text-slate-300 text-center max-w-sm mb-4">
+          <p className="text-xs text-zinc-600 dark:text-zinc-300 text-center max-w-sm mb-4">
             Полноценное распознавание PDF, таблиц Excel, документов Word, картинок и текстовых файлов
           </p>
           <div className="flex flex-wrap justify-center gap-2 text-[11px]">
@@ -954,7 +954,7 @@ export const AIChat: React.FC = () => {
           }`}
         >
           <div className="w-full max-w-xl flex flex-col items-center text-center -mt-6">
-            <h1 className="text-3xl sm:text-4xl font-medium tracking-tight text-slate-800 dark:text-slate-100 mb-8 select-none">
+            <h1 className="text-3xl sm:text-4xl font-medium tracking-tight text-zinc-800 dark:text-zinc-100 mb-8 select-none">
               {isChaika
                 ? user?.name
                   ? `${user.name}, чем могу помочь по автосервису?`
@@ -964,9 +964,9 @@ export const AIChat: React.FC = () => {
                 : "Чем я могу помочь сегодня?"}
             </h1>
 
-            {/* Central Narrower Rounded Pill Input Box (Gemini / ChatGPT Screen 3 style) */}
+            {/* Central Narrower Rounded Pill Input Box */}
             <div
-              className={`w-full relative rounded-3xl bg-slate-50/90 dark:bg-[#131821]/90 backdrop-blur-md border transition-all text-left shadow-lg ${
+              className={`w-full relative rounded-3xl bg-white/80 dark:bg-zinc-900/70 backdrop-blur-2xl border transition-all text-left shadow-lg ${
                 isChaika
                   ? "shadow-rose-950/5 dark:shadow-2xl dark:shadow-rose-950/20"
                   : "shadow-sky-950/5 dark:shadow-2xl dark:shadow-sky-950/20"
@@ -974,8 +974,8 @@ export const AIChat: React.FC = () => {
                 isListening
                   ? "border-rose-500/70 ring-4 ring-rose-500/20"
                   : isChaika
-                  ? "border-slate-200/90 dark:border-white/[0.1] focus-within:border-rose-500/60 focus-within:ring-4 focus-within:ring-rose-500/10"
-                  : "border-slate-200/90 dark:border-white/[0.1] focus-within:border-sky-500/60 focus-within:ring-4 focus-within:ring-sky-500/10"
+                  ? "border-black/[0.06] dark:border-white/[0.09] focus-within:border-white/20 focus-within:ring-4 focus-within:ring-rose-500/10"
+                  : "border-black/[0.06] dark:border-white/[0.09] focus-within:border-white/20 focus-within:ring-4 focus-within:ring-sky-500/10"
               }`}
             >
               {/* Voice recording live indicator */}
@@ -1007,7 +1007,7 @@ export const AIChat: React.FC = () => {
                     : "Спросите что-нибудь или надиктуйте запрос..."
                 }
                 rows={2}
-                className="w-full pt-4 pb-12 px-5 bg-transparent text-[15px] text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none resize-none max-h-48 leading-relaxed"
+                className="w-full pt-4 pb-12 px-5 bg-transparent text-[15px] text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:outline-none resize-none max-h-48 leading-relaxed"
               />
 
               <div className="absolute left-3.5 right-3.5 bottom-2.5 flex items-center justify-between pointer-events-none">
@@ -1015,7 +1015,7 @@ export const AIChat: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="p-2 rounded-full text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-white/[0.06] transition-colors flex items-center space-x-1 cursor-pointer"
+                    className="p-2 rounded-full text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-200/60 dark:hover:bg-white/[0.06] transition-colors flex items-center space-x-1 cursor-pointer"
                     title="Прикрепить файл или фото"
                   >
                     <Paperclip className="w-4 h-4" />
@@ -1027,8 +1027,12 @@ export const AIChat: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setIsVoiceLiveOpen(true)}
-                    className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-violet-600/20 to-pink-600/20 hover:from-violet-600/30 hover:to-pink-600/30 border border-pink-500/30 text-pink-500 dark:text-pink-300 transition-all text-xs font-semibold cursor-pointer"
-                    title="Живой непрерывный голосовой диалог («Моя волна» Live)"
+                    className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-full transition-all text-xs font-semibold cursor-pointer ${
+                      isChaika
+                        ? "bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-400"
+                        : "bg-sky-500/15 hover:bg-sky-500/25 border border-sky-500/30 text-sky-400"
+                    }`}
+                    title="Живой непрерывный голосовой диалог (Live)"
                   >
                     <Radio className="w-3.5 h-3.5 animate-pulse" />
                     <span>Live</span>
@@ -1041,7 +1045,7 @@ export const AIChat: React.FC = () => {
                     className={`p-2 rounded-full transition-all cursor-pointer ${
                       isListening
                         ? "bg-rose-500 text-white animate-pulse shadow-md shadow-rose-500/25 ring-2 ring-rose-400/50"
-                        : "text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-white/[0.06]"
+                        : "text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-200/60 dark:hover:bg-white/[0.06]"
                     }`}
                     title={isListening ? "Остановить запись голоса" : "Голосовой ввод (Speech-to-Text ru-RU)"}
                   >
@@ -1056,8 +1060,8 @@ export const AIChat: React.FC = () => {
                       (inputPrompt.trim() || attachedFiles.length > 0) && !isLoading
                         ? isChaika
                           ? "bg-rose-500 hover:bg-rose-600 text-white shadow-2xs"
-                          : "bg-slate-900 dark:bg-sky-500 text-white dark:text-slate-950 hover:opacity-90 shadow-2xs"
-                        : "bg-slate-200 dark:bg-white/[0.08] text-slate-400 dark:text-slate-600 cursor-not-allowed"
+                          : "bg-zinc-900 dark:bg-sky-500 text-white dark:text-zinc-950 hover:opacity-90 shadow-2xs"
+                        : "bg-zinc-200 dark:bg-white/[0.08] text-zinc-400 dark:text-zinc-600 cursor-not-allowed"
                     }`}
                     title="Отправить"
                   >
@@ -1078,7 +1082,7 @@ export const AIChat: React.FC = () => {
                         "Открой заказ-наряд на ТО ГАЗель NEXT А123ВС777: замена масла в ДВС и передних тормозных колодок"
                       )
                     }
-                    className="flex items-center space-x-2 px-3.5 py-1.5 rounded-full text-xs border bg-white/80 dark:bg-[#131821]/80 backdrop-blur-xs border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 hover:border-rose-500/50 hover:text-rose-500 transition-all cursor-pointer shadow-2xs"
+                    className="flex items-center space-x-2 px-3.5 py-1.5 rounded-full text-xs border bg-white/80 dark:bg-white/[0.04] hover:dark:bg-white/[0.09] backdrop-blur-md border-black/[0.06] dark:border-white/[0.07] text-zinc-700 dark:text-zinc-200 hover:border-rose-500/50 hover:text-rose-500 transition-all cursor-pointer shadow-2xs"
                   >
                     <Wrench className="w-3.5 h-3.5 text-rose-500" />
                     <span>Оформить заказ-наряд</span>
@@ -1091,7 +1095,7 @@ export const AIChat: React.FC = () => {
                         "Рассчитай нормо-часы и стоимость ремонта КамАЗ 65115: замена корзины сцепления и выжимного подшипника"
                       )
                     }
-                    className="flex items-center space-x-2 px-3.5 py-1.5 rounded-full text-xs border bg-white/80 dark:bg-[#131821]/80 backdrop-blur-xs border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 hover:border-rose-500/50 hover:text-rose-500 transition-all cursor-pointer shadow-2xs"
+                    className="flex items-center space-x-2 px-3.5 py-1.5 rounded-full text-xs border bg-white/80 dark:bg-white/[0.04] hover:dark:bg-white/[0.09] backdrop-blur-md border-black/[0.06] dark:border-white/[0.07] text-zinc-700 dark:text-zinc-200 hover:border-rose-500/50 hover:text-rose-500 transition-all cursor-pointer shadow-2xs"
                   >
                     <RotateCw className="w-3.5 h-3.5 text-rose-500" />
                     <span>Нормо-часы КамАЗ</span>
@@ -1104,7 +1108,7 @@ export const AIChat: React.FC = () => {
                         "Подготовь дефектовочную ведомость для проверки передней подвески и рулевого управления ГАЗель NEXT"
                       )
                     }
-                    className="flex items-center space-x-2 px-3.5 py-1.5 rounded-full text-xs border bg-white/80 dark:bg-[#131821]/80 backdrop-blur-xs border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 hover:border-rose-500/50 hover:text-rose-500 transition-all cursor-pointer shadow-2xs"
+                    className="flex items-center space-x-2 px-3.5 py-1.5 rounded-full text-xs border bg-white/80 dark:bg-white/[0.04] hover:dark:bg-white/[0.09] backdrop-blur-md border-black/[0.06] dark:border-white/[0.07] text-zinc-700 dark:text-zinc-200 hover:border-rose-500/50 hover:text-rose-500 transition-all cursor-pointer shadow-2xs"
                   >
                     <FileText className="w-3.5 h-3.5 text-rose-500" />
                     <span>Дефектовка подвески</span>
@@ -1116,7 +1120,7 @@ export const AIChat: React.FC = () => {
                     className={`flex items-center space-x-2 px-3.5 py-1.5 rounded-full text-xs border transition-all cursor-pointer shadow-2xs ${
                       webSearchEnabled
                         ? "bg-rose-500/15 border-rose-500/50 text-rose-600 dark:text-rose-400 font-medium"
-                        : "bg-white/80 dark:bg-[#131821]/80 backdrop-blur-xs border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 hover:border-rose-500/40 hover:text-rose-500"
+                        : "bg-white/80 dark:bg-white/[0.04] hover:dark:bg-white/[0.09] backdrop-blur-md border-black/[0.06] dark:border-white/[0.07] text-zinc-700 dark:text-zinc-200 hover:border-rose-500/40 hover:text-rose-500"
                     }`}
                   >
                     <Globe className="w-3.5 h-3.5 text-rose-500" />
@@ -1131,7 +1135,7 @@ export const AIChat: React.FC = () => {
                     className={`flex items-center space-x-2 px-4 py-2 rounded-full text-xs border transition-all cursor-pointer shadow-2xs ${
                       webSearchEnabled
                         ? "bg-sky-500/15 border-sky-500/50 text-sky-600 dark:text-sky-400 font-medium"
-                        : "bg-white/80 dark:bg-[#131821]/80 backdrop-blur-xs border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 hover:border-sky-500/40 hover:text-sky-600 dark:hover:text-sky-400"
+                        : "bg-white/80 dark:bg-white/[0.04] hover:dark:bg-white/[0.09] backdrop-blur-md border-black/[0.06] dark:border-white/[0.07] text-zinc-700 dark:text-zinc-200 hover:border-sky-500/40 hover:text-sky-600 dark:hover:text-sky-400"
                     }`}
                   >
                     <Globe className="w-3.5 h-3.5 text-sky-500" />
@@ -1144,7 +1148,7 @@ export const AIChat: React.FC = () => {
                     className={`flex items-center space-x-2 px-4 py-2 rounded-full text-xs border transition-all cursor-pointer shadow-2xs ${
                       styleMode === "brief"
                         ? "bg-sky-500/15 border-sky-500/50 text-sky-600 dark:text-sky-400 font-medium"
-                        : "bg-white/80 dark:bg-[#131821]/80 backdrop-blur-xs border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 hover:border-sky-500/40 hover:text-sky-600 dark:hover:text-sky-400"
+                        : "bg-white/80 dark:bg-white/[0.04] hover:dark:bg-white/[0.09] backdrop-blur-md border-black/[0.06] dark:border-white/[0.07] text-zinc-700 dark:text-zinc-200 hover:border-sky-500/40 hover:text-sky-600 dark:hover:text-sky-400"
                     }`}
                   >
                     <Zap className="w-3.5 h-3.5 text-sky-500" />
@@ -1157,7 +1161,7 @@ export const AIChat: React.FC = () => {
                     className={`flex items-center space-x-2 px-4 py-2 rounded-full text-xs border transition-all cursor-pointer shadow-2xs ${
                       styleMode === "detailed"
                         ? "bg-sky-500/15 border-sky-500/50 text-sky-600 dark:text-sky-400 font-medium"
-                        : "bg-white/80 dark:bg-[#131821]/80 backdrop-blur-xs border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 hover:border-sky-500/40 hover:text-sky-600 dark:hover:text-sky-400"
+                        : "bg-white/80 dark:bg-white/[0.04] hover:dark:bg-white/[0.09] backdrop-blur-md border-black/[0.06] dark:border-white/[0.07] text-zinc-700 dark:text-zinc-200 hover:border-sky-500/40 hover:text-sky-600 dark:hover:text-sky-400"
                     }`}
                   >
                     <BookOpen className="w-3.5 h-3.5 text-sky-500" />
@@ -1167,9 +1171,9 @@ export const AIChat: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="flex items-center space-x-2 px-4 py-2 rounded-full text-xs border bg-white/80 dark:bg-[#131821]/80 backdrop-blur-xs border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 hover:border-sky-500/40 hover:text-sky-600 dark:hover:text-sky-400 shadow-2xs transition-all cursor-pointer"
+                    className="flex items-center space-x-2 px-4 py-2 rounded-full text-xs border bg-white/80 dark:bg-white/[0.04] hover:dark:bg-white/[0.09] backdrop-blur-md border-black/[0.06] dark:border-white/[0.07] text-zinc-700 dark:text-zinc-200 hover:border-sky-500/40 hover:text-sky-600 dark:hover:text-sky-400 shadow-2xs transition-all cursor-pointer"
                   >
-                    <Paperclip className="w-3.5 h-3.5 text-slate-400" />
+                    <Paperclip className="w-3.5 h-3.5 text-zinc-400" />
                     <span>Анализ файлов и фото</span>
                   </button>
                 </>
@@ -1216,8 +1220,8 @@ export const AIChat: React.FC = () => {
                     <div
                       className={`group relative rounded-2xl px-4 py-3.5 max-w-2xl text-[15px] leading-relaxed ${
                         isAssistant
-                          ? "bg-transparent text-slate-900 dark:text-slate-100 w-full"
-                          : "bg-slate-900 dark:bg-[#18212e] border border-transparent dark:border-white/[0.06] text-white dark:text-slate-100"
+                          ? "bg-transparent text-zinc-900 dark:text-zinc-100 w-full"
+                          : "bg-zinc-900 dark:bg-[#18212e] border border-transparent dark:border-white/[0.06] text-white dark:text-zinc-100"
                       }`}
                     >
                       {/* Attached files preview in user message */}
@@ -1228,7 +1232,7 @@ export const AIChat: React.FC = () => {
                               key={idx}
                               type="button"
                               onClick={() => downloadUploadedFile({ name: att.name, previewUrl: att.previewUrl })}
-                              className="flex items-center space-x-2 rounded-xl bg-black/30 hover:bg-black/50 px-3 py-1.5 text-xs text-slate-200 border border-white/10 hover:border-white/25 transition-all cursor-pointer group/att"
+                              className="flex items-center space-x-2 rounded-xl bg-black/30 hover:bg-black/50 px-3 py-1.5 text-xs text-zinc-200 border border-white/10 hover:border-white/25 transition-all cursor-pointer group/att"
                               title="Нажмите, чтобы скачать файл"
                             >
                               {att.type === "image" && att.previewUrl ? (
@@ -1244,10 +1248,10 @@ export const AIChat: React.FC = () => {
                               ) : att.type === "word" ? (
                                 <FileText className="w-4 h-4 text-sky-400 shrink-0" />
                               ) : (
-                                <FileText className="w-4 h-4 text-slate-400 shrink-0" />
+                                <FileText className="w-4 h-4 text-zinc-400 shrink-0" />
                               )}
                               <span className="max-w-[170px] truncate">{att.name}</span>
-                              <Download className="w-3.5 h-3.5 text-slate-400 group-hover/att:text-white transition-colors ml-1 shrink-0" />
+                              <Download className="w-3.5 h-3.5 text-zinc-400 group-hover/att:text-white transition-colors ml-1 shrink-0" />
                             </button>
                           ))}
                         </div>
@@ -1272,10 +1276,10 @@ export const AIChat: React.FC = () => {
 
                       {/* Action buttons under assistant message */}
                       {isAssistant && (
-                        <div className="mt-3 pt-1 flex flex-wrap items-center gap-1.5 text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="mt-3 pt-1 flex flex-wrap items-center gap-1.5 text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity">
                           <button
                             onClick={() => handleCopy(msg.id, msg.content)}
-                            className="p-1 rounded hover:text-slate-700 dark:hover:text-slate-200 transition-colors cursor-pointer"
+                            className="p-1 rounded hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors cursor-pointer"
                             title="Копировать"
                           >
                             {copiedId === msg.id ? (
@@ -1285,31 +1289,31 @@ export const AIChat: React.FC = () => {
                             )}
                           </button>
                           <button
-                            className="p-1 rounded hover:text-slate-700 dark:hover:text-slate-200 transition-colors cursor-pointer"
+                            className="p-1 rounded hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors cursor-pointer"
                             title="Хороший ответ"
                           >
                             <ThumbsUp className="w-3.5 h-3.5" />
                           </button>
                           <button
-                            className="p-1 rounded hover:text-slate-700 dark:hover:text-slate-200 transition-colors cursor-pointer"
+                            className="p-1 rounded hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors cursor-pointer"
                             title="Плохой ответ"
                           >
                             <ThumbsDown className="w-3.5 h-3.5" />
                           </button>
                           <button
                             onClick={() => handleSend(activeSession.messages.filter(m => m.role === "user").slice(-1)[0]?.content)}
-                            className="p-1 rounded hover:text-slate-700 dark:hover:text-slate-200 transition-colors cursor-pointer"
+                            className="p-1 rounded hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors cursor-pointer"
                             title="Перегенерировать"
                           >
                             <RotateCw className="w-3.5 h-3.5" />
                           </button>
 
-                          <div className="h-3 w-px bg-slate-300 dark:bg-white/10 mx-1" />
+                          <div className="h-3 w-px bg-zinc-300 dark:bg-white/10 mx-1" />
 
                           {/* 1-click Export to PDF */}
                           <button
                             onClick={() => printOrSaveToPdf("Документ Geo AI", msg.content.replace(/\n/g, "<br/>"))}
-                            className="px-2 py-0.5 rounded text-[11px] text-slate-500 dark:text-slate-400 hover:text-rose-500 dark:hover:text-rose-400 hover:bg-rose-500/10 transition-colors flex items-center space-x-1 cursor-pointer font-medium"
+                            className="px-2 py-0.5 rounded text-[11px] text-zinc-500 dark:text-zinc-400 hover:text-rose-500 dark:hover:text-rose-400 hover:bg-rose-500/10 transition-colors flex items-center space-x-1 cursor-pointer font-medium"
                             title="Печать или сохранение в PDF"
                           >
                             <Printer className="w-3 h-3" />
@@ -1323,7 +1327,7 @@ export const AIChat: React.FC = () => {
                               title: "Документ Geo AI",
                               sections: [{ text: msg.content }]
                             })}
-                            className="px-2 py-0.5 rounded text-[11px] text-slate-500 dark:text-slate-400 hover:text-sky-500 dark:hover:text-sky-400 hover:bg-sky-500/10 transition-colors flex items-center space-x-1 cursor-pointer font-medium"
+                            className="px-2 py-0.5 rounded text-[11px] text-zinc-500 dark:text-zinc-400 hover:text-sky-500 dark:hover:text-sky-400 hover:bg-sky-500/10 transition-colors flex items-center space-x-1 cursor-pointer font-medium"
                             title="Скачать документ Word (.docx)"
                           >
                             <FileText className="w-3 h-3" />
@@ -1337,7 +1341,7 @@ export const AIChat: React.FC = () => {
                                 const tbl = extractMarkdownTables(msg.content);
                                 if (tbl) exportToExcel(tbl);
                               }}
-                              className="px-2 py-0.5 rounded text-[11px] text-slate-500 dark:text-slate-400 hover:text-emerald-500 dark:hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors flex items-center space-x-1 cursor-pointer font-medium"
+                              className="px-2 py-0.5 rounded text-[11px] text-zinc-500 dark:text-zinc-400 hover:text-emerald-500 dark:hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors flex items-center space-x-1 cursor-pointer font-medium"
                               title="Скачать таблицу в Excel (.xlsx)"
                             >
                               <FileSpreadsheet className="w-3 h-3" />
@@ -1349,7 +1353,7 @@ export const AIChat: React.FC = () => {
                     </div>
 
                     {!isAssistant && (
-                      <div className="w-8 h-8 rounded-full bg-slate-800 text-slate-200 flex items-center justify-center shrink-0 mt-1">
+                      <div className="w-8 h-8 rounded-full bg-zinc-800 text-zinc-200 flex items-center justify-center shrink-0 mt-1">
                         <User className="w-4 h-4" />
                       </div>
                     )}
@@ -1368,7 +1372,7 @@ export const AIChat: React.FC = () => {
                   >
                     {isChaika ? <Wrench className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
                   </div>
-                  <div className="rounded-2xl px-4 py-3 bg-slate-100 dark:bg-[#131821] border border-slate-200/60 dark:border-white/[0.06] text-xs text-slate-400 flex items-center space-x-2">
+                  <div className="rounded-2xl px-4 py-3 bg-zinc-100/90 dark:bg-zinc-900/70 backdrop-blur-md border border-zinc-200/60 dark:border-white/[0.08] text-xs text-zinc-400 flex items-center space-x-2">
                     <div
                       className={`w-2 h-2 rounded-full animate-pulse ${
                         isChaika ? "bg-rose-500" : "bg-sky-500"
@@ -1386,12 +1390,12 @@ export const AIChat: React.FC = () => {
           {/* Floating Center Bottom Input Box */}
           <div className="w-full max-w-3xl mx-auto px-4 pb-4 pt-1">
             <div
-              className={`relative rounded-3xl bg-slate-100/90 dark:bg-[#131821]/90 backdrop-blur-md border transition-colors ${
+              className={`relative rounded-3xl bg-white/80 dark:bg-zinc-900/70 backdrop-blur-2xl border transition-colors ${
                 isListening
                   ? "border-rose-500/70 ring-4 ring-rose-500/20 shadow-md shadow-rose-500/10"
                   : isChaika
-                  ? "border-slate-200 dark:border-white/[0.1] shadow-2xs focus-within:border-rose-500/60 focus-within:ring-4 focus-within:ring-rose-500/10"
-                  : "border-slate-200 dark:border-white/[0.1] shadow-2xs focus-within:border-sky-500/60 focus-within:ring-4 focus-within:ring-sky-500/10"
+                  ? "border-black/[0.06] dark:border-white/[0.09] shadow-2xs focus-within:border-white/20 focus-within:ring-4 focus-within:ring-rose-500/10"
+                  : "border-black/[0.06] dark:border-white/[0.09] shadow-2xs focus-within:border-white/20 focus-within:ring-4 focus-within:ring-sky-500/10"
               }`}
             >
               {/* Voice recording live indicator */}
@@ -1423,7 +1427,7 @@ export const AIChat: React.FC = () => {
                     : "Спросите что-нибудь (код, текст, анализ, бизнес)..."
                 }
                 rows={1}
-                className="w-full pt-3.5 pb-11 px-5 bg-transparent text-[15px] text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none resize-none max-h-48 leading-relaxed"
+                className="w-full pt-3.5 pb-11 px-5 bg-transparent text-[15px] text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:outline-none resize-none max-h-48 leading-relaxed"
               />
 
               <div className="absolute left-3.5 right-3.5 bottom-2.5 flex items-center justify-between pointer-events-none">
@@ -1431,7 +1435,7 @@ export const AIChat: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="p-1.5 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
+                    className="p-1.5 rounded-full text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 hover:bg-zinc-200/60 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
                     title="Прикрепить файл или фото"
                   >
                     <Paperclip className="w-4 h-4" />
@@ -1465,8 +1469,12 @@ export const AIChat: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setIsVoiceLiveOpen(true)}
-                    className="flex items-center space-x-1 px-2.5 py-1 rounded-full bg-gradient-to-r from-violet-600/20 to-pink-600/20 hover:from-violet-600/30 hover:to-pink-600/30 border border-pink-500/30 text-pink-500 dark:text-pink-300 transition-all text-[11px] font-semibold cursor-pointer"
-                    title="Живой непрерывный голосовой диалог («Моя волна» Live)"
+                    className={`flex items-center space-x-1 px-2.5 py-1 rounded-full transition-all text-[11px] font-semibold cursor-pointer ${
+                      isChaika
+                        ? "bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-400"
+                        : "bg-sky-500/15 hover:bg-sky-500/25 border border-sky-500/30 text-sky-400"
+                    }`}
+                    title="Живой непрерывный голосовой диалог (Live)"
                   >
                     <Radio className="w-3 h-3 animate-pulse" />
                     <span>Live</span>
@@ -1479,7 +1487,7 @@ export const AIChat: React.FC = () => {
                     className={`p-1.5 rounded-full transition-all cursor-pointer ${
                       isListening
                         ? "bg-rose-500 text-white animate-pulse shadow-md shadow-rose-500/25 ring-2 ring-rose-400/50"
-                        : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-white/[0.06]"
+                        : "text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 hover:bg-zinc-200/60 dark:hover:bg-white/[0.06]"
                     }`}
                     title={isListening ? "Остановить запись голоса" : "Голосовой ввод (Speech-to-Text ru-RU)"}
                   >
@@ -1494,8 +1502,8 @@ export const AIChat: React.FC = () => {
                       (inputPrompt.trim() || attachedFiles.length > 0) && !isLoading
                         ? isChaika
                           ? "bg-rose-500 hover:bg-rose-600 text-white"
-                          : "bg-slate-900 dark:bg-sky-500 text-white dark:text-slate-950 hover:opacity-90"
-                        : "bg-slate-200 dark:bg-white/[0.08] text-slate-400 dark:text-slate-600 cursor-not-allowed"
+                          : "bg-zinc-900 dark:bg-sky-500 text-white dark:text-zinc-950 hover:opacity-90"
+                        : "bg-zinc-200 dark:bg-white/[0.08] text-zinc-400 dark:text-zinc-600 cursor-not-allowed"
                     }`}
                     title="Отправить"
                   >
@@ -1506,7 +1514,7 @@ export const AIChat: React.FC = () => {
             </div>
 
             <div className="text-center mt-2">
-              <span className="text-[11px] text-slate-400 dark:text-slate-500 select-none">
+              <span className="text-[11px] text-zinc-400 dark:text-zinc-500 select-none">
                 {isChaika
                   ? "Чайка-Сервис CRM может допускать неточности в нормах времени. Проверяйте данные по заказ-нарядам."
                   : "Geo AI может допускать ошибки. Проверяйте важную информацию."}

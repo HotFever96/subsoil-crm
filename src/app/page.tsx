@@ -220,7 +220,7 @@ export default function Home() {
   const isChaika = currentBusiness === "chaika-service";
 
   return (
-    <div className="flex flex-col md:flex-row h-screen w-screen overflow-hidden bg-white dark:bg-[#09090b] text-slate-900 dark:text-slate-100 transition-colors relative">
+    <div className="flex flex-col md:flex-row h-screen w-screen overflow-hidden bg-white dark:bg-[#09090b] text-zinc-900 dark:text-zinc-100 transition-colors relative">
       {/* Yandex Music / Моя Волна GPU Ambient Mesh Background Aura */}
       <AmbientMesh />
 
@@ -229,12 +229,12 @@ export default function Home() {
         <div className="flex items-center space-x-3">
           <button
             onClick={() => setIsMobileMenuOpen(true)}
-            className="p-1.5 rounded-full text-slate-600 dark:text-zinc-300 hover:bg-slate-200/60 dark:hover:bg-white/[0.08] transition-colors cursor-pointer"
+            className="p-1.5 rounded-full text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200/60 dark:hover:bg-white/[0.08] transition-colors cursor-pointer"
             title="Открыть меню"
           >
             <Menu className="w-5 h-5" />
           </button>
-          <span className="text-sm font-bold tracking-tight text-slate-900 dark:text-white">
+          <span className="text-sm font-bold tracking-tight text-zinc-900 dark:text-white">
             {getTabTitle(currentTab)}
           </span>
         </div>

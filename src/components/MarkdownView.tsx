@@ -73,7 +73,7 @@ export const MarkdownView: React.FC<MarkdownViewProps> = ({ content, className =
 
       if (inlineMatch[0].startsWith("**")) {
         tokens.push(
-          <strong key={`b-${keyIdx++}`} className="font-semibold text-slate-900 dark:text-slate-100">
+          <strong key={`b-${keyIdx++}`} className="font-semibold text-zinc-900 dark:text-zinc-100">
             {inlineMatch[2]}
           </strong>
         );
@@ -81,7 +81,7 @@ export const MarkdownView: React.FC<MarkdownViewProps> = ({ content, className =
         tokens.push(
           <code
             key={`c-${keyIdx++}`}
-            className="px-1.5 py-0.5 rounded bg-slate-200/70 dark:bg-white/[0.08] text-sky-600 dark:text-sky-400 font-mono text-[13px]"
+            className="px-1.5 py-0.5 rounded bg-zinc-200/70 dark:bg-white/[0.08] text-sky-600 dark:text-sky-400 font-mono text-[13px]"
           >
             {inlineMatch[3]}
           </code>
@@ -109,7 +109,7 @@ export const MarkdownView: React.FC<MarkdownViewProps> = ({ content, className =
         // Not a valid table, render as normal paragraphs
         tableBuffer.forEach((l, i) => {
           elements.push(
-            <p key={`p-fallback-${elements.length}-${i}`} className="my-1.5 leading-relaxed text-slate-800 dark:text-slate-200">
+            <p key={`p-fallback-${elements.length}-${i}`} className="my-1.5 leading-relaxed text-zinc-800 dark:text-zinc-200">
               {renderInlineFormatted(l)}
             </p>
           );
@@ -148,8 +148,8 @@ export const MarkdownView: React.FC<MarkdownViewProps> = ({ content, className =
 
       elements.push(
         <div key={`table-${elements.length}`} className="my-3 space-y-1.5">
-          <div className="flex items-center justify-between text-xs text-slate-400 px-1">
-            <span className="font-medium text-slate-500 dark:text-slate-400 flex items-center space-x-1">
+          <div className="flex items-center justify-between text-xs text-zinc-400 px-1">
+            <span className="font-medium text-zinc-500 dark:text-zinc-400 flex items-center space-x-1">
               <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-500" />
               <span>Таблица ({dataRows.length} строк)</span>
             </span>
@@ -163,22 +163,22 @@ export const MarkdownView: React.FC<MarkdownViewProps> = ({ content, className =
             </button>
           </div>
 
-          <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-white/[0.08] shadow-2xs">
+          <div className="overflow-x-auto rounded-xl border border-zinc-200 dark:border-white/[0.08] shadow-2xs">
             <table className="w-full text-xs text-left border-collapse">
-              <thead className="bg-slate-100 dark:bg-white/[0.04] text-slate-800 dark:text-slate-200 border-b border-slate-200 dark:border-white/[0.08]">
+              <thead className="bg-zinc-100 dark:bg-white/[0.04] text-zinc-800 dark:text-zinc-200 border-b border-zinc-200 dark:border-white/[0.08]">
                 <tr>
                   {headers.map((h, i) => (
-                    <th key={i} className="py-2.5 px-3 font-semibold border-r border-slate-200 dark:border-white/[0.08] last:border-r-0 whitespace-nowrap">
+                    <th key={i} className="py-2.5 px-3 font-semibold border-r border-zinc-200 dark:border-white/[0.08] last:border-r-0 whitespace-nowrap">
                       {renderInlineFormatted(h)}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200 dark:divide-white/[0.06] text-slate-800 dark:text-slate-200">
+              <tbody className="divide-y divide-zinc-200 dark:divide-white/[0.06] text-zinc-800 dark:text-zinc-200">
                 {dataRows.map((row, rIdx) => (
-                  <tr key={rIdx} className="hover:bg-slate-50 dark:hover:bg-white/[0.02]">
+                  <tr key={rIdx} className="hover:bg-zinc-50 dark:hover:bg-white/[0.02]">
                     {row.map((cell, cIdx) => (
-                      <td key={cIdx} className="py-2 px-3 border-r border-slate-200 dark:border-white/[0.08] last:border-r-0 whitespace-nowrap">
+                      <td key={cIdx} className="py-2 px-3 border-r border-zinc-200 dark:border-white/[0.08] last:border-r-0 whitespace-nowrap">
                         {renderInlineFormatted(cell)}
                       </td>
                     ))}
@@ -197,7 +197,7 @@ export const MarkdownView: React.FC<MarkdownViewProps> = ({ content, className =
       if (!currentList) return;
       if (currentList.type === "ul") {
         elements.push(
-          <ul key={`list-${elements.length}`} className="my-2 space-y-1 pl-5 list-disc text-slate-800 dark:text-slate-200">
+          <ul key={`list-${elements.length}`} className="my-2 space-y-1 pl-5 list-disc text-zinc-800 dark:text-zinc-200">
             {currentList.items.map((item, idx) => (
               <li key={idx} className="leading-relaxed">
                 {renderInlineFormatted(item)}
@@ -207,7 +207,7 @@ export const MarkdownView: React.FC<MarkdownViewProps> = ({ content, className =
         );
       } else {
         elements.push(
-          <ol key={`list-${elements.length}`} className="my-2 space-y-1 pl-5 list-decimal text-slate-800 dark:text-slate-200">
+          <ol key={`list-${elements.length}`} className="my-2 space-y-1 pl-5 list-decimal text-zinc-800 dark:text-zinc-200">
             {currentList.items.map((item, idx) => (
               <li key={idx} className="leading-relaxed">
                 {renderInlineFormatted(item)}
@@ -236,7 +236,7 @@ export const MarkdownView: React.FC<MarkdownViewProps> = ({ content, className =
       if (line.startsWith("# ")) {
         flushList();
         elements.push(
-          <h1 key={`h1-${idx}`} className="text-lg font-bold text-slate-900 dark:text-slate-100 mt-4 mb-2">
+          <h1 key={`h1-${idx}`} className="text-lg font-bold text-zinc-900 dark:text-zinc-100 mt-4 mb-2">
             {renderInlineFormatted(line.slice(2))}
           </h1>
         );
@@ -247,7 +247,7 @@ export const MarkdownView: React.FC<MarkdownViewProps> = ({ content, className =
       if (line.startsWith("## ")) {
         flushList();
         elements.push(
-          <h2 key={`h2-${idx}`} className="text-base font-semibold text-slate-900 dark:text-slate-100 mt-3 mb-1.5">
+          <h2 key={`h2-${idx}`} className="text-base font-semibold text-zinc-900 dark:text-zinc-100 mt-3 mb-1.5">
             {renderInlineFormatted(line.slice(3))}
           </h2>
         );
@@ -258,7 +258,7 @@ export const MarkdownView: React.FC<MarkdownViewProps> = ({ content, className =
       if (line.startsWith("### ")) {
         flushList();
         elements.push(
-          <h3 key={`h3-${idx}`} className="text-sm font-semibold text-slate-900 dark:text-slate-100 mt-2.5 mb-1">
+          <h3 key={`h3-${idx}`} className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mt-2.5 mb-1">
             {renderInlineFormatted(line.slice(4))}
           </h3>
         );
@@ -295,7 +295,7 @@ export const MarkdownView: React.FC<MarkdownViewProps> = ({ content, className =
         elements.push(
           <blockquote
             key={`bq-${idx}`}
-            className="border-l-2 border-sky-500/60 pl-3 my-2 italic text-slate-600 dark:text-slate-300"
+            className="border-l-2 border-sky-500/60 pl-3 my-2 italic text-zinc-600 dark:text-zinc-300"
           >
             {renderInlineFormatted(line.slice(2))}
           </blockquote>
@@ -320,7 +320,7 @@ export const MarkdownView: React.FC<MarkdownViewProps> = ({ content, className =
       // Regular paragraph line
       flushList();
       elements.push(
-        <p key={`p-${idx}`} className="my-1.5 leading-relaxed text-slate-800 dark:text-slate-200">
+        <p key={`p-${idx}`} className="my-1.5 leading-relaxed text-zinc-800 dark:text-zinc-200">
           {renderInlineFormatted(line)}
         </p>
       );
@@ -397,10 +397,10 @@ export const MarkdownView: React.FC<MarkdownViewProps> = ({ content, className =
                       )}
                     </div>
                     <div className="min-w-0">
-                      <h4 className="text-sm font-semibold text-slate-900 dark:text-slate-100 truncate">
+                      <h4 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate">
                         {meta.title}
                       </h4>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">
+                      <p className="text-xs text-zinc-500 dark:text-zinc-400">
                         {isExcelType ? "Таблица Excel" : isPptxType ? "Презентация" : "Проектный документ"}{" "}
                         • {meta.approxSectionsCount > 0 ? `${meta.approxSectionsCount} разделов структурировано` : "Параметры зафиксированы"} • Сохранен в Электронном архиве
                       </p>
@@ -423,9 +423,9 @@ export const MarkdownView: React.FC<MarkdownViewProps> = ({ content, className =
           return (
             <div
               key={`code-${pIdx}`}
-              className="my-3 rounded-xl overflow-hidden border border-slate-300 dark:border-white/[0.1] bg-slate-900 text-slate-100 font-mono text-xs shadow-md"
+              className="my-3 rounded-xl overflow-hidden border border-zinc-300 dark:border-white/[0.1] bg-zinc-900 text-zinc-100 font-mono text-xs shadow-md"
             >
-              <div className="flex items-center justify-between px-3.5 py-1.5 bg-slate-950/80 border-b border-white/[0.08] text-[11px] text-slate-400">
+              <div className="flex items-center justify-between px-3.5 py-1.5 bg-zinc-950/80 border-b border-white/[0.08] text-[11px] text-zinc-400">
                 <span className="font-semibold uppercase tracking-wider">{part.lang || "code"}</span>
                 <button
                   type="button"

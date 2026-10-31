@@ -291,7 +291,7 @@ export const TelephonyModule: React.FC = () => {
   const bookedCount = calls.filter((c) => c.type === "inbound_admin").length + 37;
 
   return (
-    <div className="flex-1 flex flex-col h-full overflow-hidden text-slate-900 dark:text-zinc-100">
+    <div className="flex-1 flex flex-col h-full overflow-hidden text-zinc-900 dark:text-zinc-100">
       {/* Top Header - Yandex Pill Aesthetic */}
       <div className="px-6 py-4.5 border-b border-white/[0.08] bg-white/40 dark:bg-black/30 backdrop-blur-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">
         <div className="flex items-center space-x-3.5">
@@ -299,7 +299,7 @@ export const TelephonyModule: React.FC = () => {
             <PhoneCall className="w-5 h-5" />
           </div>
           <div>
-            <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center space-x-2.5">
+            <h1 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-white flex items-center space-x-2.5">
               <span>ИИ-Телефония и Автообзвон</span>
               <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-rose-500/10 text-rose-500 border border-rose-500/20">
                 Контроль качества CSI
@@ -307,7 +307,7 @@ export const TelephonyModule: React.FC = () => {
               <div className="relative group inline-block">
                 <button
                   type="button"
-                  className="p-1 rounded-full text-slate-400 hover:text-white transition-colors cursor-pointer"
+                  className="p-1 rounded-full text-zinc-400 hover:text-white transition-colors cursor-pointer"
                   title="Справка"
                 >
                   <HelpCircle className="w-4 h-4" />
@@ -336,13 +336,13 @@ export const TelephonyModule: React.FC = () => {
       <div className="px-6 pt-5 pb-3 shrink-0">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
           {/* Card 1: Total Calls */}
-          <div className="p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-slate-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
+          <div className="p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-zinc-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
             <div>
-              <span className="text-[11px] font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">
+              <span className="text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                 Всего звонков
               </span>
-              <div className="text-xl font-extrabold text-slate-900 dark:text-white mt-0.5">
-                {totalCalls + 144} <span className="text-xs font-semibold text-slate-400">звонков</span>
+              <div className="text-xl font-extrabold text-zinc-900 dark:text-white mt-0.5">
+                {totalCalls + 144} <span className="text-xs font-semibold text-zinc-400">звонков</span>
               </div>
               <span className="text-[10px] text-emerald-500 font-bold mt-0.5 block">
                 92% успешных дозвонов
@@ -354,16 +354,16 @@ export const TelephonyModule: React.FC = () => {
           </div>
 
           {/* Card 2: Average Rating */}
-          <div className="p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-slate-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
+          <div className="p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-zinc-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
             <div>
-              <span className="text-[11px] font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">
+              <span className="text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                 Индекс CSI (Оценка СТО)
               </span>
               <div className="text-xl font-extrabold text-amber-500 mt-0.5 flex items-center space-x-1">
                 <span>{avgRating}</span>
                 <Star className="w-4 h-4 fill-amber-500 text-amber-500" />
               </div>
-              <span className="text-[10px] text-slate-400 dark:text-zinc-500">
+              <span className="text-[10px] text-zinc-400 dark:text-zinc-500">
                 На основе {totalCalls + 108} оценок
               </span>
             </div>
@@ -373,15 +373,15 @@ export const TelephonyModule: React.FC = () => {
           </div>
 
           {/* Card 3: Auto-Bookings */}
-          <div className="p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-slate-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
+          <div className="p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-zinc-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
             <div>
-              <span className="text-[11px] font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">
+              <span className="text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                 Записано авто ботом
               </span>
               <div className="text-xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-0.5">
-                {bookedCount} <span className="text-xs font-semibold text-slate-400">записей</span>
+                {bookedCount} <span className="text-xs font-semibold text-zinc-400">записей</span>
               </div>
-              <span className="text-[10px] text-slate-400 dark:text-zinc-500">
+              <span className="text-[10px] text-zinc-400 dark:text-zinc-500">
                 Передано в Пост-планировщик
               </span>
             </div>
@@ -391,9 +391,9 @@ export const TelephonyModule: React.FC = () => {
           </div>
 
           {/* Card 4: Costs and ROI */}
-          <div className="p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-slate-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
+          <div className="p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-zinc-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
             <div>
-              <span className="text-[11px] font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">
+              <span className="text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                 Затраты на связь / ROI
               </span>
               <div className="text-xl font-extrabold text-rose-600 dark:text-rose-400 mt-0.5">
@@ -426,7 +426,7 @@ export const TelephonyModule: React.FC = () => {
               className={`px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                 isActive
                   ? "bg-rose-600 text-white shadow-md shadow-rose-600/20"
-                  : "bg-white/40 dark:bg-white/[0.05] text-slate-600 dark:text-zinc-300 hover:bg-white/70 dark:hover:bg-white/[0.1] border border-white/[0.07]"
+                  : "bg-white/40 dark:bg-white/[0.05] text-zinc-600 dark:text-zinc-300 hover:bg-white/70 dark:hover:bg-white/[0.1] border border-white/[0.07]"
               }`}
             >
               {t.label}
@@ -443,7 +443,7 @@ export const TelephonyModule: React.FC = () => {
               <div
                 key={call.id}
                 onClick={() => setSelectedCall(call)}
-                className="group p-4 rounded-2xl bg-white/50 dark:bg-white/[0.05] hover:bg-white dark:hover:bg-white/[0.09] border border-slate-200/60 dark:border-white/[0.08] hover:border-white/20 backdrop-blur-2xl transition-all cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-md hover:shadow-xl"
+                className="group p-4 rounded-2xl bg-white/50 dark:bg-white/[0.05] hover:bg-white dark:hover:bg-white/[0.09] border border-zinc-200/60 dark:border-white/[0.08] hover:border-white/20 backdrop-blur-2xl transition-all cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-md hover:shadow-xl"
               >
                 <div className="flex items-center space-x-3.5 min-w-0">
                   <div className="w-10 h-10 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-500 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
@@ -455,10 +455,10 @@ export const TelephonyModule: React.FC = () => {
                   </div>
                   <div className="min-w-0">
                     <div className="flex items-center space-x-2">
-                      <span className="font-bold text-sm text-slate-900 dark:text-white group-hover:text-rose-500 transition-colors truncate">
+                      <span className="font-bold text-sm text-zinc-900 dark:text-white group-hover:text-rose-500 transition-colors truncate">
                         {call.clientName}
                       </span>
-                      <span className="text-xs text-slate-400 font-mono">({call.clientPhone})</span>
+                      <span className="text-xs text-zinc-400 font-mono">({call.clientPhone})</span>
                       {call.rating && (
                         <span className="flex items-center text-xs font-bold text-amber-400">
                           <Star className="w-3.5 h-3.5 fill-amber-400 mr-0.5" />
@@ -466,7 +466,7 @@ export const TelephonyModule: React.FC = () => {
                         </span>
                       )}
                     </div>
-                    <div className="text-xs text-slate-500 dark:text-zinc-400 truncate mt-0.5">
+                    <div className="text-xs text-zinc-500 dark:text-zinc-400 truncate mt-0.5">
                       {call.aiSummary}
                     </div>
                   </div>
@@ -474,10 +474,10 @@ export const TelephonyModule: React.FC = () => {
 
                 <div className="flex items-center justify-between md:justify-end space-x-4 shrink-0 text-xs">
                   <div className="text-right">
-                    <div className="text-slate-400">
+                    <div className="text-zinc-400">
                       {call.durationSeconds} сек • {call.costRub.toFixed(2)} ₽
                     </div>
-                    <div className="text-[10px] text-slate-500">
+                    <div className="text-[10px] text-zinc-500">
                       {call.date} в {call.time}
                     </div>
                   </div>
@@ -502,10 +502,10 @@ export const TelephonyModule: React.FC = () => {
           <div className="space-y-4 pb-12">
             <div className="p-4 rounded-2xl bg-white/50 dark:bg-white/[0.04] border border-white/[0.08] backdrop-blur-2xl flex items-center justify-between">
               <div>
-                <h3 className="font-bold text-sm text-slate-900 dark:text-white">
+                <h3 className="font-bold text-sm text-zinc-900 dark:text-white">
                   Автоматический опрос качества через 24 часа
                 </h3>
-                <p className="text-xs text-slate-500 dark:text-zinc-400">
+                <p className="text-xs text-zinc-500 dark:text-zinc-400">
                   Бот сам звонит клиенту на следующий день после выдачи автомобиля и уточняет впечатления
                 </p>
               </div>

@@ -230,12 +230,12 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
               <DollarSign className="w-5 h-5" />
             </div>
             <div>
-              <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center space-x-2.5">
+              <h1 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-white flex items-center space-x-2.5">
                 <span>Выработка и Зарплата мастеров</span>
                 <div className="relative group inline-block">
                   <button
                     type="button"
-                    className="p-1 rounded-full text-slate-400 hover:text-white transition-colors cursor-pointer"
+                    className="p-1 rounded-full text-zinc-400 hover:text-white transition-colors cursor-pointer"
                     title="Справка"
                   >
                     <HelpCircle className="w-4 h-4" />
@@ -253,7 +253,7 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
               <button
                 type="button"
                 onClick={onOpenSettings}
-                className="px-4 py-2 rounded-full border border-white/[0.09] bg-white/50 dark:bg-white/[0.06] hover:dark:bg-white/[0.12] text-xs font-semibold text-slate-800 dark:text-zinc-200 flex items-center space-x-2 cursor-pointer transition-all backdrop-blur-md shadow-xs active:scale-95"
+                className="px-4 py-2 rounded-full border border-white/[0.09] bg-white/50 dark:bg-white/[0.06] hover:dark:bg-white/[0.12] text-xs font-semibold text-zinc-800 dark:text-zinc-200 flex items-center space-x-2 cursor-pointer transition-all backdrop-blur-md shadow-xs active:scale-95"
                 title="Настройка ставок мотивации сотрудников"
               >
                 <Settings className="w-3.5 h-3.5 text-rose-500" />
@@ -280,7 +280,7 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
                 className={`px-3.5 py-1.5 rounded-full font-semibold whitespace-nowrap transition-all cursor-pointer ${
                   periodFilter === p.id
                     ? "bg-rose-600 text-white shadow-md shadow-rose-600/20 scale-102"
-                    : "bg-white/40 dark:bg-white/[0.05] text-slate-600 dark:text-zinc-300 hover:bg-white/70 dark:hover:bg-white/[0.1] border border-white/[0.07]"
+                    : "bg-white/40 dark:bg-white/[0.05] text-zinc-600 dark:text-zinc-300 hover:bg-white/70 dark:hover:bg-white/[0.1] border border-white/[0.07]"
                 }`}
               >
                 {p.label}
@@ -293,7 +293,7 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as any)}
-              className="px-3.5 py-1.5 rounded-full border border-white/[0.09] bg-white/60 dark:bg-white/[0.05] backdrop-blur-2xl text-slate-700 dark:text-zinc-300 font-semibold focus:outline-hidden"
+              className="px-3.5 py-1.5 rounded-full border border-white/[0.09] bg-white/60 dark:bg-white/[0.05] backdrop-blur-2xl text-zinc-700 dark:text-zinc-300 font-semibold focus:outline-hidden"
             >
               <option value="all_active">По всем в работе и закрытым</option>
               <option value="closed_only">Только по закрытым / оплаченным</option>
@@ -302,7 +302,7 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
             <select
               value={selectedMasterId}
               onChange={(e) => setSelectedMasterId(e.target.value)}
-              className="px-3.5 py-1.5 rounded-full border border-white/[0.09] bg-white/60 dark:bg-white/[0.05] backdrop-blur-2xl text-slate-700 dark:text-zinc-300 font-semibold focus:outline-hidden"
+              className="px-3.5 py-1.5 rounded-full border border-white/[0.09] bg-white/60 dark:bg-white/[0.05] backdrop-blur-2xl text-zinc-700 dark:text-zinc-300 font-semibold focus:outline-hidden"
             >
               <option value="all">Все сотрудники СТО ({employees.length})</option>
               {employees.map((emp) => (
@@ -313,13 +313,13 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
             </select>
 
             <div className="relative">
-              <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+              <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Поиск мастера..."
-                className="pl-9 pr-3.5 py-1.5 rounded-full border border-white/[0.09] bg-white/60 dark:bg-white/[0.05] backdrop-blur-2xl text-slate-900 dark:text-zinc-100 placeholder-slate-400 w-40 sm:w-48 focus:outline-hidden"
+                className="pl-9 pr-3.5 py-1.5 rounded-full border border-white/[0.09] bg-white/60 dark:bg-white/[0.05] backdrop-blur-2xl text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 w-40 sm:w-48 focus:outline-hidden"
               />
             </div>
           </div>
@@ -334,10 +334,10 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
               <Users className="w-7 h-7" />
             </div>
             <div className="space-y-1.5">
-              <h3 className="text-base font-bold text-slate-900 dark:text-zinc-100">
+              <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-100">
                 Сотрудники еще не добавлены
               </h3>
-              <p className="text-xs text-slate-500 dark:text-zinc-400 leading-relaxed max-w-sm">
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed max-w-sm">
                 Добавьте мастеров и настройте схемы начисления ЗП в разделе "Ставки сотрудников"
               </p>
             </div>
@@ -357,15 +357,15 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
             {/* KPI Cards Row (Floating Glassmorphism) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
               {/* Card 1: Revenue from Labor */}
-              <div className="p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-slate-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
+              <div className="p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-zinc-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
                 <div>
-                  <span className="text-[11px] font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">
+                  <span className="text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                     Выручка по работам
                   </span>
-                  <div className="text-xl font-extrabold text-slate-900 dark:text-zinc-100 mt-1">
+                  <div className="text-xl font-extrabold text-zinc-900 dark:text-zinc-100 mt-1">
                     {formatCurrency(kpi.totalLaborRevenue)}
                   </div>
-                  <span className="text-[10px] text-slate-400 mt-0.5 block">
+                  <span className="text-[10px] text-zinc-400 mt-0.5 block">
                     Заказ-наряды за выбранный период
                   </span>
                 </div>
@@ -375,15 +375,15 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
               </div>
 
               {/* Card 2: Total Labor Hours */}
-              <div className="p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-slate-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
+              <div className="p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-zinc-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
                 <div>
-                  <span className="text-[11px] font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">
+                  <span className="text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                     Отработано нормо-часов
                   </span>
-                  <div className="text-xl font-extrabold text-slate-900 dark:text-zinc-100 mt-1">
-                    {kpi.totalLaborHours} <span className="text-xs font-semibold text-slate-400">Н/Ч</span>
+                  <div className="text-xl font-extrabold text-zinc-900 dark:text-zinc-100 mt-1">
+                    {kpi.totalLaborHours} <span className="text-xs font-semibold text-zinc-400">Н/Ч</span>
                   </div>
-                  <span className="text-[10px] text-slate-400 mt-0.5 block">
+                  <span className="text-[10px] text-zinc-400 mt-0.5 block">
                     Базовая ставка: {stoReq.defaultRatePerHour} ₽ / Н-Ч
                   </span>
                 </div>
@@ -393,15 +393,15 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
               </div>
 
               {/* Card 3: Total Payroll Fund */}
-              <div className="p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-slate-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
+              <div className="p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-zinc-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
                 <div>
-                  <span className="text-[11px] font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">
+                  <span className="text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                     ФОТ (Начислено мастерам)
                   </span>
                   <div className="text-xl font-extrabold text-rose-600 dark:text-rose-400 mt-1">
                     {formatCurrency(kpi.totalPayrollFund)}
                   </div>
-                  <span className="text-[10px] text-slate-400 mt-0.5 block">
+                  <span className="text-[10px] text-zinc-400 mt-0.5 block">
                     Итого к выплате сотрудникам
                   </span>
                 </div>
@@ -411,15 +411,15 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
               </div>
 
               {/* Card 4: Net Margin from Labor */}
-              <div className="p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-slate-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
+              <div className="p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-zinc-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
                 <div>
-                  <span className="text-[11px] font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">
+                  <span className="text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                     Чистая маржа СТО по работам
                   </span>
                   <div className="text-xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-1">
                     {formatCurrency(kpi.netMarginWorks)}
                   </div>
-                  <span className="text-[10px] text-slate-400 mt-0.5 block">
+                  <span className="text-[10px] text-zinc-400 mt-0.5 block">
                     Маржинальность:{" "}
                     {kpi.totalLaborRevenue > 0
                       ? Math.round((kpi.netMarginWorks / kpi.totalLaborRevenue) * 100)
@@ -434,15 +434,15 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
             </div>
 
             {/* Master Payroll Table (Yandex Tracklist Aesthetic) */}
-            <div className="bg-white/60 dark:bg-white/[0.04] border border-slate-200/60 dark:border-white/[0.08] rounded-3xl shadow-xl backdrop-blur-2xl overflow-hidden">
-              <div className="p-4.5 border-b border-slate-200/50 dark:border-white/[0.06] flex items-center justify-between">
+            <div className="bg-white/60 dark:bg-white/[0.04] border border-zinc-200/60 dark:border-white/[0.08] rounded-3xl shadow-xl backdrop-blur-2xl overflow-hidden">
+              <div className="p-4.5 border-b border-zinc-200/50 dark:border-white/[0.06] flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <Users className="w-4 h-4 text-rose-500" />
-              <h2 className="text-sm font-bold text-slate-900 dark:text-zinc-100">
+              <h2 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">
                 Ведомость начислений по сотрудникам ({filteredSummaries.length})
               </h2>
             </div>
-            <div className="text-xs text-slate-400">
+            <div className="text-xs text-zinc-400">
               Кликните на мастера для просмотра детализации работ и печати расчетного листка
             </div>
           </div>
@@ -450,7 +450,7 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="bg-slate-50 dark:bg-zinc-900/60 text-slate-500 dark:text-zinc-400 border-b border-slate-200 dark:border-zinc-800">
+                <tr className="bg-zinc-50 dark:bg-zinc-900/60 text-zinc-500 dark:text-zinc-400 border-b border-zinc-200 dark:border-zinc-800">
                   <th className="p-3 font-semibold">ФИО мастера</th>
                   <th className="p-3 font-semibold">Должность</th>
                   <th className="p-3 font-semibold">Схема мотивации</th>
@@ -465,10 +465,10 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
                   <th className="p-3 w-10 text-center"></th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-zinc-800/80">
+              <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800/80">
                 {filteredSummaries.length === 0 ? (
                   <tr>
-                    <td colSpan={12} className="p-8 text-center text-slate-400">
+                    <td colSpan={12} className="p-8 text-center text-zinc-400">
                       Нет данных о выработке за выбранный период
                     </td>
                   </tr>
@@ -478,39 +478,39 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
                     return (
                       <tr
                         key={m.employeeId}
-                        className="hover:bg-slate-50/80 dark:hover:bg-zinc-800/40 transition-colors group cursor-pointer"
+                        className="hover:bg-zinc-50/80 dark:hover:bg-zinc-800/40 transition-colors group cursor-pointer"
                         onClick={() => setSelectedPayslipMaster(m)}
                       >
-                        <td className="p-3 font-bold text-slate-900 dark:text-zinc-100 group-hover:text-rose-600 dark:group-hover:text-rose-400 flex items-center space-x-2">
-                          <div className="w-7 h-7 rounded-full bg-slate-200 dark:bg-zinc-800 flex items-center justify-center text-[11px] font-bold text-slate-700 dark:text-zinc-300 shrink-0">
+                        <td className="p-3 font-bold text-zinc-900 dark:text-zinc-100 group-hover:text-rose-600 dark:group-hover:text-rose-400 flex items-center space-x-2">
+                          <div className="w-7 h-7 rounded-full bg-zinc-200 dark:bg-zinc-800 flex items-center justify-center text-[11px] font-bold text-zinc-700 dark:text-zinc-300 shrink-0">
                             {m.employeeName.slice(0, 2)}
                           </div>
                           <span className="truncate">{m.employeeName}</span>
                         </td>
 
-                        <td className="p-3 text-slate-600 dark:text-zinc-400">
-                          <span className="text-[11px] px-2 py-0.5 rounded-md bg-slate-100 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700">
+                        <td className="p-3 text-zinc-600 dark:text-zinc-400">
+                          <span className="text-[11px] px-2 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700">
                             {m.roleTitle}
                           </span>
                         </td>
 
-                        <td className="p-3 text-slate-600 dark:text-zinc-400 text-[11px]">
+                        <td className="p-3 text-zinc-600 dark:text-zinc-400 text-[11px]">
                           {m.paymentSchemeLabel}
                         </td>
 
-                        <td className="p-3 text-center font-semibold text-slate-700 dark:text-zinc-300">
+                        <td className="p-3 text-center font-semibold text-zinc-700 dark:text-zinc-300">
                           {m.ordersCount}
                         </td>
 
-                        <td className="p-3 text-center font-bold text-slate-900 dark:text-zinc-100">
+                        <td className="p-3 text-center font-bold text-zinc-900 dark:text-zinc-100">
                           {m.totalLaborHours}
                         </td>
 
-                        <td className="p-3 text-right font-medium text-slate-700 dark:text-zinc-300">
+                        <td className="p-3 text-right font-medium text-zinc-700 dark:text-zinc-300">
                           {formatCurrency(m.totalLaborRevenue)}
                         </td>
 
-                        <td className="p-3 text-right font-bold text-slate-900 dark:text-zinc-100">
+                        <td className="p-3 text-right font-bold text-zinc-900 dark:text-zinc-100">
                           {formatCurrency(m.accruedLaborRub + m.baseSalary)}
                         </td>
 
@@ -523,7 +523,7 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
                             onChange={(e) =>
                               updateAdjustment(m.employeeId, "bonus", Number(e.target.value) || 0)
                             }
-                            className="w-20 px-2 py-1 text-right text-xs rounded border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-emerald-600 dark:text-emerald-400 font-bold"
+                            className="w-20 px-2 py-1 text-right text-xs rounded border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-emerald-600 dark:text-emerald-400 font-bold"
                           />
                         </td>
 
@@ -536,7 +536,7 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
                             onChange={(e) =>
                               updateAdjustment(m.employeeId, "deduction", Number(e.target.value) || 0)
                             }
-                            className="w-20 px-2 py-1 text-right text-xs rounded border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-rose-600 dark:text-rose-400 font-bold"
+                            className="w-20 px-2 py-1 text-right text-xs rounded border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-rose-600 dark:text-rose-400 font-bold"
                           />
                         </td>
 
@@ -564,7 +564,7 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
 
                         {/* Action link */}
                         <td className="p-3 text-center">
-                          <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-rose-500 transition-colors" />
+                          <ChevronRight className="w-4 h-4 text-zinc-400 group-hover:text-rose-500 transition-colors" />
                         </td>
                       </tr>
                     );
@@ -581,21 +581,21 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
       {/* MODAL: PAYSLIP / РАСЧЕТНЫЙ ЛИСТОК А4 */}
       {selectedPayslipMaster && (
         <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 overflow-y-auto print:p-0 print:bg-white print:static">
-          <div className="w-full max-w-4xl bg-white dark:bg-[#0c1015] border border-slate-200 dark:border-zinc-800 rounded-2xl shadow-2xl flex flex-col max-h-[92vh] print:max-h-none print:border-none print:shadow-none print:rounded-none overflow-hidden">
+          <div className="w-full max-w-4xl bg-white dark:bg-[#0c1015] border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-2xl flex flex-col max-h-[92vh] print:max-h-none print:border-none print:shadow-none print:rounded-none overflow-hidden">
             {/* Modal Header Bar */}
-            <div className="px-6 py-4 border-b border-slate-200 dark:border-zinc-800 flex items-center justify-between bg-slate-50 dark:bg-zinc-900/60 print:hidden shrink-0">
+            <div className="px-6 py-4 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between bg-zinc-50 dark:bg-zinc-900/60 print:hidden shrink-0">
               <div className="flex items-center space-x-3">
                 <div className="w-9 h-9 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-500 flex items-center justify-center shrink-0">
                   <FileText className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-slate-900 dark:text-zinc-100 flex items-center space-x-2">
+                  <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100 flex items-center space-x-2">
                     <span>Расчетный листок: {selectedPayslipMaster.employeeName}</span>
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-slate-200 dark:bg-zinc-800 font-semibold text-slate-700 dark:text-zinc-300">
+                    <span className="text-xs px-2 py-0.5 rounded-full bg-zinc-200 dark:bg-zinc-800 font-semibold text-zinc-700 dark:text-zinc-300">
                       {selectedPayslipMaster.roleTitle}
                     </span>
                   </h3>
-                  <p className="text-xs text-slate-500 dark:text-zinc-400">
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400">
                     Детализация выполненных работ и расчет начислений
                   </p>
                 </div>
@@ -609,7 +609,7 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1.5 cursor-pointer transition-colors ${
                     isPayslipFacsimile
                       ? "bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30"
-                      : "bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400"
+                      : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400"
                   }`}
                   title="Наложить печать и подпись руководителя"
                 >
@@ -621,7 +621,7 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
                 <button
                   type="button"
                   onClick={() => handleSavePayslipToArchive(selectedPayslipMaster)}
-                  className="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-zinc-800 hover:bg-slate-200 text-slate-700 dark:text-zinc-300 text-xs font-semibold flex items-center space-x-1.5 cursor-pointer"
+                  className="px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 text-zinc-700 dark:text-zinc-300 text-xs font-semibold flex items-center space-x-1.5 cursor-pointer"
                 >
                   {isPayslipSaved ? (
                     <>
@@ -640,7 +640,7 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
                 <button
                   type="button"
                   onClick={() => window.print()}
-                  className="px-4 py-1.5 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-950 text-xs font-bold flex items-center space-x-1.5 shadow-sm cursor-pointer"
+                  className="px-4 py-1.5 rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-zinc-950 text-xs font-bold flex items-center space-x-1.5 shadow-sm cursor-pointer"
                 >
                   <Printer className="w-3.5 h-3.5" />
                   <span>Печать А4</span>
@@ -649,7 +649,7 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
                 <button
                   type="button"
                   onClick={() => setSelectedPayslipMaster(null)}
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 cursor-pointer ml-1"
+                  className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 cursor-pointer ml-1"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -657,8 +657,8 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
             </div>
 
             {/* Document A4 Canvas */}
-            <div className="flex-1 overflow-y-auto p-6 bg-slate-200/50 dark:bg-black/50 print:p-0 print:bg-white">
-              <div className="p-8 font-sans text-xs bg-white text-slate-950 max-w-[210mm] mx-auto min-h-[297mm] shadow-lg print:shadow-none print:p-4 print:m-0 print:max-w-none space-y-4 leading-relaxed">
+            <div className="flex-1 overflow-y-auto p-6 bg-zinc-200/50 dark:bg-black/50 print:p-0 print:bg-white">
+              <div className="p-8 font-sans text-xs bg-white text-zinc-950 max-w-[210mm] mx-auto min-h-[297mm] shadow-lg print:shadow-none print:p-4 print:m-0 print:max-w-none space-y-4 leading-relaxed">
                 {/* Header */}
                 <div className="border-b-2 border-red-600 pb-3 flex justify-between items-start gap-4">
                   <div className="flex items-start space-x-3.5">
@@ -672,21 +672,21 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
                         {stoReq.brandName}
                       </h2>
                       <p className="font-semibold text-xs">{stoReq.name}</p>
-                      <p className="text-[11px] text-slate-600">{stoReq.address} • Тел: {stoReq.phone}</p>
+                      <p className="text-[11px] text-zinc-600">{stoReq.address} • Тел: {stoReq.phone}</p>
                     </div>
                   </div>
-                  <div className="text-right text-[11px] text-slate-600 shrink-0">
+                  <div className="text-right text-[11px] text-zinc-600 shrink-0">
                     <p>ИНН: <strong>{stoReq.inn}</strong> • ОГРНИП: {stoReq.ogrn}</p>
                     <p>Р/с: {stoReq.rs}</p>
                   </div>
                 </div>
 
                 {/* Title */}
-                <div className="text-center my-3 pb-2 border-b border-slate-200">
+                <div className="text-center my-3 pb-2 border-b border-zinc-200">
                   <h3 className="text-sm font-bold uppercase tracking-wider">
                     РАСЧЕТНЫЙ ЛИСТОК / ПЛАТЕЖНАЯ ВЕДОМОСТЬ ВЫРАБОТКИ
                   </h3>
-                  <p className="text-[11px] text-slate-500">
+                  <p className="text-[11px] text-zinc-500">
                     за период:{" "}
                     <strong>
                       {periodFilter === "today"
@@ -701,16 +701,16 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
                 </div>
 
                 {/* Master Info */}
-                <div className="grid grid-cols-2 gap-4 p-3 rounded-lg bg-slate-50 border border-slate-200">
+                <div className="grid grid-cols-2 gap-4 p-3 rounded-lg bg-zinc-50 border border-zinc-200">
                   <div>
-                    <span className="font-bold text-[10px] uppercase text-slate-400">Сотрудник:</span>
-                    <p className="font-bold text-sm text-slate-900">{selectedPayslipMaster.employeeName}</p>
-                    <p className="text-slate-600">Должность: <strong>{selectedPayslipMaster.roleTitle}</strong></p>
+                    <span className="font-bold text-[10px] uppercase text-zinc-400">Сотрудник:</span>
+                    <p className="font-bold text-sm text-zinc-900">{selectedPayslipMaster.employeeName}</p>
+                    <p className="text-zinc-600">Должность: <strong>{selectedPayslipMaster.roleTitle}</strong></p>
                   </div>
                   <div>
-                    <span className="font-bold text-[10px] uppercase text-slate-400">Схема мотивации:</span>
-                    <p className="font-bold text-slate-900">{selectedPayslipMaster.paymentSchemeLabel}</p>
-                    <p className="text-slate-600">
+                    <span className="font-bold text-[10px] uppercase text-zinc-400">Схема мотивации:</span>
+                    <p className="font-bold text-zinc-900">{selectedPayslipMaster.paymentSchemeLabel}</p>
+                    <p className="text-zinc-600">
                       Закрыто заказов: <strong>{selectedPayslipMaster.ordersCount}</strong> • Всего Н/Ч: <strong>{selectedPayslipMaster.totalLaborHours}</strong>
                     </p>
                   </div>
@@ -718,49 +718,49 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
 
                 {/* Details of works */}
                 <div className="space-y-1">
-                  <div className="font-bold text-slate-900 text-xs">
+                  <div className="font-bold text-zinc-900 text-xs">
                     Расшифровка выполненных работ по заказ-нарядам:
                   </div>
 
-                  <table className="w-full text-left border-collapse border border-slate-300 text-[11px]">
+                  <table className="w-full text-left border-collapse border border-zinc-300 text-[11px]">
                     <thead>
-                      <tr className="bg-slate-100 text-slate-700 font-semibold">
-                        <th className="p-1.5 border border-slate-300 w-8 text-center">№</th>
-                        <th className="p-1.5 border border-slate-300 w-24">Дата / ЗН</th>
-                        <th className="p-1.5 border border-slate-300">Автомобиль</th>
-                        <th className="p-1.5 border border-slate-300">Наименование работы</th>
-                        <th className="p-1.5 border border-slate-300 w-12 text-center">Н/Ч</th>
-                        <th className="p-1.5 border border-slate-300 w-24 text-right">Клиент (₽)</th>
-                        <th className="p-1.5 border border-slate-300 w-24 text-right">Начислено (₽)</th>
+                      <tr className="bg-zinc-100 text-zinc-700 font-semibold">
+                        <th className="p-1.5 border border-zinc-300 w-8 text-center">№</th>
+                        <th className="p-1.5 border border-zinc-300 w-24">Дата / ЗН</th>
+                        <th className="p-1.5 border border-zinc-300">Автомобиль</th>
+                        <th className="p-1.5 border border-zinc-300">Наименование работы</th>
+                        <th className="p-1.5 border border-zinc-300 w-12 text-center">Н/Ч</th>
+                        <th className="p-1.5 border border-zinc-300 w-24 text-right">Клиент (₽)</th>
+                        <th className="p-1.5 border border-zinc-300 w-24 text-right">Начислено (₽)</th>
                       </tr>
                     </thead>
                     <tbody>
                       {selectedPayslipMaster.details.length === 0 ? (
                         <tr>
-                          <td colSpan={7} className="p-4 text-center text-slate-400">
+                          <td colSpan={7} className="p-4 text-center text-zinc-400">
                             В данном периоде работы не зафиксированы
                           </td>
                         </tr>
                       ) : (
                         selectedPayslipMaster.details.map((d, idx) => (
                           <tr key={idx}>
-                            <td className="p-1.5 border border-slate-300 text-center">{idx + 1}</td>
-                            <td className="p-1.5 border border-slate-300 whitespace-nowrap">
+                            <td className="p-1.5 border border-zinc-300 text-center">{idx + 1}</td>
+                            <td className="p-1.5 border border-zinc-300 whitespace-nowrap">
                               <span className="font-bold">{d.orderNumber}</span>
-                              <div className="text-[10px] text-slate-400">{d.date}</div>
+                              <div className="text-[10px] text-zinc-400">{d.date}</div>
                             </td>
-                            <td className="p-1.5 border border-slate-300 font-medium">
+                            <td className="p-1.5 border border-zinc-300 font-medium">
                               <div>{d.vehicle}</div>
-                              <span className="text-[10px] text-slate-500 font-mono">{d.licensePlate}</span>
+                              <span className="text-[10px] text-zinc-500 font-mono">{d.licensePlate}</span>
                             </td>
-                            <td className="p-1.5 border border-slate-300">{d.workName}</td>
-                            <td className="p-1.5 border border-slate-300 text-center font-bold">
+                            <td className="p-1.5 border border-zinc-300">{d.workName}</td>
+                            <td className="p-1.5 border border-zinc-300 text-center font-bold">
                               {d.laborHours}
                             </td>
-                            <td className="p-1.5 border border-slate-300 text-right">
+                            <td className="p-1.5 border border-zinc-300 text-right">
                               {d.clientWorkTotal.toLocaleString()}
                             </td>
-                            <td className="p-1.5 border border-slate-300 text-right font-bold text-slate-900">
+                            <td className="p-1.5 border border-zinc-300 text-right font-bold text-zinc-900">
                               {d.earnedRub.toLocaleString()}
                             </td>
                           </tr>
@@ -771,19 +771,19 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
                 </div>
 
                 {/* Calculation breakdown */}
-                <div className="p-4 rounded-xl bg-slate-50 border border-slate-300 space-y-2">
+                <div className="p-4 rounded-xl bg-zinc-50 border border-zinc-300 space-y-2">
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
                     <div>
-                      <span className="text-slate-500 block">По выработке:</span>
-                      <strong className="text-slate-900 font-bold">
+                      <span className="text-zinc-500 block">По выработке:</span>
+                      <strong className="text-zinc-900 font-bold">
                         {formatCurrency(selectedPayslipMaster.accruedLaborRub)}
                       </strong>
                     </div>
 
                     {selectedPayslipMaster.baseSalary > 0 && (
                       <div>
-                        <span className="text-slate-500 block">Оклад:</span>
-                        <strong className="text-slate-900 font-bold">
+                        <span className="text-zinc-500 block">Оклад:</span>
+                        <strong className="text-zinc-900 font-bold">
                           {formatCurrency(selectedPayslipMaster.baseSalary)}
                         </strong>
                       </div>
@@ -791,7 +791,7 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
 
                     {selectedPayslipMaster.bonusRub > 0 && (
                       <div>
-                        <span className="text-slate-500 block">Премия / Бонус:</span>
+                        <span className="text-zinc-500 block">Премия / Бонус:</span>
                         <strong className="text-emerald-600 font-bold">
                           +{formatCurrency(selectedPayslipMaster.bonusRub)}
                         </strong>
@@ -800,7 +800,7 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
 
                     {selectedPayslipMaster.deductionRub > 0 && (
                       <div>
-                        <span className="text-slate-500 block">Удержания / Аванс:</span>
+                        <span className="text-zinc-500 block">Удержания / Аванс:</span>
                         <strong className="text-rose-600 font-bold">
                           -{formatCurrency(selectedPayslipMaster.deductionRub)}
                         </strong>
@@ -808,8 +808,8 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
                     )}
                   </div>
 
-                  <div className="border-t border-slate-300 pt-2 flex justify-between items-center">
-                    <span className="font-extrabold text-sm text-slate-900">
+                  <div className="border-t border-zinc-300 pt-2 flex justify-between items-center">
+                    <span className="font-extrabold text-sm text-zinc-900">
                       ИТОГО К ВЫПЛАТЕ НА РУКИ:
                     </span>
                     <span className="font-black text-lg text-rose-600">
@@ -817,19 +817,19 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
                     </span>
                   </div>
 
-                  <div className="text-[11px] text-slate-600 border-t border-slate-200 pt-1.5">
-                    <span className="font-bold text-slate-900">Сумма прописью: </span>
-                    <span className="italic font-medium text-slate-800">
+                  <div className="text-[11px] text-zinc-600 border-t border-zinc-200 pt-1.5">
+                    <span className="font-bold text-zinc-900">Сумма прописью: </span>
+                    <span className="italic font-medium text-zinc-800">
                       {numberToWordsRu(selectedPayslipMaster.netPayoutRub)}
                     </span>
                   </div>
                 </div>
 
                 {/* Signatures with Facsimile overlay */}
-                <div className="grid grid-cols-2 gap-8 pt-6 border-t-2 border-slate-300 text-xs">
+                <div className="grid grid-cols-2 gap-8 pt-6 border-t-2 border-zinc-300 text-xs">
                   <div>
-                    <p className="font-bold text-slate-900">Руководитель / Мастер СТО:</p>
-                    <p className="text-slate-600 mb-6">{stoReq.director}</p>
+                    <p className="font-bold text-zinc-900">Руководитель / Мастер СТО:</p>
+                    <p className="text-zinc-600 mb-6">{stoReq.director}</p>
 
                     <div className="relative inline-block">
                       {isPayslipFacsimile && (
@@ -858,14 +858,14 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
                       )}
                       <div className="border-b border-black w-48 mb-1" />
                     </div>
-                    <p className="text-[10px] text-slate-500">Подпись / М.П.</p>
+                    <p className="text-[10px] text-zinc-500">Подпись / М.П.</p>
                   </div>
 
                   <div>
-                    <p className="font-bold text-slate-900">Сотрудник (Мастер):</p>
-                    <p className="text-slate-600 mb-6">{selectedPayslipMaster.employeeName}</p>
+                    <p className="font-bold text-zinc-900">Сотрудник (Мастер):</p>
+                    <p className="text-zinc-600 mb-6">{selectedPayslipMaster.employeeName}</p>
                     <div className="border-b border-black w-48 mb-1" />
-                    <p className="text-[10px] text-slate-500">Деньги получил, с расчетом согласен</p>
+                    <p className="text-[10px] text-zinc-500">Деньги получил, с расчетом согласен</p>
                   </div>
                 </div>
               </div>

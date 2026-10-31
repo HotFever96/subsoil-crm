@@ -113,22 +113,22 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
   ];
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 overflow-y-auto print:p-0 print:bg-white print:static">
-      <div className="w-full max-w-4xl bg-white dark:bg-[#0e141e] border border-slate-200 dark:border-white/[0.1] rounded-2xl shadow-2xl flex flex-col max-h-[92vh] print:max-h-none print:border-none print:shadow-none print:rounded-none overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto print:p-0 print:bg-white print:static">
+      <div className="w-full max-w-4xl bg-white/95 dark:bg-zinc-950/90 backdrop-blur-2xl border border-black/[0.08] dark:border-white/10 rounded-3xl shadow-2xl flex flex-col max-h-[92vh] print:max-h-none print:border-none print:shadow-none print:rounded-none overflow-hidden">
         {/* Top Header Bar (Hidden on print) */}
-        <div className="px-6 py-4 border-b border-slate-200 dark:border-white/[0.08] flex items-center justify-between shrink-0 bg-slate-50 dark:bg-[#0a0f18] print:hidden">
+        <div className="px-6 py-4 border-b border-zinc-200 dark:border-white/[0.08] flex items-center justify-between shrink-0 bg-zinc-50 dark:bg-zinc-900/60 print:hidden">
           <div className="flex items-center space-x-3 min-w-0">
             <div className="w-9 h-9 rounded-xl bg-red-500/15 border border-red-500/25 text-red-600 dark:text-red-400 flex items-center justify-center shrink-0">
               <Wrench className="w-4 h-4" />
             </div>
             <div className="min-w-0">
-              <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 truncate flex items-center space-x-2">
+              <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100 truncate flex items-center space-x-2">
                 <span>{order.orderNumber}</span>
                 <span className="text-xs px-2 py-0.5 rounded-full bg-red-500/10 text-red-600 dark:text-red-400 font-semibold">
                   {order.vehicle.licensePlate}
                 </span>
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate">
                 {order.client.name} • {order.vehicle.make} {order.vehicle.model}
               </p>
             </div>
@@ -139,7 +139,7 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
             <button
               type="button"
               onClick={handleSaveArchive}
-              className="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-white/[0.06] hover:bg-slate-200 dark:hover:bg-white/[0.1] text-slate-700 dark:text-slate-200 text-xs font-medium flex items-center space-x-1.5 transition-colors cursor-pointer"
+              className="px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-white/[0.06] hover:bg-zinc-200 dark:hover:bg-white/[0.1] text-zinc-700 dark:text-zinc-200 text-xs font-medium flex items-center space-x-1.5 transition-colors cursor-pointer"
               title="Сохранить в Единый электронный архив"
             >
               {archiveSaved ? (
@@ -159,7 +159,7 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
               type="button"
               onClick={handleDownloadDocx}
               disabled={isExportingDocx}
-              className="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-white/[0.06] hover:bg-slate-200 dark:hover:bg-white/[0.1] text-slate-700 dark:text-slate-200 text-xs font-medium flex items-center space-x-1.5 transition-colors cursor-pointer disabled:opacity-50"
+              className="px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-white/[0.06] hover:bg-zinc-200 dark:hover:bg-white/[0.1] text-zinc-700 dark:text-zinc-200 text-xs font-medium flex items-center space-x-1.5 transition-colors cursor-pointer disabled:opacity-50"
               title="Скачать документ Word (.docx)"
             >
               <FileDown className="w-3.5 h-3.5" />
@@ -178,7 +178,7 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer ml-1"
+              className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 cursor-pointer ml-1"
             >
               <X className="w-5 h-5" />
             </button>
@@ -186,7 +186,7 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
         </div>
 
         {/* Document Type Selector Tabs (Hidden on print) */}
-        <div className="px-6 py-2.5 border-b border-slate-200 dark:border-white/[0.06] bg-white dark:bg-[#0e141e] flex items-center justify-between overflow-x-auto shrink-0 print:hidden gap-3">
+        <div className="px-6 py-2.5 border-b border-zinc-200 dark:border-white/[0.06] bg-white dark:bg-zinc-950/70 flex items-center justify-between overflow-x-auto shrink-0 print:hidden gap-3">
           <div className="flex items-center space-x-1.5 overflow-x-auto">
             {tabs.map((tab) => {
               const Icon = tab.icon;
@@ -199,7 +199,7 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all cursor-pointer flex items-center space-x-1.5 ${
                     isActive
                       ? "bg-red-600 text-white font-semibold shadow-2xs"
-                      : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/[0.04]"
+                      : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-white/[0.04]"
                   }`}
                 >
                   <Icon className="w-3.5 h-3.5" />
@@ -217,7 +217,7 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1.5 cursor-pointer transition-all ${
                 isFacsimile
                   ? "bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30"
-                  : "bg-slate-100 dark:bg-white/[0.06] text-slate-500 hover:text-slate-800"
+                  : "bg-zinc-100 dark:bg-white/[0.06] text-zinc-500 hover:text-zinc-800"
               }`}
               title="Наложить печать и подпись (Факсимиле)"
             >
@@ -231,7 +231,7 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1.5 cursor-pointer transition-all ${
                 isScanMode
                   ? "bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/30"
-                  : "bg-slate-100 dark:bg-white/[0.06] text-slate-500 hover:text-slate-800"
+                  : "bg-zinc-100 dark:bg-white/[0.06] text-zinc-500 hover:text-zinc-800"
               }`}
               title="Эффект скана (Scan Mode)"
             >
@@ -242,10 +242,10 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
         </div>
 
         {/* Scrollable Printable A4 Canvas */}
-        <div className="flex-1 overflow-y-auto p-6 sm:p-10 bg-slate-100 dark:bg-[#070b10] print:bg-white print:p-0">
+        <div className="flex-1 overflow-y-auto p-6 sm:p-10 bg-zinc-100 dark:bg-[#070b10] print:bg-white print:p-0">
           <div
             id="printable-service-doc"
-            className={`max-w-3xl mx-auto text-slate-900 p-8 sm:p-12 shadow-md print:shadow-none print:p-0 rounded-xl print:rounded-none font-sans text-xs leading-relaxed transition-all ${
+            className={`max-w-3xl mx-auto text-zinc-900 p-8 sm:p-12 shadow-md print:shadow-none print:p-0 rounded-xl print:rounded-none font-sans text-xs leading-relaxed transition-all ${
               isScanMode
                 ? "bg-[#faf9f5] border border-stone-300 filter contrast-[1.03] brightness-[0.99] sepia-[0.03]"
                 : "bg-white"
@@ -264,10 +264,10 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
                     />
                     <div>
                       <span className="font-extrabold text-sm uppercase text-red-600">{req.brandName}</span>
-                      <p className="text-[11px] text-slate-500">{req.name}</p>
+                      <p className="text-[11px] text-zinc-500">{req.name}</p>
                     </div>
                   </div>
-                  <div className="text-right text-[11px] text-slate-500">
+                  <div className="text-right text-[11px] text-zinc-500">
                     Образец заполнения платежного поручения
                   </div>
                 </div>
@@ -276,24 +276,24 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
                   <tbody>
                     <tr>
                       <td colSpan={2} rowSpan={2} className="border border-black p-2 align-top">
-                        <div className="text-[10px] text-slate-500">Банк получателя:</div>
+                        <div className="text-[10px] text-zinc-500">Банк получателя:</div>
                         <div className="font-semibold">{req.bankName}</div>
                       </td>
-                      <td className="border border-black p-1.5 w-20 text-[10px] text-slate-500">БИК</td>
+                      <td className="border border-black p-1.5 w-20 text-[10px] text-zinc-500">БИК</td>
                       <td className="border border-black p-1.5 font-mono font-semibold">{req.bik}</td>
                     </tr>
                     <tr>
-                      <td className="border border-black p-1.5 text-[10px] text-slate-500">Сч. №</td>
+                      <td className="border border-black p-1.5 text-[10px] text-zinc-500">Сч. №</td>
                       <td className="border border-black p-1.5 font-mono font-semibold">{req.ks}</td>
                     </tr>
                     <tr>
-                      <td className="border border-black p-1.5 text-[10px] text-slate-500 w-32">
+                      <td className="border border-black p-1.5 text-[10px] text-zinc-500 w-32">
                         ИНН {req.inn}
                       </td>
-                      <td className="border border-black p-1.5 text-[10px] text-slate-500">
+                      <td className="border border-black p-1.5 text-[10px] text-zinc-500">
                         {req.kpp ? `КПП ${req.kpp}` : "КПП —"}
                       </td>
-                      <td rowSpan={2} className="border border-black p-1.5 text-[10px] text-slate-500 align-top">
+                      <td rowSpan={2} className="border border-black p-1.5 text-[10px] text-zinc-500 align-top">
                         Сч. №
                       </td>
                       <td rowSpan={2} className="border border-black p-1.5 font-mono font-semibold align-top">
@@ -302,7 +302,7 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
                     </tr>
                     <tr>
                       <td colSpan={2} className="border border-black p-2 align-top">
-                        <div className="text-[10px] text-slate-500">Получатель:</div>
+                        <div className="text-[10px] text-zinc-500">Получатель:</div>
                         <div className="font-bold">{req.name}</div>
                       </td>
                     </tr>
@@ -322,13 +322,13 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
                     <h1 className="text-base font-extrabold text-red-600 uppercase tracking-wide">
                       {req.brandName}
                     </h1>
-                    <p className="font-bold text-xs text-slate-900">{req.name}</p>
-                    <p className="text-[11px] text-slate-600">{req.address}</p>
-                    <p className="text-[11px] text-slate-600">Тел: {req.phone} • Email: {req.email}</p>
+                    <p className="font-bold text-xs text-zinc-900">{req.name}</p>
+                    <p className="text-[11px] text-zinc-600">{req.address}</p>
+                    <p className="text-[11px] text-zinc-600">Тел: {req.phone} • Email: {req.email}</p>
                   </div>
                 </div>
-                <div className="text-right text-[11px] text-slate-600 space-y-0.5 shrink-0">
-                  <p>ИНН: <span className="font-bold text-slate-900">{req.inn}</span> {req.kpp ? `/ КПП: ${req.kpp}` : ""}</p>
+                <div className="text-right text-[11px] text-zinc-600 space-y-0.5 shrink-0">
+                  <p>ИНН: <span className="font-bold text-zinc-900">{req.inn}</span> {req.kpp ? `/ КПП: ${req.kpp}` : ""}</p>
                   <p>ОГРНИП: <span className="font-mono">{req.ogrn}</span></p>
                   <p>Р/с: <span className="font-mono">{req.rs}</span></p>
                   <p>{req.bankName} (БИК: {req.bik})</p>
@@ -337,8 +337,8 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
             )}
 
             {/* Document Title Header */}
-            <div className="text-center my-3 pb-2 border-b border-slate-200">
-              <h2 className="text-base font-extrabold uppercase tracking-wider text-slate-900">
+            <div className="text-center my-3 pb-2 border-b border-zinc-200">
+              <h2 className="text-base font-extrabold uppercase tracking-wider text-zinc-900">
                 {docType === "work_order" && `ДОГОВОР-ЗАКАЗ-НАРЯД № ${order.orderNumber}`}
                 {docType === "acceptance_act" && `АКТ ПРИЕМА-ПЕРЕДАЧИ ТС К ЗАКАЗ-НАРЯДУ № ${order.orderNumber}`}
                 {docType === "completion_act" && `АКТ ВЫПОЛНЕННЫХ РАБОТ № ${order.orderNumber}`}
@@ -346,7 +346,7 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
                 {docType === "invoice" && `СЧЕТ НА ОПЛАТУ № ${order.orderNumber}`}
                 {docType === "defect_sheet" && `ДЕФЕКТОВОЧНАЯ ВЕДОМОСТЬ № ${order.orderNumber}`}
               </h2>
-              <p className="text-xs text-slate-600 font-medium mt-0.5">от {order.createdAt} г.</p>
+              <p className="text-xs text-zinc-600 font-medium mt-0.5">от {order.createdAt} г.</p>
             </div>
 
             {/* Parties Info */}
@@ -366,31 +366,31 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-2 gap-3 p-3 rounded-lg bg-slate-50 border border-slate-200 text-xs mb-4">
+              <div className="grid grid-cols-2 gap-3 p-3 rounded-lg bg-zinc-50 border border-zinc-200 text-xs mb-4">
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-slate-400">Заказчик (Плательщик):</span>
-                  <p className="font-bold text-slate-900">{order.client.name}</p>
-                  <p className="text-slate-600">Тел: {order.client.phone || "—"}</p>
-                  {order.client.inn && <p className="text-slate-600">ИНН: {order.client.inn}</p>}
-                  {order.client.address && <p className="text-slate-600">Адрес: {order.client.address}</p>}
+                  <span className="text-[10px] uppercase font-bold text-zinc-400">Заказчик (Плательщик):</span>
+                  <p className="font-bold text-zinc-900">{order.client.name}</p>
+                  <p className="text-zinc-600">Тел: {order.client.phone || "—"}</p>
+                  {order.client.inn && <p className="text-zinc-600">ИНН: {order.client.inn}</p>}
+                  {order.client.address && <p className="text-zinc-600">Адрес: {order.client.address}</p>}
                 </div>
 
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-slate-400">Транспортное средство:</span>
-                  <p className="font-bold text-slate-900">
+                  <span className="text-[10px] uppercase font-bold text-zinc-400">Транспортное средство:</span>
+                  <p className="font-bold text-zinc-900">
                     {order.vehicle.make} {order.vehicle.model} ({order.vehicle.year} г.)
                   </p>
-                  <p className="text-slate-700">
-                    Госномер: <strong className="font-mono font-bold text-slate-950">{order.vehicle.licensePlate}</strong>
+                  <p className="text-zinc-700">
+                    Госномер: <strong className="font-mono font-bold text-zinc-950">{order.vehicle.licensePlate}</strong>
                   </p>
-                  {order.vehicle.vin && <p className="text-slate-600 text-[11px] font-mono">VIN: {order.vehicle.vin}</p>}
-                  <p className="text-slate-600">Пробег: {order.vehicle.mileage ? order.vehicle.mileage.toLocaleString() : "—"} км</p>
+                  {order.vehicle.vin && <p className="text-zinc-600 text-[11px] font-mono">VIN: {order.vehicle.vin}</p>}
+                  <p className="text-zinc-600">Пробег: {order.vehicle.mileage ? order.vehicle.mileage.toLocaleString() : "—"} км</p>
                 </div>
 
                 {order.vehicle.complaints && (
-                  <div className="col-span-2 pt-2 border-t border-slate-200">
-                    <span className="text-[10px] uppercase font-bold text-slate-400">Причина обращения / Жалобы:</span>
-                    <p className="text-slate-800 italic">{order.vehicle.complaints}</p>
+                  <div className="col-span-2 pt-2 border-t border-zinc-200">
+                    <span className="text-[10px] uppercase font-bold text-zinc-400">Причина обращения / Жалобы:</span>
+                    <p className="text-zinc-800 italic">{order.vehicle.complaints}</p>
                   </div>
                 )}
               </div>
@@ -412,35 +412,35 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
                   <table className="w-full text-xs">
                     <tbody>
                       <tr className="border-b border-emerald-100">
-                        <td className="py-1 text-slate-600 w-44">Основание платежа:</td>
-                        <td className="py-1 font-semibold text-slate-900">Оплата по заказ-наряду № {order.orderNumber} от {order.createdAt} г.</td>
+                        <td className="py-1 text-zinc-600 w-44">Основание платежа:</td>
+                        <td className="py-1 font-semibold text-zinc-900">Оплата по заказ-наряду № {order.orderNumber} от {order.createdAt} г.</td>
                       </tr>
                       <tr className="border-b border-emerald-100">
-                        <td className="py-1 text-slate-600">Плательщик:</td>
-                        <td className="py-1 font-semibold text-slate-900">{order.client.name}</td>
+                        <td className="py-1 text-zinc-600">Плательщик:</td>
+                        <td className="py-1 font-semibold text-zinc-900">{order.client.name}</td>
                       </tr>
                       <tr className="border-b border-emerald-100">
-                        <td className="py-1 text-slate-600">Способ оплаты:</td>
-                        <td className="py-1 font-semibold text-slate-900">Безналичный расчет / Банковская карта / СБП</td>
+                        <td className="py-1 text-zinc-600">Способ оплаты:</td>
+                        <td className="py-1 font-semibold text-zinc-900">Безналичный расчет / Банковская карта / СБП</td>
                       </tr>
                       <tr className="border-b border-emerald-100">
-                        <td className="py-1 text-slate-600">Налоговый режим:</td>
-                        <td className="py-1 font-medium text-slate-700">УСН (Доходы), Патент. НДС не облагается (пп. 37 п. 3 ст. 149 НК РФ)</td>
+                        <td className="py-1 text-zinc-600">Налоговый режим:</td>
+                        <td className="py-1 font-medium text-zinc-700">УСН (Доходы), Патент. НДС не облагается (пп. 37 п. 3 ст. 149 НК РФ)</td>
                       </tr>
                       <tr>
-                        <td className="py-1.5 font-bold text-slate-900 text-sm">Сумма к оплате:</td>
+                        <td className="py-1.5 font-bold text-zinc-900 text-sm">Сумма к оплате:</td>
                         <td className="py-1.5 font-extrabold text-emerald-700 text-base">{formatCurrency(order.grandTotal)}</td>
                       </tr>
                     </tbody>
                   </table>
 
                   <div className="pt-2 border-t border-emerald-200 text-xs">
-                    <span className="font-bold text-slate-900">Сумма прописью: </span>
-                    <span className="italic font-medium text-slate-800">{numberToWordsRu(order.grandTotal)}</span>
+                    <span className="font-bold text-zinc-900">Сумма прописью: </span>
+                    <span className="italic font-medium text-zinc-800">{numberToWordsRu(order.grandTotal)}</span>
                   </div>
                 </div>
 
-                <div className="text-[11px] text-slate-500">
+                <div className="text-[11px] text-zinc-500">
                   Настоящая квитанция подтверждает факт поступления денежных средств в кассу / на расчетный счет предприятия в полном объеме.
                 </div>
               </div>
@@ -448,7 +448,7 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
 
             {/* 2. ACCEPTANCE ACT SPECIFIC BODY (Schematic) */}
             {docType === "acceptance_act" && (
-              <div className="mb-5 p-3 rounded-lg border border-slate-300 bg-white">
+              <div className="mb-5 p-3 rounded-lg border border-zinc-300 bg-white">
                 <VehicleInspectionSchematic inspection={order.inspection} readOnly={true} isPrint={true} />
               </div>
             )}
@@ -456,10 +456,10 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
             {/* 3. DEFECT SHEET SPECIFIC BODY */}
             {docType === "defect_sheet" && (
               <div className="space-y-4 mb-5">
-                <div className="font-bold text-slate-900 text-xs">Ведомость выявленных дефектов узлов и агрегатов:</div>
+                <div className="font-bold text-zinc-900 text-xs">Ведомость выявленных дефектов узлов и агрегатов:</div>
                 <table className="w-full text-left border-collapse border border-black text-xs">
                   <thead>
-                    <tr className="bg-slate-100 text-slate-800">
+                    <tr className="bg-zinc-100 text-zinc-800">
                       <th className="p-1.5 border border-black w-8 text-center">№</th>
                       <th className="p-1.5 border border-black w-32">Узел / Система</th>
                       <th className="p-1.5 border border-black">Описание неисправности / Износ</th>
@@ -481,15 +481,15 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
                         <td className="p-1.5 border border-black font-semibold">Ходовая часть / ТО</td>
                         <td className="p-1.5 border border-black">{w.name}</td>
                         <td className="p-1.5 border border-black">Устранение в рамках ЗН</td>
-                        <td className="p-1.5 border border-black text-center text-slate-700">В работе</td>
+                        <td className="p-1.5 border border-black text-center text-zinc-700">В работе</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
 
-                <div className="p-3 bg-slate-50 border border-slate-300 rounded-lg text-xs space-y-1">
-                  <span className="font-bold text-slate-900">Заключение технического эксперта СТО: </span>
-                  <p className="italic text-slate-800">
+                <div className="p-3 bg-zinc-50 border border-zinc-300 rounded-lg text-xs space-y-1">
+                  <span className="font-bold text-zinc-900">Заключение технического эксперта СТО: </span>
+                  <p className="italic text-zinc-800">
                     {order.recommendations || "Эксплуатация ТС до устранения неисправностей рулевого управления и подвески не рекомендуется согласно ПДД РФ. Требуется обязательная регулировка углов установки колес."}
                   </p>
                 </div>
@@ -499,13 +499,13 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
             {/* 4. WORKS TABLE (For work_order, completion_act, invoice) */}
             {(docType === "work_order" || docType === "completion_act" || docType === "invoice") && (
               <div className="mb-4">
-                <h3 className="font-bold text-slate-900 mb-1.5 flex justify-between text-xs">
+                <h3 className="font-bold text-zinc-900 mb-1.5 flex justify-between text-xs">
                   <span>1. Выполненные работы / услуги:</span>
-                  <span className="text-slate-500 font-normal">Ставка: {req.defaultRatePerHour} ₽/Н·Ч</span>
+                  <span className="text-zinc-500 font-normal">Ставка: {req.defaultRatePerHour} ₽/Н·Ч</span>
                 </h3>
                 <table className="w-full text-left border-collapse border border-black text-xs">
                   <thead>
-                    <tr className="bg-slate-100 text-slate-800">
+                    <tr className="bg-zinc-100 text-zinc-800">
                       <th className="p-1.5 border border-black w-8 text-center">№</th>
                       <th className="p-1.5 border border-black">Наименование работы</th>
                       <th className="p-1.5 border border-black w-24">Исполнитель</th>
@@ -519,17 +519,17 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
                       <tr key={w.id || idx}>
                         <td className="p-1.5 border border-black text-center">{idx + 1}</td>
                         <td className="p-1.5 border border-black font-medium">{w.name}</td>
-                        <td className="p-1.5 border border-black text-slate-600">{w.mechanic || "Водоватовский А.И."}</td>
+                        <td className="p-1.5 border border-black text-zinc-600">{w.mechanic || "Водоватовский А.И."}</td>
                         <td className="p-1.5 border border-black text-center font-bold">{w.laborHours}</td>
                         <td className="p-1.5 border border-black text-right">{w.ratePerHour} ₽</td>
                         <td className="p-1.5 border border-black text-right font-semibold">{w.total.toLocaleString()} ₽</td>
                       </tr>
                     ))}
-                    <tr className="bg-slate-50 font-bold">
+                    <tr className="bg-zinc-50 font-bold">
                       <td colSpan={5} className="p-1.5 border border-black text-right">
                         Итого по работам:
                       </td>
-                      <td className="p-1.5 border border-black text-right font-bold text-slate-950">
+                      <td className="p-1.5 border border-black text-right font-bold text-zinc-950">
                         {order.totalWorks.toLocaleString()} ₽
                       </td>
                     </tr>
@@ -541,10 +541,10 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
             {/* 5. PARTS TABLE (For work_order, completion_act, invoice) */}
             {(docType === "work_order" || docType === "completion_act" || docType === "invoice") && order.parts.length > 0 && (
               <div className="mb-4">
-                <h3 className="font-bold text-slate-900 mb-1.5 text-xs">2. Запасные части и материалы:</h3>
+                <h3 className="font-bold text-zinc-900 mb-1.5 text-xs">2. Запасные части и материалы:</h3>
                 <table className="w-full text-left border-collapse border border-black text-xs">
                   <thead>
-                    <tr className="bg-slate-100 text-slate-800">
+                    <tr className="bg-zinc-100 text-zinc-800">
                       <th className="p-1.5 border border-black w-8 text-center">№</th>
                       <th className="p-1.5 border border-black w-28">Артикул OEM</th>
                       <th className="p-1.5 border border-black">Наименование детали</th>
@@ -557,18 +557,18 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
                     {order.parts.map((p, idx) => (
                       <tr key={p.id || idx}>
                         <td className="p-1.5 border border-black text-center">{idx + 1}</td>
-                        <td className="p-1.5 border border-black font-mono text-[11px] text-slate-600">{p.oem || "—"}</td>
+                        <td className="p-1.5 border border-black font-mono text-[11px] text-zinc-600">{p.oem || "—"}</td>
                         <td className="p-1.5 border border-black font-medium">{p.name}</td>
                         <td className="p-1.5 border border-black text-center">{p.qty} {p.unit}</td>
                         <td className="p-1.5 border border-black text-right">{p.salePrice.toLocaleString()} ₽</td>
                         <td className="p-1.5 border border-black text-right font-semibold">{p.total.toLocaleString()} ₽</td>
                       </tr>
                     ))}
-                    <tr className="bg-slate-50 font-bold">
+                    <tr className="bg-zinc-50 font-bold">
                       <td colSpan={5} className="p-1.5 border border-black text-right">
                         Итого по запчастям:
                       </td>
-                      <td className="p-1.5 border border-black text-right font-bold text-slate-950">
+                      <td className="p-1.5 border border-black text-right font-bold text-zinc-950">
                         {order.totalParts.toLocaleString()} ₽
                       </td>
                     </tr>
@@ -578,40 +578,40 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
             )}
 
             {/* Total Due & Sum in Words */}
-            <div className="p-3 bg-slate-50 border border-slate-300 rounded-lg space-y-1.5 mb-4">
+            <div className="p-3 bg-zinc-50 border border-zinc-300 rounded-lg space-y-1.5 mb-4">
               <div className="flex justify-between items-center">
-                <span className="font-extrabold text-sm text-slate-900">
+                <span className="font-extrabold text-sm text-zinc-900">
                   {docType === "invoice" ? "ВСЕГО К ОПЛАТЕ:" : "ИТОГО К ОПЛАТЕ:"}
                 </span>
                 <span className="font-black text-base text-red-600">
                   {formatCurrency(order.grandTotal)}
                 </span>
               </div>
-              <div className="text-[11px] text-slate-600 border-t border-slate-200 pt-1.5">
-                <span className="font-bold text-slate-900">Сумма прописью: </span>
-                <span className="italic font-medium text-slate-800">{numberToWordsRu(order.grandTotal)}</span>
+              <div className="text-[11px] text-zinc-600 border-t border-zinc-200 pt-1.5">
+                <span className="font-bold text-zinc-900">Сумма прописью: </span>
+                <span className="italic font-medium text-zinc-800">{numberToWordsRu(order.grandTotal)}</span>
               </div>
-              <div className="text-[10px] text-slate-500">
+              <div className="text-[10px] text-zinc-500">
                 НДС не облагается (в соответствии с пп. 37 п. 3 ст. 149 НК РФ, УСН / Патент).
               </div>
             </div>
 
             {/* Recommendations / Legal terms */}
             {docType === "completion_act" && (
-              <div className="text-[11px] text-slate-600 mb-4 p-2 bg-slate-50 border border-slate-200 rounded">
+              <div className="text-[11px] text-zinc-600 mb-4 p-2 bg-zinc-50 border border-zinc-200 rounded">
                 Вышеперечисленные работы (услуги) выполнены полностью и в срок. Заказчик претензий по объему, качеству и срокам оказания услуг не имеет.
               </div>
             )}
 
             {order.recommendations && docType !== "defect_sheet" && (
-              <div className="mb-3 text-xs text-slate-700">
+              <div className="mb-3 text-xs text-zinc-700">
                 <strong>Рекомендации клиенту:</strong> {order.recommendations}
               </div>
             )}
 
             {/* Warranty Terms */}
             {docType === "work_order" && (
-              <div className="text-[11px] text-slate-500 mb-6 border-t border-slate-200 pt-2 leading-relaxed">
+              <div className="text-[11px] text-zinc-500 mb-6 border-t border-zinc-200 pt-2 leading-relaxed">
                 <p>
                   Гарантийные обязательства: на работы по слесарному ремонту — {order.warrantyDaysWorks || 30} дней или 1 000 км пробега, на установленные оригинальные запасные части — {order.warrantyDaysParts || 14} дней. Претензии по комплектности и внешнему виду принимаются исключительно в момент получения автомобиля.
                 </p>
@@ -619,12 +619,12 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
             )}
 
             {/* Signature Blocks */}
-            <div className="grid grid-cols-2 gap-8 text-xs pt-4 border-t-2 border-slate-300">
+            <div className="grid grid-cols-2 gap-8 text-xs pt-4 border-t-2 border-zinc-300">
               <div>
-                <p className="font-bold text-slate-900">
+                <p className="font-bold text-zinc-900">
                   {docType === "invoice" ? "Предприниматель / Руководитель:" : "Исполнитель / Мастер-приемщик:"}
                 </p>
-                <p className="text-slate-600 mb-6">{req.director} / {req.masterReceiver}</p>
+                <p className="text-zinc-600 mb-6">{req.director} / {req.masterReceiver}</p>
 
                 <div className="relative inline-block">
                   {isFacsimile && (
@@ -653,16 +653,16 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
                   )}
                   <div className="border-b border-black w-48 mb-1" />
                 </div>
-                <p className="text-[10px] text-slate-500">Подпись / М.П.</p>
+                <p className="text-[10px] text-zinc-500">Подпись / М.П.</p>
               </div>
 
               <div>
-                <p className="font-bold text-slate-900">
+                <p className="font-bold text-zinc-900">
                   {docType === "payment_receipt" ? "Плательщик:" : "Заказчик (представитель):"}
                 </p>
-                <p className="text-slate-600 mb-6">{order.client.name}</p>
+                <p className="text-zinc-600 mb-6">{order.client.name}</p>
                 <div className="border-b border-black w-48 mb-1" />
-                <p className="text-[10px] text-slate-500">
+                <p className="text-[10px] text-zinc-500">
                   {docType === "payment_receipt" ? "Оплату произвел" : "С объемом и стоимостью работ согласен"}
                 </p>
               </div>

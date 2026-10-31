@@ -144,7 +144,7 @@ export const VehicleInspectionSchematic: React.FC<VehicleInspectionSchematicProp
           <span className="font-bold text-xs uppercase tracking-wider">
             СХЕМА ОСМОТРА ТС И КАРТА ПОВРЕЖДЕНИЙ КУЗОВА ({isCar ? "Легковой автомобиль" : "Грузовой / Коммерческий"})
           </span>
-          <span className="text-[10px] text-gray-700">
+          <span className="text-[10px] text-zinc-700">
             Обозначения: <strong>Ц</strong> — Царапина, <strong>В</strong> — Вмятина, <strong>С</strong> — Скол, <strong>К</strong> — Коррозия
           </span>
         </div>
@@ -156,8 +156,8 @@ export const VehicleInspectionSchematic: React.FC<VehicleInspectionSchematicProp
             const imgSrc = getVehicleImageSrc(viewKey);
 
             return (
-              <div key={viewKey} className="border border-gray-400 p-1 flex flex-col justify-between bg-white">
-                <div className="text-[10px] font-bold text-center text-gray-800 mb-0.5">
+              <div key={viewKey} className="border border-zinc-400 p-1 flex flex-col justify-between bg-white">
+                <div className="text-[10px] font-bold text-center text-zinc-800 mb-0.5">
                   {VIEW_TITLES[viewKey]}
                 </div>
 
@@ -181,7 +181,7 @@ export const VehicleInspectionSchematic: React.FC<VehicleInspectionSchematicProp
                   })}
                 </div>
 
-                <div className="text-[9px] text-center text-gray-600 mt-0.5">
+                <div className="text-[9px] text-center text-zinc-600 mt-0.5">
                   {viewDamages.length > 0 ? `Дефектов: ${viewDamages.length}` : "Без дефектов"}
                 </div>
               </div>
@@ -192,12 +192,12 @@ export const VehicleInspectionSchematic: React.FC<VehicleInspectionSchematicProp
         {/* Defects Details Table & Condition Summary */}
         <div className="grid grid-cols-2 gap-3 pt-1">
           {/* Left: Defects decoded list */}
-          <div className="border border-gray-400 p-2 space-y-1">
-            <span className="font-bold text-[10px] uppercase tracking-wide block border-b border-gray-300 pb-1">
+          <div className="border border-zinc-400 p-2 space-y-1">
+            <span className="font-bold text-[10px] uppercase tracking-wide block border-b border-zinc-300 pb-1">
               Перечень зафиксированных дефектов кузова:
             </span>
             {(current.damages || []).length === 0 ? (
-              <p className="text-gray-600 italic py-2 text-center text-[10px]">
+              <p className="text-zinc-600 italic py-2 text-center text-[10px]">
                 Видимых механических повреждений кузова, стекол и оптики не зафиксировано
               </p>
             ) : (
@@ -205,14 +205,14 @@ export const VehicleInspectionSchematic: React.FC<VehicleInspectionSchematicProp
                 {current.damages.map((d, idx) => (
                   <div key={d.id} className="flex items-center justify-between text-[10px]">
                     <span className="flex items-center space-x-1">
-                      <strong className="w-3.5 h-3.5 rounded-full bg-gray-900 text-white flex items-center justify-center text-[9px]">
+                      <strong className="w-3.5 h-3.5 rounded-full bg-zinc-900 text-white flex items-center justify-center text-[9px]">
                         {d.label}
                       </strong>
                       <span>
                         {idx + 1}. {DAMAGE_META[d.type].title} — {VIEW_TITLES[d.view]}
                       </span>
                     </span>
-                    <span className="text-gray-600 text-[9px] italic">
+                    <span className="text-zinc-600 text-[9px] italic">
                       {d.note || `Коорд: ${d.x}%, ${d.y}%`}
                     </span>
                   </div>
@@ -222,7 +222,7 @@ export const VehicleInspectionSchematic: React.FC<VehicleInspectionSchematicProp
           </div>
 
           {/* Right: Fuel Level & Completeness Checklist */}
-          <div className="border border-gray-400 p-2 space-y-2">
+          <div className="border border-zinc-400 p-2 space-y-2">
             <div>
               <div className="flex items-center justify-between text-[10px] font-bold">
                 <span>УРОВЕНЬ ТОПЛИВА В БАКЕ:</span>
@@ -235,7 +235,7 @@ export const VehicleInspectionSchematic: React.FC<VehicleInspectionSchematicProp
                   <div
                     key={lvl}
                     className={`py-0.5 border ${
-                      current.fuelLevel === lvl ? "bg-black text-white font-bold border-black" : "border-gray-400 text-gray-700"
+                      current.fuelLevel === lvl ? "bg-black text-white font-bold border-black" : "border-zinc-400 text-zinc-700"
                     }`}
                   >
                     {lvl}
@@ -244,7 +244,7 @@ export const VehicleInspectionSchematic: React.FC<VehicleInspectionSchematicProp
               </div>
             </div>
 
-            <div className="border-t border-gray-300 pt-1.5">
+            <div className="border-t border-zinc-300 pt-1.5">
               <span className="font-bold text-[10px] block mb-1">КОМПЛЕКТНОСТЬ ТРАНСПОРТНОГО СРЕДСТВА:</span>
               <div className="grid grid-cols-2 gap-x-2 gap-y-0.5 text-[9px]">
                 <div>СТС: <strong>{current.equipment?.sts ? "Да" : "Нет"}</strong></div>
@@ -257,7 +257,7 @@ export const VehicleInspectionSchematic: React.FC<VehicleInspectionSchematicProp
             </div>
 
             {current.isDirty && (
-              <div className="border border-black p-1 text-[9px] font-bold text-center bg-gray-100">
+              <div className="border border-black p-1 text-[9px] font-bold text-center bg-zinc-100">
                 ⚠ ТС принято в грязном виде (возможны скрытые дефекты ЛКП после мойки)
               </div>
             )}
