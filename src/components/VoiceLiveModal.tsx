@@ -4,7 +4,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { X, Mic, MicOff, Radio } from "lucide-react";
 import { useBusiness } from "@/lib/business-context";
 import { requestMicrophoneStream, transcribeAudioWithServer } from "@/lib/microphone-manager";
-import { MicPermissionModal } from "@/components/MicPermissionModal";
 
 interface VoiceLiveModalProps {
   isOpen: boolean;
@@ -29,7 +28,6 @@ export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
   const [lastAiResponse, setLastAiResponse] = useState<string>("");
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [liveVolume, setLiveVolume] = useState<number>(0);
-  const [showMicBlockedModal, setShowMicBlockedModal] = useState<boolean>(false);
 
   const activeStreamRef = useRef<MediaStream | null>(null);
   const recognitionRef = useRef<any>(null);
@@ -255,21 +253,17 @@ export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
     const initMicrophone = async () => {
       let stream = initialStream || activeStreamRef.current;
       if (!stream) {
-        setShowMicBlockedModal(false);
         const micRes = await requestMicrophoneStream();
         if (isCancelled) return;
         if (!micRes.ok) {
-          if (micRes.errorType === "not_allowed") {
-            setShowMicBlockedModal(true);
-          }
+          setVoiceState("idle");
+          setTranscript(micRes.errorMessage || "Микрофон недоступен. Нажмите «Включить микрофон» внизу.");
           return;
         }
-        setShowMicBlockedModal(false);
         stream = micRes.stream || null;
       }
 
       if (!stream) return;
-      setShowMicBlockedModal(false);
       activeStreamRef.current = stream;
 
       const SpeechRecognition =
@@ -657,14 +651,15 @@ export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
                 } catch {}
                 setVoiceState("idle");
               } else {
-                // Ensure permission on un-mute click
+                // Direct toggle on click
                 const micRes = await requestMicrophoneStream();
-                if (!micRes.ok && micRes.errorType === "not_allowed") {
-                  setShowMicBlockedModal(true);
+                if (!micRes.ok) {
+                  setTranscript(micRes.errorMessage || "Доступ к микрофону не предоставлен");
                   setIsMuted(true);
                   return;
                 }
-                setShowMicBlockedModal(false);
+                activeStreamRef.current = micRes.stream || null;
+                setIsMuted(false);
                 setVoiceState("listening");
                 try {
                   recognitionRef.current?.start();
@@ -690,20 +685,6 @@ export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
           </button>
         </div>
       </div>
-
-      <MicPermissionModal
-        isOpen={showMicBlockedModal}
-        onClose={() => setShowMicBlockedModal(false)}
-        onRetry={async () => {
-          setShowMicBlockedModal(false);
-          const micRes = await requestMicrophoneStream();
-          if (micRes.ok) {
-            activeStreamRef.current = micRes.stream || null;
-            setIsMuted(false);
-            resumeListening();
-          }
-        }}
-      />
     </>
   );
 };

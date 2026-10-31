@@ -34,7 +34,6 @@ import {
   Radio,
 } from "lucide-react";
 import { VoiceLiveModal } from "@/components/VoiceLiveModal";
-import { MicPermissionModal } from "@/components/MicPermissionModal";
 import { requestMicrophoneStream, transcribeAudioWithServer } from "@/lib/microphone-manager";
 import { ChatMessage, ChatActionPayload } from "@/lib/supabase";
 import { MarkdownView } from "@/components/MarkdownView";
@@ -322,7 +321,6 @@ export const AIChat: React.FC = () => {
 
   // Live Voice Mode («Моя волна» / Hands-Free) & Fallback STT State
   const [isVoiceLiveOpen, setIsVoiceLiveOpen] = useState(false);
-  const [showMicBlockedModal, setShowMicBlockedModal] = useState(false);
   const [isFallbackRecording, setIsFallbackRecording] = useState(false);
   const activeMicStreamRef = useRef<MediaStream | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -355,26 +353,13 @@ export const AIChat: React.FC = () => {
     };
   }, []);
 
-  // Dedicated handler for Live Voice mode with synchronous user-gesture getUserMedia
-  const handleOpenVoiceLive = async () => {
-    setShowMicBlockedModal(false);
-    const micResult = await requestMicrophoneStream();
-    if (!micResult.ok) {
-      if (micResult.errorType === "not_allowed") {
-        setShowMicBlockedModal(true);
-      } else {
-        setSpeechError(micResult.errorMessage || "Ошибка доступа к микрофону");
-        setTimeout(() => setSpeechError(null), 5000);
-      }
-      return;
-    }
-    setShowMicBlockedModal(false);
-    activeMicStreamRef.current = micResult.stream || null;
+  // Dedicated handler for Live Voice mode
+  const handleOpenVoiceLive = () => {
     setIsVoiceLiveOpen(true);
   };
 
-  // Voice input toggle (Direct getUserMedia + SpeechRecognition with ElevenLabs Scribe STT fallback)
-  const toggleVoiceInput = async () => {
+  // Voice input toggle (Direct native SpeechRecognition with ElevenLabs Scribe STT fallback)
+  const toggleVoiceInput = () => {
     if (typeof window === "undefined") return;
 
     if (isListening || isFallbackRecording) {
@@ -382,26 +367,20 @@ export const AIChat: React.FC = () => {
       return;
     }
 
-    setShowMicBlockedModal(false);
-    // 1. Mandatory direct getUserMedia invocation in user gesture to prompt browser
-    const micResult = await requestMicrophoneStream();
-    if (!micResult.ok) {
-      if (micResult.errorType === "not_allowed") {
-        setShowMicBlockedModal(true);
-      } else {
-        setSpeechError(micResult.errorMessage || "Ошибка доступа к микрофону");
-        setTimeout(() => setSpeechError(null), 5000);
-      }
-      return;
-    }
-
-    setShowMicBlockedModal(false);
-    const stream = micResult.stream!;
-    activeMicStreamRef.current = stream;
     baseTextRef.current = inputPrompt.trim();
 
-    // Helper: start MediaRecorder with server /api/stt fallback
-    const startServerRecordingFallback = () => {
+    // Helper: start MediaRecorder with ElevenLabs server STT fallback
+    const startServerRecordingFallback = async () => {
+      const micRes = await requestMicrophoneStream();
+      if (!micRes.ok) {
+        setSpeechError(micRes.errorMessage || "Не удалось включить микрофон");
+        setTimeout(() => setSpeechError(null), 5000);
+        setIsListening(false);
+        setIsFallbackRecording(false);
+        return;
+      }
+      const stream = micRes.stream!;
+      activeMicStreamRef.current = stream;
       try {
         audioChunksRef.current = [];
         const mimeType = MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
@@ -1621,13 +1600,6 @@ export const AIChat: React.FC = () => {
         }}
         onSendMessage={handleVoiceLiveSend}
         initialStream={activeMicStreamRef.current}
-      />
-
-      {/* Mic Permission Guidance Modal */}
-      <MicPermissionModal
-        isOpen={showMicBlockedModal}
-        onClose={() => setShowMicBlockedModal(false)}
-        onRetry={handleOpenVoiceLive}
       />
     </div>
   );

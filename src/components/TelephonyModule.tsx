@@ -32,7 +32,6 @@ import { RepairOrder } from "@/lib/auto-service-types";
 import { getInitialOrders, normalizeRepairOrder, formatCurrency } from "@/lib/auto-service-data";
 import { useAuth } from "@/lib/auth-context";
 import { requestMicrophoneStream } from "@/lib/microphone-manager";
-import { MicPermissionModal } from "@/components/MicPermissionModal";
 
 // Zero mock data: initial list is strictly empty
 const INITIAL_CALLS: TelephonyCallRecord[] = [];
@@ -46,7 +45,6 @@ export const TelephonyModule: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"journal" | "outbound" | "settings">("journal");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCall, setSelectedCall] = useState<TelephonyCallRecord | null>(null);
-  const [showMicBlockedModal, setShowMicBlockedModal] = useState(false);
 
   // Settings state
   const [sipProvider, setSipProvider] = useState<"novofon" | "mango" | "zadarma" | "vapi">("novofon");
@@ -206,16 +204,10 @@ export const TelephonyModule: React.FC = () => {
     window.speechSynthesis.speak(utt);
   };
 
-  // Launch live interactive phone simulator with explicit getUserMedia click gesture
+  // Launch live interactive phone simulator
   const handleStartCallSimulator = async (clientName = "Алексей Смирнов", car = "Газель Next") => {
-    // Direct getUserMedia in click gesture
-    setShowMicBlockedModal(false);
-    const micRes = await requestMicrophoneStream();
-    if (!micRes.ok && micRes.errorType === "not_allowed") {
-      setShowMicBlockedModal(true);
-      return;
-    }
-    setShowMicBlockedModal(false);
+    // Attempt non-blocking microphone capture
+    await requestMicrophoneStream();
 
     setIsSimulatorOpen(true);
     setSimStep("dialing");
@@ -741,15 +733,6 @@ export const TelephonyModule: React.FC = () => {
         </div>
       )}
 
-      {/* Microphone Permission Modal */}
-      <MicPermissionModal
-        isOpen={showMicBlockedModal}
-        onClose={() => setShowMicBlockedModal(false)}
-        onRetry={() => {
-          setShowMicBlockedModal(false);
-          handleStartCallSimulator();
-        }}
-      />
     </div>
   );
 };
