@@ -16,6 +16,7 @@ import {
   Coins,
   ShieldCheck,
   Edit2,
+  User,
 } from "lucide-react";
 import {
   StoCompanyRequisites,
@@ -41,10 +42,12 @@ export const StoSettingsModal: React.FC<StoSettingsModalProps> = ({
   isOpen,
   onClose,
 }) => {
-  const { user } = useAuth();
+  const { user, updateName } = useAuth();
   const currentUsername = user?.username ? user.username.trim().toLowerCase() : "";
 
   const [form, setForm] = useState<StoCompanyRequisites>(SERVICE_COMPANY_REQUISITES);
+  const [userName, setUserName] = useState(user?.name || "");
+  const [selectedModel, setSelectedModel] = useState<string>("anthropic/claude-sonnet-4.6");
   const [newMechanicName, setNewMechanicName] = useState("");
   const [isSavedToast, setIsSavedToast] = useState(false);
   const [isAddingEmp, setIsAddingEmp] = useState(false);
@@ -74,13 +77,25 @@ export const StoSettingsModal: React.FC<StoSettingsModalProps> = ({
     if (isOpen) {
       const loaded = getStoRequisites(currentUsername);
       setForm(loaded);
+      setUserName(user?.name || "");
+      if (typeof window !== "undefined") {
+        const saved = localStorage.getItem("geonedra_openrouter_model");
+        if (saved) setSelectedModel(saved);
+      }
     }
-  }, [isOpen, currentUsername]);
+  }, [isOpen, currentUsername, user?.name]);
 
   if (!isOpen) return null;
 
   const handleSave = () => {
     saveStoRequisites(form, currentUsername);
+
+    if (userName.trim() && updateName) {
+      updateName(userName.trim());
+    }
+    if (typeof window !== "undefined") {
+      localStorage.setItem("geonedra_openrouter_model", selectedModel);
+    }
 
     // Sync to Supabase
     if (currentUsername) {
@@ -92,6 +107,8 @@ export const StoSettingsModal: React.FC<StoSettingsModalProps> = ({
           username: currentUsername,
           settings: {
             sto_requisites: form,
+            preferred_model: selectedModel,
+            display_name: userName.trim() || user?.name,
           },
         }),
       }).catch(() => {});
@@ -192,6 +209,40 @@ export const StoSettingsModal: React.FC<StoSettingsModalProps> = ({
 
         {/* Form Body */}
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
+          {/* 0. User Profile & AI Assistant Model */}
+          <div className="space-y-3 p-4 rounded-2xl bg-slate-50/70 dark:bg-white/[0.03] border border-black/[0.04] dark:border-white/[0.06]">
+            <h3 className="font-bold text-slate-800 dark:text-zinc-200 text-xs uppercase tracking-wider flex items-center space-x-1.5">
+              <User className="w-3.5 h-3.5 text-rose-500" />
+              <span>Профиль пользователя и ИИ</span>
+            </h3>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="text-[11px] font-semibold text-slate-500">Ваше имя (обращение ИИ)</label>
+                <input
+                  type="text"
+                  value={userName}
+                  onChange={(e) => setUserName(e.target.value)}
+                  placeholder="Как к вам обращаться?"
+                  className="mt-1 w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 font-medium"
+                />
+              </div>
+
+              <div>
+                <label className="text-[11px] font-semibold text-slate-500">Основная модель ИИ</label>
+                <select
+                  value={selectedModel}
+                  onChange={(e) => setSelectedModel(e.target.value)}
+                  className="mt-1 w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs font-medium cursor-pointer"
+                >
+                  <option value="anthropic/claude-sonnet-4.6">Claude Sonnet 4.6 (Основной флагман, рекомендуется)</option>
+                  <option value="openai/gpt-5.4">OpenAI GPT-5.4 (Резервный флагман)</option>
+                  <option value="google/gemini-3.8-flash">Google Gemini 4 Argon (Высокоскоростной)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
           {/* 1. Legal Requisites */}
           <div className="space-y-3">
             <h3 className="font-bold text-slate-800 dark:text-zinc-200 text-xs uppercase tracking-wider flex items-center space-x-1.5">

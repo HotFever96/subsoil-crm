@@ -131,6 +131,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
     }
   };
 
+  const handleOpenSettings = () => {
+    if (isChaika) {
+      setIsStoSettingsOpen(true);
+    } else {
+      setNameInput(user?.name || "");
+      setShowSettingsModal(true);
+    }
+  };
+
   interface SidebarNavItem {
     id: NavTab;
     label: string;
@@ -474,69 +483,62 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
         </div>
 
-        {/* Footer: User Profile, Settings, Theme & Logout */}
-        <div className="p-3 border-t border-slate-200 dark:border-white/[0.08] space-y-2 shrink-0">
-          {/* User Profile Info + Logout */}
-          <div className="px-3 py-2 rounded-xl bg-slate-200/60 dark:bg-white/[0.04] flex items-center justify-between">
-            <div className="flex items-center space-x-2.5 min-w-0">
-              <div className="w-7 h-7 rounded-full bg-slate-300 dark:bg-slate-700 flex items-center justify-center text-slate-700 dark:text-slate-200 shrink-0">
+        {/* Footer: Compact Unified User Capsule with Icon Actions */}
+        <div className="p-3 border-t border-black/[0.05] dark:border-white/[0.06] shrink-0">
+          <div className="px-2.5 py-2 rounded-2xl bg-slate-200/50 dark:bg-white/[0.05] border border-black/[0.04] dark:border-white/[0.06] backdrop-blur-xl flex items-center justify-between">
+            {/* User Info (Clicking opens Settings) */}
+            <button
+              type="button"
+              onClick={handleOpenSettings}
+              className="flex items-center space-x-2 min-w-0 hover:opacity-80 transition-opacity cursor-pointer text-left mr-1.5 group"
+              title="Настройки профиля и системы"
+            >
+              <div className="w-7 h-7 rounded-full bg-slate-300/80 dark:bg-white/[0.1] flex items-center justify-center text-slate-700 dark:text-zinc-200 shrink-0 group-hover:scale-105 transition-transform">
                 <User className="w-3.5 h-3.5" />
               </div>
               <div className="min-w-0">
-                <div className="text-xs font-medium text-slate-900 dark:text-slate-100 truncate">
+                <div className="text-xs font-semibold text-slate-900 dark:text-white truncate">
                   {user?.name || "Пользователь"}
                 </div>
               </div>
-            </div>
-
-            <button
-              onClick={logout}
-              className="p-1.5 rounded-md text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 transition-colors cursor-pointer"
-              title="Выйти из системы"
-            >
-              <LogOut className="w-3.5 h-3.5" />
             </button>
-          </div>
 
-          <div className="space-y-0.5">
-            {isChaika && (
+            {/* Compact Action Icons: Settings, Theme Toggle, Logout */}
+            <div className="flex items-center space-x-0.5 shrink-0">
+              {/* Settings (Unified) */}
               <button
                 type="button"
-                onClick={() => setIsStoSettingsOpen(true)}
-                className="w-full text-left px-3.5 py-2 rounded-2xl text-xs text-rose-600 dark:text-rose-400 hover:bg-rose-500/10 transition-colors flex items-center space-x-2.5 cursor-pointer font-medium mb-1"
+                onClick={handleOpenSettings}
+                className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-300/50 dark:hover:bg-white/[0.08] transition-colors cursor-pointer"
+                title={isChaika ? "Настройки реквизитов, сотрудников и профиля СТО" : "Настройки профиля и системы"}
               >
-                <Wrench className="w-3.5 h-3.5 text-rose-500" />
-                <span>Реквизиты и сотрудники СТО</span>
+                <Settings className="w-3.5 h-3.5" />
               </button>
-            )}
 
-            <button
-              onClick={() => {
-                setNameInput(user?.name || "");
-                setShowSettingsModal(true);
-              }}
-              className="w-full text-left px-3.5 py-2 rounded-2xl text-xs text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/[0.04] transition-colors flex items-center space-x-2.5 cursor-pointer"
-            >
-              <Settings className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-400" />
-              <span>Настройки</span>
-            </button>
-
-            <button
-              onClick={toggleTheme}
-              className="w-full text-left px-3.5 py-2 rounded-2xl text-xs text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/[0.04] transition-colors flex items-center justify-between cursor-pointer"
-            >
-              <div className="flex items-center space-x-2.5">
+              {/* Theme Toggle */}
+              <button
+                type="button"
+                onClick={toggleTheme}
+                className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-300/50 dark:hover:bg-white/[0.08] transition-colors cursor-pointer"
+                title={theme === "dark" ? "Переключить на светлую тему" : "Переключить на темную тему"}
+              >
                 {theme === "dark" ? (
-                  <Moon className="w-3.5 h-3.5 text-slate-400" />
+                  <Moon className="w-3.5 h-3.5" />
                 ) : (
                   <Sun className="w-3.5 h-3.5 text-amber-500" />
                 )}
-                <span>{theme === "dark" ? "Темная тема" : "Светлая тема"}</span>
-              </div>
-              <span className="text-[10px] text-slate-400 dark:text-zinc-500 uppercase tracking-wider font-mono">
-                {theme === "dark" ? "Dark" : "Light"}
-              </span>
-            </button>
+              </button>
+
+              {/* Logout */}
+              <button
+                type="button"
+                onClick={logout}
+                className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 transition-colors cursor-pointer"
+                title="Выйти из системы"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+              </button>
+            </div>
           </div>
         </div>
       </aside>
