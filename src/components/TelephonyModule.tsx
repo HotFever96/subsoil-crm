@@ -293,7 +293,7 @@ export const TelephonyModule: React.FC = () => {
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden text-slate-900 dark:text-zinc-100">
       {/* Top Header - Yandex Pill Aesthetic */}
-      <div className="px-6 py-4.5 border-b border-white/[0.08] bg-white/40 dark:bg-[#0c121a]/60 backdrop-blur-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">
+      <div className="px-6 py-4.5 border-b border-white/[0.08] bg-white/40 dark:bg-black/30 backdrop-blur-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">
         <div className="flex items-center space-x-3.5">
           <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-rose-500/20 to-purple-500/20 border border-white/10 text-rose-500 flex items-center justify-center shrink-0 shadow-lg shadow-rose-500/10">
             <PhoneCall className="w-5 h-5" />
@@ -336,7 +336,7 @@ export const TelephonyModule: React.FC = () => {
       <div className="px-6 pt-5 pb-3 shrink-0">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
           {/* Card 1: Total Calls */}
-          <div className="p-4 rounded-3xl bg-white/50 dark:bg-white/[0.04] border border-white/[0.08] backdrop-blur-2xl shadow-sm hover:border-white/20 transition-all flex items-center justify-between group">
+          <div className="p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-slate-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
             <div>
               <span className="text-[11px] font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">
                 Всего звонков
@@ -354,7 +354,7 @@ export const TelephonyModule: React.FC = () => {
           </div>
 
           {/* Card 2: Average Rating */}
-          <div className="p-4 rounded-3xl bg-white/50 dark:bg-white/[0.04] border border-white/[0.08] backdrop-blur-2xl shadow-sm hover:border-white/20 transition-all flex items-center justify-between group">
+          <div className="p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-slate-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
             <div>
               <span className="text-[11px] font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">
                 Индекс CSI (Оценка СТО)
@@ -373,7 +373,7 @@ export const TelephonyModule: React.FC = () => {
           </div>
 
           {/* Card 3: Auto-Bookings */}
-          <div className="p-4 rounded-3xl bg-white/50 dark:bg-white/[0.04] border border-white/[0.08] backdrop-blur-2xl shadow-sm hover:border-white/20 transition-all flex items-center justify-between group">
+          <div className="p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-slate-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
             <div>
               <span className="text-[11px] font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">
                 Записано авто ботом
@@ -391,7 +391,7 @@ export const TelephonyModule: React.FC = () => {
           </div>
 
           {/* Card 4: Costs and ROI */}
-          <div className="p-4 rounded-3xl bg-white/50 dark:bg-white/[0.04] border border-white/[0.08] backdrop-blur-2xl shadow-sm hover:border-white/20 transition-all flex items-center justify-between group">
+          <div className="p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-slate-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
             <div>
               <span className="text-[11px] font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">
                 Затраты на связь / ROI
@@ -443,7 +443,7 @@ export const TelephonyModule: React.FC = () => {
               <div
                 key={call.id}
                 onClick={() => setSelectedCall(call)}
-                className="group p-4 rounded-2xl bg-white/40 dark:bg-white/[0.03] hover:bg-white/80 dark:hover:bg-white/[0.07] border border-white/[0.06] hover:border-white/15 backdrop-blur-2xl transition-all cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-xs"
+                className="group p-4 rounded-2xl bg-white/50 dark:bg-white/[0.05] hover:bg-white dark:hover:bg-white/[0.09] border border-slate-200/60 dark:border-white/[0.08] hover:border-white/20 backdrop-blur-2xl transition-all cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-md hover:shadow-xl"
               >
                 <div className="flex items-center space-x-3.5 min-w-0">
                   <div className="w-10 h-10 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-500 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">

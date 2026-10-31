@@ -271,7 +271,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Main Sidebar (Fixed slide-out on mobile, static flex on desktop) */}
       <aside
-        className={`w-72 border-r border-slate-200 dark:border-white/[0.08] bg-[#f8fafc] dark:bg-[#090d12] flex flex-col justify-between shrink-0 select-none transition-all h-full z-50 ${
+        className={`w-72 border-r border-slate-200/80 dark:border-white/[0.08] bg-slate-50/90 dark:bg-[#09090b]/85 backdrop-blur-2xl flex flex-col justify-between shrink-0 select-none transition-all h-full z-50 ${
           isMobileOpen
             ? "fixed inset-y-0 left-0 shadow-2xl flex"
             : "hidden md:flex"
@@ -441,7 +441,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     Нет сохраненных диалогов
                   </div>
                 ) : (
-                  visibleSessions.slice(0, 5).map((sess) => {
+                  visibleSessions.map((sess) => {
                     const isActive = currentTab === "ai-chat" && sess.id === activeSessionId;
                     return (
                       <div

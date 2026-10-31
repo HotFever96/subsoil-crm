@@ -520,28 +520,28 @@ export const RepairOrdersModule: React.FC = () => {
   const statuses: OrderStatus[] = ["estimate", "in_progress", "parts_waiting", "ready", "closed"];
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-[#f8fafc] dark:bg-[#090d12] overflow-hidden text-slate-900 dark:text-zinc-100">
-      {/* Top Header - Strict Industrial ERP Style */}
-      <div className="px-6 py-4 border-b border-slate-200 dark:border-zinc-800 bg-white/70 dark:bg-[#0c121a]/80 backdrop-blur-md flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">
+    <div className="flex-1 flex flex-col h-full bg-transparent overflow-hidden text-slate-900 dark:text-zinc-100">
+      {/* Top Header - Yandex Music Pill & Glass Style */}
+      <div className="px-6 py-4.5 border-b border-white/[0.08] bg-white/40 dark:bg-black/30 backdrop-blur-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">
         <div className="flex items-center space-x-3.5">
-          <div className="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 flex items-center justify-center shrink-0">
+          <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-rose-500/20 to-amber-500/20 border border-white/10 text-rose-500 flex items-center justify-center shrink-0 shadow-lg shadow-rose-500/10">
             <Wrench className="w-5 h-5" />
           </div>
           <div>
-            <h1 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center space-x-2">
+            <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center space-x-2.5">
               <span>Заказ-наряды</span>
-              <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-700 dark:text-zinc-300">
+              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-white/10 dark:bg-white/[0.06] border border-white/10 text-slate-700 dark:text-zinc-300">
                 {orders.length} записей
               </span>
               <div className="relative group inline-block">
                 <button
                   type="button"
-                  className="p-1 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 transition-colors cursor-pointer"
+                  className="p-1 rounded-full text-slate-400 hover:text-white transition-colors cursor-pointer"
                   title="Справка"
                 >
                   <HelpCircle className="w-4 h-4" />
                 </button>
-                <div className="absolute left-0 top-full mt-1.5 hidden group-hover:block z-30 w-72 p-2.5 rounded-xl bg-slate-900/95 dark:bg-zinc-900/95 text-slate-100 text-xs shadow-xl border border-white/10 backdrop-blur-md pointer-events-none">
+                <div className="absolute left-0 top-full mt-1.5 hidden group-hover:block z-30 w-72 p-3 rounded-2xl bg-zinc-900/95 text-zinc-100 text-xs shadow-2xl border border-white/10 backdrop-blur-2xl pointer-events-none">
                   Учет ремонтов, калькуляция нормо-часов, интерактивный акт осмотра кузова и пакет документов А4 (Заказ-наряд, Акт, Счет-фактура).
                 </div>
               </div>
@@ -551,35 +551,37 @@ export const RepairOrdersModule: React.FC = () => {
 
         <div className="flex items-center space-x-3">
           {/* View Mode Toggle */}
-          <div className="flex items-center bg-slate-100 dark:bg-zinc-900 p-0.5 rounded-lg border border-slate-200 dark:border-zinc-800">
+          <div className="flex items-center bg-white/40 dark:bg-white/[0.06] p-1 rounded-full border border-white/[0.08] backdrop-blur-md">
             <button
               onClick={() => setViewMode("table")}
-              className={`p-1.5 rounded-md transition-colors cursor-pointer ${
+              className={`p-1.5 px-3 rounded-full text-xs font-semibold flex items-center space-x-1.5 transition-all cursor-pointer ${
                 viewMode === "table"
-                  ? "bg-white dark:bg-zinc-800 text-red-600 dark:text-red-400 shadow-2xs font-semibold"
-                  : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
+                  ? "bg-rose-600 text-white shadow-md shadow-rose-600/25"
+                  : "text-slate-500 hover:text-white"
               }`}
               title="Табличный вид"
             >
-              <List className="w-4 h-4" />
+              <List className="w-3.5 h-3.5" />
+              <span>Таблица</span>
             </button>
             <button
               onClick={() => setViewMode("kanban")}
-              className={`p-1.5 rounded-md transition-colors cursor-pointer ${
+              className={`p-1.5 px-3 rounded-full text-xs font-semibold flex items-center space-x-1.5 transition-all cursor-pointer ${
                 viewMode === "kanban"
-                  ? "bg-white dark:bg-zinc-800 text-red-600 dark:text-red-400 shadow-2xs font-semibold"
-                  : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
+                  ? "bg-rose-600 text-white shadow-md shadow-rose-600/25"
+                  : "text-slate-500 hover:text-white"
               }`}
               title="Канбан-доска"
             >
-              <LayoutGrid className="w-4 h-4" />
+              <LayoutGrid className="w-3.5 h-3.5" />
+              <span>Канбан</span>
             </button>
           </div>
 
           <button
             type="button"
             onClick={openNewOrderModal}
-            className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-semibold shadow-sm transition-all cursor-pointer"
+            className="flex items-center space-x-2 px-4 py-2.5 rounded-full bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 text-white text-xs font-bold transition-all shadow-lg shadow-rose-600/20 cursor-pointer active:scale-95"
           >
             <Plus className="w-4 h-4" />
             <span>Новый заказ-наряд</span>
@@ -587,16 +589,16 @@ export const RepairOrdersModule: React.FC = () => {
         </div>
       </div>
 
-      {/* Filter and Search Bar */}
-      <div className="px-6 py-3 border-b border-slate-200 dark:border-zinc-800 bg-slate-50/50 dark:bg-[#0c121a]/40 flex flex-col md:flex-row md:items-center justify-between gap-3 shrink-0">
+      {/* Filter and Search Bar (Pill Glass UI) */}
+      <div className="px-6 py-2.5 border-b border-white/[0.06] bg-white/30 dark:bg-black/15 backdrop-blur-xl flex flex-col md:flex-row md:items-center justify-between gap-3 shrink-0">
         {/* Status Filters */}
-        <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 md:pb-0">
+        <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
           <button
             onClick={() => setSelectedStatus("all")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all cursor-pointer ${
+            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
               selectedStatus === "all"
-                ? "bg-slate-900 dark:bg-white text-white dark:text-slate-950 font-bold shadow-2xs"
-                : "bg-white dark:bg-zinc-900 text-slate-600 dark:text-zinc-400 border border-slate-200 dark:border-zinc-800"
+                ? "bg-rose-600 text-white shadow-md shadow-rose-600/20 scale-102"
+                : "bg-white/40 dark:bg-white/[0.05] text-slate-600 dark:text-zinc-300 hover:bg-white/70 dark:hover:bg-white/[0.1] border border-white/[0.07]"
             }`}
           >
             Все ({orders.length})
@@ -609,10 +611,10 @@ export const RepairOrdersModule: React.FC = () => {
               <button
                 key={st}
                 onClick={() => setSelectedStatus(st)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all cursor-pointer flex items-center space-x-1.5 ${
+                className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer flex items-center space-x-1.5 ${
                   isActive
-                    ? "bg-red-600 text-white font-bold shadow-2xs"
-                    : "bg-white dark:bg-zinc-900 text-slate-600 dark:text-zinc-300 border border-slate-200 dark:border-zinc-800"
+                    ? "bg-rose-600 text-white shadow-md shadow-rose-600/20 scale-102"
+                    : "bg-white/40 dark:bg-white/[0.05] text-slate-600 dark:text-zinc-300 hover:bg-white/70 dark:hover:bg-white/[0.1] border border-white/[0.07]"
                 }`}
               >
                 <span>{meta.label}</span>
@@ -626,13 +628,13 @@ export const RepairOrdersModule: React.FC = () => {
 
         {/* Search Input */}
         <div className="relative min-w-[280px]">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
             placeholder="Поиск по номеру, госномеру, VIN, клиенту..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-1.5 rounded-lg bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-zinc-100 placeholder-slate-400 focus:outline-hidden focus:ring-1 focus:ring-red-500"
+            className="w-full pl-10 pr-8 py-2 rounded-full bg-white/60 dark:bg-white/[0.05] border border-white/[0.09] backdrop-blur-2xl text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-hidden focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-all"
           />
         </div>
       </div>
@@ -659,12 +661,12 @@ export const RepairOrdersModule: React.FC = () => {
             </button>
           </div>
         ) : viewMode === "table" ? (
-          /* TABLE VIEW WITH ROW CLICK EDITING */
-          <div className="bg-white dark:bg-[#0c121a] rounded-xl border border-slate-200 dark:border-zinc-800 shadow-2xs overflow-hidden">
+          /* TABLE VIEW WITH ROW CLICK EDITING (Yandex Music Tracklist Aesthetic) */
+          <div className="bg-white/60 dark:bg-white/[0.04] rounded-3xl border border-slate-200/60 dark:border-white/[0.08] backdrop-blur-2xl shadow-xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
-                  <tr className="bg-slate-50 dark:bg-zinc-900/60 border-b border-slate-200 dark:border-zinc-800 text-slate-500 dark:text-zinc-400 font-semibold">
+                  <tr className="bg-white/40 dark:bg-white/[0.03] border-b border-slate-200/50 dark:border-white/[0.06] text-slate-500 dark:text-zinc-400 font-semibold">
                     <th className="py-3 px-4">Номер и дата</th>
                     <th className="py-3 px-4">Автомобиль и госномер</th>
                     <th className="py-3 px-4">Клиент</th>
@@ -777,13 +779,13 @@ export const RepairOrdersModule: React.FC = () => {
           </div>
         ) : (
           /* KANBAN BOARD */
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
             {statuses.map((st) => {
               const meta = getStatusMeta(st);
               const columnOrders = filteredOrders.filter((o) => o.status === st);
               return (
-                <div key={st} className="flex flex-col bg-slate-50 dark:bg-zinc-900/60 rounded-xl border border-slate-200 dark:border-zinc-800 p-3 min-h-[450px]">
-                  <div className="flex items-center justify-between pb-2.5 mb-2.5 border-b border-slate-200 dark:border-zinc-800">
+                <div key={st} className="flex flex-col bg-white/40 dark:bg-white/[0.03] rounded-3xl border border-slate-200/50 dark:border-white/[0.06] backdrop-blur-2xl p-3.5 min-h-[450px]">
+                  <div className="flex items-center justify-between pb-2.5 mb-2.5 border-b border-slate-200/60 dark:border-white/[0.06]">
                     <span className="font-bold text-xs text-slate-800 dark:text-zinc-200">{meta.label}</span>
                     <span className="text-[10px] px-2 py-0.5 rounded-full bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 font-bold">
                       {columnOrders.length}
@@ -795,7 +797,7 @@ export const RepairOrdersModule: React.FC = () => {
                       <div
                         key={ord.id}
                         onClick={() => openEditOrderModal(ord)}
-                        className="p-3 rounded-lg bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 hover:border-red-500/50 shadow-2xs cursor-pointer transition-all space-y-2"
+                        className="p-3.5 rounded-2xl bg-white dark:bg-white/[0.06] border border-slate-200/70 dark:border-white/[0.08] hover:border-rose-500/50 hover:shadow-lg dark:hover:shadow-rose-950/20 cursor-pointer transition-all space-y-2"
                       >
                         <div className="flex items-center justify-between">
                           <span className="font-bold text-xs text-slate-900 dark:text-slate-100">{ord.orderNumber}</span>
