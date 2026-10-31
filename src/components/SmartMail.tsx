@@ -440,10 +440,10 @@ export const SmartMail: React.FC<SmartMailProps> = ({
   };
 
   return (
-    <div className="flex-1 flex h-full overflow-hidden bg-white dark:bg-[#12161c] transition-colors relative">
+    <div className="flex-1 flex h-full overflow-hidden bg-transparent transition-colors relative">
       {/* Action success alert floating notification */}
       {actionSuccessMessage && (
-        <div className="absolute top-3 right-6 z-40 bg-emerald-600 text-white text-xs px-4 py-2 rounded-xl shadow-lg flex items-center space-x-2 animate-in fade-in slide-in-from-top-2">
+        <div className="absolute top-3 right-6 z-40 bg-emerald-600 text-white text-xs px-4 py-2 rounded-full shadow-2xl flex items-center space-x-2 animate-in fade-in slide-in-from-top-2">
           <CheckCircle2 className="w-4 h-4 shrink-0" />
           <span>{actionSuccessMessage}</span>
           <button
@@ -456,7 +456,7 @@ export const SmartMail: React.FC<SmartMailProps> = ({
       )}
 
       {/* 1. Folders & Mailboxes Column */}
-      <div className="w-60 border-r border-slate-200 dark:border-white/[0.08] bg-[#f8fafc] dark:bg-[#0e1217] flex flex-col justify-between shrink-0 p-3 space-y-4">
+      <div className="w-60 border-r border-black/[0.04] dark:border-white/[0.06] bg-white/60 dark:bg-black/30 backdrop-blur-2xl flex flex-col justify-between shrink-0 p-3 space-y-4">
         <div className="space-y-3">
           {/* Mailbox Selector Dropdown */}
           <div className="relative" ref={dropdownRef}>
@@ -654,7 +654,7 @@ export const SmartMail: React.FC<SmartMailProps> = ({
       </div>
 
       {/* 2. Mail List Column */}
-      <div className="w-84 border-r border-slate-200 dark:border-white/[0.08] bg-slate-50/60 dark:bg-[#0e1217] flex flex-col overflow-y-auto shrink-0">
+      <div className="w-84 border-r border-black/[0.04] dark:border-white/[0.06] bg-white/40 dark:bg-black/20 backdrop-blur-xl flex flex-col overflow-y-auto shrink-0">
         <div className="p-3.5 border-b border-slate-200 dark:border-white/[0.08] flex items-center justify-between shrink-0">
           <div className="flex items-center space-x-2">
             <span className="text-xs font-semibold text-slate-900 dark:text-slate-100 uppercase tracking-wider">
@@ -755,7 +755,7 @@ export const SmartMail: React.FC<SmartMailProps> = ({
 
       {/* 3. Reading and Reply Pane */}
       {currentMail ? (
-        <div className="flex-1 flex flex-col h-full overflow-hidden bg-white dark:bg-[#12161c]">
+        <div className="flex-1 flex flex-col h-full overflow-hidden bg-white/70 dark:bg-white/[0.02] backdrop-blur-2xl">
           {/* Header of selected letter */}
           <div className="px-6 py-4 border-b border-slate-200 dark:border-white/[0.08] flex items-center justify-between shrink-0">
             <div className="space-y-1.5 min-w-0 max-w-2xl">

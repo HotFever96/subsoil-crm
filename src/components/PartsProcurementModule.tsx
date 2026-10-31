@@ -387,20 +387,20 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
 
       {/* Mode Switcher Tabs */}
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center space-x-1 p-1 bg-slate-100 dark:bg-white/[0.04] rounded-xl border border-slate-200 dark:border-white/[0.06]">
+        <div className="flex items-center space-x-1.5 p-1 bg-white/40 dark:bg-white/[0.04] rounded-full border border-white/[0.08] backdrop-blur-md">
           <button
             type="button"
             onClick={() => {
               setSearchMode("ai_catalog");
               if (query.trim()) performSearch(query, "ai_catalog");
             }}
-            className={`flex items-center space-x-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+            className={`flex items-center space-x-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
               searchMode === "ai_catalog"
-                ? "bg-white dark:bg-zinc-800 text-rose-600 dark:text-rose-400 shadow-xs"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                ? "bg-rose-600 text-white shadow-md shadow-rose-600/20"
+                : "text-zinc-400 hover:text-white"
             }`}
           >
-            <Sparkles className="w-3.5 h-3.5 text-rose-500" />
+            <Sparkles className="w-3.5 h-3.5" />
             <span>ИИ-справочник OEM и цен</span>
           </button>
           <button
@@ -409,13 +409,13 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
               setSearchMode("api");
               if (query.trim()) performSearch(query, "api");
             }}
-            className={`flex items-center space-x-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+            className={`flex items-center space-x-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
               searchMode === "api"
-                ? "bg-white dark:bg-zinc-800 text-rose-600 dark:text-rose-400 shadow-xs"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                ? "bg-rose-600 text-white shadow-md shadow-rose-600/20"
+                : "text-zinc-400 hover:text-white"
             }`}
           >
-            <Truck className="w-3.5 h-3.5 text-rose-500" />
+            <Truck className="w-3.5 h-3.5" />
             <span>Поиск по API поставщиков</span>
           </button>
         </div>
@@ -466,24 +466,24 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
       )}
 
       {/* Main Search Controls */}
-      <div className="p-4 rounded-2xl bg-white/80 dark:bg-zinc-900/65 dark:backdrop-blur-xl border border-slate-200 dark:border-white/[0.07] space-y-3.5 shadow-xl">
+      <div className="p-4 rounded-3xl bg-white/60 dark:bg-white/[0.04] border border-white/[0.08] backdrop-blur-2xl space-y-3.5 shadow-xl">
         {/* Search input with Speech-to-Text and Submit */}
-        <div className="flex items-center space-x-2">
-          <div className="relative flex-1">
-            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && performSearch()}
-              placeholder="Введите артикул OEM (например, 2108-1006040 или OC90), VIN или название детали..."
-              className="w-full pl-10 pr-24 py-2.5 rounded-xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-slate-900 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
-            />
+        <div className="relative flex items-center">
+          <Search className="w-4 h-4 absolute left-4 text-slate-400 pointer-events-none" />
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && performSearch()}
+            placeholder="Введите артикул OEM (например, 2108-1006040 или OC90), VIN или название детали..."
+            className="w-full pl-11 pr-36 py-3 rounded-full border border-white/[0.1] bg-white/70 dark:bg-white/[0.05] backdrop-blur-2xl text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-hidden focus:border-rose-500 focus:ring-1 focus:ring-rose-500 shadow-xl transition-all"
+          />
+          <div className="absolute right-2 flex items-center space-x-1.5">
             {query && (
               <button
                 type="button"
                 onClick={() => setQuery("")}
-                className="absolute right-12 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
+                className="p-1.5 text-slate-400 hover:text-white cursor-pointer rounded-full"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -491,33 +491,31 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
             <button
               type="button"
               onClick={toggleVoiceInput}
-              className={`absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-lg transition-colors cursor-pointer ${
-                isListening ? "bg-red-500 text-white animate-pulse" : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+              className={`p-2 rounded-full transition-all cursor-pointer ${
+                isListening
+                  ? "bg-rose-500 text-white animate-pulse"
+                  : "text-slate-400 hover:text-slate-200 hover:bg-white/[0.08]"
               }`}
               title="Голосовой ввод запроса (ru-RU)"
             >
-              {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+              {isListening ? <MicOff className="w-3.5 h-3.5" /> : <Mic className="w-3.5 h-3.5" />}
+            </button>
+            <button
+              type="button"
+              disabled={isLoading || !query.trim()}
+              onClick={() => performSearch()}
+              className="px-4 py-1.5 rounded-full bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white text-xs font-bold flex items-center space-x-1.5 transition-all shadow-md shadow-rose-600/25 shrink-0 cursor-pointer active:scale-95"
+            >
+              {isLoading ? (
+                <>
+                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                  <span>Поиск...</span>
+                </>
+              ) : (
+                <span>Найти</span>
+              )}
             </button>
           </div>
-
-          <button
-            type="button"
-            disabled={isLoading || !query.trim()}
-            onClick={() => performSearch()}
-            className="px-5 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 disabled:opacity-50 text-white text-xs font-bold flex items-center space-x-2 transition-all shadow-xs shrink-0 cursor-pointer"
-          >
-            {isLoading ? (
-              <>
-                <RefreshCw className="w-4 h-4 animate-spin" />
-                <span>Идет проценка...</span>
-              </>
-            ) : (
-              <>
-                <Search className="w-4 h-4" />
-                <span>Найти запчасти</span>
-              </>
-            )}
-          </button>
         </div>
 
         {/* Margin Controls and Client Screen Toggle */}
@@ -525,7 +523,7 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
           {/* Markup selector */}
           <div className="flex items-center space-x-2">
             <span className="text-xs font-semibold text-slate-600 dark:text-slate-400 flex items-center space-x-1">
-              <Percent className="w-3.5 h-3.5 text-red-500" />
+              <Percent className="w-3.5 h-3.5 text-rose-500" />
               <span>Наценка СТО:</span>
             </span>
             <div className="flex items-center space-x-1">
@@ -537,10 +535,10 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
                     setMarkupPercent(pct);
                     if (searchResponse) performSearch();
                   }}
-                  className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${
                     markupPercent === pct
-                      ? "bg-red-500 text-white shadow-xs"
-                      : "bg-white dark:bg-white/[0.04] text-slate-700 dark:text-slate-300 hover:bg-slate-200/60 border border-slate-200 dark:border-white/[0.06]"
+                      ? "bg-rose-600 text-white shadow-sm shadow-rose-600/30"
+                      : "bg-white/40 dark:bg-white/[0.04] text-slate-700 dark:text-slate-300 hover:bg-white/70 dark:hover:bg-white/[0.09] border border-white/[0.07]"
                   }`}
                 >
                   +{pct}%
@@ -554,10 +552,10 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
             <button
               type="button"
               onClick={() => setIsClientScreenMode((prev) => !prev)}
-              className={`flex items-center space-x-2 px-3.5 py-1.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
+              className={`flex items-center space-x-2 px-3.5 py-1.5 rounded-full border text-xs font-semibold transition-all cursor-pointer ${
                 isClientScreenMode
-                  ? "bg-emerald-500/15 border-emerald-500/50 text-emerald-700 dark:text-emerald-300"
-                  : "bg-white dark:bg-white/[0.04] border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 hover:border-slate-300"
+                  ? "bg-emerald-500/15 border-emerald-500/40 text-emerald-600 dark:text-emerald-300 shadow-sm"
+                  : "bg-white/40 dark:bg-white/[0.04] border-white/[0.08] text-slate-700 dark:text-slate-300 hover:bg-white/70 dark:hover:bg-white/[0.09]"
               }`}
               title="Режим экрана клиента: скрывает оптовую себестоимость и маржу, оставляя только розничные цены"
             >
@@ -814,12 +812,12 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
               </label>
             </div>
 
-            {/* Filter pills: Supplier & Type */}
+            {/* Filter pills: Supplier & Type (Pill UI) */}
             <div className="flex flex-wrap items-center gap-2">
               <select
                 value={supplierFilter}
                 onChange={(e) => setSupplierFilter(e.target.value)}
-                className="px-2.5 py-1 rounded-lg border border-slate-200 dark:border-white/[0.08] bg-white dark:bg-slate-900 text-xs font-medium text-slate-700 dark:text-slate-300"
+                className="px-3.5 py-1.5 rounded-full border border-white/[0.09] bg-white/60 dark:bg-white/[0.05] backdrop-blur-2xl text-xs font-semibold text-slate-700 dark:text-zinc-300 focus:outline-hidden"
               >
                 <option value="all">Все поставщики</option>
                 <option value="warehouse">Свой склад (СТО)</option>
@@ -833,7 +831,7 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
               <select
                 value={typeFilter}
                 onChange={(e) => setTypeFilter(e.target.value)}
-                className="px-2.5 py-1 rounded-lg border border-slate-200 dark:border-white/[0.08] bg-white dark:bg-slate-900 text-xs font-medium text-slate-700 dark:text-slate-300"
+                className="px-3.5 py-1.5 rounded-full border border-white/[0.09] bg-white/60 dark:bg-white/[0.05] backdrop-blur-2xl text-xs font-semibold text-slate-700 dark:text-zinc-300 focus:outline-hidden"
               >
                 <option value="all">Любой тип</option>
                 <option value="original">Оригинал (OEM)</option>
@@ -844,7 +842,7 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
-                className="px-2.5 py-1 rounded-lg border border-slate-200 dark:border-white/[0.08] bg-white dark:bg-slate-900 text-xs font-medium text-slate-700 dark:text-slate-300"
+                className="px-3.5 py-1.5 rounded-full border border-white/[0.09] bg-white/60 dark:bg-white/[0.05] backdrop-blur-2xl text-xs font-semibold text-slate-700 dark:text-zinc-300 focus:outline-hidden"
               >
                 <option value="delivery">Сортировка: Быстрая доставка</option>
                 <option value="price_asc">Сортировка: Сначала дешевле</option>
@@ -854,12 +852,12 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
             </div>
           </div>
 
-          {/* Table */}
-          <div className="border border-slate-200/80 dark:border-white/[0.07] rounded-2xl overflow-hidden bg-white/90 dark:bg-zinc-900/65 dark:backdrop-blur-xl shadow-xl">
+          {/* Table (Yandex Tracklist Aesthetic) */}
+          <div className="border border-white/[0.08] rounded-3xl overflow-hidden bg-white/60 dark:bg-white/[0.04] backdrop-blur-2xl shadow-xl">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
-                  <tr className="bg-slate-50 dark:bg-white/[0.02] border-b border-slate-200 dark:border-white/[0.06] text-slate-500 font-semibold">
+                  <tr className="bg-white/40 dark:bg-white/[0.03] border-b border-white/[0.06] text-slate-500 dark:text-zinc-400 font-semibold">
                     <th className="py-3 px-4">Поставщик</th>
                     <th className="py-3 px-4">Бренд & Артикул</th>
                     <th className="py-3 px-4">Наименование детали</th>

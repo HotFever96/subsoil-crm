@@ -169,9 +169,9 @@ export const ProjectStudio: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full overflow-hidden bg-white dark:bg-[#12161c] transition-colors">
+    <div className="flex-1 flex flex-col h-full overflow-hidden bg-transparent transition-colors">
       {/* Top Header */}
-      <div className="px-6 py-4 border-b border-slate-200 dark:border-white/[0.08] flex items-center justify-between">
+      <div className="px-6 py-4.5 bg-white/40 dark:bg-black/30 border-b border-black/[0.04] dark:border-white/[0.08] backdrop-blur-2xl flex items-center justify-between">
         <div>
           <h1 className="text-sm font-semibold text-slate-900 dark:text-slate-100 truncate max-w-xl">
             {metadata.title}
@@ -231,7 +231,7 @@ export const ProjectStudio: React.FC = () => {
       {viewMode === "INTERACTIVE" ? (
         <div className="flex-1 flex overflow-hidden">
           {/* Left Column: Clean ГОСТ Check-list */}
-          <div className="w-80 border-r border-slate-200 dark:border-white/[0.08] bg-slate-50/60 dark:bg-[#0e1217] flex flex-col justify-between overflow-y-auto shrink-0">
+          <div className="w-80 border-r border-slate-200 dark:border-white/[0.08] bg-white/40 dark:bg-black/20 backdrop-blur-xl flex flex-col justify-between overflow-y-auto shrink-0">
             <div className="p-3 space-y-1.5">
               {categories.map((cat) => {
                 const isOpen = openCategoryIds.includes(cat.id);

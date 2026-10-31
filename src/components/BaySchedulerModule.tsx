@@ -229,44 +229,41 @@ export const BaySchedulerModule: React.FC = () => {
   const dayAppointments = appointments.filter((a) => a.date === selectedDate);
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-[#f8fafc] dark:bg-[#090d12] overflow-hidden">
+    <div className="flex-1 flex flex-col h-full bg-transparent overflow-hidden">
       {/* Toast alert */}
       {toastMessage && (
-        <div className="fixed top-5 right-5 z-50 flex items-center space-x-2.5 px-4 py-3 rounded-2xl bg-emerald-600 text-white shadow-xl animate-in fade-in slide-in-from-top-4 duration-300">
+        <div className="fixed top-5 right-5 z-50 flex items-center space-x-2.5 px-4 py-3 rounded-full bg-emerald-600 text-white shadow-2xl animate-in fade-in slide-in-from-top-4 duration-300">
           <CheckCircle2 className="w-5 h-5 shrink-0" />
           <span className="text-xs font-semibold">{toastMessage}</span>
         </div>
       )}
 
       {/* Top Header */}
-      <div className="px-6 py-4.5 border-b border-slate-200 dark:border-white/[0.08] bg-white/70 dark:bg-[#0c121a]/80 backdrop-blur-md flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">
+      <div className="px-6 py-4.5 bg-white/40 dark:bg-black/30 border-b border-black/[0.04] dark:border-white/[0.08] backdrop-blur-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">
         <div className="flex items-center space-x-3.5">
-          <div className="w-10 h-10 rounded-xl bg-red-500/15 border border-red-500/25 text-red-600 dark:text-red-400 flex items-center justify-center shrink-0">
+          <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-rose-500/20 to-amber-500/20 border border-white/10 text-rose-500 flex items-center justify-center shrink-0 shadow-lg shadow-rose-500/10">
             <CalendarIcon className="w-5 h-5" />
           </div>
           <div>
-            <h1 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center space-x-2">
+            <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center space-x-2.5">
               <span>Пост-планировщик</span>
-              <span className="text-xs font-normal px-2 py-0.5 rounded-full bg-red-500/10 text-red-600 dark:text-red-400">
+              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-rose-500/10 text-rose-500">
                 {bays.length} постов
               </span>
-              <span className="text-xs font-normal px-2 py-0.5 rounded-full bg-slate-100 dark:bg-white/[0.06] text-slate-600 dark:text-slate-400">
+              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-200/60 dark:bg-white/[0.06] text-slate-600 dark:text-zinc-400">
                 {dayAppointments.length} записей на день
               </span>
             </h1>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              Почасовое расписание и загрузка рабочих постов ремзоны (08:00 – 20:00)
-            </p>
           </div>
         </div>
 
         {/* Date Controls & Add Button */}
         <div className="flex items-center space-x-2.5">
-          <div className="flex items-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/[0.1] rounded-xl shadow-2xs overflow-hidden">
+          <div className="flex items-center bg-white/60 dark:bg-white/[0.06] border border-black/[0.05] dark:border-white/[0.08] rounded-full px-1 py-0.5 backdrop-blur-md shadow-xs">
             <button
               type="button"
               onClick={handlePrevDay}
-              className="p-2 hover:bg-slate-100 dark:hover:bg-white/[0.05] text-slate-600 dark:text-slate-300 transition-colors cursor-pointer"
+              className="p-1.5 rounded-full hover:bg-slate-200/60 dark:hover:bg-white/[0.08] text-slate-600 dark:text-zinc-300 transition-colors cursor-pointer"
               title="Предыдущий день"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -275,12 +272,12 @@ export const BaySchedulerModule: React.FC = () => {
               type="date"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
-              className="px-2 py-1.5 text-xs font-semibold bg-transparent text-slate-900 dark:text-slate-100 focus:outline-hidden cursor-pointer"
+              className="px-2 py-1 text-xs font-semibold bg-transparent text-slate-900 dark:text-white focus:outline-hidden cursor-pointer"
             />
             <button
               type="button"
               onClick={handleNextDay}
-              className="p-2 hover:bg-slate-100 dark:hover:bg-white/[0.05] text-slate-600 dark:text-slate-300 transition-colors cursor-pointer"
+              className="p-1.5 rounded-full hover:bg-slate-200/60 dark:hover:bg-white/[0.08] text-slate-600 dark:text-zinc-300 transition-colors cursor-pointer"
               title="Следующий день"
             >
               <ChevronRight className="w-4 h-4" />
@@ -299,7 +296,7 @@ export const BaySchedulerModule: React.FC = () => {
               setNewDescription("");
               setIsModalOpen(true);
             }}
-            className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-semibold shadow-sm transition-all cursor-pointer"
+            className="flex items-center space-x-2 px-5 py-2.5 rounded-full bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold shadow-lg shadow-rose-600/25 transition-all cursor-pointer active:scale-95"
           >
             <Plus className="w-4 h-4" />
             <span>Записать на пост</span>
@@ -309,7 +306,7 @@ export const BaySchedulerModule: React.FC = () => {
 
       {/* Hourly Timeline Grid */}
       <div className="flex-1 overflow-auto p-4 sm:p-6">
-        <div className="min-w-[900px] border border-slate-200 dark:border-white/[0.08] rounded-2xl overflow-hidden bg-white dark:bg-[#0e141e] shadow-2xs">
+        <div className="min-w-[900px] border border-black/[0.05] dark:border-white/[0.08] rounded-3xl overflow-hidden bg-white/70 dark:bg-white/[0.03] backdrop-blur-2xl shadow-2xl shadow-black/20">
           {/* Header Row: Bays as columns */}
           <div className="grid grid-cols-[100px_repeat(4,1fr)] bg-slate-50 dark:bg-white/[0.02] border-b border-slate-200 dark:border-white/[0.08] text-xs font-bold text-slate-700 dark:text-slate-300 sticky top-0 z-10">
             <div className="p-3.5 border-r border-slate-200 dark:border-white/[0.08] flex items-center justify-center text-slate-400 font-mono">

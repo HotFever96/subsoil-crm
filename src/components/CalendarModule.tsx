@@ -315,45 +315,42 @@ export const CalendarModule: React.FC = () => {
   }
 
   return (
-    <div className="flex-1 flex flex-col h-full overflow-hidden bg-white dark:bg-[#0c1015] transition-colors">
+    <div className="flex-1 flex flex-col h-full overflow-hidden bg-transparent transition-colors">
       {/* Top Controls Header */}
-      <div className="p-4 sm:p-5 border-b border-slate-200 dark:border-white/[0.08] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shrink-0">
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-500/20 text-sky-500 flex items-center justify-center shrink-0 shadow-2xs">
+      <div className="px-6 py-4.5 bg-white/40 dark:bg-black/30 border-b border-black/[0.04] dark:border-white/[0.08] backdrop-blur-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shrink-0">
+        <div className="flex items-center space-x-3.5">
+          <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-sky-500/20 to-teal-500/20 border border-white/10 text-sky-500 flex items-center justify-center shrink-0 shadow-lg shadow-sky-500/10">
             <CalendarIcon className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center space-x-2">
-              <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+              <h2 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
                 {MONTH_NAMES[month]} {year}
               </h2>
             </div>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              График проверок, заседаний комиссии и сроков сдачи отчетов по лицензиям
-            </p>
           </div>
         </div>
 
         {/* View mode & Action Buttons */}
         <div className="flex flex-wrap items-center gap-2 self-end sm:self-center">
           {/* Nav arrows */}
-          <div className="flex items-center space-x-1 border border-slate-200 dark:border-white/[0.1] rounded-xl p-0.5 bg-slate-50 dark:bg-[#131821]">
+          <div className="flex items-center space-x-1 border border-black/[0.05] dark:border-white/[0.08] rounded-full p-1 bg-white/60 dark:bg-white/[0.06] backdrop-blur-md">
             <button
               onClick={handlePrev}
-              className="p-1.5 rounded-lg text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-100 hover:bg-slate-200/50 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
+              className="p-1.5 rounded-full text-slate-500 hover:text-slate-900 dark:text-zinc-400 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
               title="Назад"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
             <button
               onClick={handleToday}
-              className="px-2.5 py-1 text-xs font-medium text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 transition-colors cursor-pointer"
+              className="px-3 py-1 text-xs font-semibold text-slate-700 dark:text-zinc-200 hover:text-slate-950 dark:hover:text-white transition-colors cursor-pointer"
             >
               Сегодня
             </button>
             <button
               onClick={handleNext}
-              className="p-1.5 rounded-lg text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-100 hover:bg-slate-200/50 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
+              className="p-1.5 rounded-full text-slate-500 hover:text-slate-900 dark:text-zinc-400 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
               title="Вперед"
             >
               <ChevronRight className="w-4 h-4" />
@@ -361,33 +358,33 @@ export const CalendarModule: React.FC = () => {
           </div>
 
           {/* View switcher */}
-          <div className="flex items-center space-x-1 border border-slate-200 dark:border-white/[0.1] rounded-xl p-0.5 bg-slate-50 dark:bg-[#131821] text-xs">
+          <div className="flex items-center space-x-1 border border-black/[0.05] dark:border-white/[0.08] rounded-full p-1 bg-white/60 dark:bg-white/[0.06] backdrop-blur-md text-xs">
             <button
               onClick={() => setViewMode("month")}
-              className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
+              className={`px-3 py-1 rounded-full font-semibold transition-all cursor-pointer ${
                 viewMode === "month"
-                  ? "bg-white dark:bg-white/[0.1] text-slate-900 dark:text-slate-100 shadow-2xs"
-                  : "text-slate-500 dark:text-slate-400 hover:text-slate-900"
+                  ? "bg-sky-600 text-white shadow-xs"
+                  : "text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white"
               }`}
             >
               Месяц
             </button>
             <button
               onClick={() => setViewMode("week")}
-              className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
+              className={`px-3 py-1 rounded-full font-semibold transition-all cursor-pointer ${
                 viewMode === "week"
-                  ? "bg-white dark:bg-white/[0.1] text-slate-900 dark:text-slate-100 shadow-2xs"
-                  : "text-slate-500 dark:text-slate-400 hover:text-slate-900"
+                  ? "bg-sky-600 text-white shadow-xs"
+                  : "text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white"
               }`}
             >
               Неделя
             </button>
             <button
               onClick={() => setViewMode("day")}
-              className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
+              className={`px-3 py-1 rounded-full font-semibold transition-all cursor-pointer ${
                 viewMode === "day"
-                  ? "bg-white dark:bg-white/[0.1] text-slate-900 dark:text-slate-100 shadow-2xs"
-                  : "text-slate-500 dark:text-slate-400 hover:text-slate-900"
+                  ? "bg-sky-600 text-white shadow-xs"
+                  : "text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white"
               }`}
             >
               День
@@ -397,7 +394,7 @@ export const CalendarModule: React.FC = () => {
           {/* Add Event Button */}
           <button
             onClick={() => handleOpenCreateModal()}
-            className="flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-white font-medium text-xs shadow-md shadow-sky-500/20 transition-all cursor-pointer"
+            className="flex items-center space-x-1.5 px-5 py-2.5 rounded-full bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs shadow-lg shadow-sky-600/25 transition-all cursor-pointer active:scale-95"
           >
             <Plus className="w-4 h-4" />
             <span className="hidden sm:inline">Новое событие</span>
@@ -406,10 +403,10 @@ export const CalendarModule: React.FC = () => {
       </div>
 
       {/* Main Calendar Workspace */}
-      <div className="flex-1 overflow-y-auto p-3 sm:p-5">
+      <div className="flex-1 overflow-y-auto p-4 sm:p-6">
         {/* VIEW 1: MONTH VIEW */}
         {viewMode === "month" && (
-          <div className="h-full flex flex-col min-h-[580px] bg-white dark:bg-[#131821] border border-slate-200 dark:border-white/[0.08] rounded-2xl overflow-hidden shadow-2xs">
+          <div className="h-full flex flex-col min-h-[580px] bg-white/70 dark:bg-white/[0.03] border border-black/[0.05] dark:border-white/[0.08] rounded-3xl overflow-hidden shadow-2xl backdrop-blur-2xl">
             {/* Weekdays header */}
             <div className="grid grid-cols-7 border-b border-slate-200 dark:border-white/[0.08] bg-slate-50/70 dark:bg-white/[0.02]">
               {WEEKDAY_NAMES.map((w, idx) => (

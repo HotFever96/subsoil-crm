@@ -225,16 +225,16 @@ export default function Home() {
       <AmbientMesh />
 
       {/* Mobile Top Header (Visible only on mobile < md) */}
-      <header className="md:hidden flex items-center justify-between px-4 py-3 border-b border-slate-200 dark:border-white/[0.08] bg-[#f8fafc] dark:bg-[#090d12] shrink-0 z-30">
+      <header className="md:hidden flex items-center justify-between px-4 py-3 border-b border-black/[0.05] dark:border-white/[0.08] bg-white/70 dark:bg-black/40 backdrop-blur-2xl shrink-0 z-30">
         <div className="flex items-center space-x-3">
           <button
             onClick={() => setIsMobileMenuOpen(true)}
-            className="p-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-200/60 dark:hover:bg-white/[0.08] transition-colors cursor-pointer"
+            className="p-1.5 rounded-full text-slate-600 dark:text-zinc-300 hover:bg-slate-200/60 dark:hover:bg-white/[0.08] transition-colors cursor-pointer"
             title="Открыть меню"
           >
             <Menu className="w-5 h-5" />
           </button>
-          <span className="text-sm font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+          <span className="text-sm font-bold tracking-tight text-slate-900 dark:text-white">
             {getTabTitle(currentTab)}
           </span>
         </div>
@@ -243,7 +243,7 @@ export default function Home() {
           {currentTab === "ai-chat" && (
             <button
               onClick={() => createNewChat(isChaika ? "service" : "geo")}
-              className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+              className={`p-1.5 rounded-full transition-all cursor-pointer ${
                 isChaika
                   ? "bg-rose-500/10 text-rose-500 hover:bg-rose-500/20"
                   : "bg-sky-500/10 text-sky-500 hover:bg-sky-500/20"
@@ -255,7 +255,7 @@ export default function Home() {
           )}
 
           {isChaika ? (
-            <div className="flex items-center space-x-1.5 px-2 py-0.5 rounded-md bg-rose-500/10 border border-rose-500/20 text-rose-500 font-bold text-xs">
+            <div className="flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-rose-500/10 text-rose-500 font-bold text-xs">
               <Wrench className="w-3.5 h-3.5" />
               <span>ЧАЙКА</span>
             </div>
@@ -263,7 +263,7 @@ export default function Home() {
             <img
               src={theme === "dark" ? "/geo-ai-logo-dark.png" : "/geo-ai-logo-light.png"}
               alt="Geo AI"
-              className="h-6 w-auto max-w-[110px] object-contain ml-1"
+              className="h-5.5 w-auto max-w-[110px] object-contain ml-1"
             />
           )}
         </div>

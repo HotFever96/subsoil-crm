@@ -456,23 +456,23 @@ export const ElectronicArchive: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-[#f8fafc] dark:bg-[#090d12] overflow-hidden">
+    <div className="flex-1 flex flex-col h-full bg-transparent overflow-hidden">
       {/* Top Header Bar */}
-      <div className="px-6 py-4 border-b border-slate-200 dark:border-white/[0.08] bg-white/70 dark:bg-[#0c121a]/80 backdrop-blur-md flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">
+      <div className="px-6 py-4.5 bg-white/40 dark:bg-black/30 border-b border-black/[0.04] dark:border-white/[0.08] backdrop-blur-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">
         <div className="flex items-center space-x-3.5">
           <div
-            className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-2xs ${
+            className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 shadow-lg ${
               isChaika
-                ? "bg-rose-500/15 border border-rose-500/25 text-rose-600 dark:text-rose-400"
-                : "bg-sky-500/15 border border-sky-500/25 text-sky-600 dark:text-sky-400"
+                ? "bg-gradient-to-tr from-rose-500/20 to-amber-500/20 border border-white/10 text-rose-500 shadow-rose-500/10"
+                : "bg-gradient-to-tr from-sky-500/20 to-teal-500/20 border border-white/10 text-sky-500 shadow-sky-500/10"
             }`}
           >
             <FolderArchive className="w-5 h-5" />
           </div>
           <div>
-            <h1 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center space-x-2">
+            <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center space-x-2.5">
               <span>Электронный архив</span>
-              <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-700 dark:text-zinc-300">
+              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-200/60 dark:bg-white/[0.06] text-slate-600 dark:text-zinc-400">
                 {filteredItems.length} документов
               </span>
               <div className="relative group inline-block">
@@ -483,7 +483,7 @@ export const ElectronicArchive: React.FC = () => {
                 >
                   <HelpCircle className="w-4 h-4" />
                 </button>
-                <div className="absolute left-0 top-full mt-1.5 hidden group-hover:block z-30 w-72 p-2.5 rounded-xl bg-slate-900/95 dark:bg-zinc-900/95 text-slate-100 text-xs shadow-xl border border-white/10 backdrop-blur-md pointer-events-none">
+                <div className="absolute left-0 top-full mt-1.5 hidden group-hover:block z-30 w-72 p-2.5 rounded-2xl bg-zinc-900/95 text-zinc-100 text-xs shadow-2xl border border-white/10 backdrop-blur-2xl pointer-events-none">
                   {isChaika
                     ? "Изолированный сейф документов СТО: заказ-наряды, акты осмотра, счета-фактуры, зарплатные листки и накладные поставщиков автозапчастей."
                     : "Изолированный сейф горно-геологических документов: лицензии на право пользования недрами, технические проекты, топопланы и сметы."}
@@ -495,14 +495,14 @@ export const ElectronicArchive: React.FC = () => {
 
         <div className="flex items-center space-x-3">
           {/* View Mode Toggle */}
-          <div className="flex items-center bg-slate-100 dark:bg-zinc-900 p-0.5 rounded-lg border border-slate-200 dark:border-zinc-800">
+          <div className="flex items-center bg-white/60 dark:bg-white/[0.06] p-1 rounded-full border border-black/[0.05] dark:border-white/[0.08] backdrop-blur-md">
             <button
               onClick={() => setViewMode("table")}
-              className={`p-1.5 rounded-md transition-colors cursor-pointer ${
+              className={`p-1.5 rounded-full transition-all cursor-pointer ${
                 viewMode === "table"
                   ? isChaika
-                    ? "bg-white dark:bg-zinc-800 text-rose-600 dark:text-rose-400 shadow-2xs font-semibold"
-                    : "bg-white dark:bg-zinc-800 text-sky-600 dark:text-sky-400 shadow-2xs font-semibold"
+                    ? "bg-rose-600 text-white shadow-md font-semibold"
+                    : "bg-sky-600 text-white shadow-md font-semibold"
                   : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
               }`}
               title="Таблица (компактный список)"
@@ -511,11 +511,11 @@ export const ElectronicArchive: React.FC = () => {
             </button>
             <button
               onClick={() => setViewMode("grid")}
-              className={`p-1.5 rounded-md transition-colors cursor-pointer ${
+              className={`p-1.5 rounded-full transition-all cursor-pointer ${
                 viewMode === "grid"
                   ? isChaika
-                    ? "bg-white dark:bg-zinc-800 text-rose-600 dark:text-rose-400 shadow-2xs font-semibold"
-                    : "bg-white dark:bg-zinc-800 text-sky-600 dark:text-sky-400 shadow-2xs font-semibold"
+                    ? "bg-rose-600 text-white shadow-md font-semibold"
+                    : "bg-sky-600 text-white shadow-md font-semibold"
                   : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
               }`}
               title="Сетка карточек"
@@ -528,8 +528,10 @@ export const ElectronicArchive: React.FC = () => {
             type="button"
             onClick={() => fileInputRef.current?.click()}
             disabled={isUploading}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-white text-xs font-semibold shadow-sm transition-all cursor-pointer disabled:opacity-50 ${
-              isChaika ? "bg-rose-600 hover:bg-rose-500" : "bg-sky-600 hover:bg-sky-500"
+            className={`flex items-center space-x-2 px-5 py-2.5 rounded-full text-white text-xs font-bold shadow-lg transition-all cursor-pointer disabled:opacity-50 active:scale-95 ${
+              isChaika
+                ? "bg-rose-600 hover:bg-rose-500 shadow-rose-600/25"
+                : "bg-sky-600 hover:bg-sky-500 shadow-sky-600/25"
             }`}
           >
             <UploadCloud className="w-4 h-4" />
@@ -546,7 +548,7 @@ export const ElectronicArchive: React.FC = () => {
       </div>
 
       {/* Categories & Search Bar */}
-      <div className="px-6 py-3 border-b border-slate-200 dark:border-white/[0.06] bg-slate-50/50 dark:bg-[#0c121a]/40 flex flex-col md:flex-row md:items-center justify-between gap-3 shrink-0">
+      <div className="px-6 py-3 border-b border-black/[0.04] dark:border-white/[0.06] bg-white/30 dark:bg-black/20 backdrop-blur-md flex flex-col md:flex-row md:items-center justify-between gap-3 shrink-0">
         {/* Category Pills */}
         <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
           {categories.map((cat) => {
@@ -557,12 +559,12 @@ export const ElectronicArchive: React.FC = () => {
                 key={cat.id}
                 type="button"
                 onClick={() => setActiveCategory(cat.id)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all cursor-pointer flex items-center space-x-1.5 ${
+                className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer flex items-center space-x-1.5 ${
                   isActive
                     ? isChaika
-                      ? "bg-rose-600 text-white shadow-2xs font-semibold"
-                      : "bg-slate-900 dark:bg-white text-white dark:text-slate-950 shadow-2xs font-semibold"
-                    : "bg-white dark:bg-white/[0.04] text-slate-600 dark:text-slate-300 hover:bg-slate-200/60 dark:hover:bg-white/[0.08] border border-slate-200/80 dark:border-white/[0.06]"
+                      ? "bg-rose-600 text-white shadow-md shadow-rose-600/20 font-bold"
+                      : "bg-sky-600 text-white shadow-md shadow-sky-600/20 font-bold"
+                    : "bg-white/50 dark:bg-white/[0.04] text-slate-600 dark:text-zinc-400 hover:text-white border border-black/[0.04] dark:border-white/[0.06]"
                 }`}
               >
                 <span>{cat.label}</span>
@@ -570,7 +572,7 @@ export const ElectronicArchive: React.FC = () => {
                   className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
                     isActive
                       ? "bg-white/20 text-white"
-                      : "bg-slate-200 dark:bg-white/[0.1] text-slate-500 dark:text-slate-400"
+                      : "bg-slate-200 dark:bg-white/[0.1] text-slate-500 dark:text-zinc-400"
                   }`}
                 >
                   {count}
@@ -582,15 +584,13 @@ export const ElectronicArchive: React.FC = () => {
 
         {/* Search input */}
         <div className="relative min-w-[260px]">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
             placeholder="Поиск по названию или тегам..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className={`w-full pl-9 pr-8 py-1.5 rounded-lg bg-white dark:bg-white/[0.05] border border-slate-200 dark:border-white/[0.08] text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-hidden ${
-              isChaika ? "focus:border-rose-500" : "focus:border-sky-500"
-            }`}
+            className="w-full pl-9 pr-8 py-1.5 rounded-full bg-white/60 dark:bg-white/[0.06] border border-black/[0.05] dark:border-white/[0.08] text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-hidden backdrop-blur-md"
           />
           {searchQuery && (
             <button
@@ -635,7 +635,7 @@ export const ElectronicArchive: React.FC = () => {
           </div>
         ) : viewMode === "table" ? (
           /* High-density compact table view (Auto-Dealer / 1C ERP standard) */
-          <div className="bg-white dark:bg-[#111722] rounded-2xl border border-slate-200 dark:border-white/[0.08] shadow-xs overflow-hidden">
+          <div className="bg-white/70 dark:bg-white/[0.03] rounded-3xl border border-black/[0.05] dark:border-white/[0.08] shadow-2xl backdrop-blur-2xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>

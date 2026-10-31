@@ -221,26 +221,26 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
   };
 
   return (
-    <div className="flex-1 flex flex-col min-h-0 bg-slate-100 dark:bg-[#070b10] overflow-y-auto">
+    <div className="flex-1 flex flex-col min-h-0 bg-transparent overflow-y-auto">
       {/* Top Header */}
-      <div className="px-6 py-4 bg-white dark:bg-[#0c1015] border-b border-slate-200 dark:border-zinc-800 shrink-0">
+      <div className="px-6 py-4.5 bg-white/40 dark:bg-black/30 border-b border-white/[0.08] backdrop-blur-2xl shrink-0">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0">
+          <div className="flex items-center space-x-3.5">
+            <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-rose-500/20 to-amber-500/20 border border-white/10 text-rose-500 flex items-center justify-center shrink-0 shadow-lg shadow-rose-500/10">
               <DollarSign className="w-5 h-5" />
             </div>
             <div>
-              <h1 className="text-base font-bold text-slate-900 dark:text-zinc-100 flex items-center space-x-2">
+              <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center space-x-2.5">
                 <span>Выработка и Зарплата мастеров</span>
                 <div className="relative group inline-block">
                   <button
                     type="button"
-                    className="p-1 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 transition-colors cursor-pointer"
+                    className="p-1 rounded-full text-slate-400 hover:text-white transition-colors cursor-pointer"
                     title="Справка"
                   >
                     <HelpCircle className="w-4 h-4" />
                   </button>
-                  <div className="absolute left-0 top-full mt-1.5 hidden group-hover:block z-30 w-72 p-2.5 rounded-xl bg-slate-900/95 dark:bg-zinc-900/95 text-slate-100 text-xs shadow-xl border border-white/10 backdrop-blur-md pointer-events-none">
+                  <div className="absolute left-0 top-full mt-1.5 hidden group-hover:block z-30 w-72 p-2.5 rounded-2xl bg-zinc-900/95 text-zinc-100 text-xs shadow-2xl border border-white/10 backdrop-blur-2xl pointer-events-none">
                     Автоматический расчет сдельной выработки, учет закрытых нормо-часов, начисление премий и печать расчетных листков мастеров.
                   </div>
                 </div>
@@ -253,7 +253,7 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
               <button
                 type="button"
                 onClick={onOpenSettings}
-                className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900 hover:bg-slate-100 dark:hover:bg-zinc-800 text-xs font-semibold text-slate-700 dark:text-zinc-300 flex items-center space-x-1.5 cursor-pointer transition-colors"
+                className="px-4 py-2 rounded-full border border-white/[0.09] bg-white/50 dark:bg-white/[0.06] hover:dark:bg-white/[0.12] text-xs font-semibold text-slate-800 dark:text-zinc-200 flex items-center space-x-2 cursor-pointer transition-all backdrop-blur-md shadow-xs active:scale-95"
                 title="Настройка ставок мотивации сотрудников"
               >
                 <Settings className="w-3.5 h-3.5 text-rose-500" />
@@ -264,9 +264,9 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
         </div>
 
         {/* Filter Controls Bar */}
-        <div className="mt-4 pt-3 border-t border-slate-200 dark:border-zinc-800 flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div className="mt-4 pt-3 border-t border-white/[0.06] flex flex-wrap items-center justify-between gap-3 text-xs">
           {/* Period selector */}
-          <div className="flex items-center space-x-1 bg-slate-100 dark:bg-zinc-900 p-1 rounded-xl border border-slate-200 dark:border-zinc-800">
+          <div className="flex items-center space-x-1.5 overflow-x-auto scrollbar-none">
             {[
               { id: "today", label: "Сегодня" },
               { id: "week", label: "За неделю" },
@@ -277,10 +277,10 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
                 key={p.id}
                 type="button"
                 onClick={() => setPeriodFilter(p.id as any)}
-                className={`px-3 py-1 rounded-lg font-medium transition-all cursor-pointer ${
+                className={`px-3.5 py-1.5 rounded-full font-semibold whitespace-nowrap transition-all cursor-pointer ${
                   periodFilter === p.id
-                    ? "bg-white dark:bg-zinc-800 text-rose-600 dark:text-rose-400 font-bold shadow-2xs"
-                    : "text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-200"
+                    ? "bg-rose-600 text-white shadow-md shadow-rose-600/20 scale-102"
+                    : "bg-white/40 dark:bg-white/[0.05] text-slate-600 dark:text-zinc-300 hover:bg-white/70 dark:hover:bg-white/[0.1] border border-white/[0.07]"
                 }`}
               >
                 {p.label}
@@ -293,7 +293,7 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as any)}
-              className="px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-slate-700 dark:text-zinc-300 font-medium"
+              className="px-3.5 py-1.5 rounded-full border border-white/[0.09] bg-white/60 dark:bg-white/[0.05] backdrop-blur-2xl text-slate-700 dark:text-zinc-300 font-semibold focus:outline-hidden"
             >
               <option value="all_active">По всем в работе и закрытым</option>
               <option value="closed_only">Только по закрытым / оплаченным</option>
@@ -302,7 +302,7 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
             <select
               value={selectedMasterId}
               onChange={(e) => setSelectedMasterId(e.target.value)}
-              className="px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-slate-700 dark:text-zinc-300 font-medium"
+              className="px-3.5 py-1.5 rounded-full border border-white/[0.09] bg-white/60 dark:bg-white/[0.05] backdrop-blur-2xl text-slate-700 dark:text-zinc-300 font-semibold focus:outline-hidden"
             >
               <option value="all">Все сотрудники СТО ({employees.length})</option>
               {employees.map((emp) => (
@@ -313,13 +313,13 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
             </select>
 
             <div className="relative">
-              <Search className="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-slate-400" />
+              <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Поиск мастера..."
-                className="pl-8 pr-3 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-slate-900 dark:text-zinc-100 placeholder-slate-400 w-40 sm:w-48"
+                className="pl-9 pr-3.5 py-1.5 rounded-full border border-white/[0.09] bg-white/60 dark:bg-white/[0.05] backdrop-blur-2xl text-slate-900 dark:text-zinc-100 placeholder-slate-400 w-40 sm:w-48 focus:outline-hidden"
               />
             </div>
           </div>
@@ -329,8 +329,8 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
       {/* Main Content Body */}
       <div className="p-6 space-y-6">
         {employees.length === 0 ? (
-          <div className="p-12 text-center flex flex-col items-center justify-center max-w-lg mx-auto my-12 bg-white dark:bg-[#0c1015] rounded-3xl border border-slate-200 dark:border-zinc-800 shadow-sm space-y-4">
-            <div className="w-14 h-14 rounded-2xl bg-rose-500/10 text-rose-600 dark:text-rose-400 flex items-center justify-center">
+          <div className="p-12 text-center flex flex-col items-center justify-center max-w-lg mx-auto my-12 bg-white/60 dark:bg-white/[0.04] rounded-3xl border border-white/[0.08] backdrop-blur-2xl shadow-2xl space-y-4">
+            <div className="w-14 h-14 rounded-2xl bg-rose-500/10 text-rose-500 flex items-center justify-center">
               <Users className="w-7 h-7" />
             </div>
             <div className="space-y-1.5">
@@ -345,7 +345,7 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
               <button
                 type="button"
                 onClick={onOpenSettings}
-                className="px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition-all shadow-sm flex items-center space-x-2 cursor-pointer"
+                className="px-5 py-2.5 rounded-full bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition-all shadow-lg shadow-rose-600/25 flex items-center space-x-2 cursor-pointer active:scale-95"
               >
                 <Settings className="w-4 h-4" />
                 <span>Ставки сотрудников</span>
@@ -354,90 +354,90 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
           </div>
         ) : (
           <>
-            {/* KPI Cards Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Card 1: Revenue from Labor */}
-          <div className="p-4 rounded-2xl bg-white dark:bg-[#0c1015] border border-slate-200 dark:border-zinc-800 shadow-xs flex items-center justify-between">
-            <div>
-              <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
-                Выручка по работам
-              </span>
-              <div className="text-xl font-black text-slate-900 dark:text-zinc-100 mt-1">
-                {formatCurrency(kpi.totalLaborRevenue)}
+            {/* KPI Cards Row (Floating Glassmorphism) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+              {/* Card 1: Revenue from Labor */}
+              <div className="p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-slate-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
+                <div>
+                  <span className="text-[11px] font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">
+                    Выручка по работам
+                  </span>
+                  <div className="text-xl font-extrabold text-slate-900 dark:text-zinc-100 mt-1">
+                    {formatCurrency(kpi.totalLaborRevenue)}
+                  </div>
+                  <span className="text-[10px] text-slate-400 mt-0.5 block">
+                    Заказ-наряды за выбранный период
+                  </span>
+                </div>
+                <div className="w-10 h-10 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-500 flex items-center justify-center shrink-0">
+                  <TrendingUp className="w-5 h-5" />
+                </div>
               </div>
-              <span className="text-[10px] text-slate-400 mt-0.5 block">
-                Заказ-наряды за выбранный период
-              </span>
-            </div>
-            <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-500 flex items-center justify-center shrink-0">
-              <TrendingUp className="w-5 h-5" />
-            </div>
-          </div>
 
-          {/* Card 2: Total Labor Hours */}
-          <div className="p-4 rounded-2xl bg-white dark:bg-[#0c1015] border border-slate-200 dark:border-zinc-800 shadow-xs flex items-center justify-between">
-            <div>
-              <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
-                Отработано нормо-часов
-              </span>
-              <div className="text-xl font-black text-slate-900 dark:text-zinc-100 mt-1">
-                {kpi.totalLaborHours} <span className="text-xs font-semibold text-slate-400">Н/Ч</span>
+              {/* Card 2: Total Labor Hours */}
+              <div className="p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-slate-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
+                <div>
+                  <span className="text-[11px] font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">
+                    Отработано нормо-часов
+                  </span>
+                  <div className="text-xl font-extrabold text-slate-900 dark:text-zinc-100 mt-1">
+                    {kpi.totalLaborHours} <span className="text-xs font-semibold text-slate-400">Н/Ч</span>
+                  </div>
+                  <span className="text-[10px] text-slate-400 mt-0.5 block">
+                    Базовая ставка: {stoReq.defaultRatePerHour} ₽ / Н-Ч
+                  </span>
+                </div>
+                <div className="w-10 h-10 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-500 flex items-center justify-center shrink-0">
+                  <Clock className="w-5 h-5" />
+                </div>
               </div>
-              <span className="text-[10px] text-slate-400 mt-0.5 block">
-                Базовая ставка: {stoReq.defaultRatePerHour} ₽ / Н-Ч
-              </span>
-            </div>
-            <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-500 flex items-center justify-center shrink-0">
-              <Clock className="w-5 h-5" />
-            </div>
-          </div>
 
-          {/* Card 3: Total Payroll Fund */}
-          <div className="p-4 rounded-2xl bg-white dark:bg-[#0c1015] border border-slate-200 dark:border-zinc-800 shadow-xs flex items-center justify-between">
-            <div>
-              <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
-                ФОТ (Начислено мастерам)
-              </span>
-              <div className="text-xl font-black text-rose-600 dark:text-rose-400 mt-1">
-                {formatCurrency(kpi.totalPayrollFund)}
+              {/* Card 3: Total Payroll Fund */}
+              <div className="p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-slate-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
+                <div>
+                  <span className="text-[11px] font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">
+                    ФОТ (Начислено мастерам)
+                  </span>
+                  <div className="text-xl font-extrabold text-rose-600 dark:text-rose-400 mt-1">
+                    {formatCurrency(kpi.totalPayrollFund)}
+                  </div>
+                  <span className="text-[10px] text-slate-400 mt-0.5 block">
+                    Итого к выплате сотрудникам
+                  </span>
+                </div>
+                <div className="w-10 h-10 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-500 flex items-center justify-center shrink-0">
+                  <DollarSign className="w-5 h-5" />
+                </div>
               </div>
-              <span className="text-[10px] text-slate-400 mt-0.5 block">
-                Итого к выплате сотрудникам
-              </span>
-            </div>
-            <div className="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-500 flex items-center justify-center shrink-0">
-              <DollarSign className="w-5 h-5" />
-            </div>
-          </div>
 
-          {/* Card 4: Net Margin from Labor */}
-          <div className="p-4 rounded-2xl bg-white dark:bg-[#0c1015] border border-slate-200 dark:border-zinc-800 shadow-xs flex items-center justify-between">
-            <div>
-              <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
-                Чистая маржа СТО по работам
-              </span>
-              <div className="text-xl font-black text-emerald-600 dark:text-emerald-400 mt-1">
-                {formatCurrency(kpi.netMarginWorks)}
+              {/* Card 4: Net Margin from Labor */}
+              <div className="p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-slate-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
+                <div>
+                  <span className="text-[11px] font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">
+                    Чистая маржа СТО по работам
+                  </span>
+                  <div className="text-xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-1">
+                    {formatCurrency(kpi.netMarginWorks)}
+                  </div>
+                  <span className="text-[10px] text-slate-400 mt-0.5 block">
+                    Маржинальность:{" "}
+                    {kpi.totalLaborRevenue > 0
+                      ? Math.round((kpi.netMarginWorks / kpi.totalLaborRevenue) * 100)
+                      : 0}
+                    %
+                  </span>
+                </div>
+                <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 flex items-center justify-center shrink-0">
+                  <CheckCircle2 className="w-5 h-5" />
+                </div>
               </div>
-              <span className="text-[10px] text-slate-400 mt-0.5 block">
-                Маржинальность:{" "}
-                {kpi.totalLaborRevenue > 0
-                  ? Math.round((kpi.netMarginWorks / kpi.totalLaborRevenue) * 100)
-                  : 0}
-                %
-              </span>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 flex items-center justify-center shrink-0">
-              <CheckCircle2 className="w-5 h-5" />
-            </div>
-          </div>
-        </div>
 
-        {/* Master Payroll Table */}
-        <div className="bg-white dark:bg-[#0c1015] border border-slate-200 dark:border-zinc-800 rounded-2xl shadow-xs overflow-hidden">
-          <div className="p-4 border-b border-slate-200 dark:border-zinc-800 flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Users className="w-4 h-4 text-rose-500" />
+            {/* Master Payroll Table (Yandex Tracklist Aesthetic) */}
+            <div className="bg-white/60 dark:bg-white/[0.04] border border-slate-200/60 dark:border-white/[0.08] rounded-3xl shadow-xl backdrop-blur-2xl overflow-hidden">
+              <div className="p-4.5 border-b border-slate-200/50 dark:border-white/[0.06] flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Users className="w-4 h-4 text-rose-500" />
               <h2 className="text-sm font-bold text-slate-900 dark:text-zinc-100">
                 Ведомость начислений по сотрудникам ({filteredSummaries.length})
               </h2>

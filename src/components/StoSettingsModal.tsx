@@ -167,10 +167,10 @@ export const StoSettingsModal: React.FC<StoSettingsModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 animate-in fade-in duration-200">
-      <div className="bg-white dark:bg-[#0c1015] w-full max-w-3xl max-h-[90vh] rounded-2xl shadow-2xl border border-slate-200 dark:border-zinc-800 flex flex-col overflow-hidden text-slate-900 dark:text-zinc-100 text-xs">
+    <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xl flex items-center justify-center p-3 sm:p-6 animate-in fade-in duration-200">
+      <div className="bg-white/95 dark:bg-[#0c0d12]/95 backdrop-blur-2xl w-full max-w-3xl max-h-[90vh] rounded-3xl shadow-2xl border border-black/[0.06] dark:border-white/[0.1] flex flex-col overflow-hidden text-slate-900 dark:text-zinc-100 text-xs">
         {/* Header */}
-        <div className="p-4 border-b border-slate-200 dark:border-zinc-800 flex items-center justify-between bg-slate-50 dark:bg-zinc-900/60">
+        <div className="p-5 border-b border-black/[0.05] dark:border-white/[0.08] flex items-center justify-between bg-slate-50/60 dark:bg-white/[0.02]">
           <div className="flex items-center space-x-2.5">
             <div className="w-8 h-8 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-500 flex items-center justify-center">
               <Building className="w-4 h-4" />

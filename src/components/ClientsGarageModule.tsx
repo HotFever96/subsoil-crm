@@ -384,50 +384,47 @@ export const ClientsGarageModule: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-[#f8fafc] dark:bg-[#090d12] overflow-hidden">
+    <div className="flex-1 flex flex-col h-full bg-transparent overflow-hidden">
       {/* Toast alert */}
       {toastMessage && (
-        <div className="fixed top-5 right-5 z-50 flex items-center space-x-2.5 px-4 py-3 rounded-2xl bg-emerald-600 text-white shadow-xl animate-in fade-in slide-in-from-top-4 duration-300">
+        <div className="fixed top-5 right-5 z-50 flex items-center space-x-2.5 px-4 py-3 rounded-full bg-emerald-600 text-white shadow-2xl animate-in fade-in slide-in-from-top-4 duration-300">
           <CheckCircle2 className="w-5 h-5 shrink-0" />
           <span className="text-xs font-semibold">{toastMessage}</span>
         </div>
       )}
 
       {/* Top Header */}
-      <div className="px-6 py-4.5 border-b border-slate-200 dark:border-white/[0.08] bg-white/70 dark:bg-[#0c121a]/80 backdrop-blur-md flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">
+      <div className="px-6 py-4.5 bg-white/40 dark:bg-black/30 border-b border-black/[0.04] dark:border-white/[0.08] backdrop-blur-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">
         <div className="flex items-center space-x-3.5">
-          <div className="w-10 h-10 rounded-xl bg-red-500/15 border border-red-500/25 text-red-600 dark:text-red-400 flex items-center justify-center shrink-0">
+          <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-rose-500/20 to-amber-500/20 border border-white/10 text-rose-500 flex items-center justify-center shrink-0 shadow-lg shadow-rose-500/10">
             <Users className="w-5 h-5" />
           </div>
           <div>
-            <h1 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center space-x-2">
+            <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center space-x-2.5">
               <span>Контрагенты и Автопарк</span>
-              <span className="text-xs font-normal px-2 py-0.5 rounded-full bg-red-500/10 text-red-600 dark:text-red-400">
+              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-200/60 dark:bg-white/[0.06] text-slate-600 dark:text-zinc-400">
                 {allClientsList.length} контрагентов
               </span>
             </h1>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              Картотека клиентов, автомобилей и полная история визитов
-            </p>
           </div>
         </div>
 
         <div className="flex items-center space-x-3">
           <div className="relative min-w-[260px]">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               type="text"
               placeholder="Поиск по клиенту, госномеру, марке..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-1.5 rounded-xl bg-white dark:bg-white/[0.05] border border-slate-200 dark:border-white/[0.08] text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-hidden focus:ring-1 focus:ring-red-500"
+              className="w-full pl-9 pr-4 py-2 rounded-full bg-white/60 dark:bg-white/[0.06] border border-black/[0.05] dark:border-white/[0.08] text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-hidden backdrop-blur-md"
             />
           </div>
 
           <button
             type="button"
             onClick={handleOpenCreateClientModal}
-            className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-semibold shadow-sm transition-all cursor-pointer whitespace-nowrap shrink-0"
+            className="flex items-center space-x-2 px-5 py-2.5 rounded-full bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold shadow-lg shadow-rose-600/25 transition-all cursor-pointer whitespace-nowrap shrink-0 active:scale-95"
           >
             <Plus className="w-4 h-4" />
             <span>+ Добавить клиента</span>
@@ -438,7 +435,7 @@ export const ClientsGarageModule: React.FC = () => {
       {/* 2-Column Layout: Clients List & Selected Client Garage */}
       <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
         {/* Left Column: Clients List */}
-        <div className="w-full md:w-80 lg:w-96 border-r border-slate-200 dark:border-white/[0.08] bg-white dark:bg-[#0c121a] overflow-y-auto divide-y divide-slate-100 dark:divide-white/[0.04]">
+        <div className="w-full md:w-80 lg:w-96 border-r border-black/[0.04] dark:border-white/[0.06] bg-white/50 dark:bg-black/20 backdrop-blur-xl overflow-y-auto divide-y divide-black/[0.03] dark:divide-white/[0.04]">
           {filteredClients.length === 0 ? (
             <div className="p-8 text-center text-slate-400 text-xs">
               <Users className="w-8 h-8 mx-auto mb-2 opacity-30" />
