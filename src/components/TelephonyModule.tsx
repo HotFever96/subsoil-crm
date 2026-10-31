@@ -203,8 +203,41 @@ export const TelephonyModule: React.FC = () => {
     }
   };
 
-  // Speak AI text in simulator using browser voice synthesis
-  const speakSimVoice = (text: string, onDone: () => void) => {
+  // Speak AI text in simulator using ElevenLabs /api/tts streaming with browser speech fallback
+  const simAudioRef = useRef<HTMLAudioElement | null>(null);
+
+  const speakSimVoice = async (text: string, onDone: () => void) => {
+    try {
+      const res = await fetch("/api/tts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text }),
+      });
+
+      const contentType = res.headers.get("content-type") || "";
+      if (res.ok && contentType.includes("audio")) {
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        if (!simAudioRef.current) {
+          simAudioRef.current = new Audio();
+        }
+        simAudioRef.current.src = url;
+        simAudioRef.current.onended = () => {
+          URL.revokeObjectURL(url);
+          onDone();
+        };
+        simAudioRef.current.onerror = () => {
+          URL.revokeObjectURL(url);
+          onDone();
+        };
+        await simAudioRef.current.play();
+        return;
+      }
+    } catch (e) {
+      console.warn("Telephony ElevenLabs TTS fallback to browser:", e);
+    }
+
+    // Fallback to browser SpeechSynthesis
     if (typeof window === "undefined" || !("speechSynthesis" in window)) {
       onDone();
       return;
@@ -608,6 +641,10 @@ export const TelephonyModule: React.FC = () => {
             <button
               onClick={() => {
                 setIsSimulatorOpen(false);
+                if (simAudioRef.current) {
+                  simAudioRef.current.pause();
+                  simAudioRef.current.currentTime = 0;
+                }
                 window.speechSynthesis?.cancel();
               }}
               className="absolute top-4 right-4 text-zinc-400 hover:text-white"

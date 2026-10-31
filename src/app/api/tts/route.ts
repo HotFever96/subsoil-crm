@@ -3,90 +3,112 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { text, voiceId } = body;
-    const apiKey = body.apiKey || process.env.ELEVENLABS_API_KEY;
+    const { text, voiceId: customVoiceId } = body;
+    const apiKey = process.env.ELEVENLABS_API_KEY;
+    const voiceId = customVoiceId || process.env.ELEVENLABS_VOICE_ID || "FEv57Fb59mqBt2dXANPz";
 
     if (!text || typeof text !== "string" || !text.trim()) {
       return NextResponse.json({ error: "No text provided" }, { status: 400 });
     }
 
+    // Clean text of markdown syntax (*, #, `, ```, URLs, etc.)
     const cleanText = text
-      .replace(/```[\s\S]*?```/g, "") // remove code blocks
-      .replace(/[#*_~`]/g, "") // remove markdown syntax
-      .replace(/https?:\/\/\S+/g, "") // remove URLs
+      .replace(/```[\s\S]*?```/g, "")
+      .replace(/https?:\/\/\S+/g, "")
+      .replace(/[*#_~`>|]/g, "")
+      .replace(/\s+/g, " ")
       .trim();
 
     if (!cleanText) {
       return NextResponse.json({ error: "Text is empty after stripping markdown" }, { status: 400 });
     }
 
-    // 1. ELEVENLABS TTS API (Ultra-fast eleven_flash_v2_5 engine)
     if (apiKey) {
-      const selectedVoice = voiceId || "21m00Tcm4TlvDq8ikWAM"; // Expressive Russian/Multilingual female voice
       try {
-        const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${selectedVoice}`, {
+        const streamUrl = `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}/stream?optimize_streaming_latency=3&output_format=mp3_44100_128`;
+        const res = await fetch(streamUrl, {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
             "xi-api-key": apiKey.trim(),
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             text: cleanText,
             model_id: "eleven_flash_v2_5",
+            language_code: "ru",
             voice_settings: {
-              stability: 0.5,
-              similarity_boost: 0.75,
-              style: 0.35,
+              stability: 0.42,
+              similarity_boost: 0.82,
+              style: 0.22,
               use_speaker_boost: true,
             },
           }),
         });
 
-        if (res.ok) {
-          const audioBuffer = await res.arrayBuffer();
-          const base64Audio = Buffer.from(audioBuffer).toString("base64");
-          return NextResponse.json({
-            audioUrl: `data:audio/mp3;base64,${base64Audio}`,
-            provider: "elevenlabs",
-          });
-        } else {
-          // If flash_v2_5 fails or model not found, try fallback to eleven_multilingual_v2
-          const retryRes = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${selectedVoice}`, {
-            method: "POST",
+        if (res.ok && res.body) {
+          return new Response(res.body as any, {
+            status: 200,
             headers: {
-              "Content-Type": "application/json",
-              "xi-api-key": apiKey.trim(),
+              "Content-Type": "audio/mpeg",
+              "Cache-Control": "no-cache",
             },
-            body: JSON.stringify({
-              text: cleanText,
-              model_id: "eleven_multilingual_v2",
-              voice_settings: {
-                stability: 0.5,
-                similarity_boost: 0.75,
-              },
-            }),
           });
-          if (retryRes.ok) {
-            const audioBuffer = await retryRes.arrayBuffer();
-            const base64Audio = Buffer.from(audioBuffer).toString("base64");
-            return NextResponse.json({
-              audioUrl: `data:audio/mp3;base64,${base64Audio}`,
-              provider: "elevenlabs",
-            });
-          }
         }
-      } catch (e) {
-        console.warn("ElevenLabs request failed, falling back to client synthesis:", e);
+
+        const errText = await res.text();
+        console.warn("ElevenLabs stream returned error:", res.status, errText);
+      } catch (err) {
+        console.warn("ElevenLabs streaming request failed:", err);
       }
     }
 
-    // 2. Silent seamless fallback to client Web Speech API synthesis
-    return NextResponse.json({
-      fallback: true,
-      text: cleanText,
-    });
+    // Fallback indicator for client-side Web Speech API synthesis
+    return NextResponse.json({ fallback: true, text: cleanText });
   } catch (err: any) {
     console.error("TTS Route error:", err);
-    return NextResponse.json({ fallback: true, error: err.message });
+    return NextResponse.json({ fallback: true, error: err.message }, { status: 500 });
   }
+}
+
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const text = searchParams.get("text") || "Проверка связи. Голосовой режим активен.";
+  const apiKey = process.env.ELEVENLABS_API_KEY;
+  const voiceId = process.env.ELEVENLABS_VOICE_ID || "FEv57Fb59mqBt2dXANPz";
+
+  if (!apiKey) {
+    return NextResponse.json({ error: "No API key configured" }, { status: 500 });
+  }
+
+  const streamUrl = `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}/stream?optimize_streaming_latency=3&output_format=mp3_44100_128`;
+  const res = await fetch(streamUrl, {
+    method: "POST",
+    headers: {
+      "xi-api-key": apiKey.trim(),
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      text,
+      model_id: "eleven_flash_v2_5",
+      language_code: "ru",
+      voice_settings: {
+        stability: 0.42,
+        similarity_boost: 0.82,
+        style: 0.22,
+        use_speaker_boost: true,
+      },
+    }),
+  });
+
+  if (res.ok && res.body) {
+    return new Response(res.body as any, {
+      status: 200,
+      headers: {
+        "Content-Type": "audio/mpeg",
+        "Cache-Control": "no-cache",
+      },
+    });
+  }
+
+  return NextResponse.json({ error: "TTS generation failed" }, { status: res.status });
 }

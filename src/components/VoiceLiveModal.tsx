@@ -1,19 +1,16 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import {
-  Mic,
-  MicOff,
-  X,
-  Radio,
-} from "lucide-react";
+import { X, Mic, MicOff, Radio } from "lucide-react";
 import { useBusiness } from "@/lib/business-context";
 
 interface VoiceLiveModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSendMessage: (text: string, options?: { voiceMode: boolean }) => Promise<string>;
+  onSendMessage: (text: string, options?: { voiceMode?: boolean }) => Promise<string>;
 }
+
+type VoiceState = "idle" | "listening" | "thinking" | "speaking";
 
 export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
   isOpen,
@@ -23,21 +20,78 @@ export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
   const { currentBusiness } = useBusiness();
   const isChaika = currentBusiness === "chaika-service";
 
-  // Voice state: "idle" | "listening" | "thinking" | "speaking"
-  const [voiceState, setVoiceState] = useState<"idle" | "listening" | "thinking" | "speaking">("idle");
-  const [transcript, setTranscript] = useState("");
-  const [lastAiResponse, setLastAiResponse] = useState("");
-  const [isMuted, setIsMuted] = useState(false);
+  const [voiceState, setVoiceState] = useState<VoiceState>("listening");
+  const [transcript, setTranscript] = useState<string>("");
+  const [lastAiResponse, setLastAiResponse] = useState<string>("");
+  const [isMuted, setIsMuted] = useState<boolean>(false);
+  const [liveVolume, setLiveVolume] = useState<number>(0);
 
   const recognitionRef = useRef<any>(null);
-  const audioPlayerRef = useRef<HTMLAudioElement | null>(null);
   const silenceTimerRef = useRef<any>(null);
-  const isSpeakingRef = useRef(false);
+  const audioPlayerRef = useRef<HTMLAudioElement | null>(null);
+  const isSpeakingRef = useRef<boolean>(false);
 
-  // Browser speech synthesis fallback with natural young Russian female voice
+  // Web Audio Context & Frequency Analyser for living pulse
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const sourceNodeRef = useRef<MediaElementAudioSourceNode | null>(null);
+
+  const setupAudioAnalyser = (audioEl: HTMLAudioElement) => {
+    try {
+      if (!audioCtxRef.current) {
+        const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+        if (AudioContextClass) {
+          audioCtxRef.current = new AudioContextClass();
+        }
+      }
+      if (audioCtxRef.current && audioCtxRef.current.state === "suspended") {
+        audioCtxRef.current.resume();
+      }
+      if (audioCtxRef.current && !analyserRef.current) {
+        const analyser = audioCtxRef.current.createAnalyser();
+        analyser.fftSize = 128;
+        analyser.smoothingTimeConstant = 0.75;
+        analyserRef.current = analyser;
+
+        if (!sourceNodeRef.current) {
+          const source = audioCtxRef.current.createMediaElementSource(audioEl);
+          source.connect(analyser);
+          analyser.connect(audioCtxRef.current.destination);
+          sourceNodeRef.current = source;
+        }
+      }
+    } catch (e) {
+      console.warn("AudioContext setup warning:", e);
+    }
+  };
+
+  // Real-time frequency meter loop for physical pulsating sphere
+  useEffect(() => {
+    let animId: number;
+    const updateMeter = () => {
+      if (analyserRef.current && isSpeakingRef.current) {
+        const dataArray = new Uint8Array(analyserRef.current.frequencyBinCount);
+        analyserRef.current.getByteFrequencyData(dataArray);
+        let sum = 0;
+        for (let i = 0; i < dataArray.length; i++) {
+          sum += dataArray[i];
+        }
+        const avg = sum / dataArray.length / 255;
+        setLiveVolume(avg);
+      } else {
+        setLiveVolume((prev) => (prev > 0.01 ? prev * 0.85 : 0));
+      }
+      animId = requestAnimationFrame(updateMeter);
+    };
+    animId = requestAnimationFrame(updateMeter);
+    return () => cancelAnimationFrame(animId);
+  }, []);
+
+  // Silent fallback to Web Speech API
   const speakWithBrowserTts = (text: string): Promise<void> => {
     return new Promise((resolve) => {
       if (typeof window === "undefined" || !("speechSynthesis" in window)) {
+        isSpeakingRef.current = false;
         resolve();
         return;
       }
@@ -45,7 +99,7 @@ export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = "ru-RU";
-      utterance.rate = 1.08;
+      utterance.rate = 1.05;
       utterance.pitch = 1.15;
 
       const voices = window.speechSynthesis.getVoices();
@@ -54,9 +108,9 @@ export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
         (v) =>
           v.name.toLowerCase().includes("svetl") ||
           v.name.toLowerCase().includes("milena") ||
-          v.name.toLowerCase().includes("tatiana") ||
           v.name.toLowerCase().includes("female") ||
-          v.name.toLowerCase().includes("google")
+          v.name.toLowerCase().includes("google") ||
+          v.name.toLowerCase().includes("yandex")
       );
 
       if (femaleRu) {
@@ -79,7 +133,7 @@ export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
     });
   };
 
-  // Main TTS playback handler: ElevenLabs ultra-fast engine with seamless browser fallback
+  // Main streaming TTS playback handler: ElevenLabs ultra-fast engine with seamless browser fallback
   const playAiVoice = async (text: string) => {
     setVoiceState("speaking");
     isSpeakingRef.current = true;
@@ -91,25 +145,35 @@ export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
         body: JSON.stringify({ text }),
       });
 
-      const data = await res.json();
-      if (data && data.audioUrl) {
+      const contentType = res.headers.get("content-type") || "";
+      if (res.ok && contentType.includes("audio")) {
+        const audioBlob = await res.blob();
+        const audioUrl = URL.createObjectURL(audioBlob);
+
         if (!audioPlayerRef.current) {
           audioPlayerRef.current = new Audio();
+          audioPlayerRef.current.crossOrigin = "anonymous";
         }
-        audioPlayerRef.current.src = data.audioUrl;
+
+        setupAudioAnalyser(audioPlayerRef.current);
+
+        audioPlayerRef.current.src = audioUrl;
         audioPlayerRef.current.onended = () => {
           isSpeakingRef.current = false;
+          URL.revokeObjectURL(audioUrl);
           resumeListening();
         };
         audioPlayerRef.current.onerror = () => {
           isSpeakingRef.current = false;
+          URL.revokeObjectURL(audioUrl);
           resumeListening();
         };
+
         await audioPlayerRef.current.play();
         return;
       }
     } catch (err) {
-      console.warn("ElevenLabs TTS silent fallback to Web Speech:", err);
+      console.warn("ElevenLabs streaming failed, falling back to Web Speech:", err);
     }
 
     // Silent seamless fallback to client Web Speech synthesis
@@ -141,10 +205,11 @@ export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
 
     try {
       const reply = await onSendMessage(spokenText, { voiceMode: true });
-      // Strip any markdown/action blocks for vocalization
+      // Strip markdown/action blocks for vocalization
       const vocalText = reply
         .replace(/```[\s\S]*?```/g, "")
-        .replace(/[#*_~`]/g, "")
+        .replace(/https?:\/\/\S+/g, "")
+        .replace(/[*#_~`>|]/g, "")
         .trim();
 
       setLastAiResponse(vocalText || "Принято, всё оформила!");
@@ -159,12 +224,15 @@ export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
   // Setup Web Speech Recognition
   useEffect(() => {
     if (!isOpen) {
+      if (audioPlayerRef.current) {
+        audioPlayerRef.current.pause();
+        audioPlayerRef.current.currentTime = 0;
+      }
       try {
-        recognitionRef.current?.stop();
         window.speechSynthesis?.cancel();
-        if (audioPlayerRef.current) audioPlayerRef.current.pause();
+        recognitionRef.current?.stop();
       } catch {}
-      setVoiceState("idle");
+      isSpeakingRef.current = false;
       return;
     }
 
@@ -172,6 +240,7 @@ export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
       (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
+      console.warn("Web Speech Recognition not supported in this browser");
       return;
     }
 
@@ -207,7 +276,7 @@ export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
           const finalPrompt = currentSpeech;
           accumulatedText = "";
           handleUserSpoke(finalPrompt);
-        }, 1300);
+        }, 1250);
       }
     };
 
@@ -235,6 +304,9 @@ export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
       try {
         recognition.stop();
         window.speechSynthesis?.cancel();
+        if (audioPlayerRef.current) {
+          audioPlayerRef.current.pause();
+        }
       } catch {}
     };
   }, [isOpen, isMuted]);
@@ -285,15 +357,15 @@ export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
         </button>
       </div>
 
-      {/* CENTER: YANDEX MUSIC "МОЯ ВОЛНА" MULTI-LAYER PULSATING ENERGY SPHERE (NO MIC ICON) */}
+      {/* CENTER: YANDEX MUSIC "МОЯ ВОЛНА" MULTI-LAYER PULSATING ENERGY SPHERE */}
       <div className="relative flex flex-col items-center justify-center my-auto w-full max-w-xl">
         {/* Ambient surrounding glow aura */}
         <div
-          className={`absolute w-72 h-72 sm:w-[420px] sm:h-[420px] rounded-full blur-[100px] pointer-events-none transition-all duration-700 ${
+          className={`absolute w-72 h-72 sm:w-[460px] sm:h-[460px] rounded-full blur-[100px] pointer-events-none transition-all duration-300 ${
             voiceState === "speaking"
               ? isChaika
-                ? "bg-rose-500/40 scale-125"
-                : "bg-sky-500/40 scale-125"
+                ? "bg-rose-500/45 scale-135"
+                : "bg-sky-500/45 scale-135"
               : voiceState === "thinking"
               ? "bg-amber-500/35 scale-110"
               : voiceState === "listening"
@@ -302,6 +374,9 @@ export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
                 : "bg-teal-500/30 scale-105"
               : "bg-white/10 scale-90 opacity-40"
           }`}
+          style={{
+            transform: voiceState === "speaking" ? `scale(${1.25 + liveVolume * 0.45})` : undefined,
+          }}
         />
 
         {/* Multi-layered organic energy sphere */}
@@ -319,11 +394,11 @@ export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
         >
           {/* Outer Ripple Wave 1 */}
           <div
-            className={`absolute w-56 h-56 sm:w-72 sm:h-72 rounded-full border transition-all duration-1000 ${
+            className={`absolute w-56 h-56 sm:w-72 sm:h-72 rounded-full border transition-all duration-500 ${
               voiceState === "speaking"
                 ? isChaika
-                  ? "border-rose-500/30 scale-125 animate-ping opacity-25"
-                  : "border-sky-500/30 scale-125 animate-ping opacity-25"
+                  ? "border-rose-500/40 scale-130 animate-ping opacity-35"
+                  : "border-sky-500/40 scale-130 animate-ping opacity-35"
                 : voiceState === "thinking"
                 ? "border-amber-500/20 scale-110 animate-pulse"
                 : "border-white/5 scale-100 opacity-20"
@@ -336,18 +411,18 @@ export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
               isChaika ? "border-rose-400/40" : "border-sky-400/40"
             } ${
               voiceState === "speaking"
-                ? "animate-spin duration-3000 scale-115 opacity-70"
+                ? "animate-spin duration-3000 scale-120 opacity-80"
                 : voiceState === "thinking"
                 ? "animate-spin duration-2000 scale-105 opacity-50"
                 : "animate-spin duration-10000 scale-100 opacity-30"
             }`}
           />
 
-          {/* Central Living Sphere (No microphone inside - pure pulsating living light) */}
+          {/* Central Living Sphere - Pulses with voice frequencies in real-time */}
           <div
-            className={`relative w-40 h-40 sm:w-56 sm:h-56 rounded-full overflow-hidden flex items-center justify-center shadow-2xl transition-all duration-500 ${
+            className={`relative w-40 h-40 sm:w-56 sm:h-56 rounded-full overflow-hidden flex items-center justify-center shadow-2xl transition-transform duration-100 ${
               voiceState === "speaking"
-                ? "scale-110 shadow-rose-500/50"
+                ? "shadow-rose-500/60"
                 : voiceState === "thinking"
                 ? "scale-105 shadow-amber-500/40"
                 : voiceState === "listening"
@@ -355,6 +430,7 @@ export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
                 : "scale-95 opacity-80"
             }`}
             style={{
+              transform: voiceState === "speaking" ? `scale(${1.1 + liveVolume * 0.45})` : undefined,
               background: isChaika
                 ? "radial-gradient(circle at 35% 35%, #f43f5e 0%, #e11d48 35%, #9f1239 70%, #09090b 100%)"
                 : "radial-gradient(circle at 35% 35%, #38bdf8 0%, #0284c7 35%, #1e1b4b 70%, #09090b 100%)",
@@ -362,11 +438,11 @@ export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
           >
             {/* Morphing Internal Plasma Layers */}
             <div
-              className={`absolute inset-0 rounded-full blur-xl transition-all duration-700 ${
+              className={`absolute inset-0 rounded-full blur-xl transition-all duration-300 ${
                 voiceState === "speaking"
                   ? isChaika
-                    ? "bg-rose-400/50 animate-pulse scale-110"
-                    : "bg-sky-400/50 animate-pulse scale-110"
+                    ? "bg-rose-400/60 animate-pulse scale-115"
+                    : "bg-sky-400/60 animate-pulse scale-115"
                   : voiceState === "thinking"
                   ? "bg-amber-400/40 animate-pulse scale-100"
                   : "bg-white/20 scale-90"
@@ -378,8 +454,8 @@ export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
               className={`w-24 h-24 sm:w-32 sm:h-32 rounded-full blur-md transition-all duration-500 ${
                 voiceState === "speaking"
                   ? isChaika
-                    ? "bg-gradient-to-tr from-rose-300 via-amber-200 to-rose-400 animate-spin duration-5000 opacity-90 scale-110"
-                    : "bg-gradient-to-tr from-sky-300 via-teal-200 to-indigo-400 animate-spin duration-5000 opacity-90 scale-110"
+                    ? "bg-gradient-to-tr from-rose-300 via-amber-200 to-rose-400 animate-spin duration-5000 opacity-95 scale-115"
+                    : "bg-gradient-to-tr from-sky-300 via-teal-200 to-indigo-400 animate-spin duration-5000 opacity-95 scale-115"
                   : voiceState === "thinking"
                   ? "bg-gradient-to-tr from-amber-300 to-orange-400 animate-spin duration-3000 opacity-80"
                   : "bg-white/30 animate-pulse opacity-60"
@@ -387,7 +463,7 @@ export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
             />
 
             {/* Inner Sparkle Center */}
-            <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-white/40 blur-xs animate-ping duration-2000" />
+            <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-white/50 blur-xs animate-ping duration-2000" />
           </div>
         </div>
 
@@ -411,70 +487,54 @@ export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
           </div>
         </div>
 
-        {/* Real-time Subtitles / Spoken Transcript */}
-        <div className="mt-6 w-full min-h-[56px] p-4 rounded-2xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-xl text-center text-xs text-zinc-200 font-medium leading-relaxed">
-          {voiceState === "listening" && transcript && (
-            <span className="text-white">«{transcript}»</span>
-          )}
-          {voiceState === "speaking" && lastAiResponse && (
-            <span className={isChaika ? "text-rose-300" : "text-sky-300"}>«{lastAiResponse}»</span>
-          )}
-          {voiceState === "thinking" && (
-            <span className="text-amber-400 italic">Формирую ответ и выполняю действия...</span>
-          )}
-          {!transcript && !lastAiResponse && voiceState === "listening" && (
-            <span className="text-zinc-500">
-              {isChaika
-                ? "Назовите команду, например: «Создай заказ-наряд на замену масла Камри»"
-                : "Задайте любой вопрос или назовите задачу..."}
-            </span>
-          )}
+        {/* Dynamic Transcription / AI Response Card */}
+        <div className="w-full mt-6 px-4 py-3 rounded-2xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-xl text-center min-h-[56px] flex items-center justify-center">
+          <p className="text-xs text-zinc-300 italic line-clamp-3">
+            {voiceState === "speaking"
+              ? lastAiResponse || "..."
+              : transcript
+              ? `«${transcript}»`
+              : "Произнесите любую команду (например: «Рассчитай нормо-часы замены ГРМ на Газели»)"}
+          </p>
         </div>
       </div>
 
-      {/* Bottom Minimalist Glass Pill Remote Control Bar */}
-      <div className="z-20">
-        <div className="flex items-center space-x-3 p-1.5 px-3 rounded-full bg-zinc-900/80 backdrop-blur-2xl border border-white/10 shadow-2xl">
-          {/* Mute / Unmute Button */}
-          <button
-            type="button"
-            onClick={() => {
-              const nextMuted = !isMuted;
-              setIsMuted(nextMuted);
-              if (nextMuted) {
-                try {
-                  recognitionRef.current?.stop();
-                  window.speechSynthesis?.cancel();
-                } catch {}
-                setVoiceState("idle");
-              } else {
-                resumeListening();
-              }
-            }}
-            className={`p-3 rounded-full transition-all cursor-pointer ${
-              isMuted
-                ? "bg-zinc-800 text-zinc-400 hover:text-white"
-                : isChaika
-                ? "bg-rose-600 hover:bg-rose-500 text-white shadow-lg shadow-rose-600/30"
-                : "bg-sky-600 hover:bg-sky-500 text-white shadow-lg shadow-sky-600/30"
-            }`}
-            title={isMuted ? "Включить микрофон" : "Отключить микрофон (Mute)"}
-          >
-            {isMuted ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
-          </button>
+      {/* Bottom Control Bar */}
+      <div className="w-full max-w-sm flex items-center justify-center space-x-4 z-20 pb-4">
+        <button
+          type="button"
+          onClick={() => {
+            const nextMuted = !isMuted;
+            setIsMuted(nextMuted);
+            if (nextMuted) {
+              try {
+                recognitionRef.current?.stop();
+              } catch {}
+              setVoiceState("idle");
+            } else {
+              setVoiceState("listening");
+              try {
+                recognitionRef.current?.start();
+              } catch {}
+            }
+          }}
+          className={`flex items-center space-x-2 px-5 py-3 rounded-full text-xs font-semibold transition-all cursor-pointer shadow-lg active:scale-95 ${
+            isMuted
+              ? "bg-rose-500/20 text-rose-300 border border-rose-500/40"
+              : "bg-white/[0.08] hover:bg-white/[0.14] text-white border border-white/10"
+          }`}
+        >
+          {isMuted ? <MicOff className="w-4 h-4 text-rose-400" /> : <Mic className="w-4 h-4" />}
+          <span>{isMuted ? "Включить микрофон" : "Микрофон активен"}</span>
+        </button>
 
-          <div className="h-5 w-px bg-white/10" />
-
-          {/* Close Button */}
-          <button
-            type="button"
-            onClick={onClose}
-            className="p-3 rounded-full bg-white/[0.06] hover:bg-white/[0.12] text-zinc-300 hover:text-white transition-colors cursor-pointer"
-            title="Завершить сеанс"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={onClose}
+          className="px-6 py-3 rounded-full bg-white text-zinc-950 hover:bg-zinc-200 text-xs font-bold transition-all shadow-xl active:scale-95 cursor-pointer"
+        >
+          Завершить
+        </button>
       </div>
     </div>
   );
