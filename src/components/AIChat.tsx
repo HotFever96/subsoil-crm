@@ -901,39 +901,6 @@ export const AIChat: React.FC = () => {
         className="hidden"
       />
 
-      {/* Top Floating Glass Header Bar (Yandex Music / Pill UI aesthetic) */}
-      <div className="w-full px-4 sm:px-6 py-2.5 flex items-center justify-between z-20 shrink-0 border-b border-slate-200/50 dark:border-white/[0.06] bg-white/40 dark:bg-[#09090b]/40 backdrop-blur-xl">
-        <div className="flex items-center space-x-2.5">
-          <div className="flex items-center space-x-2 px-3 py-1 rounded-full bg-white/80 dark:bg-white/[0.06] border border-slate-200 dark:border-white/[0.08] backdrop-blur-md shadow-2xs">
-            <span className={`w-2 h-2 rounded-full ${isChaika ? "bg-rose-500 shadow-rose-500/50" : "bg-sky-500 shadow-sky-500/50"} shadow-md animate-pulse`} />
-            <span className="text-xs font-semibold text-slate-800 dark:text-zinc-200">
-              {isChaika ? "Шеф-мастер СТО" : "AI Action Hub"}
-            </span>
-          </div>
-          <span className="text-[11px] text-slate-500 dark:text-zinc-400 hidden sm:inline">
-            {isChaika ? "Нормо-часы, заказ-наряды, запчасти и звонки" : "Недропользование, почта, календарь и документы"}
-          </span>
-        </div>
-
-        <div className="flex items-center space-x-2.5">
-          {/* Live Voice Mode Button («Моя волна» / Hands-Free) */}
-          <button
-            type="button"
-            onClick={() => setIsVoiceLiveOpen(true)}
-            className="flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-violet-600/30 via-pink-600/30 to-amber-600/30 hover:from-violet-600/40 hover:via-pink-600/40 hover:to-amber-600/40 border border-white/20 text-white shadow-lg backdrop-blur-xl transition-all cursor-pointer group hover:scale-[1.03] active:scale-[0.98]"
-            title="Запустить непрерывный голосовой диалог без рук («Моя волна» Live)"
-          >
-            <div className="relative flex items-center justify-center">
-              <span className="w-2.5 h-2.5 rounded-full bg-pink-500 animate-ping absolute opacity-75" />
-              <Radio className="w-3.5 h-3.5 text-pink-400 group-hover:text-pink-300 relative z-10" />
-            </div>
-            <span className="text-xs font-semibold tracking-wide bg-gradient-to-r from-pink-300 via-purple-200 to-amber-200 bg-clip-text text-transparent">
-              🎙️ Голосовой режим (Live)
-            </span>
-          </button>
-        </div>
-      </div>
-
       {/* Drag & Drop Visual Glow Overlay */}
       {isDraggingOver && (
         <div className="absolute inset-0 z-50 bg-sky-500/10 dark:bg-sky-500/20 backdrop-blur-xs border-2 border-dashed border-sky-500 m-3 rounded-3xl flex flex-col items-center justify-center p-6 transition-all pointer-events-none shadow-2xl animate-in fade-in duration-150">
