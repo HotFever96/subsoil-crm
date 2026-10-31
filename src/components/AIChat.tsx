@@ -34,6 +34,8 @@ import {
   Radio,
 } from "lucide-react";
 import { VoiceLiveModal } from "@/components/VoiceLiveModal";
+import { MicPermissionModal } from "@/components/MicPermissionModal";
+import { requestMicrophoneStream, transcribeAudioWithServer } from "@/lib/microphone-manager";
 import { ChatMessage, ChatActionPayload } from "@/lib/supabase";
 import { MarkdownView } from "@/components/MarkdownView";
 import { useChat } from "@/lib/chat-context";
@@ -318,44 +320,132 @@ export const AIChat: React.FC = () => {
     }
   }, [activeSession?.messages, isLoading, hasUserMessages]);
 
-  // Clean up speech recognition on unmount
+  // Live Voice Mode («Моя волна» / Hands-Free) & Fallback STT State
+  const [isVoiceLiveOpen, setIsVoiceLiveOpen] = useState(false);
+  const [showMicBlockedModal, setShowMicBlockedModal] = useState(false);
+  const [isFallbackRecording, setIsFallbackRecording] = useState(false);
+  const activeMicStreamRef = useRef<MediaStream | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+
+  const stopVoiceInput = () => {
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.stop();
+      } catch {}
+      recognitionRef.current = null;
+    }
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
+      try {
+        mediaRecorderRef.current.stop();
+      } catch {}
+    }
+    if (activeMicStreamRef.current) {
+      activeMicStreamRef.current.getTracks().forEach((track) => track.stop());
+      activeMicStreamRef.current = null;
+    }
+    setIsListening(false);
+    setIsFallbackRecording(false);
+  };
+
+  // Clean up speech recognition & mic stream on unmount
   useEffect(() => {
     return () => {
-      if (recognitionRef.current) {
-        try {
-          recognitionRef.current.abort();
-        } catch {
-          // ignore
-        }
-      }
+      stopVoiceInput();
     };
   }, []);
 
-  // Live Voice Mode («Моя волна» / Hands-Free)
-  const [isVoiceLiveOpen, setIsVoiceLiveOpen] = useState(false);
-
-  // Voice input toggle (Speech-to-Text with ru-RU)
-  const toggleVoiceInput = () => {
-    if (typeof window === "undefined") return;
-
-    if (isListening) {
-      if (recognitionRef.current) {
-        try {
-          recognitionRef.current.stop();
-        } catch {
-          // ignore
-        }
+  // Dedicated handler for Live Voice mode with synchronous user-gesture getUserMedia
+  const handleOpenVoiceLive = async () => {
+    const micResult = await requestMicrophoneStream();
+    if (!micResult.ok) {
+      if (micResult.errorType === "not_allowed") {
+        setShowMicBlockedModal(true);
+      } else {
+        setSpeechError(micResult.errorMessage || "Ошибка доступа к микрофону");
+        setTimeout(() => setSpeechError(null), 5000);
       }
-      setIsListening(false);
       return;
     }
+    activeMicStreamRef.current = micResult.stream || null;
+    setIsVoiceLiveOpen(true);
+  };
+
+  // Voice input toggle (Direct getUserMedia + SpeechRecognition with ElevenLabs Scribe STT fallback)
+  const toggleVoiceInput = async () => {
+    if (typeof window === "undefined") return;
+
+    if (isListening || isFallbackRecording) {
+      stopVoiceInput();
+      return;
+    }
+
+    // 1. Mandatory direct getUserMedia invocation in user gesture to prompt browser
+    const micResult = await requestMicrophoneStream();
+    if (!micResult.ok) {
+      if (micResult.errorType === "not_allowed") {
+        setShowMicBlockedModal(true);
+      } else {
+        setSpeechError(micResult.errorMessage || "Ошибка доступа к микрофону");
+        setTimeout(() => setSpeechError(null), 5000);
+      }
+      return;
+    }
+
+    const stream = micResult.stream!;
+    activeMicStreamRef.current = stream;
+    baseTextRef.current = inputPrompt.trim();
+
+    // Helper: start MediaRecorder with server /api/stt fallback
+    const startServerRecordingFallback = () => {
+      try {
+        audioChunksRef.current = [];
+        const mimeType = MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
+          ? "audio/webm;codecs=opus"
+          : MediaRecorder.isTypeSupported("audio/webm")
+          ? "audio/webm"
+          : "audio/mp4";
+
+        const recorder = new MediaRecorder(stream, { mimeType });
+        recorder.ondataavailable = (e) => {
+          if (e.data && e.data.size > 0) {
+            audioChunksRef.current.push(e.data);
+          }
+        };
+
+        recorder.onstop = async () => {
+          if (audioChunksRef.current.length === 0) return;
+          const audioBlob = new Blob(audioChunksRef.current, { type: mimeType });
+          try {
+            const text = await transcribeAudioWithServer(audioBlob);
+            if (text) {
+              const fullText = baseTextRef.current
+                ? `${baseTextRef.current} ${text}`
+                : text;
+              setInputPrompt(fullText);
+            }
+          } catch (sttErr) {
+            console.warn("Server STT error:", sttErr);
+          }
+        };
+
+        mediaRecorderRef.current = recorder;
+        recorder.start(250);
+        setIsListening(true);
+        setIsFallbackRecording(true);
+        setSpeechError(null);
+      } catch (recErr) {
+        console.error("MediaRecorder fallback error:", recErr);
+        setSpeechError("Не удалось запустить запись звука");
+        setIsListening(false);
+      }
+    };
 
     const SpeechRecognitionClass =
       (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
 
     if (!SpeechRecognitionClass) {
-      setSpeechError("Голосовой ввод не поддерживается данным браузером. Рекомендуется использовать Chrome, Edge или Safari.");
-      setTimeout(() => setSpeechError(null), 5000);
+      startServerRecordingFallback();
       return;
     }
 
@@ -365,8 +455,6 @@ export const AIChat: React.FC = () => {
       recognition.continuous = true;
       recognition.interimResults = true;
       recognition.maxAlternatives = 1;
-
-      baseTextRef.current = inputPrompt.trim();
 
       recognition.onstart = () => {
         setIsListening(true);
@@ -393,27 +481,33 @@ export const AIChat: React.FC = () => {
       recognition.onerror = (event: any) => {
         console.warn("Speech recognition error:", event.error);
         if (event.error === "not-allowed" || event.error === "service-not-allowed") {
-          setSpeechError("Доступ к микрофону заблокирован. Пожалуйста, разрешите доступ в настройках браузера.");
+          setShowMicBlockedModal(true);
+          stopVoiceInput();
         } else if (event.error === "no-speech") {
           return;
+        } else if (event.error === "network") {
+          console.log("Switching to ElevenLabs server-side STT due to network error");
+          try {
+            recognition.abort();
+          } catch {}
+          startServerRecordingFallback();
         } else {
-          setSpeechError(`Ошибка распознавания речи: ${event.error}`);
+          setSpeechError(`Ошибка распознавания: ${event.error}`);
+          stopVoiceInput();
         }
-        setIsListening(false);
-        setTimeout(() => setSpeechError(null), 5000);
       };
 
       recognition.onend = () => {
-        setIsListening(false);
+        if (!isFallbackRecording) {
+          setIsListening(false);
+        }
       };
 
       recognitionRef.current = recognition;
       recognition.start();
     } catch (err) {
-      console.error("Speech recognition startup error:", err);
-      setSpeechError("Не удалось запустить микрофон. Проверьте разрешения браузера.");
-      setIsListening(false);
-      setTimeout(() => setSpeechError(null), 5000);
+      console.warn("SpeechRecognition start failed, falling back to server STT:", err);
+      startServerRecordingFallback();
     }
   };
 
@@ -540,13 +634,8 @@ export const AIChat: React.FC = () => {
   };
 
   const handleSend = async (textToSend?: string) => {
-    if (isListening && recognitionRef.current) {
-      try {
-        recognitionRef.current.stop();
-      } catch {
-        // ignore
-      }
-      setIsListening(false);
+    if (isListening || isFallbackRecording) {
+      stopVoiceInput();
     }
 
     const text = (textToSend !== undefined ? textToSend : inputPrompt).trim();
@@ -1026,7 +1115,7 @@ export const AIChat: React.FC = () => {
                   {/* Live Voice Mode Pill button */}
                   <button
                     type="button"
-                    onClick={() => setIsVoiceLiveOpen(true)}
+                    onClick={handleOpenVoiceLive}
                     className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-full transition-all text-xs font-semibold cursor-pointer ${
                       isChaika
                         ? "bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-400"
@@ -1468,7 +1557,7 @@ export const AIChat: React.FC = () => {
                   {/* Live Voice Mode Pill button */}
                   <button
                     type="button"
-                    onClick={() => setIsVoiceLiveOpen(true)}
+                    onClick={handleOpenVoiceLive}
                     className={`flex items-center space-x-1 px-2.5 py-1 rounded-full transition-all text-[11px] font-semibold cursor-pointer ${
                       isChaika
                         ? "bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-400"
@@ -1526,8 +1615,19 @@ export const AIChat: React.FC = () => {
       {/* Live Voice Mode («Моя волна» / Hands-Free) Modal */}
       <VoiceLiveModal
         isOpen={isVoiceLiveOpen}
-        onClose={() => setIsVoiceLiveOpen(false)}
+        onClose={() => {
+          setIsVoiceLiveOpen(false);
+          activeMicStreamRef.current = null;
+        }}
         onSendMessage={handleVoiceLiveSend}
+        initialStream={activeMicStreamRef.current}
+      />
+
+      {/* Mic Permission Guidance Modal */}
+      <MicPermissionModal
+        isOpen={showMicBlockedModal}
+        onClose={() => setShowMicBlockedModal(false)}
+        onRetry={handleOpenVoiceLive}
       />
     </div>
   );

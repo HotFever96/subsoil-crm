@@ -31,76 +31,11 @@ import { TelephonyCallRecord, CallType, CallStatus } from "@/lib/telephony-types
 import { RepairOrder } from "@/lib/auto-service-types";
 import { getInitialOrders, normalizeRepairOrder, formatCurrency } from "@/lib/auto-service-data";
 import { useAuth } from "@/lib/auth-context";
+import { requestMicrophoneStream } from "@/lib/microphone-manager";
+import { MicPermissionModal } from "@/components/MicPermissionModal";
 
-const INITIAL_CALLS: TelephonyCallRecord[] = [
-  {
-    id: "call-1",
-    type: "csi_quality",
-    clientName: "ООО «СеверТрансЛогистик» (Смирнов А.В.)",
-    clientPhone: "+7 (922) 111-22-33",
-    vehicleInfo: "ГАЗон Next (А102АА89)",
-    orderNumber: "ЗН-2026-0042",
-    date: "2026-10-24",
-    time: "14:15",
-    durationSeconds: 78,
-    status: "completed",
-    rating: 5,
-    hasComplaints: false,
-    transcript: "ИИ: «Добрый день, Алексей! СТО Чайка-Сервис, меня зовут Алина. Вы вчера забирали ГАЗон Next после ремонта шкворней. Всё ли в порядке, как оцениваете качество от 1 до 5?» — Клиент: «Здравствуйте. Да, всё отлично, руль теперь ровно стоит, ставлю 5 баллов, спасибо!»",
-    aiSummary: "Клиент полностью удовлетворен. Замечаний по подвеске нет. Рекомендовано повторное ТО через 10 000 км.",
-    costRub: 3.9,
-  },
-  {
-    id: "call-2",
-    type: "csi_quality",
-    clientName: "Козлов Дмитрий Сергеевич",
-    clientPhone: "+7 (912) 345-67-89",
-    vehicleInfo: "Газель Бизнес (В456ОР89)",
-    orderNumber: "ЗН-2026-0039",
-    date: "2026-10-23",
-    time: "11:30",
-    durationSeconds: 94,
-    status: "completed",
-    rating: 5,
-    hasComplaints: false,
-    transcript: "ИИ: «Дмитрий, здравствуйте! Чайка-Сервис беспокоит. Проводили замену колодок и ТО. Как тормоза работают?» — Клиент: «Да, колодки притерлись, тормозит мягко, претензий нет. Пятерка вам!»",
-    aiSummary: "Положительный отзыв. Тормозная система в норме. Лояльный клиент.",
-    costRub: 4.7,
-  },
-  {
-    id: "call-3",
-    type: "readiness_reminder",
-    clientName: "ИП Ахмедов Р.Т.",
-    clientPhone: "+7 (900) 555-12-34",
-    vehicleInfo: "КАМАЗ 65115 (С789ТТ89)",
-    orderNumber: "ЗН-2026-0044",
-    date: "2026-10-22",
-    time: "17:05",
-    durationSeconds: 45,
-    status: "completed",
-    rating: 5,
-    hasComplaints: false,
-    transcript: "ИИ: «Руслан, здравствуйте! СТО Чайка-Сервис. Ваш КАМАЗ готов к выдаче после регулировки сцепления. Сумма к оплате 14 500 рублей. Ждем вас до 20:00!» — Клиент: «Отлично, сейчас водителя отправлю, спасибо!»",
-    aiSummary: "Уведомление о готовности доставлено. Клиент подтвердил приезд за автомобилем.",
-    costRub: 2.25,
-  },
-  {
-    id: "call-4",
-    type: "inbound_admin",
-    clientName: "Новый клиент (Владимир)",
-    clientPhone: "+7 (922) 777-88-99",
-    vehicleInfo: "Toyota Land Cruiser Prado",
-    date: "2026-10-21",
-    time: "09:40",
-    durationSeconds: 110,
-    status: "completed",
-    rating: 5,
-    hasComplaints: false,
-    transcript: "Клиент: «Здравствуйте, сколько стоит сход-развал на Прадик и есть ли место на субботу?» — ИИ: «Здравствуйте! Сход-развал на 3D стенде стоит 2 500 рублей. В субботу есть свободное окно на 11:30. Записать вас?» — Клиент: «Да, запишите!»",
-    aiSummary: "Входящий звонок. Консультация по стоимости и успешная запись в Пост-планировщик на субботу 11:30.",
-    costRub: 5.5,
-  },
-];
+// Zero mock data: initial list is strictly empty
+const INITIAL_CALLS: TelephonyCallRecord[] = [];
 
 export const TelephonyModule: React.FC = () => {
   const { user } = useAuth();
@@ -111,6 +46,7 @@ export const TelephonyModule: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"journal" | "outbound" | "settings">("journal");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCall, setSelectedCall] = useState<TelephonyCallRecord | null>(null);
+  const [showMicBlockedModal, setShowMicBlockedModal] = useState(false);
 
   // Settings state
   const [sipProvider, setSipProvider] = useState<"novofon" | "mango" | "zadarma" | "vapi">("novofon");
@@ -124,25 +60,33 @@ export const TelephonyModule: React.FC = () => {
   const [simUserText, setSimUserText] = useState("");
 
   const audioContextRef = useRef<AudioContext | null>(null);
+  const simAudioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Load calls from localStorage
+  // Load calls strictly from storage without fake entries
   useEffect(() => {
     const key = `geo_ai_telephony_calls_${currentUsername || "guest"}_v1`;
     try {
       const raw = localStorage.getItem(key);
       if (raw) {
         const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          setCalls(parsed);
-        } else {
-          setCalls(INITIAL_CALLS);
+        if (Array.isArray(parsed)) {
+          // Filter out legacy hardcoded fake call IDs
+          const clean = parsed.filter(
+            (c) =>
+              c.id !== "call-1" &&
+              c.id !== "call-2" &&
+              c.id !== "call-3" &&
+              c.id !== "call-4"
+          );
+          if (clean.length !== parsed.length) {
+            localStorage.setItem(key, JSON.stringify(clean));
+          }
+          setCalls(clean);
+          return;
         }
-      } else {
-        setCalls(INITIAL_CALLS);
       }
-    } catch {
-      setCalls(INITIAL_CALLS);
-    }
+    } catch {}
+    setCalls([]);
 
     // Load repair orders for outbound list
     const ordKey = `geo_ai_repair_orders_${currentUsername || "guest"}_v2`;
@@ -204,8 +148,6 @@ export const TelephonyModule: React.FC = () => {
   };
 
   // Speak AI text in simulator using ElevenLabs /api/tts streaming with browser speech fallback
-  const simAudioRef = useRef<HTMLAudioElement | null>(null);
-
   const speakSimVoice = async (text: string, onDone: () => void) => {
     try {
       const res = await fetch("/api/tts", {
@@ -264,8 +206,15 @@ export const TelephonyModule: React.FC = () => {
     window.speechSynthesis.speak(utt);
   };
 
-  // Launch live interactive phone simulator
-  const handleStartCallSimulator = (clientName = "Алексей Смирнов", car = "Газель Next") => {
+  // Launch live interactive phone simulator with explicit getUserMedia click gesture
+  const handleStartCallSimulator = async (clientName = "Алексей Смирнов", car = "Газель Next") => {
+    // Direct getUserMedia in click gesture
+    const micRes = await requestMicrophoneStream();
+    if (!micRes.ok && micRes.errorType === "not_allowed") {
+      setShowMicBlockedModal(true);
+      return;
+    }
+
     setIsSimulatorOpen(true);
     setSimStep("dialing");
     setSimRating(5);
@@ -295,7 +244,7 @@ export const TelephonyModule: React.FC = () => {
     speakSimVoice(thankYou, () => {
       setSimStep("finished");
 
-      // Add to calls record!
+      // Add actual call to journal
       const newCall: TelephonyCallRecord = {
         id: `call-${Date.now()}`,
         type: "csi_quality",
@@ -317,16 +266,20 @@ export const TelephonyModule: React.FC = () => {
     });
   };
 
-  // KPI Calculations
+  // Pure dynamic KPI Calculations (strictly 0 when no calls exist)
   const totalCalls = calls.length;
-  const avgRating = (calls.filter((c) => c.rating).reduce((acc, c) => acc + (c.rating || 5), 0) / (calls.filter((c) => c.rating).length || 1)).toFixed(1);
+  const ratedCalls = calls.filter((c) => c.rating);
+  const avgRating =
+    ratedCalls.length > 0
+      ? (ratedCalls.reduce((acc, c) => acc + (c.rating || 5), 0) / ratedCalls.length).toFixed(1)
+      : "0.0";
   const totalCost = calls.reduce((acc, c) => acc + (c.costRub || 0), 0);
-  const bookedCount = calls.filter((c) => c.type === "inbound_admin").length + 37;
+  const bookedCount = calls.filter((c) => c.type === "inbound_admin").length;
 
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden text-zinc-900 dark:text-zinc-100">
       {/* Top Header - Yandex Pill Aesthetic */}
-      <div className="px-6 py-4.5 border-b border-white/[0.08] bg-white/40 dark:bg-black/30 backdrop-blur-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">
+      <div className="apple-header px-6 py-4.5 border-b border-white/[0.08] bg-white/40 dark:bg-black/30 backdrop-blur-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">
         <div className="flex items-center space-x-3.5">
           <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-rose-500/20 to-purple-500/20 border border-white/10 text-rose-500 flex items-center justify-center shrink-0 shadow-lg shadow-rose-500/10">
             <PhoneCall className="w-5 h-5" />
@@ -357,7 +310,7 @@ export const TelephonyModule: React.FC = () => {
           <button
             type="button"
             onClick={() => handleStartCallSimulator("Алексей Смирнов", "Газель Next")}
-            className="flex items-center space-x-2 px-4 py-2.5 rounded-full bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 text-white text-xs font-bold transition-all shadow-lg shadow-rose-600/25 cursor-pointer active:scale-95"
+            className="apple-tap flex items-center space-x-2 px-4 py-2.5 rounded-full bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 text-white text-xs font-bold transition-all shadow-lg shadow-rose-600/25 cursor-pointer active:scale-95"
           >
             <Headphones className="w-4 h-4" />
             <span>🎧 Протестировать звонок ИИ-бота (Симулятор)</span>
@@ -369,16 +322,16 @@ export const TelephonyModule: React.FC = () => {
       <div className="px-6 pt-5 pb-3 shrink-0">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
           {/* Card 1: Total Calls */}
-          <div className="p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-zinc-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
+          <div className="apple-kpi-1 apple-card-hover p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-zinc-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
             <div>
               <span className="text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                 Всего звонков
               </span>
-              <div className="text-xl font-extrabold text-zinc-900 dark:text-white mt-0.5">
-                {totalCalls + 144} <span className="text-xs font-semibold text-zinc-400">звонков</span>
+              <div className="text-xl font-extrabold text-zinc-900 dark:text-white mt-0.5 font-mono">
+                {totalCalls} <span className="text-xs font-semibold text-zinc-400">звонков</span>
               </div>
-              <span className="text-[10px] text-emerald-500 font-bold mt-0.5 block">
-                92% успешных дозвонов
+              <span className="text-[10px] text-zinc-400 mt-0.5 block">
+                {totalCalls > 0 ? "Успешные дозвоны" : "Журнал звонков пуст"}
               </span>
             </div>
             <div className="w-11 h-11 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-500 flex items-center justify-center shrink-0">
@@ -387,17 +340,17 @@ export const TelephonyModule: React.FC = () => {
           </div>
 
           {/* Card 2: Average Rating */}
-          <div className="p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-zinc-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
+          <div className="apple-kpi-2 apple-card-hover p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-zinc-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
             <div>
               <span className="text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                 Индекс CSI (Оценка СТО)
               </span>
-              <div className="text-xl font-extrabold text-amber-500 mt-0.5 flex items-center space-x-1">
+              <div className="text-xl font-extrabold text-amber-500 mt-0.5 flex items-center space-x-1 font-mono">
                 <span>{avgRating}</span>
                 <Star className="w-4 h-4 fill-amber-500 text-amber-500" />
               </div>
               <span className="text-[10px] text-zinc-400 dark:text-zinc-500">
-                На основе {totalCalls + 108} оценок
+                На основе {ratedCalls.length} оценок
               </span>
             </div>
             <div className="w-11 h-11 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-500 flex items-center justify-center shrink-0">
@@ -406,12 +359,12 @@ export const TelephonyModule: React.FC = () => {
           </div>
 
           {/* Card 3: Auto-Bookings */}
-          <div className="p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-zinc-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
+          <div className="apple-kpi-3 apple-card-hover p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-zinc-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
             <div>
               <span className="text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                 Записано авто ботом
               </span>
-              <div className="text-xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-0.5">
+              <div className="text-xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-0.5 font-mono">
                 {bookedCount} <span className="text-xs font-semibold text-zinc-400">записей</span>
               </div>
               <span className="text-[10px] text-zinc-400 dark:text-zinc-500">
@@ -424,16 +377,16 @@ export const TelephonyModule: React.FC = () => {
           </div>
 
           {/* Card 4: Costs and ROI */}
-          <div className="p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-zinc-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
+          <div className="apple-kpi-4 apple-card-hover p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-zinc-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
             <div>
               <span className="text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                 Затраты на связь / ROI
               </span>
-              <div className="text-xl font-extrabold text-rose-600 dark:text-rose-400 mt-0.5">
-                {formatCurrency(totalCost + 432)}
+              <div className="text-xl font-extrabold text-rose-600 dark:text-rose-400 mt-0.5 font-mono">
+                {formatCurrency(totalCost)}
               </div>
               <span className="text-[10px] text-emerald-400 font-bold block">
-                Экономия: ~45 000 ₽ / мес
+                {totalCalls > 0 ? "Оптимизация расходов СТО" : "0 ₽ расходов"}
               </span>
             </div>
             <div className="w-11 h-11 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-500 flex items-center justify-center shrink-0">
@@ -458,7 +411,7 @@ export const TelephonyModule: React.FC = () => {
               onClick={() => setActiveTab(t.id as any)}
               className={`px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                 isActive
-                  ? "bg-rose-600 text-white shadow-md shadow-rose-600/20"
+                  ? "bg-rose-600 text-white shadow-md shadow-rose-600/25"
                   : "bg-white/40 dark:bg-white/[0.05] text-zinc-600 dark:text-zinc-300 hover:bg-white/70 dark:hover:bg-white/[0.1] border border-white/[0.07]"
               }`}
             >
@@ -472,163 +425,170 @@ export const TelephonyModule: React.FC = () => {
       <div className="flex-1 overflow-y-auto px-6 py-2">
         {activeTab === "journal" && (
           <div className="space-y-2 pb-12">
-            {calls.map((call) => (
-              <div
-                key={call.id}
-                onClick={() => setSelectedCall(call)}
-                className="group p-4 rounded-2xl bg-white/50 dark:bg-white/[0.05] hover:bg-white dark:hover:bg-white/[0.09] border border-zinc-200/60 dark:border-white/[0.08] hover:border-white/20 backdrop-blur-2xl transition-all cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-md hover:shadow-xl"
-              >
-                <div className="flex items-center space-x-3.5 min-w-0">
-                  <div className="w-10 h-10 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-500 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                    {call.type === "inbound_admin" ? (
-                      <PhoneIncoming className="w-5 h-5 text-blue-400" />
-                    ) : (
-                      <PhoneOutgoing className="w-5 h-5 text-rose-500" />
-                    )}
-                  </div>
-                  <div className="min-w-0">
-                    <div className="flex items-center space-x-2">
-                      <span className="font-bold text-sm text-zinc-900 dark:text-white group-hover:text-rose-500 transition-colors truncate">
-                        {call.clientName}
-                      </span>
-                      <span className="text-xs text-zinc-400 font-mono">({call.clientPhone})</span>
-                      {call.rating && (
-                        <span className="flex items-center text-xs font-bold text-amber-400">
-                          <Star className="w-3.5 h-3.5 fill-amber-400 mr-0.5" />
-                          {call.rating}
-                        </span>
+            {calls.length === 0 ? (
+              <div className="h-full min-h-[320px] flex flex-col items-center justify-center text-center p-8">
+                <div className="w-14 h-14 rounded-3xl bg-white/40 dark:bg-white/[0.04] border border-white/10 flex items-center justify-center text-zinc-400 mb-3.5">
+                  <PhoneCall className="w-7 h-7 text-rose-500" />
+                </div>
+                <h3 className="text-base font-bold text-zinc-800 dark:text-zinc-200">
+                  Журнал звонков пуст
+                </h3>
+                <p className="text-xs text-zinc-500 dark:text-zinc-400 max-w-sm mt-1">
+                  Запустите тестовый звонок ИИ-бота или проведите автообзвон по закрытому заказ-наряду.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => handleStartCallSimulator("Тестовый клиент", "Автомобиль")}
+                  className="apple-tap mt-4 px-5 py-2.5 rounded-full bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition-all shadow-md cursor-pointer"
+                >
+                  🎧 Запустить тестовый звонок
+                </button>
+              </div>
+            ) : (
+              calls.map((call) => (
+                <div
+                  key={call.id}
+                  onClick={() => setSelectedCall(call)}
+                  className="apple-row apple-card-hover group p-4 rounded-2xl bg-white/50 dark:bg-white/[0.05] hover:bg-white dark:hover:bg-white/[0.09] border border-zinc-200/60 dark:border-white/[0.08] hover:border-white/20 backdrop-blur-2xl transition-all cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-md hover:shadow-xl"
+                >
+                  <div className="flex items-center space-x-3.5 min-w-0">
+                    <div className="w-10 h-10 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-500 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                      {call.type === "inbound_admin" ? (
+                        <PhoneIncoming className="w-5 h-5 text-blue-400" />
+                      ) : (
+                        <PhoneOutgoing className="w-5 h-5 text-rose-500" />
                       )}
                     </div>
-                    <div className="text-xs text-zinc-500 dark:text-zinc-400 truncate mt-0.5">
-                      {call.aiSummary}
+                    <div className="min-w-0">
+                      <div className="flex items-center space-x-2">
+                        <span className="font-bold text-sm text-zinc-900 dark:text-white group-hover:text-rose-500 transition-colors truncate">
+                          {call.clientName}
+                        </span>
+                        <span className="text-xs text-zinc-400 font-mono">({call.clientPhone})</span>
+                        {call.rating && (
+                          <span className="flex items-center text-xs font-bold text-amber-400">
+                            <Star className="w-3.5 h-3.5 fill-amber-400 mr-0.5" />
+                            {call.rating}
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-xs text-zinc-500 dark:text-zinc-400 truncate mt-0.5">
+                        {call.aiSummary}
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="flex items-center justify-between md:justify-end space-x-4 shrink-0 text-xs">
-                  <div className="text-right">
-                    <div className="text-zinc-400">
-                      {call.durationSeconds} сек • {call.costRub.toFixed(2)} ₽
+                  <div className="flex items-center justify-between md:justify-end space-x-4 shrink-0 text-xs">
+                    <div className="text-right">
+                      <div className="text-zinc-400">
+                        {call.durationSeconds} сек • {call.costRub.toFixed(2)} ₽
+                      </div>
+                      <div className="text-[10px] text-zinc-500">
+                        {call.date} в {call.time}
+                      </div>
                     </div>
-                    <div className="text-[10px] text-zinc-500">
-                      {call.date} в {call.time}
-                    </div>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedCall(call);
+                      }}
+                      className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white cursor-pointer"
+                      title="Слушать транскрипцию"
+                    >
+                      <Play className="w-3.5 h-3.5" />
+                    </button>
                   </div>
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedCall(call);
-                    }}
-                    className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white cursor-pointer"
-                    title="Слушать транскрипцию"
-                  >
-                    <Play className="w-3.5 h-3.5" />
-                  </button>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         )}
 
         {activeTab === "outbound" && (
-          <div className="space-y-4 pb-12">
-            <div className="p-4 rounded-2xl bg-white/50 dark:bg-white/[0.04] border border-white/[0.08] backdrop-blur-2xl flex items-center justify-between">
+          <div className="space-y-3 pb-12">
+            <div className="p-4 rounded-2xl bg-white/40 dark:bg-white/[0.04] border border-white/[0.08] backdrop-blur-md flex items-center justify-between">
               <div>
-                <h3 className="font-bold text-sm text-zinc-900 dark:text-white">
-                  Автоматический опрос качества через 24 часа
-                </h3>
-                <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                  Бот сам звонит клиенту на следующий день после выдачи автомобиля и уточняет впечатления
+                <h4 className="text-sm font-bold text-white">Автообзвон закрытых заказ-нарядов</h4>
+                <p className="text-xs text-zinc-400">
+                  Робот автоматически звонит клиенту через 24 часа после выдачи авто и сохраняет оценку в журнал
                 </p>
               </div>
-              <button
-                type="button"
-                onClick={() => setAutoCsiEnabled(!autoCsiEnabled)}
-                className={`w-12 h-6 rounded-full transition-colors relative cursor-pointer ${
-                  autoCsiEnabled ? "bg-rose-600" : "bg-zinc-700"
-                }`}
-              >
-                <div
-                  className={`w-5 h-5 rounded-full bg-white transition-transform absolute top-0.5 ${
-                    autoCsiEnabled ? "left-6.5" : "left-0.5"
-                  }`}
-                />
-              </button>
+              <div className="flex items-center space-x-2">
+                <span className="text-xs text-emerald-400 font-semibold">● Активен</span>
+              </div>
             </div>
 
             <div className="space-y-2">
-              <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider">
-                Готовы к опросу качества:
-              </span>
-              {orders.slice(0, 5).map((ord) => (
-                <div
-                  key={ord.id}
-                  className="p-4 rounded-2xl bg-white/40 dark:bg-white/[0.03] border border-white/[0.06] flex items-center justify-between"
-                >
-                  <div>
-                    <div className="font-bold text-sm text-white">
-                      {ord.client?.name || "Контрагент"} • {ord.vehicle?.make} {ord.vehicle?.model} ({ord.vehicle?.licensePlate})
-                    </div>
-                    <div className="text-xs text-zinc-400">
-                      Заказ-наряд: {ord.orderNumber} • Тел: {ord.client?.phone || "+7 (922) 000-00-00"}
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => handleStartCallSimulator(ord.client?.name, `${ord.vehicle?.make} ${ord.vehicle?.model}`)}
-                    className="px-3.5 py-1.5 rounded-full bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer shadow-md"
+              {orders
+                .filter((o) => o.status === "closed" || o.status === "ready")
+                .map((ord) => (
+                  <div
+                    key={ord.id}
+                    className="p-4 rounded-2xl bg-white/50 dark:bg-white/[0.04] border border-zinc-200/60 dark:border-white/[0.08] flex items-center justify-between"
                   >
-                    <PhoneOutgoing className="w-3.5 h-3.5" />
-                    <span>Позвонить сейчас</span>
-                  </button>
-                </div>
-              ))}
+                    <div>
+                      <div className="font-bold text-sm text-white">
+                        {ord.orderNumber} • {ord.client.name}
+                      </div>
+                      <div className="text-xs text-zinc-400">
+                        {ord.vehicle.make} {ord.vehicle.model} ({ord.vehicle.licensePlate}) • Тел: {ord.client.phone}
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleStartCallSimulator(ord.client.name, `${ord.vehicle.make} ${ord.vehicle.model}`)}
+                      className="px-4 py-2 rounded-full bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition-all shadow-md cursor-pointer"
+                    >
+                      Позвонить сейчас
+                    </button>
+                  </div>
+                ))}
             </div>
           </div>
         )}
 
         {activeTab === "settings" && (
-          <div className="max-w-xl space-y-4 pb-12 text-xs">
-            <div className="p-5 rounded-3xl bg-white/50 dark:bg-white/[0.04] border border-white/[0.08] backdrop-blur-2xl space-y-4">
-              <h3 className="text-base font-bold text-white">Шлюз IP-телефонии и провайдер</h3>
-
-              <div className="space-y-1">
-                <label className="text-zinc-400 font-semibold">Оператор связи / Виртуальная АТС</label>
+          <div className="max-w-xl space-y-4 pb-12">
+            <div className="p-6 rounded-3xl bg-white/50 dark:bg-white/[0.04] border border-zinc-200/60 dark:border-white/[0.08] backdrop-blur-2xl space-y-4">
+              <h3 className="text-sm font-bold text-white">Подключение SIP-телефонии</h3>
+              <div>
+                <label className="block text-xs font-semibold text-zinc-400 mb-1.5">Провайдер телефонии:</label>
                 <select
                   value={sipProvider}
                   onChange={(e) => setSipProvider(e.target.value as any)}
-                  className="w-full px-3 py-2 rounded-xl bg-zinc-900 border border-white/10 text-white font-medium"
+                  className="w-full px-3.5 py-2.5 rounded-2xl bg-zinc-900 border border-white/10 text-white text-xs"
                 >
-                  <option value="novofon">Novofon (Рекомендуется для РФ, автообзвон)</option>
+                  <option value="novofon">Novofon (ex-Zadarma) — рекомендовано для СТО</option>
                   <option value="mango">Mango Office (Манго Телеком)</option>
-                  <option value="zadarma">Zadarma / Плюсофон</option>
-                  <option value="vapi">Vapi / ElevenLabs Conversational AI</option>
+                  <option value="zadarma">Zadarma Cloud PBX</option>
+                  <option value="vapi">Vapi.ai Voice Webhook Gateway</option>
                 </select>
               </div>
 
-              <div className="space-y-1">
-                <label className="text-zinc-400 font-semibold">API Key / SIP Trunk Token</label>
+              <div>
+                <label className="block text-xs font-semibold text-zinc-400 mb-1.5">API Ключ провайдера / SIP Secret:</label>
                 <input
                   type="password"
+                  placeholder="Вставьте API-ключ телефонии..."
                   value={sipApiKey}
                   onChange={(e) => setSipApiKey(e.target.value)}
-                  placeholder="Вставьте токен интеграции вашей АТС..."
-                  className="w-full px-3 py-2 rounded-xl bg-zinc-900 border border-white/10 text-white font-mono"
+                  className="w-full px-3.5 py-2.5 rounded-2xl bg-zinc-900 border border-white/10 text-white text-xs focus:border-rose-500 focus:outline-none"
                 />
               </div>
 
-              <div className="p-3 rounded-2xl bg-white/[0.03] border border-white/[0.06] text-zinc-400 leading-relaxed text-[11px]">
-                Встроенный ИИ-робот автоматически обрабатывает звонки через Webhook-шлюз и сохраняет расшифровки разговоров в реальном времени.
+              <div className="flex items-center justify-between pt-2">
+                <div>
+                  <div className="text-xs font-bold text-white">Автоматический CSI-опрос</div>
+                  <div className="text-[11px] text-zinc-400">Звонить роботом после каждого закрытого заказ-наряда</div>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={autoCsiEnabled}
+                  onChange={(e) => setAutoCsiEnabled(e.target.checked)}
+                  className="w-4 h-4 accent-rose-600 rounded"
+                />
               </div>
-
-              <button
-                type="button"
-                onClick={() => alert("Настройки SIP-шлюза сохранены!")}
-                className="px-5 py-2.5 rounded-full bg-rose-600 hover:bg-rose-500 text-white font-bold transition-all shadow-md cursor-pointer"
-              >
-                Сохранить настройки АТС
-              </button>
             </div>
           </div>
         )}
@@ -637,7 +597,7 @@ export const TelephonyModule: React.FC = () => {
       {/* MODAL: INTERACTIVE LIVE TELEPHONE CALL SIMULATOR */}
       {isSimulatorOpen && (
         <div className="fixed inset-0 z-70 bg-black/85 backdrop-blur-3xl flex items-center justify-center p-4 animate-in fade-in duration-300">
-          <div className="w-full max-w-sm rounded-3xl bg-zinc-900/95 border border-white/15 p-6 shadow-2xl flex flex-col items-center text-center space-y-6 text-white relative">
+          <div className="apple-sheet w-full max-w-sm rounded-3xl bg-zinc-900/95 border border-white/15 p-6 shadow-2xl flex flex-col items-center text-center space-y-6 text-white relative">
             <button
               onClick={() => {
                 setIsSimulatorOpen(false);
@@ -647,7 +607,7 @@ export const TelephonyModule: React.FC = () => {
                 }
                 window.speechSynthesis?.cancel();
               }}
-              className="absolute top-4 right-4 text-zinc-400 hover:text-white"
+              className="absolute top-4 right-4 text-zinc-400 hover:text-white cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -680,122 +640,114 @@ export const TelephonyModule: React.FC = () => {
               </div>
             </div>
 
-            {/* Conversation Flow */}
-            <div className="w-full p-3.5 rounded-2xl bg-white/[0.04] border border-white/[0.08] text-xs text-zinc-300 min-h-[75px] flex items-center justify-center">
-              {simStep === "dialing" && <span className="text-zinc-500 italic">Идет набор номера клиента...</span>}
-              {simStep === "connected" && (
-                <span className="text-rose-300 italic">Алина: «Здравствуйте! Подскажите, как оцениваете ремонт от 1 до 5?»</span>
-              )}
-              {simStep === "user_turn" && (
-                <div className="space-y-2 w-full">
-                  <span className="text-white font-bold block">Ваш ответ роботу:</span>
-                  <div className="flex justify-center space-x-1">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <button
-                        key={star}
-                        type="button"
-                        onClick={() => {
-                          setSimRating(star);
-                          setSimUserText(`Оцениваю на ${star} звезд, всё отлично!`);
-                        }}
-                        className={`p-1.5 rounded-lg transition-transform ${
-                          simRating >= star ? "text-amber-400 scale-110" : "text-zinc-600"
-                        }`}
-                      >
-                        <Star className="w-5 h-5 fill-current" />
-                      </button>
-                    ))}
-                  </div>
-                  <input
-                    type="text"
-                    value={simUserText}
-                    onChange={(e) => setSimUserText(e.target.value)}
-                    placeholder="Или введите фразу (например: Всё супер, спасибо)..."
-                    className="w-full px-2.5 py-1.5 rounded-xl bg-zinc-950 border border-white/10 text-white text-[11px]"
-                  />
-                </div>
-              )}
-              {simStep === "ai_speaking" && (
-                <span className="text-emerald-300">Алина: «Спасибо за отзыв! Зафиксировала 5 звезд, хорошего дня!»</span>
-              )}
-              {simStep === "finished" && (
-                <span className="text-emerald-400 font-bold">Звонок успешно завершен и занесен в базу!</span>
-              )}
-            </div>
+            {/* Interaction step controls */}
+            {simStep === "dialing" && (
+              <p className="text-xs text-zinc-400 animate-pulse">Соединение с абонентом...</p>
+            )}
 
-            {/* Simulator Action Buttons */}
-            <div className="w-full flex items-center justify-center space-x-3">
-              {simStep === "user_turn" ? (
+            {(simStep === "connected" || simStep === "ai_speaking") && (
+              <p className="text-xs text-zinc-300 italic">«Здравствуйте! Опрос качества ремонта Чайка-Сервис...»</p>
+            )}
+
+            {simStep === "user_turn" && (
+              <div className="w-full space-y-4">
+                <p className="text-xs text-emerald-400 font-semibold">Ваш ответ роботу (выберите оценку):</p>
+                <div className="flex justify-center space-x-2">
+                  {[1, 2, 3, 4, 5].map((st) => (
+                    <button
+                      key={st}
+                      type="button"
+                      onClick={() => setSimRating(st)}
+                      className={`w-9 h-9 rounded-full font-bold text-xs flex items-center justify-center transition-all ${
+                        simRating === st
+                          ? "bg-amber-400 text-black scale-110 shadow-lg"
+                          : "bg-white/10 text-zinc-400 hover:text-white"
+                      }`}
+                    >
+                      {st} ★
+                    </button>
+                  ))}
+                </div>
+
+                <input
+                  type="text"
+                  placeholder="Ваш комментарий (например: Всё супер, спасибо)..."
+                  value={simUserText}
+                  onChange={(e) => setSimUserText(e.target.value)}
+                  className="w-full px-3 py-2 rounded-xl bg-zinc-800 border border-white/10 text-xs text-white placeholder:text-zinc-500"
+                />
+
                 <button
                   type="button"
                   onClick={handleFinishSimCall}
-                  className="px-5 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-md cursor-pointer"
+                  className="w-full py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-all shadow-md cursor-pointer"
                 >
-                  Ответить роботу: «5 звезд!»
+                  Ответить и завершить звонок
                 </button>
-              ) : simStep === "finished" ? (
+              </div>
+            )}
+
+            {simStep === "finished" && (
+              <div className="space-y-3">
+                <CheckCircle2 className="w-10 h-10 text-emerald-400 mx-auto" />
+                <p className="text-xs text-white font-bold">Звонок успешно зафиксирован в журнале!</p>
                 <button
                   type="button"
                   onClick={() => setIsSimulatorOpen(false)}
-                  className="px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-bold cursor-pointer"
+                  className="px-6 py-2 rounded-full bg-white text-zinc-900 font-bold text-xs"
                 >
-                  Закрыть симулятор
+                  Закрыть
                 </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsSimulatorOpen(false);
-                    window.speechSynthesis?.cancel();
-                  }}
-                  className="p-3.5 rounded-full bg-rose-600 hover:bg-rose-500 text-white cursor-pointer"
-                  title="Положить трубку"
-                >
-                  <PhoneOff className="w-5 h-5" />
-                </button>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
       )}
 
-      {/* DETAIL MODAL */}
+      {/* Selected Call Detail Modal */}
       {selectedCall && (
-        <div className="fixed inset-0 z-60 bg-black/70 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="w-full max-w-lg bg-zinc-950 border border-white/10 rounded-3xl p-6 text-xs text-white space-y-4">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <div className="font-bold text-sm flex items-center space-x-2">
-                <PhoneCall className="w-4 h-4 text-rose-500" />
-                <span>Запись звонка: {selectedCall.clientName}</span>
+        <div className="fixed inset-0 z-70 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="apple-sheet w-full max-w-lg rounded-3xl bg-zinc-900 border border-white/10 p-6 shadow-2xl space-y-4 text-white relative">
+            <button onClick={() => setSelectedCall(null)} className="absolute top-4 right-4 text-zinc-400 hover:text-white">
+              <X className="w-5 h-5" />
+            </button>
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 rounded-2xl bg-rose-500/15 text-rose-400 flex items-center justify-center">
+                <PhoneCall className="w-5 h-5" />
               </div>
-              <button onClick={() => setSelectedCall(null)} className="text-zinc-400 hover:text-white">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="space-y-2">
-              <span className="text-zinc-400 font-bold uppercase text-[10px]">Полная стенограмма:</span>
-              <div className="p-3.5 rounded-2xl bg-zinc-900 border border-white/[0.06] text-zinc-300 leading-relaxed font-mono text-[11px] max-h-48 overflow-y-auto">
-                {selectedCall.transcript}
+              <div>
+                <h3 className="font-bold text-base text-white">{selectedCall.clientName}</h3>
+                <p className="text-xs text-zinc-400">{selectedCall.clientPhone} • {selectedCall.date}</p>
               </div>
             </div>
 
-            <div className="p-3 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-300">
-              <strong>Резюме ИИ:</strong> {selectedCall.aiSummary}
+            <div className="p-3.5 rounded-2xl bg-white/[0.04] border border-white/10 space-y-1.5">
+              <span className="text-[11px] font-bold text-zinc-400 uppercase">ИИ-Резюме разговора:</span>
+              <p className="text-xs text-zinc-200 leading-relaxed">{selectedCall.aiSummary}</p>
             </div>
 
-            <div className="flex justify-end">
-              <button
-                type="button"
-                onClick={() => setSelectedCall(null)}
-                className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white"
-              >
-                Закрыть
-              </button>
+            <div className="p-3.5 rounded-2xl bg-black/40 border border-white/5 space-y-2">
+              <span className="text-[11px] font-bold text-zinc-400 uppercase">Полная стенограмма:</span>
+              <p className="text-xs text-zinc-300 font-mono leading-relaxed whitespace-pre-wrap">{selectedCall.transcript}</p>
+            </div>
+
+            <div className="flex items-center justify-between text-xs text-zinc-400 pt-2">
+              <span>Длительность: {selectedCall.durationSeconds} сек</span>
+              <span>Стоимость: {selectedCall.costRub.toFixed(2)} ₽</span>
             </div>
           </div>
         </div>
       )}
+
+      {/* Microphone Permission Modal */}
+      <MicPermissionModal
+        isOpen={showMicBlockedModal}
+        onClose={() => setShowMicBlockedModal(false)}
+        onRetry={() => {
+          setShowMicBlockedModal(false);
+          handleStartCallSimulator();
+        }}
+      />
     </div>
   );
 };
