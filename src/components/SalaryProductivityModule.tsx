@@ -45,6 +45,7 @@ import {
   generateDefaultSignatureDataUrl,
 } from "@/lib/canvas-image-processor";
 import { useAuth } from "@/lib/auth-context";
+import { useCountUp, formatCountUpCurrency } from "@/lib/use-count-up";
 
 interface SalaryProductivityModuleProps {
   orders?: RepairOrder[];
@@ -178,6 +179,11 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
     });
   }, [orders, employees, periodFilter, statusFilter, selectedMasterId, adjustments]);
 
+  const animatedTotalLaborRevenue = useCountUp(kpi.totalLaborRevenue, 400);
+  const animatedTotalLaborHours = useCountUp(kpi.totalLaborHours, 400);
+  const animatedTotalPayrollFund = useCountUp(kpi.totalPayrollFund, 400);
+  const animatedNetMarginWorks = useCountUp(kpi.netMarginWorks, 400);
+
   // Search filter
   const filteredSummaries = useMemo(() => {
     if (!searchQuery.trim()) return summaries;
@@ -223,7 +229,7 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
   return (
     <div className="flex-1 flex flex-col min-h-0 bg-transparent overflow-y-auto">
       {/* Top Header */}
-      <div className="px-6 py-4.5 bg-white/40 dark:bg-black/30 border-b border-white/[0.08] backdrop-blur-2xl shrink-0">
+      <div className="apple-header px-6 py-4.5 bg-white/40 dark:bg-black/30 border-b border-white/[0.08] backdrop-blur-2xl shrink-0">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center space-x-3.5">
             <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-rose-500/20 to-amber-500/20 border border-white/10 text-rose-500 flex items-center justify-center shrink-0 shadow-lg shadow-rose-500/10">
@@ -354,16 +360,16 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
           </div>
         ) : (
           <>
-            {/* KPI Cards Row (Floating Glassmorphism) */}
+            {/* KPI Cards Row (Floating Glassmorphism with Staggered Spring Reveal) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
               {/* Card 1: Revenue from Labor */}
-              <div className="p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-zinc-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
+              <div className="apple-kpi-1 apple-card-hover p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-zinc-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
                 <div>
                   <span className="text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                     Выручка по работам
                   </span>
-                  <div className="text-xl font-extrabold text-zinc-900 dark:text-zinc-100 mt-1">
-                    {formatCurrency(kpi.totalLaborRevenue)}
+                  <div className="text-xl font-extrabold text-zinc-900 dark:text-zinc-100 mt-1 font-mono">
+                    {formatCountUpCurrency(animatedTotalLaborRevenue)}
                   </div>
                   <span className="text-[10px] text-zinc-400 mt-0.5 block">
                     Заказ-наряды за выбранный период
@@ -375,13 +381,13 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
               </div>
 
               {/* Card 2: Total Labor Hours */}
-              <div className="p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-zinc-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
+              <div className="apple-kpi-2 apple-card-hover p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-zinc-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
                 <div>
                   <span className="text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                     Отработано нормо-часов
                   </span>
-                  <div className="text-xl font-extrabold text-zinc-900 dark:text-zinc-100 mt-1">
-                    {kpi.totalLaborHours} <span className="text-xs font-semibold text-zinc-400">Н/Ч</span>
+                  <div className="text-xl font-extrabold text-zinc-900 dark:text-zinc-100 mt-1 font-mono">
+                    {animatedTotalLaborHours} <span className="text-xs font-semibold text-zinc-400">Н/Ч</span>
                   </div>
                   <span className="text-[10px] text-zinc-400 mt-0.5 block">
                     Базовая ставка: {stoReq.defaultRatePerHour} ₽ / Н-Ч
@@ -393,13 +399,13 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
               </div>
 
               {/* Card 3: Total Payroll Fund */}
-              <div className="p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-zinc-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
+              <div className="apple-kpi-3 apple-card-hover p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-zinc-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
                 <div>
                   <span className="text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                     ФОТ (Начислено мастерам)
                   </span>
-                  <div className="text-xl font-extrabold text-rose-600 dark:text-rose-400 mt-1">
-                    {formatCurrency(kpi.totalPayrollFund)}
+                  <div className="text-xl font-extrabold text-rose-600 dark:text-rose-400 mt-1 font-mono">
+                    {formatCountUpCurrency(animatedTotalPayrollFund)}
                   </div>
                   <span className="text-[10px] text-zinc-400 mt-0.5 block">
                     Итого к выплате сотрудникам
@@ -411,13 +417,13 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
               </div>
 
               {/* Card 4: Net Margin from Labor */}
-              <div className="p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-zinc-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
+              <div className="apple-kpi-4 apple-card-hover p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-zinc-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
                 <div>
                   <span className="text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                     Чистая маржа СТО по работам
                   </span>
-                  <div className="text-xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-1">
-                    {formatCurrency(kpi.netMarginWorks)}
+                  <div className="text-xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-1 font-mono">
+                    {formatCountUpCurrency(animatedNetMarginWorks)}
                   </div>
                   <span className="text-[10px] text-zinc-400 mt-0.5 block">
                     Маржинальность:{" "}

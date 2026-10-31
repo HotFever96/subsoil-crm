@@ -167,9 +167,9 @@ export function loadCustomerInvoices(username: string): CustomerInvoice[] {
   const key = `geo_ai_customer_invoices_${username || "guest"}_v1`;
   try {
     const raw = localStorage.getItem(key);
-    if (raw) {
+    if (raw !== null) {
       const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) {
+      if (Array.isArray(parsed)) {
         return parsed;
       }
     }

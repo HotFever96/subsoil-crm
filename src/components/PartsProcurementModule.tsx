@@ -356,7 +356,7 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
 
       {/* Header bar (when full page) */}
       {!isEmbedded && (
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="apple-header flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 rounded-2xl bg-red-500/10 text-red-600 dark:text-red-400 flex items-center justify-center shrink-0">
               <Layers className="w-5 h-5" />

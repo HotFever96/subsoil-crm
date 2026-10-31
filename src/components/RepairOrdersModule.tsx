@@ -521,8 +521,8 @@ export const RepairOrdersModule: React.FC = () => {
 
   return (
     <div className="flex-1 flex flex-col h-full bg-transparent overflow-hidden text-zinc-900 dark:text-zinc-100">
-      {/* Top Header - Yandex Music Pill & Glass Style */}
-      <div className="px-6 py-4.5 border-b border-white/[0.08] bg-white/40 dark:bg-black/30 backdrop-blur-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">
+      {/* Top Header - Apple Spring Cascade & Glass Style */}
+      <div className="apple-header px-6 py-4.5 border-b border-white/[0.08] bg-white/40 dark:bg-black/30 backdrop-blur-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">
         <div className="flex items-center space-x-3.5">
           <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-rose-500/20 to-amber-500/20 border border-white/10 text-rose-500 flex items-center justify-center shrink-0 shadow-lg shadow-rose-500/10">
             <Wrench className="w-5 h-5" />
@@ -825,7 +825,7 @@ export const RepairOrdersModule: React.FC = () => {
       {/* FULL REPAIR ORDER MODAL: 3 WORK TABS */}
       {isEditorOpen && (
         <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-0 sm:p-4 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-zinc-900/90 dark:backdrop-blur-2xl w-full max-w-5xl h-full sm:h-[92vh] sm:rounded-2xl rounded-none shadow-2xl border-0 sm:border border-zinc-200 dark:border-white/[0.08] flex flex-col overflow-hidden">
+          <div className="apple-sheet bg-white dark:bg-zinc-900/90 dark:backdrop-blur-2xl w-full max-w-5xl h-full sm:h-[92vh] sm:rounded-2xl rounded-none shadow-2xl border-0 sm:border border-zinc-200 dark:border-white/[0.08] flex flex-col overflow-hidden">
             {/* Modal Header & Tabs */}
             <div className="px-4 sm:px-6 py-3 border-b border-zinc-200 dark:border-white/[0.08] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 bg-zinc-50/80 dark:bg-white/[0.02] shrink-0">
               <div className="flex items-center justify-between sm:justify-start space-x-3">
