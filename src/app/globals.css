@@ -1,7 +1,5 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *));
-
 @layer base {
   :root {
     --bg-main: #f8fafc;
@@ -18,10 +16,29 @@
     --accent-soft: rgba(2, 132, 199, 0.08);
   }
 
-  [data-business="chaika-service"] {
+  /* Чайка-Сервис: Палитра Кармин (По умолчанию) */
+  [data-business="chaika-service"],
+  [data-business="chaika-service"][data-chaika-palette="carmine"],
+  html[data-chaika-palette="carmine"] [data-business="chaika-service"] {
     --accent: #dc2626;
     --accent-hover: #b91c1c;
     --accent-soft: rgba(220, 38, 38, 0.08);
+  }
+
+  /* Чайка-Сервис: Палитра Ле-Ман Кобальт */
+  [data-business="chaika-service"][data-chaika-palette="cobalt"],
+  html[data-chaika-palette="cobalt"] [data-business="chaika-service"] {
+    --accent: #2563eb;
+    --accent-hover: #1d4ed8;
+    --accent-soft: rgba(37, 99, 235, 0.08);
+  }
+
+  /* Чайка-Сервис: Палитра Бритиш Рейсинг Изумруд */
+  [data-business="chaika-service"][data-chaika-palette="emerald"],
+  html[data-chaika-palette="emerald"] [data-business="chaika-service"] {
+    --accent: #059669;
+    --accent-hover: #047857;
+    --accent-soft: rgba(5, 150, 105, 0.08);
   }
 
   .dark {
@@ -39,12 +56,30 @@
     --accent-soft: rgba(56, 189, 248, 0.12);
   }
 
-  [data-business="chaika-service"].dark,
+  /* Тёмная тема: Чайка-Сервис Кармин */
+  .dark[data-business="chaika-service"],
   .dark [data-business="chaika-service"],
-  .dark[data-business="chaika-service"] {
+  html.dark[data-chaika-palette="carmine"] [data-business="chaika-service"],
+  html.dark[data-chaika-palette="carmine"] {
     --accent: #f43f5e;
     --accent-hover: #e11d48;
     --accent-soft: rgba(244, 63, 94, 0.15);
+  }
+
+  /* Тёмная тема: Чайка-Сервис Кобальт */
+  html.dark[data-chaika-palette="cobalt"] [data-business="chaika-service"],
+  html.dark[data-chaika-palette="cobalt"] {
+    --accent: #38bdf8;
+    --accent-hover: #0ea5e9;
+    --accent-soft: rgba(56, 189, 248, 0.15);
+  }
+
+  /* Тёмная тема: Чайка-Сервис Изумруд */
+  html.dark[data-chaika-palette="emerald"] [data-business="chaika-service"],
+  html.dark[data-chaika-palette="emerald"] {
+    --accent: #10b981;
+    --accent-hover: #059669;
+    --accent-soft: rgba(16, 185, 129, 0.15);
   }
 }
 
@@ -68,25 +103,16 @@ html.dark[data-business="chaika-service"] body {
   background-attachment: fixed;
 }
 
-/* Yandex Music / Моя Волна Ambient Mesh Animations */
-@keyframes orbFloat1 {
-  0%, 100% {
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-  50% {
-    transform: translate3d(90px, -60px, 0) scale(1.18);
-  }
-}
-
+/* Yandex Music / Моя Волна 4-Orbital Blobs GPU Animations */
 @keyframes orbitalBlob1 {
   0% {
     transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
   }
   33% {
-    transform: translate3d(80px, 90px, 0) scale(1.22) rotate(110deg);
+    transform: translate3d(60px, 80px, 0) scale(1.12) rotate(120deg);
   }
   66% {
-    transform: translate3d(-60px, 120px, 0) scale(0.92) rotate(220deg);
+    transform: translate3d(-50px, 40px, 0) scale(0.92) rotate(240deg);
   }
   100% {
     transform: translate3d(0, 0, 0) scale(1) rotate(360deg);
@@ -95,69 +121,61 @@ html.dark[data-business="chaika-service"] body {
 
 @keyframes orbitalBlob2 {
   0% {
-    transform: translate3d(0, 0, 0) scale(1.1) rotate(0deg);
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
   }
   33% {
-    transform: translate3d(-100px, -60px, 0) scale(0.9) rotate(-120deg);
+    transform: translate3d(-70px, -60px, 0) scale(0.9) rotate(-120deg);
   }
   66% {
-    transform: translate3d(60px, -110px, 0) scale(1.25) rotate(-240deg);
+    transform: translate3d(50px, -30px, 0) scale(1.15) rotate(-240deg);
   }
   100% {
-    transform: translate3d(0, 0, 0) scale(1.1) rotate(-360deg);
+    transform: translate3d(0, 0, 0) scale(1) rotate(-360deg);
   }
 }
 
 @keyframes orbitalBlob3 {
   0% {
-    transform: translate3d(0, 0, 0) scale(0.95) rotate(0deg);
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
   }
-  50% {
-    transform: translate3d(110px, -90px, 0) scale(1.28) rotate(180deg);
+  33% {
+    transform: translate3d(80px, -50px, 0) scale(1.1) rotate(100deg);
+  }
+  66% {
+    transform: translate3d(-40px, 70px, 0) scale(0.95) rotate(220deg);
   }
   100% {
-    transform: translate3d(0, 0, 0) scale(0.95) rotate(360deg);
+    transform: translate3d(0, 0, 0) scale(1) rotate(360deg);
   }
 }
 
 @keyframes orbitalBlob4 {
   0% {
-    transform: translate3d(0, 0, 0) scale(1.15) rotate(0deg);
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
   }
-  40% {
-    transform: translate3d(-90px, 100px, 0) scale(1.25) rotate(-140deg);
+  33% {
+    transform: translate3d(-60px, 60px, 0) scale(0.94) rotate(-90deg);
   }
-  80% {
-    transform: translate3d(70px, 50px, 0) scale(0.88) rotate(-280deg);
+  66% {
+    transform: translate3d(70px, -40px, 0) scale(1.08) rotate(-200deg);
   }
   100% {
-    transform: translate3d(0, 0, 0) scale(1.15) rotate(-360deg);
+    transform: translate3d(0, 0, 0) scale(1) rotate(-360deg);
   }
 }
 
 @keyframes waveSpherePulse {
-  0%, 100% {
-    transform: scale(1) rotate(0deg);
-    filter: blur(1px) brightness(1);
+  0% {
+    transform: scale(0.96);
+    filter: brightness(0.95);
   }
   50% {
-    transform: scale(1.12) rotate(180deg);
-    filter: blur(3px) brightness(1.25);
-  }
-}
-
-@keyframes ambientEnergyBurst {
-  0% {
-    transform: scale(1);
-    filter: brightness(1);
-  }
-  30% {
-    transform: scale(1.08);
-    filter: brightness(1.4);
+    transform: scale(1.04);
+    filter: brightness(1.1);
   }
   100% {
-    transform: scale(1);
-    filter: brightness(1);
+    transform: scale(0.96);
+    filter: brightness(0.95);
   }
 }
 
@@ -165,7 +183,7 @@ html.dark[data-business="chaika-service"] body {
 @keyframes appleHeaderEnter {
   from {
     opacity: 0;
-    transform: translate3d(0, -8px, 0);
+    transform: translate3d(0, -6px, 0);
   }
   to {
     opacity: 1;
@@ -176,7 +194,7 @@ html.dark[data-business="chaika-service"] body {
 @keyframes appleKpiEnter {
   from {
     opacity: 0;
-    transform: translate3d(0, 14px, 0) scale(0.97);
+    transform: translate3d(0, 10px, 0) scale(0.98);
   }
   to {
     opacity: 1;
@@ -187,7 +205,7 @@ html.dark[data-business="chaika-service"] body {
 @keyframes appleRowEnter {
   from {
     opacity: 0;
-    transform: translate3d(0, 10px, 0);
+    transform: translate3d(0, 8px, 0);
   }
   to {
     opacity: 1;
@@ -195,17 +213,48 @@ html.dark[data-business="chaika-service"] body {
   }
 }
 
-@keyframes appleSheetModal {
-  from {
+/* Apple Bounce Transitions: Tactile, Silky Spring Response */
+@keyframes appleBounceEnter {
+  0% {
     opacity: 0;
-    transform: scale(0.94);
-    filter: blur(8px);
+    transform: scale(0.99) translate3d(0, 4px, 0);
   }
-  to {
+  60% {
     opacity: 1;
-    transform: scale(1);
+    transform: scale(1.002) translate3d(0, -0.5px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+}
+
+.apple-bounce-enter {
+  animation: appleBounceEnter 240ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes appleSheetModal {
+  0% {
+    opacity: 0;
+    transform: scale(0.95) translate3d(0, 6px, 0);
+    filter: blur(4px);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.005) translate3d(0, -1px, 0);
     filter: blur(0px);
   }
+  100% {
+    opacity: 1;
+    transform: scale(1) translate3d(0, 0, 0);
+    filter: blur(0px);
+  }
+}
+
+.apple-sheet {
+  animation: appleSheetModal 240ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity, filter;
 }
 
 .animate-blob-1 {
@@ -228,53 +277,43 @@ html.dark[data-business="chaika-service"] body {
   will-change: transform;
 }
 
-.animate-energy-burst {
-  animation: ambientEnergyBurst 400ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  will-change: transform, filter;
-}
-
 /* Apple Staggered Utilities */
 .apple-header {
-  animation: appleHeaderEnter 200ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: appleHeaderEnter 180ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .apple-kpi-1 {
-  animation: appleKpiEnter 260ms cubic-bezier(0.22, 1, 0.36, 1) 0ms forwards;
+  animation: appleKpiEnter 240ms cubic-bezier(0.16, 1, 0.3, 1) 0ms forwards;
 }
 
 .apple-kpi-2 {
-  animation: appleKpiEnter 260ms cubic-bezier(0.22, 1, 0.36, 1) 50ms forwards;
+  animation: appleKpiEnter 240ms cubic-bezier(0.16, 1, 0.3, 1) 40ms forwards;
 }
 
 .apple-kpi-3 {
-  animation: appleKpiEnter 260ms cubic-bezier(0.22, 1, 0.36, 1) 100ms forwards;
+  animation: appleKpiEnter 240ms cubic-bezier(0.16, 1, 0.3, 1) 80ms forwards;
 }
 
 .apple-kpi-4 {
-  animation: appleKpiEnter 260ms cubic-bezier(0.22, 1, 0.36, 1) 150ms forwards;
+  animation: appleKpiEnter 240ms cubic-bezier(0.16, 1, 0.3, 1) 120ms forwards;
 }
 
 .apple-row {
-  animation: appleRowEnter 220ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-
-.apple-sheet {
-  animation: appleSheetModal 220ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  will-change: transform, opacity, filter;
+  animation: appleRowEnter 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .apple-card-hover {
-  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 200ms ease, border-color 200ms ease;
+  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 220ms ease, border-color 220ms ease;
 }
 .apple-card-hover:hover {
-  transform: translate3d(0, -2px, 0);
+  transform: translate3d(0, -2px, 0) scale(1.003);
 }
 
 .apple-tap {
-  transition: transform 150ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 140ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .apple-tap:active {
-  transform: scale(0.96);
+  transform: scale(0.975);
 }
 
 .animate-wave-sphere {
@@ -331,4 +370,3 @@ html.dark[data-business="chaika-service"] body {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(148, 163, 184, 0.4);
 }
-

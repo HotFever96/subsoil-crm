@@ -278,41 +278,43 @@ export default function Home() {
         onCloseMobile={() => setIsMobileMenuOpen(false)}
       />
 
-      {/* Main Workspace */}
+      {/* Main Workspace with Tactile Apple Bounce Transition on Tab Switch */}
       <main className="flex-1 flex flex-col h-full overflow-hidden relative">
-        {currentTab === "ai-chat" && <AIChat />}
+        <div key={currentTab} className="flex-1 flex flex-col h-full overflow-hidden apple-bounce-enter">
+          {currentTab === "ai-chat" && <AIChat />}
 
-        {currentTab === "smart-mail" && (
-          <SmartMail
-            mails={mails}
-            onApproveMail={handleApproveMail}
-            onUpdateMails={handleUpdateMails}
-          />
-        )}
+          {currentTab === "smart-mail" && (
+            <SmartMail
+              mails={mails}
+              onApproveMail={handleApproveMail}
+              onUpdateMails={handleUpdateMails}
+            />
+          )}
 
-        {currentTab === "calendar" && <CalendarModule />}
+          {currentTab === "calendar" && <CalendarModule />}
 
-        {currentTab === "project-studio" && <ProjectStudio />}
+          {currentTab === "project-studio" && <ProjectStudio />}
 
-        {currentTab === "archive" && <ElectronicArchive />}
+          {currentTab === "archive" && <ElectronicArchive />}
 
-        {currentTab === "repair-orders" && <RepairOrdersModule />}
+          {currentTab === "repair-orders" && <RepairOrdersModule />}
 
-        {currentTab === "invoices" && <CustomerInvoicesModule />}
+          {currentTab === "invoices" && <CustomerInvoicesModule />}
 
-        {currentTab === "parts-procurement" && <PartsProcurementModule />}
+          {currentTab === "parts-procurement" && <PartsProcurementModule />}
 
-        {currentTab === "telephony" && <TelephonyModule />}
+          {currentTab === "telephony" && <TelephonyModule />}
 
-        {currentTab === "payroll" && (
-          <SalaryProductivityModule onOpenSettings={() => setIsStoSettingsOpen(true)} />
-        )}
+          {currentTab === "payroll" && (
+            <SalaryProductivityModule onOpenSettings={() => setIsStoSettingsOpen(true)} />
+          )}
 
-        {currentTab === "bay-scheduler" && <BaySchedulerModule />}
+          {currentTab === "bay-scheduler" && <BaySchedulerModule />}
 
-        {currentTab === "warehouse-parts" && <WarehouseModule />}
+          {currentTab === "warehouse-parts" && <WarehouseModule />}
 
-        {currentTab === "garage-clients" && <ClientsGarageModule />}
+          {currentTab === "garage-clients" && <ClientsGarageModule />}
+        </div>
       </main>
 
       <StoSettingsModal

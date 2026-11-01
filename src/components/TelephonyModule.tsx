@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
   PhoneCall,
+  Phone,
   PhoneIncoming,
   PhoneOutgoing,
   PhoneOff,
@@ -558,10 +559,7 @@ export const TelephonyModule: React.FC = () => {
           <div>
             <h1 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-white flex items-center space-x-2.5">
               <span>ИИ-Телефония и Автообзвон</span>
-              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20 flex items-center space-x-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                <span>Voicyfy Анна Онлайн</span>
-              </span>
+              
               <div className="relative group inline-block">
                 <button
                   type="button"
@@ -586,21 +584,11 @@ export const TelephonyModule: React.FC = () => {
           <button
             type="button"
             onClick={() => setIsTestCallModalOpen(true)}
-            className="apple-tap flex items-center space-x-2 px-4 py-2 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white text-xs font-bold transition-all shadow-md shadow-rose-600/20 cursor-pointer active:scale-95"
-            title="Совершить реальный тестовый звонок на телефон"
+            className="apple-tap flex items-center space-x-2 px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-semibold transition-all shadow-md shadow-red-600/20 cursor-pointer active:scale-95"
+            title="Совершить звонок клиенту"
           >
-            <Smartphone className="w-4 h-4" />
-            <span>📞 Запустить звонок (Анна)</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => handleStartCallSimulator("Алексей Смирнов", "Газель Next")}
-            className="apple-tap flex items-center space-x-1.5 px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 text-zinc-200 text-xs font-semibold transition-all cursor-pointer active:scale-95"
-            title="Запустить встроенный аудио-симулятор в браузере"
-          >
-            <Headphones className="w-3.5 h-3.5 text-zinc-300" />
-            <span className="hidden sm:inline">Симулятор</span>
+            <Phone className="w-3.5 h-3.5" />
+            <span>Исходящий звонок</span>
           </button>
         </div>
       </div>

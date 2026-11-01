@@ -30,7 +30,7 @@ import {
   Receipt,
   PhoneCall,
 } from "lucide-react";
-import { useTheme } from "@/lib/theme-context";
+import { useTheme, CHAIKA_PALETTES, ChaikaPalette } from "@/lib/theme-context";
 import { useAuth } from "@/lib/auth-context";
 import { useChat, cleanChatTitle, detectChatWorkspace } from "@/lib/chat-context";
 import { useBusiness } from "@/lib/business-context";
@@ -66,7 +66,67 @@ export const Sidebar: React.FC<SidebarProps> = ({
   isMobileOpen = false,
   onCloseMobile,
 }) => {
-  const { theme, toggleTheme } = useTheme();
+  const { theme, toggleTheme, chaikaPalette, setChaikaPalette } = useTheme();
+  const [isPaletteCloudOpen, setIsPaletteCloudOpen] = useState(false);
+  const [holdProgress, setHoldProgress] = useState(0);
+  const holdTimerRef = React.useRef<NodeJS.Timeout | null>(null);
+  const holdIntervalRef = React.useRef<NodeJS.Timeout | null>(null);
+  const longPressTriggeredRef = React.useRef(false);
+
+  const startHold = () => {
+    if (!isChaika) return;
+    longPressTriggeredRef.current = false;
+    setHoldProgress(0);
+
+    const startTime = Date.now();
+    holdIntervalRef.current = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const pct = Math.min(100, Math.round((elapsed / 2000) * 100));
+      setHoldProgress(pct);
+    }, 35);
+
+    holdTimerRef.current = setTimeout(() => {
+      longPressTriggeredRef.current = true;
+      if (holdIntervalRef.current) clearInterval(holdIntervalRef.current);
+      setHoldProgress(0);
+      setIsPaletteCloudOpen(true);
+      try {
+        if (typeof navigator !== "undefined" && navigator.vibrate) {
+          navigator.vibrate([35, 45, 35]);
+        }
+      } catch {}
+    }, 2000);
+  };
+
+  const cancelHold = () => {
+    if (holdTimerRef.current) {
+      clearTimeout(holdTimerRef.current);
+      holdTimerRef.current = null;
+    }
+    if (holdIntervalRef.current) {
+      clearInterval(holdIntervalRef.current);
+      holdIntervalRef.current = null;
+    }
+    setHoldProgress(0);
+  };
+
+  const handleThemePointerDown = () => {
+    startHold();
+  };
+
+  const handleThemePointerUp = () => {
+    cancelHold();
+  };
+
+  const handleThemeClick = (e: React.MouseEvent) => {
+    if (longPressTriggeredRef.current) {
+      longPressTriggeredRef.current = false;
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
+    toggleTheme();
+  };
   const { user, logout, updateName } = useAuth();
   const { sessions, activeSessionId, selectSession, deleteSession, createNewChat } = useChat();
   const { currentBusiness, toggleBusiness } = useBusiness();
