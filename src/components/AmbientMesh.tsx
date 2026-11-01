@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { useBusiness } from "@/lib/business-context";
+import { useTheme } from "@/lib/theme-context";
 
 interface AmbientMeshProps {
   activeTab?: string;
@@ -9,7 +10,9 @@ interface AmbientMeshProps {
 
 export const AmbientMesh: React.FC<AmbientMeshProps> = ({ activeTab }) => {
   const { currentBusiness } = useBusiness();
+  const { theme } = useTheme();
   const isChaika = currentBusiness === "chaika-service";
+  const isDark = theme === "dark";
 
   // Cursor following spring inertia (lerp factor 0.08)
   const cursorTarget = useRef({ x: -500, y: -500, active: false });
@@ -74,58 +77,108 @@ export const AmbientMesh: React.FC<AmbientMeshProps> = ({ activeTab }) => {
   return (
     <div
       aria-hidden="true"
-      className="fixed inset-0 pointer-events-none overflow-hidden z-0 select-none transition-opacity duration-700 opacity-[0.03] dark:opacity-90"
+      className="fixed inset-0 pointer-events-none overflow-hidden z-0 select-none transition-opacity duration-700 opacity-95 dark:opacity-90"
     >
       {/* 4-Blob Fluid Orbital Mesh */}
       <div className={`absolute inset-0 transition-transform duration-500 ${isBursting ? "animate-energy-burst" : ""}`}>
         {isChaika ? (
-          /* «Чайка-Сервис» (СТО & Автопарк): Rich Carmine, Warm Radiant Amber, Fuchsia-Wine, Coral Flame */
-          <>
-            {/* Global Base Aura (Ensures zero black dead-zones in center) */}
-            <div
-              className="absolute inset-0 opacity-45 dark:opacity-35"
-              style={{
-                background:
-                  "radial-gradient(ellipse 90% 75% at 50% 50%, rgba(225, 29, 72, 0.28) 0%, rgba(245, 158, 11, 0.16) 45%, rgba(136, 19, 55, 0.10) 75%, transparent 100%)",
-              }}
-            />
+          isDark ? (
+            /* «Чайка-Сервис» Тёмная тема: Оригинальный насыщенный кармин, янтарь, вино и коралл */
+            <>
+              {/* Global Base Aura (Ensures zero black dead-zones in center) */}
+              <div
+                className="absolute inset-0 opacity-45 dark:opacity-35"
+                style={{
+                  background:
+                    "radial-gradient(ellipse 90% 75% at 50% 50%, rgba(225, 29, 72, 0.28) 0%, rgba(245, 158, 11, 0.16) 45%, rgba(136, 19, 55, 0.10) 75%, transparent 100%)",
+                }}
+              />
 
-            {/* Blob 1: Crimson-Scarlet Top-Right */}
-            <div
-              className="animate-blob-1 absolute -top-32 right-[5%] w-[820px] h-[820px] rounded-full blur-[110px]"
-              style={{
-                background:
-                  "radial-gradient(circle, rgba(244, 63, 94, 0.72) 0%, rgba(225, 29, 72, 0.50) 45%, rgba(159, 18, 57, 0.25) 70%, transparent 85%)",
-              }}
-            />
+              {/* Blob 1: Crimson-Scarlet Top-Right */}
+              <div
+                className="animate-blob-1 absolute -top-32 right-[5%] w-[820px] h-[820px] rounded-full blur-[110px]"
+                style={{
+                  background:
+                    "radial-gradient(circle, rgba(244, 63, 94, 0.72) 0%, rgba(225, 29, 72, 0.50) 45%, rgba(159, 18, 57, 0.25) 70%, transparent 85%)",
+                }}
+              />
 
-            {/* Blob 2: Warm Amber Mid-Left & Center Workspace */}
-            <div
-              className="animate-blob-2 absolute top-[20%] left-[10%] w-[780px] h-[780px] rounded-full blur-[120px]"
-              style={{
-                background:
-                  "radial-gradient(circle, rgba(245, 158, 11, 0.68) 0%, rgba(251, 146, 60, 0.45) 45%, rgba(217, 119, 6, 0.22) 70%, transparent 85%)",
-              }}
-            />
+              {/* Blob 2: Warm Amber Mid-Left & Center Workspace */}
+              <div
+                className="animate-blob-2 absolute top-[20%] left-[10%] w-[780px] h-[780px] rounded-full blur-[120px]"
+                style={{
+                  background:
+                    "radial-gradient(circle, rgba(245, 158, 11, 0.68) 0%, rgba(251, 146, 60, 0.45) 45%, rgba(217, 119, 6, 0.22) 70%, transparent 85%)",
+                }}
+              />
 
-            {/* Blob 3: Deep Fuchsia-Wine Bottom Center */}
-            <div
-              className="animate-blob-3 absolute -bottom-36 left-[30%] w-[860px] h-[860px] rounded-full blur-[130px]"
-              style={{
-                background:
-                  "radial-gradient(circle, rgba(192, 38, 211, 0.62) 0%, rgba(159, 18, 57, 0.45) 50%, rgba(88, 28, 135, 0.22) 75%, transparent 90%)",
-              }}
-            />
+              {/* Blob 3: Deep Fuchsia-Wine Bottom Center */}
+              <div
+                className="animate-blob-3 absolute -bottom-36 left-[30%] w-[860px] h-[860px] rounded-full blur-[130px]"
+                style={{
+                  background:
+                    "radial-gradient(circle, rgba(192, 38, 211, 0.62) 0%, rgba(159, 18, 57, 0.45) 50%, rgba(88, 28, 135, 0.22) 75%, transparent 90%)",
+                }}
+              />
 
-            {/* Blob 4: Coral Flame Center-Right Fill */}
-            <div
-              className="animate-blob-4 absolute top-[40%] right-[18%] w-[720px] h-[720px] rounded-full blur-[115px]"
-              style={{
-                background:
-                  "radial-gradient(circle, rgba(255, 87, 34, 0.58) 0%, rgba(244, 63, 94, 0.40) 45%, rgba(190, 18, 60, 0.18) 70%, transparent 85%)",
-              }}
-            />
-          </>
+              {/* Blob 4: Coral Flame Center-Right Fill */}
+              <div
+                className="animate-blob-4 absolute top-[40%] right-[18%] w-[720px] h-[720px] rounded-full blur-[115px]"
+                style={{
+                  background:
+                    "radial-gradient(circle, rgba(255, 87, 34, 0.58) 0%, rgba(244, 63, 94, 0.40) 45%, rgba(190, 18, 60, 0.18) 70%, transparent 85%)",
+                }}
+              />
+            </>
+          ) : (
+            /* «Чайка-Сервис» Светлая тема: Строгий автомобильный титан, янтарь шампань и ледяной лазурный (без розового/фуксии) */
+            <>
+              {/* Global Base Aura (Нейтральное мягкое свечение) */}
+              <div
+                className="absolute inset-0 opacity-40"
+                style={{
+                  background:
+                    "radial-gradient(ellipse 90% 75% at 50% 50%, rgba(245, 158, 11, 0.08) 0%, rgba(148, 163, 184, 0.08) 45%, rgba(226, 232, 240, 0.06) 75%, transparent 100%)",
+                }}
+              />
+
+              {/* Blob 1: Тонкий благородный рубиновый акцент Top-Right */}
+              <div
+                className="animate-blob-1 absolute -top-32 right-[5%] w-[820px] h-[820px] rounded-full blur-[120px]"
+                style={{
+                  background:
+                    "radial-gradient(circle, rgba(239, 68, 68, 0.12) 0%, rgba(248, 113, 113, 0.06) 45%, transparent 75%)",
+                }}
+              />
+
+              {/* Blob 2: Тёплый солнечный янтарь / шампань Mid-Left */}
+              <div
+                className="animate-blob-2 absolute top-[20%] left-[10%] w-[780px] h-[780px] rounded-full blur-[125px]"
+                style={{
+                  background:
+                    "radial-gradient(circle, rgba(245, 158, 11, 0.15) 0%, rgba(251, 191, 36, 0.07) 45%, transparent 75%)",
+                }}
+              />
+
+              {/* Blob 3: Чистый небесно-титановый / ледяной лазурный (вместо тёмно-розовой фуксии) */}
+              <div
+                className="animate-blob-3 absolute -bottom-36 left-[30%] w-[860px] h-[860px] rounded-full blur-[130px]"
+                style={{
+                  background:
+                    "radial-gradient(circle, rgba(147, 197, 253, 0.20) 0%, rgba(191, 219, 254, 0.09) 50%, transparent 80%)",
+                }}
+              />
+
+              {/* Blob 4: Мягкий автомобильный закатный штрих Center-Right */}
+              <div
+                className="animate-blob-4 absolute top-[40%] right-[18%] w-[720px] h-[720px] rounded-full blur-[120px]"
+                style={{
+                  background:
+                    "radial-gradient(circle, rgba(251, 146, 60, 0.12) 0%, rgba(254, 215, 170, 0.05) 45%, transparent 75%)",
+                }}
+              />
+            </>
+          )
         ) : (
           /* «Geo AI» (Недропользование): Sapphire Blue, Radiant Cyan, Turquoise Teal, Royal Indigo */
           <>
@@ -180,11 +233,13 @@ export const AmbientMesh: React.FC<AmbientMeshProps> = ({ activeTab }) => {
       {/* Interactive Cursor Follower Light */}
       <div
         ref={lightRef}
-        className="hidden dark:block absolute top-0 left-0 w-[560px] h-[560px] rounded-full blur-[90px] pointer-events-none transition-opacity duration-300"
+        className="absolute top-0 left-0 w-[560px] h-[560px] rounded-full blur-[90px] pointer-events-none transition-opacity duration-300"
         style={{
           opacity: 0,
           background: isChaika
-            ? "radial-gradient(circle, rgba(244, 63, 94, 0.24) 0%, rgba(245, 158, 11, 0.14) 45%, transparent 70%)"
+            ? isDark
+              ? "radial-gradient(circle, rgba(244, 63, 94, 0.24) 0%, rgba(245, 158, 11, 0.14) 45%, transparent 70%)"
+              : "radial-gradient(circle, rgba(245, 158, 11, 0.10) 0%, rgba(147, 197, 253, 0.08) 45%, transparent 70%)"
             : "radial-gradient(circle, rgba(14, 165, 233, 0.24) 0%, rgba(20, 184, 166, 0.14) 45%, transparent 70%)",
           willChange: "transform, opacity",
         }}

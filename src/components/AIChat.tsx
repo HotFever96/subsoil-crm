@@ -957,7 +957,7 @@ export const AIChat: React.FC = () => {
       onDragLeave={handleDragLeave}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
-      className="flex-1 flex flex-col h-full overflow-hidden bg-transparent dark:bg-transparent backdrop-blur-xs transition-colors relative"
+      className="flex-1 flex flex-col h-full overflow-hidden bg-white/60 dark:bg-transparent backdrop-blur-xs transition-colors relative"
     >
       {/* Hidden file input */}
       <input
@@ -1034,7 +1034,7 @@ export const AIChat: React.FC = () => {
 
             {/* Central Narrower Rounded Pill Input Box */}
             <div
-              className={`w-full relative rounded-3xl bg-white/[0.95] dark:bg-zinc-900/70 backdrop-blur-2xl border transition-all text-left shadow-[0_2px_10px_rgba(15,23,42,0.04)] ${
+              className={`w-full relative rounded-3xl bg-white/80 dark:bg-zinc-900/70 backdrop-blur-2xl border transition-all text-left shadow-lg ${
                 isChaika
                   ? "shadow-rose-950/5 dark:shadow-2xl dark:shadow-rose-950/20"
                   : "shadow-sky-950/5 dark:shadow-2xl dark:shadow-sky-950/20"
@@ -1042,8 +1042,8 @@ export const AIChat: React.FC = () => {
                 isListening
                   ? "border-rose-500/70 ring-4 ring-rose-500/20"
                   : isChaika
-                  ? "border-slate-200 dark:border-white/[0.09] focus-within:border-[#DC2626] dark:focus-within:border-white/20 focus-within:ring-4 focus-within:ring-red-500/10 dark:focus-within:ring-rose-500/10"
-                  : "border-slate-200 dark:border-white/[0.09] focus-within:border-sky-500 dark:focus-within:border-white/20 focus-within:ring-4 focus-within:ring-sky-500/10"
+                  ? "border-black/[0.06] dark:border-white/[0.09] focus-within:border-white/20 focus-within:ring-4 focus-within:ring-rose-500/10"
+                  : "border-black/[0.06] dark:border-white/[0.09] focus-within:border-white/20 focus-within:ring-4 focus-within:ring-sky-500/10"
               }`}
             >
               {/* Voice recording live indicator */}
@@ -1458,12 +1458,12 @@ export const AIChat: React.FC = () => {
           {/* Floating Center Bottom Input Box */}
           <div className="w-full max-w-3xl mx-auto px-4 pb-4 pt-1">
             <div
-              className={`relative rounded-3xl bg-white/[0.95] dark:bg-zinc-900/70 backdrop-blur-2xl border transition-colors shadow-[0_2px_10px_rgba(15,23,42,0.04)] ${
+              className={`relative rounded-3xl bg-white/80 dark:bg-zinc-900/70 backdrop-blur-2xl border transition-colors ${
                 isListening
                   ? "border-rose-500/70 ring-4 ring-rose-500/20 shadow-md shadow-rose-500/10"
                   : isChaika
-                  ? "border-slate-200 dark:border-white/[0.09] shadow-2xs focus-within:border-[#DC2626] dark:focus-within:border-white/20 focus-within:ring-4 focus-within:ring-red-500/10 dark:focus-within:ring-rose-500/10"
-                  : "border-slate-200 dark:border-white/[0.09] shadow-2xs focus-within:border-sky-500 dark:focus-within:border-white/20 focus-within:ring-4 focus-within:ring-sky-500/10"
+                  ? "border-black/[0.06] dark:border-white/[0.09] shadow-2xs focus-within:border-white/20 focus-within:ring-4 focus-within:ring-rose-500/10"
+                  : "border-black/[0.06] dark:border-white/[0.09] shadow-2xs focus-within:border-white/20 focus-within:ring-4 focus-within:ring-sky-500/10"
               }`}
             >
               {/* Voice recording live indicator */}

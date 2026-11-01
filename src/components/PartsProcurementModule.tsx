@@ -387,7 +387,7 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
 
       {/* Mode Switcher Tabs */}
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center space-x-1.5 p-1 bg-white/[0.92] dark:bg-white/[0.04] rounded-full border border-slate-200 dark:border-white/[0.08] shadow-[0_2px_10px_rgba(15,23,42,0.04)] backdrop-blur-md">
+        <div className="flex items-center space-x-1.5 p-1 bg-white/40 dark:bg-white/[0.04] rounded-full border border-white/[0.08] backdrop-blur-md">
           <button
             type="button"
             onClick={() => {
@@ -396,8 +396,8 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
             }}
             className={`flex items-center space-x-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
               searchMode === "ai_catalog"
-                ? "bg-[#DC2626] dark:bg-rose-600 text-white shadow-none dark:shadow-md dark:shadow-rose-600/20"
-                : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white"
+                ? "bg-rose-600 text-white shadow-md shadow-rose-600/20"
+                : "text-zinc-400 hover:text-white"
             }`}
           >
             <Sparkles className="w-3.5 h-3.5" />
@@ -411,8 +411,8 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
             }}
             className={`flex items-center space-x-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
               searchMode === "api"
-                ? "bg-[#DC2626] dark:bg-rose-600 text-white shadow-none dark:shadow-md dark:shadow-rose-600/20"
-                : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white"
+                ? "bg-rose-600 text-white shadow-md shadow-rose-600/20"
+                : "text-zinc-400 hover:text-white"
             }`}
           >
             <Truck className="w-3.5 h-3.5" />
@@ -466,7 +466,7 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
       )}
 
       {/* Main Search Controls */}
-      <div className="p-4 rounded-3xl bg-white/[0.92] dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] backdrop-blur-2xl space-y-3.5 shadow-[0_2px_10px_rgba(15,23,42,0.04)] dark:shadow-xl">
+      <div className="p-4 rounded-3xl bg-white/60 dark:bg-white/[0.04] border border-white/[0.08] backdrop-blur-2xl space-y-3.5 shadow-xl">
         {/* Search input with Speech-to-Text and Submit */}
         <div className="relative flex items-center">
           <Search className="w-4 h-4 absolute left-4 text-zinc-400 pointer-events-none" />
@@ -476,7 +476,7 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && performSearch()}
             placeholder="Введите артикул OEM (например, 2108-1006040 или OC90), VIN или название детали..."
-            className="w-full pl-11 pr-36 py-3 rounded-full border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-white/[0.05] backdrop-blur-2xl text-sm text-zinc-900 dark:text-white placeholder:text-zinc-400 focus:outline-hidden focus:border-[#DC2626] dark:focus:border-rose-500 focus:ring-1 focus:ring-[#DC2626] dark:focus:ring-rose-500 shadow-xs dark:shadow-xl transition-all"
+            className="w-full pl-11 pr-36 py-3 rounded-full border border-white/[0.1] bg-white/70 dark:bg-white/[0.05] backdrop-blur-2xl text-sm text-zinc-900 dark:text-white placeholder:text-zinc-400 focus:outline-hidden focus:border-rose-500 focus:ring-1 focus:ring-rose-500 shadow-xl transition-all"
           />
           <div className="absolute right-2 flex items-center space-x-1.5">
             {query && (
@@ -504,7 +504,7 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
               type="button"
               disabled={isLoading || !query.trim()}
               onClick={() => performSearch()}
-              className="px-4 py-1.5 rounded-full bg-[#DC2626] hover:bg-[#B91C1C] dark:bg-rose-600 dark:hover:bg-rose-500 disabled:opacity-50 text-white text-xs font-bold flex items-center space-x-1.5 transition-all opacity-100 shadow-none dark:shadow-md dark:shadow-rose-600/25 shrink-0 cursor-pointer active:scale-95"
+              className="px-4 py-1.5 rounded-full bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white text-xs font-bold flex items-center space-x-1.5 transition-all shadow-md shadow-rose-600/25 shrink-0 cursor-pointer active:scale-95"
             >
               {isLoading ? (
                 <>
@@ -523,7 +523,7 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
           {/* Markup selector */}
           <div className="flex items-center space-x-2">
             <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-400 flex items-center space-x-1">
-              <Percent className="w-3.5 h-3.5 text-[#DC2626] dark:text-rose-500" />
+              <Percent className="w-3.5 h-3.5 text-rose-500" />
               <span>Наценка СТО:</span>
             </span>
             <div className="flex items-center space-x-1">
@@ -537,8 +537,8 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
                   }}
                   className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${
                     markupPercent === pct
-                      ? "bg-[#DC2626] dark:bg-rose-600 text-white shadow-none dark:shadow-sm dark:shadow-rose-600/30"
-                      : "bg-slate-100 dark:bg-white/[0.04] text-zinc-700 dark:text-zinc-300 hover:bg-slate-200 dark:hover:bg-white/[0.09] border border-slate-200 dark:border-white/[0.07]"
+                      ? "bg-rose-600 text-white shadow-sm shadow-rose-600/30"
+                      : "bg-white/40 dark:bg-white/[0.04] text-zinc-700 dark:text-zinc-300 hover:bg-white/70 dark:hover:bg-white/[0.09] border border-white/[0.07]"
                   }`}
                 >
                   +{pct}%
@@ -817,7 +817,7 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
               <select
                 value={supplierFilter}
                 onChange={(e) => setSupplierFilter(e.target.value)}
-                className="px-3.5 py-1.5 rounded-full border border-slate-200 dark:border-white/[0.09] bg-white/[0.92] dark:bg-white/[0.05] backdrop-blur-2xl text-xs font-semibold text-zinc-700 dark:text-zinc-300 focus:outline-hidden shadow-[0_2px_10px_rgba(15,23,42,0.04)]"
+                className="px-3.5 py-1.5 rounded-full border border-white/[0.09] bg-white/60 dark:bg-white/[0.05] backdrop-blur-2xl text-xs font-semibold text-zinc-700 dark:text-zinc-300 focus:outline-hidden"
               >
                 <option value="all">Все поставщики</option>
                 <option value="warehouse">Свой склад (СТО)</option>
@@ -831,7 +831,7 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
               <select
                 value={typeFilter}
                 onChange={(e) => setTypeFilter(e.target.value)}
-                className="px-3.5 py-1.5 rounded-full border border-slate-200 dark:border-white/[0.09] bg-white/[0.92] dark:bg-white/[0.05] backdrop-blur-2xl text-xs font-semibold text-zinc-700 dark:text-zinc-300 focus:outline-hidden shadow-[0_2px_10px_rgba(15,23,42,0.04)]"
+                className="px-3.5 py-1.5 rounded-full border border-white/[0.09] bg-white/60 dark:bg-white/[0.05] backdrop-blur-2xl text-xs font-semibold text-zinc-700 dark:text-zinc-300 focus:outline-hidden"
               >
                 <option value="all">Любой тип</option>
                 <option value="original">Оригинал (OEM)</option>
@@ -842,7 +842,7 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
-                className="px-3.5 py-1.5 rounded-full border border-slate-200 dark:border-white/[0.09] bg-white/[0.92] dark:bg-white/[0.05] backdrop-blur-2xl text-xs font-semibold text-zinc-700 dark:text-zinc-300 focus:outline-hidden shadow-[0_2px_10px_rgba(15,23,42,0.04)]"
+                className="px-3.5 py-1.5 rounded-full border border-white/[0.09] bg-white/60 dark:bg-white/[0.05] backdrop-blur-2xl text-xs font-semibold text-zinc-700 dark:text-zinc-300 focus:outline-hidden"
               >
                 <option value="delivery">Сортировка: Быстрая доставка</option>
                 <option value="price_asc">Сортировка: Сначала дешевле</option>
@@ -853,11 +853,11 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
           </div>
 
           {/* Table (Yandex Tracklist Aesthetic) */}
-          <div className="border border-slate-200 dark:border-white/[0.08] rounded-3xl overflow-hidden bg-white/[0.92] dark:bg-white/[0.04] backdrop-blur-2xl shadow-[0_2px_10px_rgba(15,23,42,0.04)] dark:shadow-xl">
+          <div className="border border-white/[0.08] rounded-3xl overflow-hidden bg-white/60 dark:bg-white/[0.04] backdrop-blur-2xl shadow-xl">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
-                  <tr className="bg-slate-50/90 dark:bg-white/[0.03] border-b border-slate-200 dark:border-white/[0.06] text-zinc-600 dark:text-zinc-400 font-semibold">
+                  <tr className="bg-white/40 dark:bg-white/[0.03] border-b border-white/[0.06] text-zinc-500 dark:text-zinc-400 font-semibold">
                     <th className="py-3 px-4">Поставщик</th>
                     <th className="py-3 px-4">Бренд & Артикул</th>
                     <th className="py-3 px-4">Наименование детали</th>

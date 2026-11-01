@@ -458,12 +458,12 @@ export const ElectronicArchive: React.FC = () => {
   return (
     <div className="flex-1 flex flex-col h-full bg-transparent overflow-hidden">
       {/* Top Header Bar */}
-      <div className="px-6 py-4.5 bg-white/[0.92] dark:bg-black/30 border-b border-slate-200 dark:border-white/[0.08] backdrop-blur-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">
+      <div className="px-6 py-4.5 bg-white/40 dark:bg-black/30 border-b border-black/[0.04] dark:border-white/[0.08] backdrop-blur-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">
         <div className="flex items-center space-x-3.5">
           <div
             className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 shadow-lg ${
               isChaika
-                ? "bg-gradient-to-tr from-red-500/15 to-amber-500/15 border border-slate-200 dark:border-white/10 text-[#DC2626] dark:text-rose-500 shadow-sm"
+                ? "bg-gradient-to-tr from-rose-500/20 to-amber-500/20 border border-white/10 text-rose-500 shadow-rose-500/10"
                 : "bg-gradient-to-tr from-sky-500/20 to-teal-500/20 border border-white/10 text-sky-500 shadow-sky-500/10"
             }`}
           >
@@ -472,7 +472,7 @@ export const ElectronicArchive: React.FC = () => {
           <div>
             <h1 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-white flex items-center space-x-2.5">
               <span>Электронный архив</span>
-              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-white/[0.06] border border-slate-200 dark:border-white/10 text-zinc-600 dark:text-zinc-400">
+              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-zinc-200/60 dark:bg-white/[0.06] text-zinc-600 dark:text-zinc-400">
                 {filteredItems.length} документов
               </span>
               <div className="relative group inline-block">
@@ -495,13 +495,13 @@ export const ElectronicArchive: React.FC = () => {
 
         <div className="flex items-center space-x-3">
           {/* View Mode Toggle */}
-          <div className="flex items-center bg-white/[0.92] dark:bg-white/[0.06] p-1 rounded-full border border-slate-200 dark:border-white/[0.08] backdrop-blur-md shadow-xs">
+          <div className="flex items-center bg-white/60 dark:bg-white/[0.06] p-1 rounded-full border border-black/[0.05] dark:border-white/[0.08] backdrop-blur-md">
             <button
               onClick={() => setViewMode("table")}
               className={`p-1.5 rounded-full transition-all cursor-pointer ${
                 viewMode === "table"
                   ? isChaika
-                    ? "bg-[#DC2626] dark:bg-rose-600 text-white shadow-none dark:shadow-md font-semibold"
+                    ? "bg-rose-600 text-white shadow-md font-semibold"
                     : "bg-sky-600 text-white shadow-md font-semibold"
                   : "text-zinc-500 hover:text-zinc-900 dark:hover:text-white"
               }`}
@@ -562,9 +562,9 @@ export const ElectronicArchive: React.FC = () => {
                 className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer flex items-center space-x-1.5 ${
                   isActive
                     ? isChaika
-                      ? "bg-[#DC2626] dark:bg-rose-600 text-white shadow-none dark:shadow-md dark:shadow-rose-600/20 font-bold"
+                      ? "bg-rose-600 text-white shadow-md shadow-rose-600/20 font-bold"
                       : "bg-sky-600 text-white shadow-md shadow-sky-600/20 font-bold"
-                    : "bg-slate-100 dark:bg-white/[0.04] text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white border border-slate-200 dark:border-white/[0.06]"
+                    : "bg-white/50 dark:bg-white/[0.04] text-zinc-600 dark:text-zinc-400 hover:text-white border border-black/[0.04] dark:border-white/[0.06]"
                 }`}
               >
                 <span>{cat.label}</span>
@@ -590,7 +590,7 @@ export const ElectronicArchive: React.FC = () => {
             placeholder="Поиск по названию или тегам..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-8 py-1.5 rounded-full bg-white dark:bg-white/[0.06] border border-slate-200 dark:border-white/[0.08] text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-hidden backdrop-blur-md shadow-xs"
+            className="w-full pl-9 pr-8 py-1.5 rounded-full bg-white/60 dark:bg-white/[0.06] border border-black/[0.05] dark:border-white/[0.08] text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-hidden backdrop-blur-md"
           />
           {searchQuery && (
             <button
