@@ -2,9 +2,12 @@
 
 export type OrderStatus =
   | "estimate"        // Заявка / Оценка
+  | "draft"           // Черновик (быстрое сканирование)
+  | "lead_ai"         // Заявка (ИИ Анна)
   | "in_progress"     // В работе
   | "parts_waiting"   // Ожидание запчастей
   | "ready"           // Готов к выдаче
+  | "issued"          // Выдан (запускает CSI)
   | "closed";         // Закрыт / Оплачен
 
 export interface OrderWorkItem {
@@ -72,6 +75,19 @@ export interface RepairOrder {
   warrantyDaysParts?: number; // Срок гарантии на запчасти (по умолчанию 14 дней)
   masterName?: string;     // Мастер-приемщик
   username: string;        // admin vs antonv
+  csiRating?: number;      // Оценка качества CSI (1-5)
+  csiFeedback?: string;    // Отзыв клиента по CSI
+  csiSummary?: string;     // Итог разговора с ИИ-агентом
+  voicyfyCalls?: Array<{
+    id: string;
+    timestamp: string;
+    actionType: string;
+    status: string;
+    comment?: string;
+    rating?: number;
+    feedback?: string;
+    summary?: string;
+  }>;
 }
 
 export interface WarehousePart {

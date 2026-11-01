@@ -86,6 +86,60 @@ export const TelephonyModule: React.FC = () => {
     } catch {}
     setCalls([]);
 
+    // Sync from Supabase (including Voicyfy webhook calls)
+    fetch("/api/sync", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "get_telephony_calls", username: currentUsername || "antonv" }),
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.success && Array.isArray(data.calls) && data.calls.length > 0) {
+          const map = new Map<string, TelephonyCallRecord>();
+          // Existing
+          try {
+            const raw = localStorage.getItem(key);
+            if (raw) {
+              const p = JSON.parse(raw);
+              if (Array.isArray(p)) {
+                p.forEach((c) => map.set(c.id, c));
+              }
+            }
+          } catch {}
+          // Merged from remote
+          data.calls.forEach((c: any) => {
+            if (c && c.id) {
+              const rec: TelephonyCallRecord = {
+                id: String(c.id),
+                type: (c.type || "csi_quality") as CallType,
+                clientName: c.clientName || c.name || "Клиент",
+                clientPhone: c.clientPhone || c.phone || "",
+                vehicleInfo: c.vehicleInfo || c.car || "Автомобиль",
+                orderNumber: c.orderNumber || c.order_id || undefined,
+                date: c.date || (c.timestamp ? c.timestamp.slice(0, 10) : new Date().toISOString().slice(0, 10)),
+                time: c.time || (c.timestamp ? c.timestamp.slice(11, 16) : "12:00"),
+                durationSeconds: Number(c.durationSeconds) || 60,
+                status: (c.status || "completed") as CallStatus,
+                rating: c.rating ? Number(c.rating) : undefined,
+                hasComplaints: Boolean(c.hasComplaints),
+                transcript: c.transcript || c.comment || "",
+                aiSummary: c.aiSummary || c.summary || c.comment || "Звонок ИИ-агента Voicyfy",
+                costRub: Number(c.costRub) || 0,
+              };
+              map.set(rec.id, rec);
+            }
+          });
+          const merged = Array.from(map.values()).sort(
+            (a, b) => new Date(`${b.date}T${b.time}`).getTime() - new Date(`${a.date}T${a.time}`).getTime()
+          );
+          setCalls(merged);
+          try {
+            localStorage.setItem(key, JSON.stringify(merged));
+          } catch {}
+        }
+      })
+      .catch(() => {});
+
     // Load repair orders for outbound list
     const ordKey = `geo_ai_repair_orders_${currentUsername || "guest"}_v2`;
     try {

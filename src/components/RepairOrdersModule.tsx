@@ -31,6 +31,10 @@ import {
   Stamp,
   HelpCircle,
   Camera,
+  PhoneCall,
+  Phone,
+  ChevronDown,
+  Star,
 } from "lucide-react";
 import {
   RepairOrder,
@@ -121,6 +125,10 @@ export const RepairOrdersModule: React.FC = () => {
   const [isWarehousePickerOpen, setIsWarehousePickerOpen] = useState(false);
   const [isOcrScannerOpen, setIsOcrScannerOpen] = useState(false);
   const [ocrSuccessToast, setOcrSuccessToast] = useState<string | null>(null);
+  const [isVoicyfyCalling, setIsVoicyfyCalling] = useState(false);
+  const [voicyfyMenuOpen, setVoicyfyMenuOpen] = useState(false);
+  const [voicyfyCustomPromptOpen, setVoicyfyCustomPromptOpen] = useState(false);
+  const [voicyfyCustomText, setVoicyfyCustomText] = useState("");
   const [availableWarehouseParts, setAvailableWarehouseParts] = useState<WarehousePart[]>([]);
   const [warehouseSearch, setWarehouseSearch] = useState("");
 
@@ -275,10 +283,14 @@ export const RepairOrdersModule: React.FC = () => {
     let matchedVehicleMake = "";
     let matchedVehicleModel = "";
 
-    const rawPlate = (data.licensePlate || "").trim().toUpperCase();
+    const rawPlate = (data.licensePlate || data.plate_number || "").trim().toUpperCase();
     const cleanPlate = rawPlate.replace(/[^A-ZА-Я0-9]/gi, "");
     const rawVin = (data.vin || "").trim().toUpperCase();
     const cleanVin = rawVin.replace(/[^A-Z0-9]/gi, "");
+    const scannedMake = data.make || data.brand || "";
+    const scannedModel = data.model || "";
+    const scannedClientName = data.clientName || data.client_name || "";
+    const scannedPhone = data.clientPhone || data.phone || "";
 
     // 1. Check Clients & Garage database in localStorage
     try {
@@ -332,16 +344,16 @@ export const RepairOrdersModule: React.FC = () => {
     if (rawPlate) setLicensePlate(rawPlate);
     if (rawVin) setVin(rawVin);
 
-    const finalMake = data.make || matchedVehicleMake;
+    const finalMake = scannedMake || matchedVehicleMake;
     if (finalMake) setVehicleMake(finalMake);
 
-    const finalModel = data.model || matchedVehicleModel;
+    const finalModel = scannedModel || matchedVehicleModel;
     if (finalModel) setVehicleModel(finalModel);
 
-    const finalClientName = data.clientName || matchedClientName;
+    const finalClientName = scannedClientName || matchedClientName;
     if (finalClientName) setClientName(finalClientName);
 
-    const finalPhone = data.clientPhone || matchedClientPhone;
+    const finalPhone = scannedPhone || matchedClientPhone;
     if (finalPhone) setClientPhone(finalPhone);
 
     if (matchedClientInn) setClientInn(matchedClientInn);
@@ -359,9 +371,67 @@ export const RepairOrdersModule: React.FC = () => {
     setTimeout(() => setOcrSuccessToast(null), 5000);
   };
 
+  const handleTriggerVoicyfyCall = async (
+    actionType: "ready" | "csi" | "custom",
+    customInstruction?: string
+  ) => {
+    const targetPhone = clientPhone.trim();
+    if (!targetPhone) {
+      alert("Пожалуйста, укажите номер телефона клиента для звонка голосового агента.");
+      return;
+    }
+
+    setIsVoicyfyCalling(true);
+    try {
+      const payload = {
+        name: clientName.trim() || "Клиент",
+        phone: targetPhone,
+        car: `${vehicleMake} ${vehicleModel}`.trim() || "автомобиль",
+        order_id: editingOrder?.orderNumber || "ЗН",
+        action_type: actionType,
+        custom_instruction: customInstruction || voicyfyCustomText,
+        username: currentUsername,
+      };
+
+      const res = await fetch("/api/voicyfy/call", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        setOcrSuccessToast(
+          actionType === "ready"
+            ? "✓ Голосовой агент Анна: звонок о готовности авто запущен!"
+            : actionType === "csi"
+            ? "✓ Голосовой агент Анна: звонок контроля качества (CSI) запланирован!"
+            : "✓ Голосовой агент Анна: персональная задача на звонок передана!"
+        );
+        setTimeout(() => setOcrSuccessToast(null), 5000);
+        setVoicyfyCustomPromptOpen(false);
+        setVoicyfyCustomText("");
+        setVoicyfyMenuOpen(false);
+      } else {
+        alert(data.error || "Не удалось отправить задачу Voicyfy");
+      }
+    } catch (err: any) {
+      alert(`Ошибка связи с сервисом Voicyfy: ${err.message}`);
+    } finally {
+      setIsVoicyfyCalling(false);
+    }
+  };
+
   const handleSaveOrder = () => {
-    if (!licensePlate.trim() || !clientName.trim()) {
-      alert("Пожалуйста, укажите госномер автомобиля и заказчика.");
+    // If saving order without works/parts: auto-save as 'draft'
+    const hasNoWorksOrParts = (!works || works.length === 0) && (!parts || parts.length === 0);
+    let finalStatus = orderStatus;
+    if (hasNoWorksOrParts && (orderStatus === "in_progress" || !orderStatus)) {
+      finalStatus = "draft";
+    }
+
+    if (!licensePlate.trim() && !clientName.trim()) {
+      alert("Пожалуйста, укажите хотя бы госномер автомобиля или заказчика (или отсканируйте СТС).");
       return;
     }
 
@@ -373,20 +443,20 @@ export const RepairOrdersModule: React.FC = () => {
     const newOrder: RepairOrder = {
       id: editingOrder ? editingOrder.id : `ord-${Date.now()}`,
       orderNumber,
-      status: orderStatus,
+      status: finalStatus,
       createdAt: editingOrder ? editingOrder.createdAt : new Date().toISOString().slice(0, 10),
       client: {
         type: clientInn.trim() ? "legal" : "individual",
-        name: clientName.trim(),
+        name: clientName.trim() || "Клиент",
         phone: clientPhone.trim(),
         inn: clientInn.trim() || undefined,
       },
       vehicle: {
         make: vehicleMake.trim() || "ТС",
         model: vehicleModel.trim() || "",
-        licensePlate: licensePlate.trim().toUpperCase(),
+        licensePlate: licensePlate.trim().toUpperCase() || "Б/Н",
         vin: vin.trim().toUpperCase(),
-        year: 2023,
+        year: editingOrder?.vehicle?.year || 2023,
         mileage: Number(mileage) || 0,
         complaints: complaints.trim(),
       },
@@ -399,7 +469,17 @@ export const RepairOrdersModule: React.FC = () => {
       warrantyDaysParts: 14,
       masterName: stoReq.masterReceiver,
       username: currentUsername,
+      csiRating: editingOrder?.csiRating,
+      csiFeedback: editingOrder?.csiFeedback,
+      csiSummary: editingOrder?.csiSummary,
+      voicyfyCalls: editingOrder?.voicyfyCalls,
     };
+
+    // Automation: if status changed to 'issued' (Выдан), automatically schedule CSI call with Voicyfy
+    const wasAlreadyIssued = editingOrder?.status === "issued";
+    if (finalStatus === "issued" && !wasAlreadyIssued && clientPhone.trim()) {
+      handleTriggerVoicyfyCall("csi");
+    }
 
     let updatedList: RepairOrder[];
     if (editingOrder) {
@@ -612,7 +692,16 @@ export const RepairOrdersModule: React.FC = () => {
     );
   });
 
-  const statuses: OrderStatus[] = ["estimate", "in_progress", "parts_waiting", "ready", "closed"];
+  const statuses: OrderStatus[] = [
+    "lead_ai",
+    "draft",
+    "estimate",
+    "in_progress",
+    "parts_waiting",
+    "ready",
+    "issued",
+    "closed",
+  ];
 
   return (
     <div className="flex-1 flex flex-col h-full bg-transparent overflow-hidden text-zinc-900 dark:text-zinc-100">
@@ -805,7 +894,15 @@ export const RepairOrdersModule: React.FC = () => {
 
                         <td className="py-3 px-4">
                           <div className="font-medium text-zinc-900 dark:text-zinc-100">{ord.client?.name || "Клиент"}</div>
-                          <div className="text-[11px] text-zinc-400">{ord.client?.phone || ""}</div>
+                          <div className="text-[11px] text-zinc-400 flex items-center space-x-1.5 mt-0.5">
+                            <span>{ord.client?.phone || ""}</span>
+                            {ord.csiRating && (
+                              <span className="inline-flex items-center space-x-0.5 px-1.5 py-0.2 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-500 border border-amber-500/30">
+                                <Star className="w-2.5 h-2.5 fill-amber-500" />
+                                <span>{ord.csiRating}/5 CSI</span>
+                              </span>
+                            )}
+                          </div>
                         </td>
 
                         <td className="py-3 px-4">
@@ -874,15 +971,15 @@ export const RepairOrdersModule: React.FC = () => {
           </div>
         ) : (
           /* KANBAN BOARD */
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-8 gap-3">
             {statuses.map((st) => {
               const meta = getStatusMeta(st);
               const columnOrders = filteredOrders.filter((o) => o.status === st);
               return (
-                <div key={st} className="flex flex-col bg-white/40 dark:bg-white/[0.03] rounded-3xl border border-zinc-200/50 dark:border-white/[0.06] backdrop-blur-2xl p-3.5 min-h-[450px]">
+                <div key={st} className="flex flex-col bg-white/40 dark:bg-white/[0.03] rounded-3xl border border-zinc-200/50 dark:border-white/[0.06] backdrop-blur-2xl p-3 min-h-[450px]">
                   <div className="flex items-center justify-between pb-2.5 mb-2.5 border-b border-zinc-200/60 dark:border-white/[0.06]">
-                    <span className="font-bold text-xs text-zinc-800 dark:text-zinc-200">{meta.label}</span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 font-bold">
+                    <span className="font-bold text-xs text-zinc-800 dark:text-zinc-200 truncate pr-1" title={meta.label}>{meta.label}</span>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 font-bold shrink-0">
                       {columnOrders.length}
                     </span>
                   </div>
@@ -892,7 +989,7 @@ export const RepairOrdersModule: React.FC = () => {
                       <div
                         key={ord.id}
                         onClick={() => openEditOrderModal(ord)}
-                        className="p-3.5 rounded-2xl bg-white dark:bg-white/[0.06] border border-zinc-200/70 dark:border-white/[0.08] hover:border-rose-500/50 hover:shadow-lg dark:hover:shadow-rose-950/20 cursor-pointer transition-all space-y-2"
+                        className="p-3 rounded-2xl bg-white dark:bg-white/[0.06] border border-zinc-200/70 dark:border-white/[0.08] hover:border-rose-500/50 hover:shadow-lg dark:hover:shadow-rose-950/20 cursor-pointer transition-all space-y-2"
                       >
                         <div className="flex items-center justify-between">
                           <span className="font-bold text-xs text-zinc-900 dark:text-zinc-100">{ord.orderNumber}</span>
@@ -902,7 +999,15 @@ export const RepairOrdersModule: React.FC = () => {
                           <div className="font-semibold text-xs text-zinc-800 dark:text-zinc-200">{ord.vehicle?.make || "Автомобиль"} {ord.vehicle?.model || ""}</div>
                           <div className="font-mono font-bold text-[11px] text-red-600 dark:text-red-400">{ord.vehicle?.licensePlate || "Б/Н"}</div>
                         </div>
-                        <div className="text-[11px] text-zinc-500 dark:text-zinc-400 truncate">{ord.client?.name || "Клиент"}</div>
+                        <div className="flex items-center justify-between text-[11px] text-zinc-500 dark:text-zinc-400">
+                          <span className="truncate">{ord.client?.name || "Клиент"}</span>
+                          {ord.csiRating && (
+                            <span className="inline-flex items-center space-x-0.5 px-1 py-0.2 rounded-full text-[9px] font-bold bg-amber-500/15 text-amber-500 border border-amber-500/30 shrink-0">
+                              <Star className="w-2.5 h-2.5 fill-amber-500" />
+                              <span>{ord.csiRating}</span>
+                            </span>
+                          )}
+                        </div>
                         <div className="pt-2 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
                           <span className="text-[10px] text-zinc-400">{ord.works?.length || 0} раб. • {ord.parts?.length || 0} запч.</span>
                           <span className="font-bold text-xs text-zinc-900 dark:text-zinc-100">{formatCurrency(ord.grandTotal)}</span>
@@ -1047,9 +1152,69 @@ export const RepairOrdersModule: React.FC = () => {
                             <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
                             <span>Заказчик</span>
                           </span>
-                          <span className="text-[10px] text-zinc-500 font-medium">
-                            {clientInn.trim() ? "Юридическое лицо" : "Физическое лицо"}
-                          </span>
+                          <div className="flex items-center space-x-2">
+                            {/* Voicyfy Call Dropdown */}
+                            <div className="relative">
+                              <button
+                                type="button"
+                                onClick={() => setVoicyfyMenuOpen(!voicyfyMenuOpen)}
+                                disabled={isVoicyfyCalling}
+                                className="inline-flex items-center space-x-1 text-[11px] font-semibold text-rose-400 hover:text-rose-300 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/25 px-2.5 py-0.5 rounded-lg transition-all cursor-pointer shadow-xs active:scale-95 disabled:opacity-50"
+                                title="Голосовой ИИ-агент Анна (Voicyfy)"
+                              >
+                                <Sparkles className="w-3 h-3 text-rose-400" />
+                                <span>Звонок Анны (ИИ)</span>
+                                <ChevronDown className="w-2.5 h-2.5 opacity-60" />
+                              </button>
+
+                              {voicyfyMenuOpen && (
+                                <div className="absolute right-0 top-full mt-1.5 w-64 rounded-2xl bg-zinc-900/95 backdrop-blur-2xl border border-white/10 shadow-2xl p-1.5 z-50 space-y-1 animate-in fade-in zoom-in-95">
+                                  <div className="px-2.5 py-1 text-[10px] uppercase font-bold tracking-wider text-zinc-500 border-b border-white/[0.06]">
+                                    Голосовой агент Voicyfy
+                                  </div>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleTriggerVoicyfyCall("ready")}
+                                    className="w-full text-left px-2.5 py-2 rounded-xl text-xs text-white hover:bg-white/10 flex items-center space-x-2 transition-colors cursor-pointer"
+                                  >
+                                    <span className="text-sm">🚗</span>
+                                    <div>
+                                      <div className="font-semibold">Сообщить о готовности авто</div>
+                                      <div className="text-[10px] text-zinc-400">Срочный звонок о выдаче ТС</div>
+                                    </div>
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleTriggerVoicyfyCall("csi")}
+                                    className="w-full text-left px-2.5 py-2 rounded-xl text-xs text-white hover:bg-white/10 flex items-center space-x-2 transition-colors cursor-pointer"
+                                  >
+                                    <span className="text-sm">⭐</span>
+                                    <div>
+                                      <div className="font-semibold">Запустить контроль качества (CSI)</div>
+                                      <div className="text-[10px] text-zinc-400">Опрос качества ремонта 1–5</div>
+                                    </div>
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setVoicyfyMenuOpen(false);
+                                      setVoicyfyCustomPromptOpen(true);
+                                    }}
+                                    className="w-full text-left px-2.5 py-2 rounded-xl text-xs text-rose-300 hover:bg-rose-500/10 flex items-center space-x-2 transition-colors cursor-pointer"
+                                  >
+                                    <span className="text-sm">✏️</span>
+                                    <div>
+                                      <div className="font-semibold">Свое поручение для звонка...</div>
+                                      <div className="text-[10px] text-zinc-400">Ввести текст задачи для Анны</div>
+                                    </div>
+                                  </button>
+                                </div>
+                              )}
+                            </div>
+                            <span className="text-[10px] text-zinc-500 font-medium">
+                              {clientInn.trim() ? "Юрлицо" : "Физлицо"}
+                            </span>
+                          </div>
                         </div>
 
                         <div>
@@ -1063,13 +1228,25 @@ export const RepairOrdersModule: React.FC = () => {
                         </div>
 
                         <div className="grid grid-cols-2 gap-2">
-                          <input
-                            type="text"
-                            value={clientPhone}
-                            onChange={(e) => setClientPhone(e.target.value)}
-                            placeholder="Телефон *"
-                            className="w-full px-3 py-1.5 rounded-xl border border-white/[0.08] bg-zinc-950 text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-red-500"
-                          />
+                          <div className="relative flex items-center">
+                            <input
+                              type="text"
+                              value={clientPhone}
+                              onChange={(e) => setClientPhone(e.target.value)}
+                              placeholder="Телефон *"
+                              className="w-full px-3 py-1.5 pr-8 rounded-xl border border-white/[0.08] bg-zinc-950 text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-red-500"
+                            />
+                            {clientPhone && (
+                              <button
+                                type="button"
+                                onClick={() => setVoicyfyMenuOpen(!voicyfyMenuOpen)}
+                                className="absolute right-2 p-1 rounded-md text-rose-400 hover:text-rose-300 hover:bg-white/10 transition-colors cursor-pointer"
+                                title="Поручить звонок ИИ-агенту Анне"
+                              >
+                                <PhoneCall className="w-3.5 h-3.5" />
+                              </button>
+                            )}
+                          </div>
                           <input
                             type="text"
                             value={clientInn}
@@ -1161,13 +1338,22 @@ export const RepairOrdersModule: React.FC = () => {
                       <div>
                         <select
                           value={orderStatus}
-                          onChange={(e) => setOrderStatus(e.target.value as OrderStatus)}
+                          onChange={(e) => {
+                            const newStatus = e.target.value as OrderStatus;
+                            if (newStatus === "issued" && orderStatus !== "issued" && clientPhone.trim()) {
+                              handleTriggerVoicyfyCall("csi");
+                            }
+                            setOrderStatus(newStatus);
+                          }}
                           className="w-full px-3 py-1.5 rounded-xl border border-white/[0.08] bg-zinc-950 text-xs text-white font-semibold focus:outline-none cursor-pointer"
                         >
+                          <option value="draft">Черновик</option>
+                          <option value="lead_ai">Заявка (ИИ Анна)</option>
                           <option value="estimate">Заявка / Оценка</option>
                           <option value="in_progress">В работе</option>
                           <option value="parts_waiting">Ожидание запчастей</option>
                           <option value="ready">Готов к выдаче</option>
+                          <option value="issued">Выдан (запуск CSI)</option>
                           <option value="closed">Закрыт / Оплачен</option>
                         </select>
                       </div>
@@ -2006,6 +2192,55 @@ export const RepairOrdersModule: React.FC = () => {
         onClose={() => setIsOcrScannerOpen(false)}
         onApply={handleApplyOcrData}
       />
+
+      {/* VOICYFY CUSTOM INSTRUCTION MODAL */}
+      {voicyfyCustomPromptOpen && (
+        <div className="fixed inset-0 z-70 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in">
+          <div className="bg-zinc-900 border border-white/10 rounded-2xl w-full max-w-md p-5 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Sparkles className="w-4 h-4 text-rose-400" />
+                <h3 className="text-sm font-bold text-white">Поручение для звонка Анне (ИИ)</h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setVoicyfyCustomPromptOpen(false)}
+                className="text-zinc-400 hover:text-white cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <p className="text-xs text-zinc-400">
+              Клиент: <span className="text-white font-semibold">{clientName || "Клиент"}</span> ({clientPhone || "без номера"}) • Авто: {vehicleMake} {vehicleModel}
+            </p>
+            <textarea
+              value={voicyfyCustomText}
+              onChange={(e) => setVoicyfyCustomText(e.target.value)}
+              placeholder="Например: Позвони клиенту и уточни, согласовывает ли он дополнительную замену сайлентблоков переднего рычага за 4200 ₽..."
+              rows={4}
+              className="w-full p-3 rounded-xl border border-white/10 bg-zinc-950 text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-rose-500 resize-none"
+            />
+            <div className="flex items-center justify-end space-x-2">
+              <button
+                type="button"
+                onClick={() => setVoicyfyCustomPromptOpen(false)}
+                className="px-3.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-xs text-zinc-300 cursor-pointer"
+              >
+                Отмена
+              </button>
+              <button
+                type="button"
+                onClick={() => handleTriggerVoicyfyCall("custom", voicyfyCustomText)}
+                disabled={!voicyfyCustomText.trim() || isVoicyfyCalling}
+                className="px-4 py-1.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white text-xs font-semibold flex items-center space-x-1.5 shadow-lg shadow-rose-900/30 cursor-pointer disabled:opacity-50"
+              >
+                <PhoneCall className="w-3.5 h-3.5" />
+                <span>Отправить задачу</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

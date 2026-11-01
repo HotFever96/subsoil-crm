@@ -135,7 +135,23 @@ export function formatCurrency(amount: any): string {
 
 export function getStatusMeta(status?: string | OrderStatus): { label: string; bg: string; text: string; border: string } {
   const norm = String(status || "").toLowerCase();
-  if (norm === "estimate" || norm === "new" || norm === "draft") {
+  if (norm === "draft") {
+    return {
+      label: "Черновик",
+      bg: "bg-zinc-500/10",
+      text: "text-zinc-600 dark:text-zinc-400 font-medium",
+      border: "border-zinc-500/30",
+    };
+  }
+  if (norm === "lead_ai" || norm === "anna" || norm === "voicyfy") {
+    return {
+      label: "Заявка (ИИ Анна)",
+      bg: "bg-rose-500/10",
+      text: "text-rose-600 dark:text-rose-400 font-semibold",
+      border: "border-rose-500/30",
+    };
+  }
+  if (norm === "estimate" || norm === "new") {
     return {
       label: "Заявка / Оценка",
       bg: "bg-zinc-100 dark:bg-zinc-800/60",
@@ -167,6 +183,14 @@ export function getStatusMeta(status?: string | OrderStatus): { label: string; b
       border: "border-blue-500/30",
     };
   }
+  if (norm === "issued") {
+    return {
+      label: "Выдан",
+      bg: "bg-teal-500/10",
+      text: "text-teal-600 dark:text-teal-400 font-semibold",
+      border: "border-teal-500/30",
+    };
+  }
   if (norm === "closed" || norm === "completed" || norm === "done") {
     return {
       label: "Закрыт / Оплачен",
@@ -195,7 +219,7 @@ export function normalizeRepairOrder(raw: any, username?: string): RepairOrder {
 
   const rawStatus = String(raw.status || "in_progress").toLowerCase();
   let status: OrderStatus = "in_progress";
-  if (["estimate", "in_progress", "parts_waiting", "ready", "closed"].includes(rawStatus)) {
+  if (["estimate", "draft", "lead_ai", "in_progress", "parts_waiting", "ready", "issued", "closed"].includes(rawStatus)) {
     status = rawStatus as OrderStatus;
   }
 
@@ -302,6 +326,10 @@ export function normalizeRepairOrder(raw: any, username?: string): RepairOrder {
     warrantyDaysParts: Number(raw.warrantyDaysParts) || 14,
     masterName: String(raw.masterName || "Водоватовский А.И."),
     username: String(raw.username || username || "admin"),
+    csiRating: typeof raw.csiRating === "number" ? raw.csiRating : undefined,
+    csiFeedback: raw.csiFeedback ? String(raw.csiFeedback) : undefined,
+    csiSummary: raw.csiSummary ? String(raw.csiSummary) : undefined,
+    voicyfyCalls: Array.isArray(raw.voicyfyCalls) ? raw.voicyfyCalls : [],
   };
 }
 

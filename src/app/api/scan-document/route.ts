@@ -157,9 +157,43 @@ export async function POST(req: NextRequest) {
       };
     }
 
+    // Normalize keys to support both camelCase and snake_case specifications
+    const licensePlate = parsedData.licensePlate || parsedData.plate_number || "";
+    const vin = parsedData.vin || "";
+    const make = parsedData.make || parsedData.brand || "";
+    const model = parsedData.model || "";
+    const clientName = parsedData.clientName || parsedData.client_name || "";
+    const clientPhone = parsedData.clientPhone || parsedData.phone || "";
+    const year = parsedData.year || null;
+    const mileage = parsedData.mileage || null;
+    const documentType = parsedData.documentType || "other";
+
+    const unifiedResult = {
+      licensePlate,
+      plate_number: licensePlate,
+      vin,
+      make,
+      brand: make,
+      model,
+      year,
+      clientName,
+      client_name: clientName,
+      clientPhone,
+      phone: clientPhone,
+      mileage,
+      documentType,
+    };
+
     return NextResponse.json({
       success: true,
-      data: parsedData,
+      data: unifiedResult,
+      client_name: clientName,
+      phone: clientPhone,
+      brand: make,
+      model,
+      plate_number: licensePlate,
+      vin,
+      year,
     });
   } catch (err: any) {
     console.error("Scan document API error:", err);

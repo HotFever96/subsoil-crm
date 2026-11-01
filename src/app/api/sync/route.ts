@@ -619,6 +619,55 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: res.ok });
     }
 
+    // 24.1 Get Telephony Calls (including Voicyfy)
+    if (action === "get_telephony_calls") {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/chat_messages?select=*&role=eq.system&citations->>type=eq.telephony_call&order=created_at.desc&limit=100`,
+        { headers }
+      );
+      if (!res.ok) {
+        return NextResponse.json({ success: true, calls: [] });
+      }
+      const rows = await res.json();
+      const calls = rows
+        .map((r: any) => {
+          try {
+            return typeof r.content === "string" ? JSON.parse(r.content) : r.content;
+          } catch {
+            return null;
+          }
+        })
+        .filter(Boolean);
+      return NextResponse.json({ success: true, calls });
+    }
+
+    // 24.2 Save Telephony Call
+    if (action === "save_telephony_call") {
+      const call = payload?.call || payload;
+      if (!call?.id) {
+        return NextResponse.json({ error: "Call id is required" }, { status: 400 });
+      }
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/chat_messages`, {
+        method: "POST",
+        headers: {
+          ...headers,
+          Prefer: "resolution=merge-duplicates,return=representation",
+        },
+        body: JSON.stringify({
+          id: call.id,
+          role: "system",
+          content: JSON.stringify(call),
+          citations: {
+            type: "telephony_call",
+            username,
+            phone: call.clientPhone || "",
+            name: call.clientName || "",
+          },
+        }),
+      });
+      return NextResponse.json({ success: res.ok, call });
+    }
+
     // 25. Get Supplier Integrations
     if (action === "get_supplier_integrations") {
       const res = await fetch(

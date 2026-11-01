@@ -18,12 +18,16 @@ import {
 
 export interface ScannedVehicleData {
   licensePlate?: string;
+  plate_number?: string;
   vin?: string;
   make?: string;
+  brand?: string;
   model?: string;
   year?: number | null;
   clientName?: string;
+  client_name?: string;
   clientPhone?: string;
+  phone?: string;
   mileage?: number | string | null;
   documentType?: string;
 }
