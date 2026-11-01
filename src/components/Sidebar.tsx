@@ -81,12 +81,29 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const [isChatHistoryOpen, setIsChatHistoryOpen] = useState(true);
   const [isFlipping, setIsFlipping] = useState(false);
 
-  // Hidden 3-palette theme switcher with 2-second hold
+  // Hidden 3-palette theme switcher with 1.2-second hold (feels like crisp 2s)
   const [isPaletteCloudOpen, setIsPaletteCloudOpen] = useState(false);
+  const [isPaletteClosing, setIsPaletteClosing] = useState(false);
   const [holdProgress, setHoldProgress] = useState(0);
   const holdTimerRef = React.useRef<NodeJS.Timeout | null>(null);
   const holdIntervalRef = React.useRef<NodeJS.Timeout | null>(null);
   const longPressTriggeredRef = React.useRef(false);
+
+  const HOLD_DURATION = 1200;
+
+  const closePaletteWithAnimation = (callback?: () => void) => {
+    setIsPaletteClosing(true);
+    setTimeout(() => {
+      setIsPaletteCloudOpen(false);
+      setIsPaletteClosing(false);
+      callback?.();
+    }, 170);
+  };
+
+  const handleSelectPalette = (palette: ChaikaPalette) => {
+    setChaikaPalette(palette);
+    closePaletteWithAnimation();
+  };
 
   const startHold = () => {
     if (!isChaika) return;
@@ -99,22 +116,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
     holdIntervalRef.current = setInterval(() => {
       const elapsed = Date.now() - startTime;
-      const pct = Math.min(100, Math.round((elapsed / 2000) * 100));
+      const pct = Math.min(100, Math.round((elapsed / HOLD_DURATION) * 100));
       setHoldProgress(pct);
-    }, 30);
+    }, 25);
 
     holdTimerRef.current = setTimeout(() => {
       longPressTriggeredRef.current = true;
       if (holdIntervalRef.current) clearInterval(holdIntervalRef.current);
       holdIntervalRef.current = null;
       setHoldProgress(0);
+      setIsPaletteClosing(false);
       setIsPaletteCloudOpen(true);
       try {
         if (typeof navigator !== "undefined" && navigator.vibrate) {
           navigator.vibrate([40, 50, 40]);
         }
       } catch {}
-    }, 2000);
+    }, HOLD_DURATION);
   };
 
   const cancelHold = () => {
@@ -608,82 +626,58 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   )}
                 </button>
 
-                {/* Hidden Apple Cloud Palette Popover */}
+                {/* Hidden Apple Cloud Palette Popover - Ultra-compact Rounded Island */}
                 {isPaletteCloudOpen && (
                   <>
                     <div
-                      className="fixed inset-0 z-50 bg-black/25 dark:bg-black/40 backdrop-blur-2xs cursor-default"
-                      onClick={() => setIsPaletteCloudOpen(false)}
+                      className="fixed inset-0 z-50 bg-transparent cursor-default"
+                      onClick={() => closePaletteWithAnimation()}
                     />
-                    <div className="absolute bottom-11 -right-6 sm:left-auto sm:-right-8 w-72 z-60 p-3 rounded-2xl bg-white/95 dark:bg-zinc-900/95 backdrop-blur-2xl border border-black/10 dark:border-white/15 shadow-2xl shadow-black/30 apple-bounce-enter select-none text-left">
-                      {/* Cloud Header */}
-                      <div className="flex items-center justify-between pb-2 mb-2 border-b border-black/[0.06] dark:border-white/[0.08]">
-                        <div className="flex items-center space-x-2">
-                          <Palette className="w-3.5 h-3.5 text-zinc-700 dark:text-zinc-200" />
-                          <span className="text-xs font-bold text-zinc-900 dark:text-white">
-                            Цветовая палитра Чайки
-                          </span>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => setIsPaletteCloudOpen(false)}
-                          className="p-1 rounded-md text-zinc-400 hover:text-zinc-700 dark:hover:text-white transition-colors cursor-pointer"
-                        >
-                          <X className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
+                    <div
+                      className={`absolute bottom-11 -right-2 z-60 px-2.5 py-1.5 rounded-full bg-zinc-900/95 dark:bg-zinc-900/95 backdrop-blur-2xl border border-white/20 shadow-2xl shadow-black/60 flex items-center space-x-2 select-none ${
+                        isPaletteClosing ? "apple-capsule-exit" : "apple-capsule-enter"
+                      }`}
+                    >
+                      {[
+                        {
+                          id: "carmine" as ChaikaPalette,
+                          title: "Кармин & Янтарь",
+                          bg: "linear-gradient(135deg, #fb7185 0%, #dc2626 50%, #f59e0b 100%)",
+                        },
+                        {
+                          id: "cobalt" as ChaikaPalette,
+                          title: "Ле-Ман & Кобальт",
+                          bg: "linear-gradient(135deg, #38bdf8 0%, #2563eb 100%)",
+                        },
+                        {
+                          id: "emerald" as ChaikaPalette,
+                          title: "Бритиш Рейсинг & Золото",
+                          bg: "linear-gradient(135deg, #34d399 0%, #059669 50%, #eab308 100%)",
+                        },
+                      ].map((p) => {
+                        const isSelected = chaikaPalette === p.id;
+                        return (
+                          <button
+                            key={p.id}
+                            type="button"
+                            onClick={() => handleSelectPalette(p.id)}
+                            className={`relative p-0.5 rounded-full transition-all duration-200 cursor-pointer group hover:scale-130 active:scale-90 outline-none focus:outline-hidden ${
+                              isSelected
+                                ? "ring-2 ring-white ring-offset-2 ring-offset-zinc-900 scale-110"
+                                : "opacity-85 hover:opacity-100"
+                            }`}
+                            title={p.title}
+                          >
+                            <span
+                              className="w-5.5 h-5.5 rounded-full block shadow-md border border-white/30"
+                              style={{ background: p.bg }}
+                            />
+                          </button>
+                        );
+                      })}
 
-                      <p className="text-[10.5px] text-zinc-500 dark:text-zinc-400 mb-2 leading-tight">
-                        Фирменные цветовые наборы СТО:
-                      </p>
-
-                      {/* 3 Preset Options */}
-                      <div className="space-y-1.5">
-                        {CHAIKA_PALETTES.map((p) => {
-                          const isSelected = chaikaPalette === p.id;
-                          return (
-                            <button
-                              key={p.id}
-                              type="button"
-                              onClick={() => {
-                                setChaikaPalette(p.id);
-                                setIsPaletteCloudOpen(false);
-                              }}
-                              className={`w-full p-2 rounded-xl flex items-center justify-between transition-all cursor-pointer text-left ${
-                                isSelected
-                                  ? "bg-zinc-100 dark:bg-white/10 ring-1 ring-black/10 dark:ring-white/20 shadow-xs"
-                                  : "hover:bg-zinc-100/70 dark:hover:bg-white/[0.05]"
-                              }`}
-                            >
-                              <div className="flex items-center space-x-2.5 min-w-0">
-                                <div className="flex -space-x-1 shrink-0">
-                                  {p.previewColors.map((color, i) => (
-                                    <span
-                                      key={i}
-                                      className="w-3.5 h-3.5 rounded-full border border-white/50 shadow-2xs"
-                                      style={{ backgroundColor: color }}
-                                    />
-                                  ))}
-                                </div>
-                                <div className="min-w-0">
-                                  <div className="text-xs font-bold text-zinc-900 dark:text-white truncate">
-                                    {p.name}
-                                  </div>
-                                  <div className="text-[9.5px] text-zinc-500 dark:text-zinc-400 truncate">
-                                    {p.tagline}
-                                  </div>
-                                </div>
-                              </div>
-                              {isSelected && (
-                                <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0 ml-1.5" />
-                              )}
-                            </button>
-                          );
-                        })}
-                      </div>
-
-                      {/* Cloud Arrow Notch pointing down to button */}
-                      <div className="absolute -bottom-1.5 right-8 w-3 h-3 rotate-45 bg-white/95 dark:bg-zinc-900/95 border-r border-b border-black/10 dark:border-white/15" />
+                      {/* Pointer Notch pointing down to theme button */}
+                      <div className="absolute -bottom-1.5 right-4 w-3 h-3 rotate-45 bg-zinc-900/95 border-r border-b border-white/20" />
                     </div>
                   </>
                 )}
