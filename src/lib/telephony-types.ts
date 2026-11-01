@@ -1,6 +1,6 @@
 "use client";
 
-export type CallType = "csi_quality" | "readiness_reminder" | "inbound_admin";
+export type CallType = "csi_quality" | "readiness_reminder" | "inbound_admin" | "custom_order";
 export type CallStatus = "completed" | "in_progress" | "no_answer" | "scheduled";
 
 export interface TelephonyCallRecord {
@@ -19,4 +19,8 @@ export interface TelephonyCallRecord {
   transcript: string;
   aiSummary: string;
   costRub: number;
+  feedback?: string;
+  reason?: string;
+  scheduledTime?: string;
+  source?: string;
 }

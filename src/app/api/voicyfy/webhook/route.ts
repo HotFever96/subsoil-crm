@@ -269,7 +269,11 @@ export async function POST(req: NextRequest) {
           hasComplaints: rating ? Number(rating) < 4 : false,
           transcript: summary || feedback || reason || "Запись звонка Voicyfy",
           aiSummary: summary || (rating ? `Оценка CSI: ${rating}/5. Отзыв: ${feedback}` : reason),
-          costRub: 0,
+          costRub: 12,
+          feedback: feedback || undefined,
+          reason: reason || undefined,
+          scheduledTime: scheduled_time || undefined,
+          source: "voicyfy_webhook",
         };
 
         await fetch(`${SUPABASE_URL}/rest/v1/chat_messages`, {

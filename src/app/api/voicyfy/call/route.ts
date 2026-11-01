@@ -108,16 +108,28 @@ export async function POST(req: NextRequest) {
       };
     }
 
+    const now = new Date();
     const callRecord = {
       id: `call-${Date.now()}`,
-      timestamp: new Date().toISOString(),
+      timestamp: now.toISOString(),
       actionType: action_type,
+      type: action_type === "ready" ? "readiness_reminder" : action_type === "csi" ? "csi_quality" : "custom_order",
       status: voicyfyStatus >= 200 && voicyfyStatus < 300 ? "scheduled" : "error",
       comment,
-      name,
+      name: name || "Клиент",
+      clientName: name || "Клиент",
       phone,
-      car,
+      clientPhone: phone,
+      car: car || "Автомобиль",
+      vehicleInfo: car || "Автомобиль",
+      orderNumber: order_id || undefined,
       order_id,
+      date: now.toISOString().slice(0, 10),
+      time: now.toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" }),
+      durationSeconds: 45,
+      costRub: 12,
+      aiSummary: comment,
+      source: "voicyfy_call",
       voicyfyResponse: voicyfyResponseData,
     };
 

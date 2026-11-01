@@ -622,7 +622,7 @@ export async function POST(req: NextRequest) {
     // 24.1 Get Telephony Calls (including Voicyfy)
     if (action === "get_telephony_calls") {
       const res = await fetch(
-        `${SUPABASE_URL}/rest/v1/chat_messages?select=*&role=eq.system&citations->>type=eq.telephony_call&order=created_at.desc&limit=100`,
+        `${SUPABASE_URL}/rest/v1/chat_messages?select=*&role=eq.system&citations->>type=in.(telephony_call,voicyfy_webhook)&order=created_at.desc&limit=150`,
         { headers }
       );
       if (!res.ok) {
@@ -632,7 +632,14 @@ export async function POST(req: NextRequest) {
       const calls = rows
         .map((r: any) => {
           try {
-            return typeof r.content === "string" ? JSON.parse(r.content) : r.content;
+            const parsed = typeof r.content === "string" ? JSON.parse(r.content) : r.content;
+            if (!parsed) return null;
+            return {
+              ...parsed,
+              id: parsed.id || r.id,
+              rowId: r.id,
+              citationType: r.citations?.type,
+            };
           } catch {
             return null;
           }
@@ -666,6 +673,48 @@ export async function POST(req: NextRequest) {
         }),
       });
       return NextResponse.json({ success: res.ok, call });
+    }
+
+    // 24.3 Get Voicyfy Agent Settings
+    if (action === "get_voicyfy_settings") {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/chat_messages?select=*&role=eq.system&citations->>type=eq.voicyfy_settings&citations->>username=eq.${encodeURIComponent(username)}&limit=1`,
+        { headers }
+      );
+      if (!res.ok) {
+        return NextResponse.json({ success: true, settings: null });
+      }
+      const rows = await res.json();
+      let settings = null;
+      if (rows.length > 0 && rows[0].content) {
+        try {
+          settings = typeof rows[0].content === "string" ? JSON.parse(rows[0].content) : rows[0].content;
+        } catch {}
+      }
+      return NextResponse.json({ success: true, settings });
+    }
+
+    // 24.4 Save Voicyfy Agent Settings
+    if (action === "save_voicyfy_settings") {
+      const { settings } = payload;
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/chat_messages`, {
+        method: "POST",
+        headers: {
+          ...headers,
+          Prefer: "resolution=merge-duplicates,return=representation",
+        },
+        body: JSON.stringify({
+          id: `voicyfy-settings-${username}`,
+          role: "system",
+          content: JSON.stringify(settings),
+          citations: {
+            type: "voicyfy_settings",
+            username,
+            updatedAt: new Date().toISOString(),
+          },
+        }),
+      });
+      return NextResponse.json({ success: res.ok, settings });
     }
 
     // 25. Get Supplier Integrations
