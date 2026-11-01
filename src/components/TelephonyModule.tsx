@@ -550,16 +550,16 @@ export const TelephonyModule: React.FC = () => {
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden text-zinc-900 dark:text-zinc-100">
       {/* Top Header - Apple Cascade & Clean Graphite Glass */}
-      <div className="apple-header px-6 py-4 border-b border-white/[0.08] bg-white/40 dark:bg-black/30 backdrop-blur-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">
+      <div className="apple-header px-6 py-4 border-b border-slate-200 dark:border-white/[0.08] bg-white/[0.92] dark:bg-black/30 backdrop-blur-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">
         <div className="flex items-center space-x-3.5">
-          <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-rose-500/20 to-purple-500/20 border border-white/10 text-rose-500 flex items-center justify-center shrink-0 shadow-lg shadow-rose-500/10">
+          <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-red-500/15 to-purple-500/15 border border-slate-200 dark:border-white/10 text-[#DC2626] dark:text-rose-500 flex items-center justify-center shrink-0 shadow-sm">
             <PhoneCall className="w-5 h-5" />
           </div>
           <div>
             <h1 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-white flex items-center space-x-2.5">
               <span>ИИ-Телефония и Автообзвон</span>
-              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20 flex items-center space-x-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-red-500/10 text-red-600 dark:text-rose-400 border border-red-500/20 flex items-center space-x-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 <span>Voicyfy Анна Онлайн</span>
               </span>
               <div className="relative group inline-block">
@@ -626,7 +626,7 @@ export const TelephonyModule: React.FC = () => {
       <div className="px-6 pt-4 pb-2 shrink-0">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
           {/* Card 1: Total Calls */}
-          <div className="apple-kpi-1 apple-card-hover p-4 rounded-3xl bg-white/60 dark:bg-white/[0.04] hover:dark:bg-white/[0.07] border border-zinc-200/60 dark:border-white/[0.08] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
+          <div className="apple-kpi-1 apple-card-hover p-4 rounded-3xl bg-white/[0.92] dark:bg-white/[0.04] hover:dark:bg-white/[0.07] border border-slate-200 dark:border-white/[0.08] hover:border-slate-300 dark:hover:border-white/20 backdrop-blur-2xl shadow-[0_2px_10px_rgba(15,23,42,0.04)] dark:shadow-xl dark:shadow-black/20 transition-all flex items-center justify-between group">
             <div>
               <span className="text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                 Всего звонков
@@ -644,7 +644,7 @@ export const TelephonyModule: React.FC = () => {
           </div>
 
           {/* Card 2: Average CSI Rating */}
-          <div className="apple-kpi-2 apple-card-hover p-4 rounded-3xl bg-white/60 dark:bg-white/[0.04] hover:dark:bg-white/[0.07] border border-zinc-200/60 dark:border-white/[0.08] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
+          <div className="apple-kpi-2 apple-card-hover p-4 rounded-3xl bg-white/[0.92] dark:bg-white/[0.04] hover:dark:bg-white/[0.07] border border-slate-200 dark:border-white/[0.08] hover:border-slate-300 dark:hover:border-white/20 backdrop-blur-2xl shadow-[0_2px_10px_rgba(15,23,42,0.04)] dark:shadow-xl dark:shadow-black/20 transition-all flex items-center justify-between group">
             <div>
               <span className="text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                 Индекс CSI (Оценка СТО)
@@ -663,7 +663,7 @@ export const TelephonyModule: React.FC = () => {
           </div>
 
           {/* Card 3: Auto-Bookings by Bot */}
-          <div className="apple-kpi-3 apple-card-hover p-4 rounded-3xl bg-white/60 dark:bg-white/[0.04] hover:dark:bg-white/[0.07] border border-zinc-200/60 dark:border-white/[0.08] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
+          <div className="apple-kpi-3 apple-card-hover p-4 rounded-3xl bg-white/[0.92] dark:bg-white/[0.04] hover:dark:bg-white/[0.07] border border-slate-200 dark:border-white/[0.08] hover:border-slate-300 dark:hover:border-white/20 backdrop-blur-2xl shadow-[0_2px_10px_rgba(15,23,42,0.04)] dark:shadow-xl dark:shadow-black/20 transition-all flex items-center justify-between group">
             <div>
               <span className="text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                 Записано авто ботом
@@ -671,7 +671,7 @@ export const TelephonyModule: React.FC = () => {
               <div className="text-xl font-extrabold text-emerald-500 dark:text-emerald-400 mt-0.5 font-mono">
                 {bookedCount} <span className="text-xs font-semibold text-zinc-400">заявок</span>
               </div>
-              <span className="text-[10px] text-emerald-400/90 font-medium truncate block">
+              <span className="text-[10px] text-emerald-600 dark:text-emerald-400/90 font-medium truncate block">
                 {botRevenue > 0 ? `+${formatCurrency(botRevenue)} в заказ-нарядах` : "Входящие лиды с линии Анны"}
               </span>
             </div>
@@ -681,12 +681,12 @@ export const TelephonyModule: React.FC = () => {
           </div>
 
           {/* Card 4: Costs and ROI */}
-          <div className="apple-kpi-4 apple-card-hover p-4 rounded-3xl bg-white/60 dark:bg-white/[0.04] hover:dark:bg-white/[0.07] border border-zinc-200/60 dark:border-white/[0.08] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
+          <div className="apple-kpi-4 apple-card-hover p-4 rounded-3xl bg-white/[0.92] dark:bg-white/[0.04] hover:dark:bg-white/[0.07] border border-slate-200 dark:border-white/[0.08] hover:border-slate-300 dark:hover:border-white/20 backdrop-blur-2xl shadow-[0_2px_10px_rgba(15,23,42,0.04)] dark:shadow-xl dark:shadow-black/20 transition-all flex items-center justify-between group">
             <div>
               <span className="text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                 Затраты на связь / ROI
               </span>
-              <div className="text-xl font-extrabold text-rose-500 dark:text-rose-400 mt-0.5 font-mono">
+              <div className="text-xl font-extrabold text-[#DC2626] dark:text-rose-400 mt-0.5 font-mono">
                 {formatCurrency(totalCost)}
               </div>
               <span className="text-[10px] text-zinc-400 block">
@@ -716,8 +716,8 @@ export const TelephonyModule: React.FC = () => {
                 onClick={() => setActiveTab(t.id as any)}
                 className={`px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer flex items-center space-x-1.5 ${
                   isActive
-                    ? "bg-rose-600 text-white shadow-md shadow-rose-600/25"
-                    : "bg-white/40 dark:bg-white/[0.04] text-zinc-600 dark:text-zinc-300 hover:bg-white/70 dark:hover:bg-white/[0.08] border border-white/[0.07]"
+                    ? "bg-[#DC2626] dark:bg-rose-600 text-white shadow-none dark:shadow-md dark:shadow-rose-600/25"
+                    : "bg-slate-100 dark:bg-white/[0.04] text-zinc-600 dark:text-zinc-300 hover:bg-slate-200 dark:hover:bg-white/[0.08] border border-slate-200 dark:border-white/[0.07]"
                 }`}
               >
                 <span>{t.label}</span>
@@ -782,14 +782,14 @@ export const TelephonyModule: React.FC = () => {
                   placeholder="Поиск по клиенту, телефону, авто..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-white/40 dark:bg-white/[0.04] border border-white/[0.08] text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-rose-500"
+                  className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-white dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] text-xs text-zinc-900 dark:text-white placeholder:text-zinc-500 focus:outline-none focus:border-[#DC2626] shadow-xs"
                 />
               </div>
             </div>
 
             {filteredCalls.length === 0 ? (
-              <div className="h-full min-h-[300px] flex flex-col items-center justify-center text-center p-8 bg-white/30 dark:bg-white/[0.02] rounded-3xl border border-white/[0.06]">
-                <div className="w-14 h-14 rounded-3xl bg-white/40 dark:bg-white/[0.04] border border-white/10 flex items-center justify-center text-zinc-400 mb-3.5">
+              <div className="h-full min-h-[300px] flex flex-col items-center justify-center text-center p-8 bg-white/[0.92] dark:bg-white/[0.02] rounded-3xl border border-slate-200 dark:border-white/[0.06] shadow-xs">
+                <div className="w-14 h-14 rounded-3xl bg-white dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 flex items-center justify-center text-zinc-400 mb-3.5 shadow-xs">
                   <PhoneCall className="w-7 h-7 text-rose-500" />
                 </div>
                 <h3 className="text-base font-bold text-zinc-800 dark:text-zinc-200">
@@ -801,7 +801,7 @@ export const TelephonyModule: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setIsTestCallModalOpen(true)}
-                  className="apple-tap mt-4 px-5 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white text-xs font-bold transition-all shadow-md cursor-pointer"
+                  className="apple-tap mt-4 px-5 py-2.5 rounded-xl bg-[#DC2626] hover:bg-[#B91C1C] dark:bg-gradient-to-r dark:from-red-600 dark:to-rose-600 text-white text-xs font-bold transition-all shadow-sm cursor-pointer"
                 >
                   📞 Запустить тестовый звонок
                 </button>
@@ -817,7 +817,7 @@ export const TelephonyModule: React.FC = () => {
                     <div
                       key={call.id}
                       onClick={() => setSelectedCall(call)}
-                      className="apple-row apple-card-hover group p-4 rounded-2xl bg-white/50 dark:bg-white/[0.04] hover:bg-white dark:hover:bg-white/[0.08] border border-zinc-200/60 dark:border-white/[0.07] hover:border-white/20 backdrop-blur-2xl transition-all cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-md hover:shadow-xl"
+                      className="apple-row apple-card-hover group p-4 rounded-2xl bg-white/[0.92] dark:bg-white/[0.04] hover:bg-white dark:hover:bg-white/[0.08] border border-slate-200 dark:border-white/[0.07] hover:border-slate-300 dark:hover:border-white/20 backdrop-blur-2xl transition-all cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-[0_2px_10px_rgba(15,23,42,0.04)] dark:shadow-md hover:shadow-lg"
                     >
                       <div className="flex items-center space-x-3.5 min-w-0">
                         {/* Call Type Icon Badge */}
@@ -967,12 +967,12 @@ export const TelephonyModule: React.FC = () => {
                   return (
                     <div
                       key={ord.id}
-                      className="p-4 rounded-2xl bg-white/50 dark:bg-white/[0.04] border border-zinc-200/60 dark:border-white/[0.07] hover:border-white/20 transition-all flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-md"
+                      className="p-4 rounded-2xl bg-white/[0.92] dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.07] hover:border-slate-300 dark:hover:border-white/20 transition-all flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-[0_2px_10px_rgba(15,23,42,0.04)] dark:shadow-md"
                     >
                       <div>
                         <div className="flex items-center space-x-2">
-                          <span className="font-bold text-sm text-white">{ord.orderNumber}</span>
-                          <span className="text-xs text-zinc-300 font-semibold">{ord.client.name}</span>
+                          <span className="font-bold text-sm text-zinc-900 dark:text-white">{ord.orderNumber}</span>
+                          <span className="text-xs text-zinc-700 dark:text-zinc-300 font-semibold">{ord.client.name}</span>
                           <span
                             className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${
                               isReady
@@ -1036,125 +1036,125 @@ export const TelephonyModule: React.FC = () => {
         {activeTab === "settings" && (
           <div className="max-w-3xl space-y-5 pb-16">
             {/* CARD 1: VOICYFY INTEGRATION STATUS & WEBHOOK */}
-            <div className="p-5 rounded-3xl bg-white/50 dark:bg-white/[0.04] border border-zinc-200/60 dark:border-white/[0.08] backdrop-blur-2xl space-y-4 shadow-xl">
+            <div className="p-5 rounded-3xl bg-white/[0.92] dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] backdrop-blur-2xl space-y-4 shadow-[0_2px_10px_rgba(15,23,42,0.04)] dark:shadow-xl">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2.5">
                   <div className="p-2 rounded-xl bg-rose-500/10 text-rose-400">
                     <Zap className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="text-sm font-bold text-white">Интеграция с голосовым ИИ Voicyfy (Анна)</h3>
-                    <p className="text-xs text-zinc-400">Прием входящих результатов и отправка поручений</p>
+                    <h3 className="text-sm font-bold text-zinc-900 dark:text-white">Интеграция с голосовым ИИ Voicyfy (Анна)</h3>
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400">Прием входящих результатов и отправка поручений</p>
                   </div>
                 </div>
-                <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 text-xs font-bold flex items-center space-x-1.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/25 text-xs font-bold flex items-center space-x-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                   <span>Активно (Онлайн)</span>
                 </span>
               </div>
 
               {/* Webhook Endpoint Display */}
               <div className="space-y-1.5">
-                <label className="block text-xs font-semibold text-zinc-300">
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300">
                   URL приемника входящего Webhook:
                 </label>
                 <div className="flex items-center space-x-2">
-                  <div className="flex-1 p-2.5 rounded-xl bg-zinc-950/80 border border-white/10 font-mono text-xs text-zinc-200 truncate select-all">
+                  <div className="flex-1 p-2.5 rounded-xl bg-slate-100 dark:bg-zinc-950/80 border border-slate-200 dark:border-white/10 font-mono text-xs text-zinc-800 dark:text-zinc-200 truncate select-all">
                     {WEBHOOK_URL}
                   </div>
                   <button
                     type="button"
                     onClick={handleCopyWebhook}
-                    className="apple-tap px-3.5 py-2.5 rounded-xl bg-rose-600/20 hover:bg-rose-600/30 border border-rose-500/30 text-rose-300 text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer"
+                    className="apple-tap px-3.5 py-2.5 rounded-xl bg-rose-600/10 hover:bg-rose-600/20 border border-rose-500/30 text-rose-600 dark:text-rose-300 text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer"
                   >
-                    {copiedWebhook ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                    {copiedWebhook ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
                     <span>{copiedWebhook ? "Скопировано!" : "Скопировать"}</span>
                   </button>
                 </div>
                 <p className="text-[11px] text-zinc-500 leading-relaxed">
-                  Данный URL прописан в кабинете Voicyfy в качестве вебхука функции <code className="text-zinc-300">send_webhook</code> для автоматического сохранения оценок CSI и создания заявок.
+                  Данный URL прописан в кабинете Voicyfy в качестве вебхука функции <code className="text-zinc-700 dark:text-zinc-300 font-semibold">send_webhook</code> для автоматического сохранения оценок CSI и создания заявок.
                 </p>
               </div>
 
               {/* Environment Variables Verification */}
-              <div className="pt-2 border-t border-white/[0.06] space-y-2">
+              <div className="pt-2 border-t border-slate-200 dark:border-white/[0.06] space-y-2">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-500">
                   Переменные окружения на Vercel:
                 </span>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
-                  <div className="p-2.5 rounded-xl bg-zinc-900/60 border border-white/[0.06] flex items-center justify-between">
-                    <span className="text-zinc-400 font-mono text-[11px]">VOICYFY_PUBLIC_URL</span>
-                    <span className="text-emerald-400 font-bold text-[10px]">✓ Задан</span>
+                  <div className="p-2.5 rounded-xl bg-slate-100 dark:bg-zinc-900/60 border border-slate-200 dark:border-white/[0.06] flex items-center justify-between">
+                    <span className="text-zinc-600 dark:text-zinc-400 font-mono text-[11px]">VOICYFY_PUBLIC_URL</span>
+                    <span className="text-emerald-600 dark:text-emerald-400 font-bold text-[10px]">✓ Задан</span>
                   </div>
-                  <div className="p-2.5 rounded-xl bg-zinc-900/60 border border-white/[0.06] flex items-center justify-between">
-                    <span className="text-zinc-400 font-mono text-[11px]">VOICYFY_SECRET_KEY</span>
-                    <span className="text-emerald-400 font-bold text-[10px]">✓ Подключен</span>
+                  <div className="p-2.5 rounded-xl bg-slate-100 dark:bg-zinc-900/60 border border-slate-200 dark:border-white/[0.06] flex items-center justify-between">
+                    <span className="text-zinc-600 dark:text-zinc-400 font-mono text-[11px]">VOICYFY_SECRET_KEY</span>
+                    <span className="text-emerald-600 dark:text-emerald-400 font-bold text-[10px]">✓ Подключен</span>
                   </div>
-                  <div className="p-2.5 rounded-xl bg-zinc-900/60 border border-white/[0.06] flex items-center justify-between">
-                    <span className="text-zinc-400 font-mono text-[11px]">VOICYFY_API_KEY</span>
-                    <span className="text-emerald-400 font-bold text-[10px]">✓ Управление</span>
+                  <div className="p-2.5 rounded-xl bg-slate-100 dark:bg-zinc-900/60 border border-slate-200 dark:border-white/[0.06] flex items-center justify-between">
+                    <span className="text-zinc-600 dark:text-zinc-400 font-mono text-[11px]">VOICYFY_API_KEY</span>
+                    <span className="text-emerald-600 dark:text-emerald-400 font-bold text-[10px]">✓ Управление</span>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* CARD 2: AGENT SCRIPT & SPECIAL PROMOTIONS */}
-            <div className="p-5 rounded-3xl bg-white/50 dark:bg-white/[0.04] border border-zinc-200/60 dark:border-white/[0.08] backdrop-blur-2xl space-y-4 shadow-xl">
+            <div className="p-5 rounded-3xl bg-white/[0.92] dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] backdrop-blur-2xl space-y-4 shadow-[0_2px_10px_rgba(15,23,42,0.04)] dark:shadow-xl">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2.5">
-                  <div className="p-2 rounded-xl bg-amber-500/10 text-amber-400">
+                  <div className="p-2 rounded-xl bg-amber-500/10 text-amber-500">
                     <Sparkles className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="text-sm font-bold text-white">Скрипт и спецпредложения для голосового агента</h3>
-                    <p className="text-xs text-zinc-400">Данные используются Анной при общении с клиентами по телефону</p>
+                    <h3 className="text-sm font-bold text-zinc-900 dark:text-white">Скрипт и спецпредложения для голосового агента</h3>
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400">Данные используются Анной при общении с клиентами по телефону</p>
                   </div>
                 </div>
               </div>
 
               <div className="space-y-3">
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-300 mb-1">
+                  <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
                     Специальные акции и скидки автосервиса:
                   </label>
                   <textarea
                     rows={2}
                     value={agentPromotions}
                     onChange={(e) => setAgentPromotions(e.target.value)}
-                    className="w-full p-2.5 rounded-xl bg-zinc-950/80 border border-white/10 text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-rose-500"
+                    className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-zinc-950/80 border border-slate-200 dark:border-white/10 text-xs text-zinc-900 dark:text-white placeholder:text-zinc-400 focus:outline-none focus:border-[#DC2626]"
                     placeholder="Акции и скидки для озвучивания клиентам..."
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-300 mb-1">
+                  <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
                     Перечень ключевых услуг автосервиса СТО:
                   </label>
                   <textarea
                     rows={2}
                     value={agentServices}
                     onChange={(e) => setAgentServices(e.target.value)}
-                    className="w-full p-2.5 rounded-xl bg-zinc-950/80 border border-white/10 text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-rose-500"
+                    className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-zinc-950/80 border border-slate-200 dark:border-white/10 text-xs text-zinc-900 dark:text-white placeholder:text-zinc-400 focus:outline-none focus:border-[#DC2626]"
                     placeholder="Перечень оказываемых услуг..."
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-300 mb-1">
+                  <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
                     Гарантийные условия:
                   </label>
                   <input
                     type="text"
                     value={agentWarranty}
                     onChange={(e) => setAgentWarranty(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl bg-zinc-950/80 border border-white/10 text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-rose-500"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-zinc-950/80 border border-slate-200 dark:border-white/10 text-xs text-zinc-900 dark:text-white placeholder:text-zinc-400 focus:outline-none focus:border-[#DC2626]"
                   />
                 </div>
 
                 <div className="flex items-center justify-between pt-2">
-                  <span className="text-[11px] text-zinc-400">
+                  <span className="text-[11px] text-zinc-500">
                     {settingsSavedToast && (
-                      <span className="text-emerald-400 font-bold flex items-center space-x-1">
+                      <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center space-x-1">
                         <Check className="w-3.5 h-3.5" />
                         <span>Настройки агента сохранены в Supabase</span>
                       </span>
@@ -1164,7 +1164,7 @@ export const TelephonyModule: React.FC = () => {
                     type="button"
                     disabled={isSavingSettings}
                     onClick={handleSaveAgentSettings}
-                    className="apple-tap px-4 py-2 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white text-xs font-bold transition-all shadow-md cursor-pointer disabled:opacity-50"
+                    className="apple-tap px-4 py-2 rounded-xl bg-[#DC2626] hover:bg-[#B91C1C] dark:bg-gradient-to-r dark:from-red-600 dark:to-rose-600 text-white text-xs font-bold transition-all shadow-sm cursor-pointer disabled:opacity-50"
                   >
                     {isSavingSettings ? "Сохранение..." : "Сохранить настройки агента"}
                   </button>
@@ -1173,19 +1173,19 @@ export const TelephonyModule: React.FC = () => {
             </div>
 
             {/* CARD 3: SIP TRUNK & AUTOMATION */}
-            <div className="p-5 rounded-3xl bg-white/50 dark:bg-white/[0.04] border border-zinc-200/60 dark:border-white/[0.08] backdrop-blur-2xl space-y-4 shadow-xl">
-              <h3 className="text-sm font-bold text-white flex items-center space-x-2">
+            <div className="p-5 rounded-3xl bg-white/[0.92] dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] backdrop-blur-2xl space-y-4 shadow-[0_2px_10px_rgba(15,23,42,0.04)] dark:shadow-xl">
+              <h3 className="text-sm font-bold text-zinc-900 dark:text-white flex items-center space-x-2">
                 <Settings className="w-4 h-4 text-zinc-400" />
                 <span>Настройки SIP-телефонии и автоматизации</span>
               </h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-400 mb-1.5">Провайдер телефонии:</label>
+                  <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-400 mb-1.5">Провайдер телефонии:</label>
                   <select
                     value={sipProvider}
                     onChange={(e) => setSipProvider(e.target.value as any)}
-                    className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-white/10 text-white text-xs cursor-pointer"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-zinc-950 border border-slate-200 dark:border-white/10 text-zinc-900 dark:text-white text-xs cursor-pointer"
                   >
                     <option value="novofon">Novofon (ex-Zadarma) — для СТО РФ</option>
                     <option value="mango">Mango Office (Манго Телеком)</option>

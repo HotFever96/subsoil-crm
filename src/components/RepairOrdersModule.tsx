@@ -706,15 +706,15 @@ export const RepairOrdersModule: React.FC = () => {
   return (
     <div className="flex-1 flex flex-col h-full bg-transparent overflow-hidden text-zinc-900 dark:text-zinc-100">
       {/* Top Header - Apple Spring Cascade & Glass Style */}
-      <div className="apple-header px-6 py-4.5 border-b border-white/[0.08] bg-white/40 dark:bg-black/30 backdrop-blur-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">
+      <div className="apple-header px-6 py-4.5 border-b border-slate-200 dark:border-white/[0.08] bg-white/[0.92] dark:bg-black/30 backdrop-blur-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">
         <div className="flex items-center space-x-3.5">
-          <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-rose-500/20 to-amber-500/20 border border-white/10 text-rose-500 flex items-center justify-center shrink-0 shadow-lg shadow-rose-500/10">
+          <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-red-500/15 to-amber-500/15 border border-slate-200 dark:border-white/10 text-[#DC2626] dark:text-rose-500 flex items-center justify-center shrink-0 shadow-sm">
             <Wrench className="w-5 h-5" />
           </div>
           <div>
             <h1 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-white flex items-center space-x-2.5">
               <span>Заказ-наряды</span>
-              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-white/10 dark:bg-white/[0.06] border border-white/10 text-zinc-700 dark:text-zinc-300">
+              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-white/[0.06] border border-slate-200 dark:border-white/10 text-zinc-700 dark:text-zinc-300">
                 {orders.length} записей
               </span>
               <div className="relative group inline-block">
@@ -735,13 +735,13 @@ export const RepairOrdersModule: React.FC = () => {
 
         <div className="flex items-center space-x-3">
           {/* View Mode Toggle */}
-          <div className="flex items-center bg-white/40 dark:bg-white/[0.06] p-1 rounded-full border border-white/[0.08] backdrop-blur-md">
+          <div className="flex items-center bg-white/[0.92] dark:bg-white/[0.06] p-1 rounded-full border border-slate-200 dark:border-white/[0.08] shadow-[0_2px_10px_rgba(15,23,42,0.04)] backdrop-blur-md">
             <button
               onClick={() => setViewMode("table")}
               className={`p-1.5 px-3 rounded-full text-xs font-semibold flex items-center space-x-1.5 transition-all cursor-pointer ${
                 viewMode === "table"
-                  ? "bg-rose-600 text-white shadow-md shadow-rose-600/25"
-                  : "text-zinc-500 hover:text-white"
+                  ? "bg-[#DC2626] dark:bg-rose-600 text-white shadow-none dark:shadow-md dark:shadow-rose-600/25"
+                  : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white"
               }`}
               title="Табличный вид"
             >
@@ -752,8 +752,8 @@ export const RepairOrdersModule: React.FC = () => {
               onClick={() => setViewMode("kanban")}
               className={`p-1.5 px-3 rounded-full text-xs font-semibold flex items-center space-x-1.5 transition-all cursor-pointer ${
                 viewMode === "kanban"
-                  ? "bg-rose-600 text-white shadow-md shadow-rose-600/25"
-                  : "text-zinc-500 hover:text-white"
+                  ? "bg-[#DC2626] dark:bg-rose-600 text-white shadow-none dark:shadow-md dark:shadow-rose-600/25"
+                  : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white"
               }`}
               title="Канбан-доска"
             >
@@ -765,7 +765,7 @@ export const RepairOrdersModule: React.FC = () => {
           <button
             type="button"
             onClick={openNewOrderModal}
-            className="flex items-center space-x-2 px-4 py-2.5 rounded-full bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 text-white text-xs font-bold transition-all shadow-lg shadow-rose-600/20 cursor-pointer active:scale-95"
+            className="flex items-center space-x-2 px-4 py-2.5 rounded-full bg-[#DC2626] hover:bg-[#B91C1C] dark:bg-gradient-to-r dark:from-rose-600 dark:to-rose-500 dark:hover:from-rose-500 dark:hover:to-rose-400 text-white text-xs font-bold transition-all shadow-sm dark:shadow-lg dark:shadow-rose-600/20 cursor-pointer active:scale-95"
           >
             <Plus className="w-4 h-4" />
             <span>Новый заказ-наряд</span>
@@ -774,15 +774,15 @@ export const RepairOrdersModule: React.FC = () => {
       </div>
 
       {/* Filter and Search Bar (Pill Glass UI) */}
-      <div className="px-6 py-2.5 border-b border-white/[0.06] bg-white/30 dark:bg-black/15 backdrop-blur-xl flex flex-col md:flex-row md:items-center justify-between gap-3 shrink-0">
+      <div className="px-6 py-2.5 border-b border-slate-200 dark:border-white/[0.06] bg-white/[0.92] dark:bg-black/15 backdrop-blur-xl flex flex-col md:flex-row md:items-center justify-between gap-3 shrink-0">
         {/* Status Filters */}
         <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
           <button
             onClick={() => setSelectedStatus("all")}
             className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
               selectedStatus === "all"
-                ? "bg-rose-600 text-white shadow-md shadow-rose-600/20 scale-102"
-                : "bg-white/40 dark:bg-white/[0.05] text-zinc-600 dark:text-zinc-300 hover:bg-white/70 dark:hover:bg-white/[0.1] border border-white/[0.07]"
+                ? "bg-[#DC2626] dark:bg-rose-600 text-white shadow-none dark:shadow-md dark:shadow-rose-600/20 scale-102"
+                : "bg-slate-100 dark:bg-white/[0.05] text-zinc-600 dark:text-zinc-300 hover:bg-slate-200 dark:hover:bg-white/[0.1] border border-slate-200 dark:border-white/[0.07]"
             }`}
           >
             Все ({orders.length})
@@ -797,8 +797,8 @@ export const RepairOrdersModule: React.FC = () => {
                 onClick={() => setSelectedStatus(st)}
                 className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer flex items-center space-x-1.5 ${
                   isActive
-                    ? "bg-rose-600 text-white shadow-md shadow-rose-600/20 scale-102"
-                    : "bg-white/40 dark:bg-white/[0.05] text-zinc-600 dark:text-zinc-300 hover:bg-white/70 dark:hover:bg-white/[0.1] border border-white/[0.07]"
+                    ? "bg-[#DC2626] dark:bg-rose-600 text-white shadow-none dark:shadow-md dark:shadow-rose-600/20 scale-102"
+                    : "bg-slate-100 dark:bg-white/[0.05] text-zinc-600 dark:text-zinc-300 hover:bg-slate-200 dark:hover:bg-white/[0.1] border border-slate-200 dark:border-white/[0.07]"
                 }`}
               >
                 <span>{meta.label}</span>
@@ -818,7 +818,7 @@ export const RepairOrdersModule: React.FC = () => {
             placeholder="Поиск по номеру, госномеру, VIN, клиенту..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-8 py-2 rounded-full bg-white/60 dark:bg-white/[0.05] border border-white/[0.09] backdrop-blur-2xl text-xs text-zinc-900 dark:text-white placeholder:text-zinc-400 focus:outline-hidden focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-all"
+            className="w-full pl-10 pr-8 py-2 rounded-full bg-white dark:bg-white/[0.05] border border-slate-200 dark:border-white/[0.09] backdrop-blur-2xl text-xs text-zinc-900 dark:text-white placeholder:text-zinc-400 focus:outline-hidden focus:border-[#DC2626] dark:focus:border-rose-500 focus:ring-1 focus:ring-[#DC2626] dark:focus:ring-rose-500 transition-all shadow-xs"
           />
         </div>
       </div>
@@ -846,11 +846,11 @@ export const RepairOrdersModule: React.FC = () => {
           </div>
         ) : viewMode === "table" ? (
           /* TABLE VIEW WITH ROW CLICK EDITING (Yandex Music Tracklist Aesthetic) */
-          <div className="bg-white/60 dark:bg-white/[0.04] rounded-3xl border border-zinc-200/60 dark:border-white/[0.08] backdrop-blur-2xl shadow-xl overflow-hidden">
+          <div className="bg-white/[0.92] dark:bg-white/[0.04] rounded-3xl border border-slate-200 dark:border-white/[0.08] backdrop-blur-2xl shadow-[0_2px_10px_rgba(15,23,42,0.04)] dark:shadow-xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
-                  <tr className="bg-white/40 dark:bg-white/[0.03] border-b border-zinc-200/50 dark:border-white/[0.06] text-zinc-500 dark:text-zinc-400 font-semibold">
+                  <tr className="bg-slate-50/90 dark:bg-white/[0.03] border-b border-slate-200 dark:border-white/[0.06] text-zinc-600 dark:text-zinc-400 font-semibold">
                     <th className="py-3 px-4">Номер и дата</th>
                     <th className="py-3 px-4">Автомобиль и госномер</th>
                     <th className="py-3 px-4">Клиент</th>
@@ -976,7 +976,7 @@ export const RepairOrdersModule: React.FC = () => {
               const meta = getStatusMeta(st);
               const columnOrders = filteredOrders.filter((o) => o.status === st);
               return (
-                <div key={st} className="flex flex-col bg-white/40 dark:bg-white/[0.03] rounded-3xl border border-zinc-200/50 dark:border-white/[0.06] backdrop-blur-2xl p-3 min-h-[450px]">
+                <div key={st} className="flex flex-col bg-white/[0.92] dark:bg-white/[0.03] rounded-3xl border border-slate-200 dark:border-white/[0.06] shadow-[0_2px_10px_rgba(15,23,42,0.04)] dark:shadow-xl backdrop-blur-2xl p-3 min-h-[450px]">
                   <div className="flex items-center justify-between pb-2.5 mb-2.5 border-b border-zinc-200/60 dark:border-white/[0.06]">
                     <span className="font-bold text-xs text-zinc-800 dark:text-zinc-200 truncate pr-1" title={meta.label}>{meta.label}</span>
                     <span className="text-[10px] px-2 py-0.5 rounded-full bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 font-bold shrink-0">
@@ -989,7 +989,7 @@ export const RepairOrdersModule: React.FC = () => {
                       <div
                         key={ord.id}
                         onClick={() => openEditOrderModal(ord)}
-                        className="p-3 rounded-2xl bg-white dark:bg-white/[0.06] border border-zinc-200/70 dark:border-white/[0.08] hover:border-rose-500/50 hover:shadow-lg dark:hover:shadow-rose-950/20 cursor-pointer transition-all space-y-2"
+                        className="p-3 rounded-2xl bg-white dark:bg-white/[0.06] border border-slate-200 dark:border-white/[0.08] shadow-[0_2px_8px_rgba(15,23,42,0.03)] hover:border-[#DC2626]/50 dark:hover:border-rose-500/50 hover:shadow-md cursor-pointer transition-all space-y-2"
                       >
                         <div className="flex items-center justify-between">
                           <span className="font-bold text-xs text-zinc-900 dark:text-zinc-100">{ord.orderNumber}</span>

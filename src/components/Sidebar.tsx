@@ -306,9 +306,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
               >
                 {isChaika ? (
                   <img
-                    src={theme === "dark" ? "/logo-chaika-white.png" : "/logo-chaika-dark.png"}
+                    src="/logo-chaika-white.png"
                     alt="Чайка-Сервис"
-                    className="h-8 sm:h-8.5 w-auto max-w-[160px] object-contain transition-all drop-shadow-xs"
+                    className="h-8 sm:h-8.5 w-auto max-w-[160px] object-contain transition-all drop-shadow-xs filter brightness-0 dark:brightness-100 dark:filter-none"
                   />
                 ) : (
                   <img
@@ -370,8 +370,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   className={`w-full text-left px-3.5 py-2 rounded-2xl text-[14.5px] transition-all flex items-center justify-between cursor-pointer antialiased ${
                     isActive
                       ? isChaika
-                        ? "bg-gradient-to-r from-red-500/20 to-red-500/5 border border-red-500/30 text-zinc-950 dark:text-white font-semibold shadow-xs backdrop-blur-md"
-                        : "bg-gradient-to-r from-sky-500/20 to-sky-500/5 border border-sky-500/30 text-zinc-950 dark:text-white font-semibold shadow-xs backdrop-blur-md"
+                        ? "bg-[#F1F5F9] dark:bg-gradient-to-r dark:from-red-500/20 dark:to-red-500/5 border-l-4 border-l-[#DC2626] border-zinc-200/70 dark:border dark:border-red-500/30 text-[#0F172A] dark:text-white font-semibold shadow-xs backdrop-blur-md"
+                        : "bg-[#F1F5F9] dark:bg-gradient-to-r dark:from-sky-500/20 dark:to-sky-500/5 border-l-4 border-l-sky-600 border-zinc-200/70 dark:border dark:border-sky-500/30 text-[#0F172A] dark:text-white font-semibold shadow-xs backdrop-blur-md"
                       : "text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white hover:bg-zinc-200/50 dark:hover:bg-white/[0.06] font-medium"
                   }`}
                 >
@@ -380,8 +380,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       className={`w-4 h-4 shrink-0 transition-colors ${
                         isActive
                           ? isChaika
-                            ? "text-red-500 dark:text-red-400"
-                            : "text-sky-500 dark:text-sky-400"
+                            ? "text-[#DC2626] dark:text-red-400"
+                            : "text-sky-600 dark:text-sky-400"
                           : "text-zinc-400 dark:text-zinc-400 group-hover:text-zinc-800 dark:group-hover:text-zinc-200"
                       }`}
                     />
@@ -453,13 +453,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         className={`group w-full px-2.5 py-2 rounded-xl text-xs cursor-pointer flex items-center justify-between transition-colors border ${
                           isActive
                             ? isChaika
-                              ? "bg-gradient-to-r from-red-500/20 to-red-500/5 border-red-500/30 text-zinc-950 dark:text-white font-semibold shadow-2xs"
-                              : "bg-gradient-to-r from-sky-500/20 to-sky-500/5 border-sky-500/30 text-zinc-950 dark:text-white font-semibold shadow-2xs"
+                              ? "bg-[#F1F5F9] dark:bg-gradient-to-r dark:from-red-500/20 dark:to-red-500/5 border-l-2 border-l-[#DC2626] border-zinc-200/60 dark:border-red-500/30 text-[#0F172A] dark:text-white font-semibold shadow-2xs"
+                              : "bg-[#F1F5F9] dark:bg-gradient-to-r dark:from-sky-500/20 dark:to-sky-500/5 border-l-2 border-l-sky-600 border-zinc-200/60 dark:border-sky-500/30 text-[#0F172A] dark:text-white font-semibold shadow-2xs"
                             : "border-transparent text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-200/40 dark:hover:bg-white/[0.04]"
                         }`}
                       >
                         <div className="flex items-center space-x-2.5 min-w-0 pr-1">
-                          <MessageSquare className={`w-3.5 h-3.5 shrink-0 ${isActive ? (isChaika ? "text-red-500" : "text-sky-500") : "text-zinc-400"}`} />
+                          <MessageSquare className={`w-3.5 h-3.5 shrink-0 ${isActive ? (isChaika ? "text-[#DC2626] dark:text-red-400" : "text-sky-600 dark:text-sky-400") : "text-zinc-400"}`} />
                           <span className="truncate text-xs">{cleanChatTitle(sess.title)}</span>
                         </div>
 

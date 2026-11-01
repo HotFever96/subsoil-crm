@@ -220,12 +220,12 @@ export default function Home() {
   const isChaika = currentBusiness === "chaika-service";
 
   return (
-    <div className="flex flex-col md:flex-row h-screen w-screen overflow-hidden bg-white dark:bg-[#09090b] text-zinc-900 dark:text-zinc-100 transition-colors relative">
+    <div className="flex flex-col md:flex-row h-screen w-screen overflow-hidden bg-slate-100 dark:bg-[#09090b] text-zinc-900 dark:text-zinc-100 transition-colors relative">
       {/* Yandex Music / Моя Волна GPU Ambient Mesh Background Aura */}
       <AmbientMesh activeTab={currentTab} />
 
       {/* Mobile Top Header (Visible only on mobile < md) */}
-      <header className="md:hidden flex items-center justify-between px-4 py-3 border-b border-black/[0.05] dark:border-white/[0.08] bg-white/70 dark:bg-black/40 backdrop-blur-2xl shrink-0 z-30">
+      <header className="md:hidden flex items-center justify-between px-4 py-3 border-b border-black/[0.05] dark:border-white/[0.08] bg-white/90 dark:bg-black/40 backdrop-blur-2xl shrink-0 z-30">
         <div className="flex items-center space-x-3">
           <button
             onClick={() => setIsMobileMenuOpen(true)}
@@ -279,7 +279,7 @@ export default function Home() {
       />
 
       {/* Main Workspace */}
-      <main className="flex-1 flex flex-col h-full overflow-hidden relative">
+      <main className="flex-1 flex flex-col h-full overflow-hidden relative bg-gradient-to-br from-slate-100 via-slate-50 to-gray-100 dark:bg-transparent">
         {currentTab === "ai-chat" && <AIChat />}
 
         {currentTab === "smart-mail" && (

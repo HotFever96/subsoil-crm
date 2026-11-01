@@ -229,10 +229,10 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
   return (
     <div className="flex-1 flex flex-col min-h-0 bg-transparent overflow-y-auto">
       {/* Top Header */}
-      <div className="apple-header px-6 py-4.5 bg-white/40 dark:bg-black/30 border-b border-white/[0.08] backdrop-blur-2xl shrink-0">
+      <div className="apple-header px-6 py-4.5 bg-white/[0.92] dark:bg-black/30 border-b border-slate-200 dark:border-white/[0.08] backdrop-blur-2xl shrink-0">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center space-x-3.5">
-            <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-rose-500/20 to-amber-500/20 border border-white/10 text-rose-500 flex items-center justify-center shrink-0 shadow-lg shadow-rose-500/10">
+            <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-red-500/15 to-amber-500/15 border border-slate-200 dark:border-white/10 text-[#DC2626] dark:text-rose-500 flex items-center justify-center shrink-0 shadow-sm">
               <DollarSign className="w-5 h-5" />
             </div>
             <div>
@@ -259,7 +259,7 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
               <button
                 type="button"
                 onClick={onOpenSettings}
-                className="px-4 py-2 rounded-full border border-white/[0.09] bg-white/50 dark:bg-white/[0.06] hover:dark:bg-white/[0.12] text-xs font-semibold text-zinc-800 dark:text-zinc-200 flex items-center space-x-2 cursor-pointer transition-all backdrop-blur-md shadow-xs active:scale-95"
+                className="px-4 py-2 rounded-full border border-slate-200 dark:border-white/[0.09] bg-white/[0.92] dark:bg-white/[0.06] hover:dark:bg-white/[0.12] text-xs font-semibold text-zinc-800 dark:text-zinc-200 flex items-center space-x-2 cursor-pointer transition-all backdrop-blur-md shadow-xs active:scale-95"
                 title="Настройка ставок мотивации сотрудников"
               >
                 <Settings className="w-3.5 h-3.5 text-rose-500" />
@@ -285,8 +285,8 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
                 onClick={() => setPeriodFilter(p.id as any)}
                 className={`px-3.5 py-1.5 rounded-full font-semibold whitespace-nowrap transition-all cursor-pointer ${
                   periodFilter === p.id
-                    ? "bg-rose-600 text-white shadow-md shadow-rose-600/20 scale-102"
-                    : "bg-white/40 dark:bg-white/[0.05] text-zinc-600 dark:text-zinc-300 hover:bg-white/70 dark:hover:bg-white/[0.1] border border-white/[0.07]"
+                    ? "bg-[#DC2626] dark:bg-rose-600 text-white shadow-none dark:shadow-md dark:shadow-rose-600/20 scale-102"
+                    : "bg-slate-100 dark:bg-white/[0.05] text-zinc-600 dark:text-zinc-300 hover:bg-slate-200 dark:hover:bg-white/[0.1] border border-slate-200 dark:border-white/[0.07]"
                 }`}
               >
                 {p.label}
@@ -299,7 +299,7 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as any)}
-              className="px-3.5 py-1.5 rounded-full border border-white/[0.09] bg-white/60 dark:bg-white/[0.05] backdrop-blur-2xl text-zinc-700 dark:text-zinc-300 font-semibold focus:outline-hidden"
+              className="px-3.5 py-1.5 rounded-full border border-slate-200 dark:border-white/[0.09] bg-white/[0.92] dark:bg-white/[0.05] backdrop-blur-2xl text-zinc-700 dark:text-zinc-300 font-semibold focus:outline-hidden shadow-xs"
             >
               <option value="all_active">По всем в работе и закрытым</option>
               <option value="closed_only">Только по закрытым / оплаченным</option>
@@ -308,7 +308,7 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
             <select
               value={selectedMasterId}
               onChange={(e) => setSelectedMasterId(e.target.value)}
-              className="px-3.5 py-1.5 rounded-full border border-white/[0.09] bg-white/60 dark:bg-white/[0.05] backdrop-blur-2xl text-zinc-700 dark:text-zinc-300 font-semibold focus:outline-hidden"
+              className="px-3.5 py-1.5 rounded-full border border-slate-200 dark:border-white/[0.09] bg-white/[0.92] dark:bg-white/[0.05] backdrop-blur-2xl text-zinc-700 dark:text-zinc-300 font-semibold focus:outline-hidden shadow-xs"
             >
               <option value="all">Все сотрудники СТО ({employees.length})</option>
               {employees.map((emp) => (
@@ -325,7 +325,7 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Поиск мастера..."
-                className="pl-9 pr-3.5 py-1.5 rounded-full border border-white/[0.09] bg-white/60 dark:bg-white/[0.05] backdrop-blur-2xl text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 w-40 sm:w-48 focus:outline-hidden"
+                className="pl-9 pr-3.5 py-1.5 rounded-full border border-slate-200 dark:border-white/[0.09] bg-white/[0.92] dark:bg-white/[0.05] backdrop-blur-2xl text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 w-40 sm:w-48 focus:outline-hidden shadow-xs"
               />
             </div>
           </div>
@@ -363,7 +363,7 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
             {/* KPI Cards Row (Floating Glassmorphism with Staggered Spring Reveal) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
               {/* Card 1: Revenue from Labor */}
-              <div className="apple-kpi-1 apple-card-hover p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-zinc-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
+              <div className="apple-kpi-1 apple-card-hover p-4 rounded-3xl bg-white/[0.92] dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-slate-200 dark:border-white/[0.1] hover:border-slate-300 dark:hover:border-white/20 backdrop-blur-2xl shadow-[0_2px_10px_rgba(15,23,42,0.04)] dark:shadow-xl dark:shadow-black/20 transition-all flex items-center justify-between group">
                 <div>
                   <span className="text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                     Выручка по работам
@@ -381,7 +381,7 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
               </div>
 
               {/* Card 2: Total Labor Hours */}
-              <div className="apple-kpi-2 apple-card-hover p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-zinc-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
+              <div className="apple-kpi-2 apple-card-hover p-4 rounded-3xl bg-white/[0.92] dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-slate-200 dark:border-white/[0.1] hover:border-slate-300 dark:hover:border-white/20 backdrop-blur-2xl shadow-[0_2px_10px_rgba(15,23,42,0.04)] dark:shadow-xl dark:shadow-black/20 transition-all flex items-center justify-between group">
                 <div>
                   <span className="text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                     Отработано нормо-часов
@@ -399,7 +399,7 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
               </div>
 
               {/* Card 3: Total Payroll Fund */}
-              <div className="apple-kpi-3 apple-card-hover p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-zinc-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
+              <div className="apple-kpi-3 apple-card-hover p-4 rounded-3xl bg-white/[0.92] dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-slate-200 dark:border-white/[0.1] hover:border-slate-300 dark:hover:border-white/20 backdrop-blur-2xl shadow-[0_2px_10px_rgba(15,23,42,0.04)] dark:shadow-xl dark:shadow-black/20 transition-all flex items-center justify-between group">
                 <div>
                   <span className="text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                     ФОТ (Начислено мастерам)
@@ -417,7 +417,7 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
               </div>
 
               {/* Card 4: Net Margin from Labor */}
-              <div className="apple-kpi-4 apple-card-hover p-4 rounded-3xl bg-white/60 dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-zinc-200/60 dark:border-white/[0.1] hover:border-white/20 backdrop-blur-2xl shadow-xl shadow-black/20 transition-all flex items-center justify-between group">
+              <div className="apple-kpi-4 apple-card-hover p-4 rounded-3xl bg-white/[0.92] dark:bg-white/[0.05] hover:dark:bg-white/[0.08] border border-slate-200 dark:border-white/[0.1] hover:border-slate-300 dark:hover:border-white/20 backdrop-blur-2xl shadow-[0_2px_10px_rgba(15,23,42,0.04)] dark:shadow-xl dark:shadow-black/20 transition-all flex items-center justify-between group">
                 <div>
                   <span className="text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                     Чистая маржа СТО по работам
@@ -440,7 +440,7 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
             </div>
 
             {/* Master Payroll Table (Yandex Tracklist Aesthetic) */}
-            <div className="bg-white/60 dark:bg-white/[0.04] border border-zinc-200/60 dark:border-white/[0.08] rounded-3xl shadow-xl backdrop-blur-2xl overflow-hidden">
+            <div className="bg-white/[0.92] dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] rounded-3xl shadow-[0_2px_10px_rgba(15,23,42,0.04)] dark:shadow-xl backdrop-blur-2xl overflow-hidden">
               <div className="p-4.5 border-b border-zinc-200/50 dark:border-white/[0.06] flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <Users className="w-4 h-4 text-rose-500" />

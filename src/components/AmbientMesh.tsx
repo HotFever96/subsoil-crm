@@ -74,7 +74,7 @@ export const AmbientMesh: React.FC<AmbientMeshProps> = ({ activeTab }) => {
   return (
     <div
       aria-hidden="true"
-      className="fixed inset-0 pointer-events-none overflow-hidden z-0 select-none transition-opacity duration-700 opacity-95 dark:opacity-90"
+      className="fixed inset-0 pointer-events-none overflow-hidden z-0 select-none transition-opacity duration-700 opacity-[0.03] dark:opacity-90"
     >
       {/* 4-Blob Fluid Orbital Mesh */}
       <div className={`absolute inset-0 transition-transform duration-500 ${isBursting ? "animate-energy-burst" : ""}`}>
@@ -180,7 +180,7 @@ export const AmbientMesh: React.FC<AmbientMeshProps> = ({ activeTab }) => {
       {/* Interactive Cursor Follower Light */}
       <div
         ref={lightRef}
-        className="absolute top-0 left-0 w-[560px] h-[560px] rounded-full blur-[90px] pointer-events-none transition-opacity duration-300"
+        className="hidden dark:block absolute top-0 left-0 w-[560px] h-[560px] rounded-full blur-[90px] pointer-events-none transition-opacity duration-300"
         style={{
           opacity: 0,
           background: isChaika
