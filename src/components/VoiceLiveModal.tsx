@@ -107,6 +107,7 @@ export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
       utterance.lang = "ru-RU";
       utterance.rate = 1.05;
       utterance.pitch = 1.15;
+      utterance.volume = 0.72;
 
       const voices = window.speechSynthesis.getVoices();
       const ruVoices = voices.filter((v) => v.lang.startsWith("ru"));
@@ -160,6 +161,7 @@ export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
           audioPlayerRef.current = new Audio();
           audioPlayerRef.current.crossOrigin = "anonymous";
         }
+        audioPlayerRef.current.volume = 0.72;
 
         setupAudioAnalyser(audioPlayerRef.current);
 

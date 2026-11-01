@@ -37,10 +37,10 @@ export async function POST(req: NextRequest) {
             model_id: "eleven_flash_v2_5",
             language_code: "ru",
             voice_settings: {
-              stability: 0.42,
-              similarity_boost: 0.82,
-              style: 0.22,
-              use_speaker_boost: true,
+              stability: 0.50,
+              similarity_boost: 0.80,
+              style: 0.15,
+              use_speaker_boost: false,
             },
           }),
         });
@@ -92,10 +92,10 @@ export async function GET(req: NextRequest) {
       model_id: "eleven_flash_v2_5",
       language_code: "ru",
       voice_settings: {
-        stability: 0.42,
-        similarity_boost: 0.82,
-        style: 0.22,
-        use_speaker_boost: true,
+        stability: 0.50,
+        similarity_boost: 0.80,
+        style: 0.15,
+        use_speaker_boost: false,
       },
     }),
   });

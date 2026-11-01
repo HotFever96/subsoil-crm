@@ -161,6 +161,7 @@ export const TelephonyModule: React.FC = () => {
         if (!simAudioRef.current) {
           simAudioRef.current = new Audio();
         }
+        simAudioRef.current.volume = 0.72;
         simAudioRef.current.src = url;
         simAudioRef.current.onended = () => {
           URL.revokeObjectURL(url);
@@ -187,6 +188,7 @@ export const TelephonyModule: React.FC = () => {
     utt.lang = "ru-RU";
     utt.rate = 1.05;
     utt.pitch = 1.2;
+    utt.volume = 0.72;
 
     const voices = window.speechSynthesis.getVoices();
     const femaleRu = voices.find(
