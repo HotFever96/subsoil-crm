@@ -296,7 +296,7 @@ export const BaySchedulerModule: React.FC = () => {
               setNewDescription("");
               setIsModalOpen(true);
             }}
-            className="flex items-center space-x-2 px-5 py-2.5 rounded-full bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold shadow-lg shadow-rose-600/25 transition-all cursor-pointer active:scale-95"
+            className="flex items-center space-x-2 px-4 py-2 rounded-full bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-100 text-white dark:text-zinc-950 text-xs font-semibold shadow-xs transition-all cursor-pointer active:scale-95"
           >
             <Plus className="w-4 h-4" />
             <span>Записать на пост</span>

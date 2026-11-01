@@ -435,7 +435,7 @@ export const CustomerInvoicesModule: React.FC = () => {
               setCreateMode("manual");
               setIsCreateModalOpen(true);
             }}
-            className="apple-tap flex items-center space-x-2 px-4 py-2.5 rounded-full bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition-all shadow-lg shadow-rose-600/20 cursor-pointer active:scale-95"
+            className="apple-tap flex items-center space-x-2 px-4 py-2 rounded-full bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-100 text-white dark:text-zinc-950 text-xs font-semibold transition-all shadow-xs cursor-pointer active:scale-95"
           >
             <Plus className="w-4 h-4" />
             <span>Выставить счет</span>
@@ -520,8 +520,8 @@ export const CustomerInvoicesModule: React.FC = () => {
                 onClick={() => setStatusFilter(flt.id as any)}
                 className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                   isActive
-                    ? "bg-rose-600 text-white shadow-md shadow-rose-600/20 scale-102"
-                    : "bg-white/40 dark:bg-white/[0.05] text-zinc-600 dark:text-zinc-300 hover:bg-white/70 dark:hover:bg-white/[0.1] border border-white/[0.07]"
+                    ? "bg-zinc-900 text-white dark:bg-white/15 dark:text-white border-zinc-900/10 dark:border-white/20 shadow-xs font-semibold"
+                    : "bg-black/[0.03] dark:bg-white/[0.04] text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-black/[0.06] dark:hover:bg-white/[0.08] border-transparent font-medium"
                 }`}
               >
                 {flt.label}
@@ -571,7 +571,7 @@ export const CustomerInvoicesModule: React.FC = () => {
                   setCreateMode("manual");
                   setIsCreateModalOpen(true);
                 }}
-                className="mt-4 px-4 py-2 rounded-full bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition-all shadow-md cursor-pointer"
+                className="mt-4 px-4 py-2 rounded-full bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-100 text-white dark:text-zinc-950 text-xs font-semibold transition-all shadow-xs cursor-pointer active:scale-95"
               >
                 Выставить первый счет
               </button>
@@ -669,7 +669,7 @@ export const CustomerInvoicesModule: React.FC = () => {
                 type="button"
                 onClick={() => setCreateMode("manual")}
                 className={`flex-1 py-2 rounded-xl font-bold transition-all cursor-pointer ${
-                  createMode === "manual" ? "bg-rose-600 text-white shadow-md" : "text-zinc-400 hover:text-white"
+                  createMode === "manual" ? "bg-zinc-900 text-white dark:bg-white/15 dark:text-white shadow-xs font-semibold" : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white font-medium"
                 }`}
               >
                 1. Независимый счет (Аванс / Запчасти)
@@ -678,7 +678,7 @@ export const CustomerInvoicesModule: React.FC = () => {
                 type="button"
                 onClick={() => setCreateMode("from_order")}
                 className={`flex-1 py-2 rounded-xl font-bold transition-all cursor-pointer ${
-                  createMode === "from_order" ? "bg-rose-600 text-white shadow-md" : "text-zinc-400 hover:text-white"
+                  createMode === "from_order" ? "bg-zinc-900 text-white dark:bg-white/15 dark:text-white shadow-xs font-semibold" : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white font-medium"
                 }`}
               >
                 2. На основании Заказ-наряда
@@ -845,7 +845,7 @@ export const CustomerInvoicesModule: React.FC = () => {
               <button
                 type="button"
                 onClick={createMode === "manual" ? handleCreateManualInvoice : handleCreateFromOrder}
-                className="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold transition-all shadow-md cursor-pointer"
+                className="px-5 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-100 text-white dark:text-zinc-950 font-semibold transition-all shadow-xs cursor-pointer"
               >
                 Сформировать счет
               </button>

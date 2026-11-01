@@ -561,10 +561,8 @@ export const ElectronicArchive: React.FC = () => {
                 onClick={() => setActiveCategory(cat.id)}
                 className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer flex items-center space-x-1.5 ${
                   isActive
-                    ? isChaika
-                      ? "bg-rose-600 text-white shadow-md shadow-rose-600/20 font-bold"
-                      : "bg-sky-600 text-white shadow-md shadow-sky-600/20 font-bold"
-                    : "bg-white/50 dark:bg-white/[0.04] text-zinc-600 dark:text-zinc-400 hover:text-white border border-black/[0.04] dark:border-white/[0.06]"
+                    ? "bg-zinc-900 text-white dark:bg-white/15 dark:text-white border-zinc-900/10 dark:border-white/20 shadow-xs font-semibold"
+                    : "bg-black/[0.03] dark:bg-white/[0.04] text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-black/[0.06] dark:hover:bg-white/[0.08] border-transparent font-medium"
                 }`}
               >
                 <span>{cat.label}</span>

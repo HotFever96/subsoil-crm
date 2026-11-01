@@ -738,10 +738,10 @@ export const RepairOrdersModule: React.FC = () => {
           <div className="flex items-center bg-white/40 dark:bg-white/[0.06] p-1 rounded-full border border-white/[0.08] backdrop-blur-md">
             <button
               onClick={() => setViewMode("table")}
-              className={`p-1.5 px-3 rounded-full text-xs font-semibold flex items-center space-x-1.5 transition-all cursor-pointer ${
+              className={`p-1.5 px-3 rounded-full text-xs flex items-center space-x-1.5 transition-colors cursor-pointer border ${
                 viewMode === "table"
-                  ? "bg-rose-600 text-white shadow-md shadow-rose-600/25"
-                  : "text-zinc-500 hover:text-white"
+                  ? "bg-zinc-900 text-white dark:bg-white/15 dark:text-white border-zinc-900/10 dark:border-white/20 shadow-xs font-semibold"
+                  : "text-zinc-500 hover:text-zinc-900 dark:hover:text-white border-transparent font-medium"
               }`}
               title="Табличный вид"
             >
@@ -750,10 +750,10 @@ export const RepairOrdersModule: React.FC = () => {
             </button>
             <button
               onClick={() => setViewMode("kanban")}
-              className={`p-1.5 px-3 rounded-full text-xs font-semibold flex items-center space-x-1.5 transition-all cursor-pointer ${
+              className={`p-1.5 px-3 rounded-full text-xs flex items-center space-x-1.5 transition-colors cursor-pointer border ${
                 viewMode === "kanban"
-                  ? "bg-rose-600 text-white shadow-md shadow-rose-600/25"
-                  : "text-zinc-500 hover:text-white"
+                  ? "bg-zinc-900 text-white dark:bg-white/15 dark:text-white border-zinc-900/10 dark:border-white/20 shadow-xs font-semibold"
+                  : "text-zinc-500 hover:text-zinc-900 dark:hover:text-white border-transparent font-medium"
               }`}
               title="Канбан-доска"
             >
@@ -765,7 +765,7 @@ export const RepairOrdersModule: React.FC = () => {
           <button
             type="button"
             onClick={openNewOrderModal}
-            className="flex items-center space-x-2 px-4 py-2.5 rounded-full bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 text-white text-xs font-bold transition-all shadow-lg shadow-rose-600/20 cursor-pointer active:scale-95"
+            className="flex items-center space-x-2 px-4 py-2 rounded-full bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-100 text-white dark:text-zinc-950 text-xs font-semibold transition-all shadow-xs cursor-pointer active:scale-95"
           >
             <Plus className="w-4 h-4" />
             <span>Новый заказ-наряд</span>
@@ -779,10 +779,10 @@ export const RepairOrdersModule: React.FC = () => {
         <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
           <button
             onClick={() => setSelectedStatus("all")}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+            className={`px-3.5 py-1.5 rounded-full text-xs whitespace-nowrap transition-colors cursor-pointer border ${
               selectedStatus === "all"
-                ? "bg-rose-600 text-white shadow-md shadow-rose-600/20 scale-102"
-                : "bg-white/40 dark:bg-white/[0.05] text-zinc-600 dark:text-zinc-300 hover:bg-white/70 dark:hover:bg-white/[0.1] border border-white/[0.07]"
+                ? "bg-zinc-900 text-white dark:bg-white/15 dark:text-white border-zinc-900/10 dark:border-white/20 shadow-xs font-semibold"
+                : "bg-black/[0.03] dark:bg-white/[0.04] text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-black/[0.06] dark:hover:bg-white/[0.08] border-transparent font-medium"
             }`}
           >
             Все ({orders.length})
@@ -795,10 +795,10 @@ export const RepairOrdersModule: React.FC = () => {
               <button
                 key={st}
                 onClick={() => setSelectedStatus(st)}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer flex items-center space-x-1.5 ${
+                className={`px-3.5 py-1.5 rounded-full text-xs whitespace-nowrap transition-colors cursor-pointer flex items-center space-x-1.5 border ${
                   isActive
-                    ? "bg-rose-600 text-white shadow-md shadow-rose-600/20 scale-102"
-                    : "bg-white/40 dark:bg-white/[0.05] text-zinc-600 dark:text-zinc-300 hover:bg-white/70 dark:hover:bg-white/[0.1] border border-white/[0.07]"
+                    ? "bg-zinc-900 text-white dark:bg-white/15 dark:text-white border-zinc-900/10 dark:border-white/20 shadow-xs font-semibold"
+                    : "bg-black/[0.03] dark:bg-white/[0.04] text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-black/[0.06] dark:hover:bg-white/[0.08] border-transparent font-medium"
                 }`}
               >
                 <span>{meta.label}</span>

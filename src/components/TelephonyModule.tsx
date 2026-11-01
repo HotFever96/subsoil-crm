@@ -584,7 +584,7 @@ export const TelephonyModule: React.FC = () => {
           <button
             type="button"
             onClick={() => setIsTestCallModalOpen(true)}
-            className="apple-tap flex items-center space-x-2 px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-semibold transition-all shadow-md shadow-red-600/20 cursor-pointer active:scale-95"
+            className="apple-tap flex items-center space-x-2 px-4 py-2 rounded-full bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-100 text-white dark:text-zinc-950 text-xs font-semibold transition-all shadow-xs cursor-pointer active:scale-95"
             title="Совершить звонок клиенту"
           >
             <Phone className="w-3.5 h-3.5" />
@@ -704,8 +704,8 @@ export const TelephonyModule: React.FC = () => {
                 onClick={() => setActiveTab(t.id as any)}
                 className={`px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer flex items-center space-x-1.5 ${
                   isActive
-                    ? "bg-rose-600 text-white shadow-md shadow-rose-600/25"
-                    : "bg-white/40 dark:bg-white/[0.04] text-zinc-600 dark:text-zinc-300 hover:bg-white/70 dark:hover:bg-white/[0.08] border border-white/[0.07]"
+                    ? "bg-zinc-900 text-white dark:bg-white/15 dark:text-white border-zinc-900/10 dark:border-white/20 shadow-xs font-semibold"
+                    : "bg-black/[0.03] dark:bg-white/[0.04] text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-black/[0.06] dark:hover:bg-white/[0.08] border-transparent font-medium"
                 }`}
               >
                 <span>{t.label}</span>
@@ -743,10 +743,10 @@ export const TelephonyModule: React.FC = () => {
               <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
                 {[
                   { id: "all", label: "Все" },
-                  { id: "csi_quality", label: "⭐ CSI Контроль качества" },
-                  { id: "inbound_admin", label: "📥 Заявка (Лид)" },
-                  { id: "readiness_reminder", label: "🚗 Готовность авто" },
-                  { id: "custom_order", label: "✏️ Поручения мастера" },
+                  { id: "csi_quality", label: "CSI Контроль качества" },
+                  { id: "inbound_admin", label: "Заявка (Лид)" },
+                  { id: "readiness_reminder", label: "Готовность авто" },
+                  { id: "custom_order", label: "Поручения мастера" },
                 ].map((f) => (
                   <button
                     key={f.id}
@@ -754,8 +754,8 @@ export const TelephonyModule: React.FC = () => {
                     onClick={() => setFilterType(f.id as any)}
                     className={`px-3 py-1 rounded-full text-[11px] font-semibold whitespace-nowrap transition-all cursor-pointer ${
                       filterType === f.id
-                        ? "bg-white/20 text-white border border-white/25"
-                        : "bg-white/[0.03] text-zinc-400 hover:text-zinc-200 border border-white/[0.05]"
+                        ? "bg-zinc-900 text-white dark:bg-white/15 dark:text-white border-zinc-900/10 dark:border-white/20 shadow-2xs font-semibold"
+                        : "bg-black/[0.03] dark:bg-white/[0.03] text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-black/[0.06] dark:hover:bg-white/[0.06] border-transparent font-medium"
                     }`}
                   >
                     {f.label}
@@ -1437,7 +1437,7 @@ export const TelephonyModule: React.FC = () => {
                   setSelectedCall(null);
                   handleTriggerRealCall(phone, name, car, orderId, "csi");
                 }}
-                className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition-all shadow-md cursor-pointer flex items-center space-x-1.5"
+                className="px-4 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-100 text-white dark:text-zinc-950 text-xs font-semibold transition-all shadow-xs cursor-pointer flex items-center space-x-1.5"
               >
                 <PhoneCall className="w-3.5 h-3.5" />
                 <span>Повторить звонок (Анна)</span>

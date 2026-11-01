@@ -422,39 +422,51 @@ export const Sidebar: React.FC<SidebarProps> = ({
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = currentTab === item.id;
+
+              const activeBgAndBorder = !isActive
+                ? "border-transparent text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white hover:bg-zinc-200/50 dark:hover:bg-white/[0.06] font-medium"
+                : isChaika
+                  ? chaikaPalette === "cobalt"
+                    ? "bg-gradient-to-r from-blue-500/20 to-blue-500/5 border-blue-500/30 text-zinc-950 dark:text-white font-semibold shadow-xs"
+                    : chaikaPalette === "emerald"
+                      ? "bg-gradient-to-r from-emerald-500/20 to-emerald-500/5 border-emerald-500/30 text-zinc-950 dark:text-white font-semibold shadow-xs"
+                      : "bg-gradient-to-r from-red-500/20 to-red-500/5 border-red-500/30 text-zinc-950 dark:text-white font-semibold shadow-xs"
+                  : "bg-gradient-to-r from-sky-500/20 to-sky-500/5 border-sky-500/30 text-zinc-950 dark:text-white font-semibold shadow-xs";
+
+              const iconColor = isActive
+                ? isChaika
+                  ? chaikaPalette === "cobalt"
+                    ? "text-blue-500 dark:text-blue-400"
+                    : chaikaPalette === "emerald"
+                      ? "text-emerald-500 dark:text-emerald-400"
+                      : "text-red-500 dark:text-red-400"
+                  : "text-sky-500 dark:text-sky-400"
+                : "text-zinc-400 dark:text-zinc-400 group-hover:text-zinc-800 dark:group-hover:text-zinc-200";
+
+              const badgeColor = isChaika
+                ? chaikaPalette === "cobalt"
+                  ? "bg-blue-500/15 text-blue-600 dark:text-blue-400"
+                  : chaikaPalette === "emerald"
+                    ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
+                    : "bg-red-500/15 text-red-600 dark:text-red-400"
+                : "bg-sky-500/15 text-sky-600 dark:text-sky-400";
+
               return (
                 <button
                   key={item.id}
-                  onClick={() => handleTabClick(item.id)}
-                  className={`w-full text-left px-3.5 py-2 rounded-2xl text-[14.5px] transition-all flex items-center justify-between cursor-pointer antialiased ${
-                    isActive
-                      ? isChaika
-                        ? "bg-gradient-to-r from-red-500/20 to-red-500/5 border border-red-500/30 text-zinc-950 dark:text-white font-semibold shadow-xs backdrop-blur-md"
-                        : "bg-gradient-to-r from-sky-500/20 to-sky-500/5 border border-sky-500/30 text-zinc-950 dark:text-white font-semibold shadow-xs backdrop-blur-md"
-                      : "text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white hover:bg-zinc-200/50 dark:hover:bg-white/[0.06] font-medium"
-                  }`}
+                  onClick={(e) => {
+                    (e.currentTarget as HTMLElement)?.blur();
+                    handleTabClick(item.id);
+                  }}
+                  className={`w-full text-left px-3.5 py-2 rounded-2xl text-[14.5px] border transition-colors duration-150 flex items-center justify-between cursor-pointer antialiased outline-none focus:outline-none focus-visible:outline-none ring-0 focus:ring-0 active:scale-[0.98] select-none ${activeBgAndBorder}`}
                 >
                   <div className="flex items-center space-x-3 min-w-0">
-                    <Icon
-                      className={`w-4 h-4 shrink-0 transition-colors ${
-                        isActive
-                          ? isChaika
-                            ? "text-red-500 dark:text-red-400"
-                            : "text-sky-500 dark:text-sky-400"
-                          : "text-zinc-400 dark:text-zinc-400 group-hover:text-zinc-800 dark:group-hover:text-zinc-200"
-                      }`}
-                    />
+                    <Icon className={`w-4 h-4 shrink-0 transition-colors ${iconColor}`} />
                     <span className="truncate">{item.label}</span>
                   </div>
 
                   {item.badge && (
-                    <span
-                      className={`text-[11px] px-2 py-0.5 rounded-full font-medium ml-2 shrink-0 ${
-                        isChaika
-                          ? "bg-red-500/15 text-red-600 dark:text-red-400"
-                          : "bg-sky-500/15 text-sky-600 dark:text-sky-400"
-                      }`}
-                    >
+                    <span className={`text-[11px] px-2 py-0.5 rounded-full font-medium ml-2 shrink-0 ${badgeColor}`}>
                       {item.badge}
                     </span>
                   )}

@@ -387,21 +387,21 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
 
       {/* Mode Switcher Tabs */}
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center space-x-1.5 p-1 bg-white/40 dark:bg-white/[0.04] rounded-full border border-white/[0.08] backdrop-blur-md">
+        <div className="flex items-center space-x-1 p-1 bg-black/[0.03] dark:bg-white/[0.04] rounded-full border border-black/[0.06] dark:border-white/[0.08] backdrop-blur-md">
           <button
             type="button"
             onClick={() => {
               setSearchMode("ai_catalog");
               if (query.trim()) performSearch(query, "ai_catalog");
             }}
-            className={`flex items-center space-x-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+            className={`flex items-center space-x-2 px-3.5 py-1.5 rounded-full text-xs transition-colors cursor-pointer border ${
               searchMode === "ai_catalog"
-                ? "bg-rose-600 text-white shadow-md shadow-rose-600/20"
-                : "text-zinc-400 hover:text-white"
+                ? "bg-white text-zinc-900 dark:bg-white/15 dark:text-white border-black/10 dark:border-white/20 shadow-xs font-semibold"
+                : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white border-transparent font-medium"
             }`}
           >
             <Sparkles className="w-3.5 h-3.5" />
-            <span>ИИ-справочник OEM и цен</span>
+            <span>Каталог OEM и кроссов</span>
           </button>
           <button
             type="button"
@@ -409,20 +409,20 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
               setSearchMode("api");
               if (query.trim()) performSearch(query, "api");
             }}
-            className={`flex items-center space-x-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+            className={`flex items-center space-x-2 px-3.5 py-1.5 rounded-full text-xs transition-colors cursor-pointer border ${
               searchMode === "api"
-                ? "bg-rose-600 text-white shadow-md shadow-rose-600/20"
-                : "text-zinc-400 hover:text-white"
+                ? "bg-white text-zinc-900 dark:bg-white/15 dark:text-white border-black/10 dark:border-white/20 shadow-xs font-semibold"
+                : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white border-transparent font-medium"
             }`}
           >
             <Truck className="w-3.5 h-3.5" />
-            <span>Поиск по API поставщиков</span>
+            <span>Шлюзы дистрибьюторов</span>
           </button>
         </div>
 
         {searchMode === "ai_catalog" ? (
           <span className="text-[11px] text-zinc-500 dark:text-zinc-400 flex items-center space-x-1">
-            <span>💡 Подбор кросс-номеров и ориентировочных цен без фейковых остатков</span>
+            <span>Подбор кросс-номеров и цен по дистрибьюторам</span>
           </span>
         ) : (
           <span className="text-[11px] text-zinc-500 dark:text-zinc-400 flex items-center space-x-1">
@@ -504,7 +504,7 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
               type="button"
               disabled={isLoading || !query.trim()}
               onClick={() => performSearch()}
-              className="px-4 py-1.5 rounded-full bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white text-xs font-bold flex items-center space-x-1.5 transition-all shadow-md shadow-rose-600/25 shrink-0 cursor-pointer active:scale-95"
+              className="px-4 py-1.5 rounded-full bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-100 disabled:opacity-50 text-white dark:text-zinc-950 text-xs font-semibold flex items-center space-x-1.5 transition-all shadow-xs shrink-0 cursor-pointer active:scale-95"
             >
               {isLoading ? (
                 <>
@@ -535,10 +535,10 @@ export const PartsProcurementModule: React.FC<PartsProcurementModuleProps> = ({
                     setMarkupPercent(pct);
                     if (searchResponse) performSearch();
                   }}
-                  className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                  className={`px-3 py-1 rounded-full text-xs transition-colors cursor-pointer border ${
                     markupPercent === pct
-                      ? "bg-rose-600 text-white shadow-sm shadow-rose-600/30"
-                      : "bg-white/40 dark:bg-white/[0.04] text-zinc-700 dark:text-zinc-300 hover:bg-white/70 dark:hover:bg-white/[0.09] border border-white/[0.07]"
+                      ? "bg-zinc-900 text-white dark:bg-white/15 dark:text-white border-zinc-900/10 dark:border-white/20 shadow-xs font-semibold"
+                      : "bg-black/[0.03] dark:bg-white/[0.04] text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-black/[0.06] dark:hover:bg-white/[0.08] border-transparent font-medium"
                   }`}
                 >
                   +{pct}%

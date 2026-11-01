@@ -285,8 +285,8 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
                 onClick={() => setPeriodFilter(p.id as any)}
                 className={`px-3.5 py-1.5 rounded-full font-semibold whitespace-nowrap transition-all cursor-pointer ${
                   periodFilter === p.id
-                    ? "bg-rose-600 text-white shadow-md shadow-rose-600/20 scale-102"
-                    : "bg-white/40 dark:bg-white/[0.05] text-zinc-600 dark:text-zinc-300 hover:bg-white/70 dark:hover:bg-white/[0.1] border border-white/[0.07]"
+                    ? "bg-zinc-900 text-white dark:bg-white/15 dark:text-white border-zinc-900/10 dark:border-white/20 shadow-xs font-semibold"
+                    : "bg-black/[0.03] dark:bg-white/[0.04] text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-black/[0.06] dark:hover:bg-white/[0.08] border-transparent font-medium"
                 }`}
               >
                 {p.label}
