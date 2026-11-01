@@ -279,7 +279,7 @@ export default function Home() {
       />
 
       {/* Main Workspace with Tactile Apple Bounce Transition on Tab Switch */}
-      <main className="flex-1 flex flex-col h-full overflow-hidden relative">
+      <main className="flex-1 flex flex-col h-full overflow-hidden relative z-10">
         <div key={currentTab} className="flex-1 flex flex-col h-full overflow-hidden apple-bounce-enter">
           {currentTab === "ai-chat" && <AIChat />}
 
