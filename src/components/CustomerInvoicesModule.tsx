@@ -554,28 +554,30 @@ export const CustomerInvoicesModule: React.FC = () => {
       {/* Invoices List / Table (Floating Canvas, no hard box frames) */}
       <div className="flex-1 overflow-y-auto px-6 py-2">
         {filteredInvoices.length === 0 ? (
-          <div className="h-full min-h-[300px] flex flex-col items-center justify-center text-center p-8">
-            <div className="w-14 h-14 rounded-3xl bg-white/40 dark:bg-white/[0.04] border border-white/10 flex items-center justify-center text-zinc-400 mb-3.5">
-              <Receipt className="w-7 h-7 text-rose-500" />
+          <div className="h-full min-h-[340px] flex items-center justify-center p-4">
+            <div className="p-8 rounded-3xl bg-white/70 dark:bg-zinc-950/70 border border-zinc-200/80 dark:border-white/[0.1] backdrop-blur-2xl shadow-xl max-w-md w-full flex flex-col items-center text-center">
+              <div className="w-14 h-14 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-500 mb-4">
+                <Receipt className="w-7 h-7" />
+              </div>
+              <h3 className="text-base font-bold text-zinc-900 dark:text-white">
+                {searchQuery ? "Ничего не найдено" : "Счета еще не выставлены"}
+              </h3>
+              <p className="text-xs text-zinc-600 dark:text-zinc-300 mt-2 leading-relaxed">
+                Нажмите «Выставить счет», чтобы создать счет на предоплату запчастей или выгрузить его из заказ-наряда.
+              </p>
+              {!searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCreateMode("manual");
+                    setIsCreateModalOpen(true);
+                  }}
+                  className="mt-5 px-5 py-2.5 rounded-full bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-100 text-white dark:text-zinc-950 text-xs font-semibold transition-all shadow-xs cursor-pointer active:scale-95"
+                >
+                  Выставить первый счет
+                </button>
+              )}
             </div>
-            <h3 className="text-base font-bold text-zinc-800 dark:text-zinc-200">
-              {searchQuery ? "Ничего не найдено" : "Счета еще не выставлены"}
-            </h3>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 max-w-sm mt-1">
-              Нажмите «Выставить счет», чтобы создать счет на предоплату запчастей или выгрузить его из заказ-наряда.
-            </p>
-            {!searchQuery && (
-              <button
-                type="button"
-                onClick={() => {
-                  setCreateMode("manual");
-                  setIsCreateModalOpen(true);
-                }}
-                className="mt-4 px-4 py-2 rounded-full bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-100 text-white dark:text-zinc-950 text-xs font-semibold transition-all shadow-xs cursor-pointer active:scale-95"
-              >
-                Выставить первый счет
-              </button>
-            )}
           </div>
         ) : (
           <div className="space-y-1.5 pb-12">

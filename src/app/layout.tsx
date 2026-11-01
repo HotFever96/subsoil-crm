@@ -28,7 +28,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ru" className={`${geistSans.variable} ${geistMono.variable} h-full`}>
-      <body className="min-h-screen antialiased selection:bg-sky-500/20 selection:text-sky-500">
+      <body className="min-h-screen selection:bg-sky-500/20 selection:text-sky-500">
         <BusinessProvider>
           <ThemeProvider>
             <AuthProvider>

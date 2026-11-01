@@ -604,32 +604,32 @@ export const ElectronicArchive: React.FC = () => {
       {/* Files List / Grid Container */}
       <div className="flex-1 overflow-y-auto p-6">
         {filteredItems.length === 0 ? (
-          <div className="h-full min-h-[300px] flex flex-col items-center justify-center text-center p-8">
-            <div className="w-14 h-14 rounded-2xl bg-zinc-100 dark:bg-white/[0.04] border border-zinc-200 dark:border-white/[0.08] flex items-center justify-center text-zinc-400 mb-3.5">
-              <FolderArchive className="w-7 h-7" />
+          <div className="h-full min-h-[340px] flex items-center justify-center p-4">
+            <div className="p-8 rounded-3xl bg-white/70 dark:bg-zinc-950/70 border border-zinc-200/80 dark:border-white/[0.1] backdrop-blur-2xl shadow-xl max-w-md w-full flex flex-col items-center text-center">
+              <div className="w-14 h-14 rounded-2xl bg-zinc-100 dark:bg-white/[0.08] border border-zinc-200 dark:border-white/[0.1] flex items-center justify-center text-zinc-400 mb-4">
+                <FolderArchive className="w-7 h-7 text-zinc-700 dark:text-zinc-200" />
+              </div>
+              <h3 className="text-base font-bold text-zinc-900 dark:text-white">
+                {searchQuery ? "Ничего не найдено" : "В этой категории пока нет документов"}
+              </h3>
+              <p className="text-xs text-zinc-600 dark:text-zinc-300 mt-2 leading-relaxed">
+                {searchQuery
+                  ? `По запросу «${searchQuery}» совпадений не обнаружено. Попробуйте изменить формулировку.`
+                  : isChaika
+                  ? "Создайте заказ-наряд, акт осмотра кузова или загрузите накладную вручную."
+                  : "Загрузите исходную лицензию или сгенерируйте документ через ИИ-чат или студию проектирования."}
+              </p>
+              {!searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="mt-5 px-5 py-2.5 rounded-full bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-100 text-white dark:text-zinc-950 text-xs font-semibold transition-all shadow-xs cursor-pointer active:scale-95 flex items-center space-x-1.5"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>Добавить файл</span>
+                </button>
+              )}
             </div>
-            <h3 className="text-base font-semibold text-zinc-800 dark:text-zinc-200">
-              {searchQuery ? "Ничего не найдено" : "В этой категории пока нет документов"}
-            </h3>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 max-w-sm mt-1">
-              {searchQuery
-                ? `По запросу «${searchQuery}» совпадений не обнаружено. Попробуйте изменить формулировку.`
-                : isChaika
-                ? "Создайте заказ-наряд, акт осмотра кузова или загрузите накладную вручную."
-                : "Загрузите исходную лицензию или сгенерируйте документ через ИИ-чат или студию проектирования."}
-            </p>
-            {!searchQuery && (
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className={`mt-4 px-4 py-2 rounded-xl text-white text-xs font-semibold flex items-center space-x-1.5 transition-colors cursor-pointer ${
-                  isChaika ? "bg-rose-600 hover:bg-rose-500" : "bg-sky-600 hover:bg-sky-500"
-                }`}
-              >
-                <Plus className="w-3.5 h-3.5" />
-                <span>Добавить файл</span>
-              </button>
-            )}
           </div>
         ) : viewMode === "table" ? (
           /* High-density compact table view (Auto-Dealer / 1C ERP standard) */

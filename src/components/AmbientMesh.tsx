@@ -345,7 +345,7 @@ export const AmbientMesh: React.FC<AmbientMeshProps> = () => {
   return (
     <div
       aria-hidden="true"
-      className="fixed inset-0 pointer-events-none overflow-hidden z-0 select-none transition-opacity duration-700 opacity-95 dark:opacity-90"
+      className="fixed inset-0 pointer-events-none overflow-hidden z-0 select-none transition-opacity duration-700 opacity-70 dark:opacity-50"
     >
       {/* 4-Blob Fluid Orbital Mesh */}
       <div className="absolute inset-0">
