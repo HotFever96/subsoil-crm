@@ -29,6 +29,8 @@ import {
   ChevronRight,
   Receipt,
   PhoneCall,
+  Palette,
+  Check,
 } from "lucide-react";
 import { useTheme, CHAIKA_PALETTES, ChaikaPalette } from "@/lib/theme-context";
 import { useAuth } from "@/lib/auth-context";
@@ -66,7 +68,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
   isMobileOpen = false,
   onCloseMobile,
 }) => {
+  const { currentBusiness, toggleBusiness } = useBusiness();
+  const isChaika = currentBusiness === "chaika-service";
   const { theme, toggleTheme, chaikaPalette, setChaikaPalette } = useTheme();
+  const { user, logout, updateName } = useAuth();
+  const { sessions, activeSessionId, selectSession, deleteSession, createNewChat } = useChat();
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [isStoSettingsOpen, setIsStoSettingsOpen] = useState(false);
+  const [nameInput, setNameInput] = useState("");
+  const [selectedModel, setSelectedModel] = useState<string>("anthropic/claude-sonnet-4.6");
+  const [isSavingSettings, setIsSavingSettings] = useState(false);
+  const [isChatHistoryOpen, setIsChatHistoryOpen] = useState(true);
+  const [isFlipping, setIsFlipping] = useState(false);
+
+  // Hidden 3-palette theme switcher with 2-second hold
   const [isPaletteCloudOpen, setIsPaletteCloudOpen] = useState(false);
   const [holdProgress, setHoldProgress] = useState(0);
   const holdTimerRef = React.useRef<NodeJS.Timeout | null>(null);
@@ -79,20 +94,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
     setHoldProgress(0);
 
     const startTime = Date.now();
+    if (holdIntervalRef.current) clearInterval(holdIntervalRef.current);
+    if (holdTimerRef.current) clearTimeout(holdTimerRef.current);
+
     holdIntervalRef.current = setInterval(() => {
       const elapsed = Date.now() - startTime;
       const pct = Math.min(100, Math.round((elapsed / 2000) * 100));
       setHoldProgress(pct);
-    }, 35);
+    }, 30);
 
     holdTimerRef.current = setTimeout(() => {
       longPressTriggeredRef.current = true;
       if (holdIntervalRef.current) clearInterval(holdIntervalRef.current);
+      holdIntervalRef.current = null;
       setHoldProgress(0);
       setIsPaletteCloudOpen(true);
       try {
         if (typeof navigator !== "undefined" && navigator.vibrate) {
-          navigator.vibrate([35, 45, 35]);
+          navigator.vibrate([40, 50, 40]);
         }
       } catch {}
     }, 2000);
@@ -127,44 +146,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
     }
     toggleTheme();
   };
-  const { user, logout, updateName } = useAuth();
-  const { sessions, activeSessionId, selectSession, deleteSession, createNewChat } = useChat();
-  const { currentBusiness, toggleBusiness } = useBusiness();
-  const [showSettingsModal, setShowSettingsModal] = useState(false);
-  const [isStoSettingsOpen, setIsStoSettingsOpen] = useState(false);
-  const [nameInput, setNameInput] = useState("");
-  const [selectedModel, setSelectedModel] = useState<string>("anthropic/claude-sonnet-4.6");
-  const [isSavingSettings, setIsSavingSettings] = useState(false);
-  const [isChatHistoryOpen, setIsChatHistoryOpen] = useState(true);
-  const [isFlipping, setIsFlipping] = useState(false);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("geonedra_openrouter_model");
-      if (saved) {
-        setSelectedModel(saved);
-      }
-    }
-    if (user?.username) {
-      fetch("/api/sync", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "get_user_settings", username: user.username }),
-      })
-        .then((r) => r.json())
-        .then((data) => {
-          if (data.success && data.settings?.preferred_model) {
-            setSelectedModel(data.settings.preferred_model);
-            if (typeof window !== "undefined") {
-              localStorage.setItem("geonedra_openrouter_model", data.settings.preferred_model);
-            }
-          }
-        })
-        .catch(() => {});
-    }
-  }, [user?.username]);
-
-  const isChaika = currentBusiness === "chaika-service";
 
   const handleToggleBusiness = () => {
     setIsFlipping(true);
@@ -575,19 +556,138 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <Settings className="w-3.5 h-3.5" />
               </button>
 
-              {/* Theme Toggle */}
-              <button
-                type="button"
-                onClick={toggleTheme}
-                className="w-7 h-7 rounded-lg flex items-center justify-center text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-300/50 dark:hover:bg-white/[0.08] transition-colors cursor-pointer"
-                title={theme === "dark" ? "Переключить на светлую тему" : "Переключить на темную тему"}
-              >
-                {theme === "dark" ? (
-                  <Moon className="w-3.5 h-3.5" />
-                ) : (
-                  <Sun className="w-3.5 h-3.5 text-amber-500" />
+              {/* Theme Toggle with 2-Second Hold for Hidden Palettes Cloud */}
+              <div className="relative">
+                <button
+                  type="button"
+                  onMouseDown={handleThemePointerDown}
+                  onMouseUp={handleThemePointerUp}
+                  onMouseLeave={handleThemePointerUp}
+                  onTouchStart={handleThemePointerDown}
+                  onTouchEnd={handleThemePointerUp}
+                  onContextMenu={(e) => {
+                    if (isChaika) {
+                      e.preventDefault();
+                      setIsPaletteCloudOpen((prev) => !prev);
+                    }
+                  }}
+                  onClick={handleThemeClick}
+                  className={`w-7 h-7 rounded-lg flex items-center justify-center text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-300/50 dark:hover:bg-white/[0.08] transition-all cursor-pointer relative select-none outline-none focus:outline-hidden ${
+                    holdProgress > 0 ? "scale-90 bg-zinc-300/70 dark:bg-white/[0.14]" : ""
+                  }`}
+                  title={
+                    isChaika
+                      ? "Тема (зажмите на 2 сек для палитры)"
+                      : theme === "dark"
+                      ? "Переключить на светлую тему"
+                      : "Переключить на темную тему"
+                  }
+                >
+                  {/* Subtle Circular Progress indicator during 2s hold */}
+                  {holdProgress > 0 && (
+                    <svg className="absolute -inset-0.5 w-8 h-8 -rotate-90 pointer-events-none">
+                      <circle
+                        cx="16"
+                        cy="16"
+                        r="14"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        className="text-red-500 opacity-90"
+                        strokeDasharray={88}
+                        strokeDashoffset={88 - (88 * holdProgress) / 100}
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                  )}
+
+                  {theme === "dark" ? (
+                    <Moon className="w-3.5 h-3.5" />
+                  ) : (
+                    <Sun className="w-3.5 h-3.5 text-amber-500" />
+                  )}
+                </button>
+
+                {/* Hidden Apple Cloud Palette Popover */}
+                {isPaletteCloudOpen && (
+                  <>
+                    <div
+                      className="fixed inset-0 z-50 bg-black/25 dark:bg-black/40 backdrop-blur-2xs cursor-default"
+                      onClick={() => setIsPaletteCloudOpen(false)}
+                    />
+                    <div className="absolute bottom-11 -right-6 sm:left-auto sm:-right-8 w-72 z-60 p-3 rounded-2xl bg-white/95 dark:bg-zinc-900/95 backdrop-blur-2xl border border-black/10 dark:border-white/15 shadow-2xl shadow-black/30 apple-bounce-enter select-none text-left">
+                      {/* Cloud Header */}
+                      <div className="flex items-center justify-between pb-2 mb-2 border-b border-black/[0.06] dark:border-white/[0.08]">
+                        <div className="flex items-center space-x-2">
+                          <Palette className="w-3.5 h-3.5 text-zinc-700 dark:text-zinc-200" />
+                          <span className="text-xs font-bold text-zinc-900 dark:text-white">
+                            Цветовая палитра Чайки
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setIsPaletteCloudOpen(false)}
+                          className="p-1 rounded-md text-zinc-400 hover:text-zinc-700 dark:hover:text-white transition-colors cursor-pointer"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+
+                      <p className="text-[10.5px] text-zinc-500 dark:text-zinc-400 mb-2 leading-tight">
+                        Фирменные цветовые наборы СТО:
+                      </p>
+
+                      {/* 3 Preset Options */}
+                      <div className="space-y-1.5">
+                        {CHAIKA_PALETTES.map((p) => {
+                          const isSelected = chaikaPalette === p.id;
+                          return (
+                            <button
+                              key={p.id}
+                              type="button"
+                              onClick={() => {
+                                setChaikaPalette(p.id);
+                                setIsPaletteCloudOpen(false);
+                              }}
+                              className={`w-full p-2 rounded-xl flex items-center justify-between transition-all cursor-pointer text-left ${
+                                isSelected
+                                  ? "bg-zinc-100 dark:bg-white/10 ring-1 ring-black/10 dark:ring-white/20 shadow-xs"
+                                  : "hover:bg-zinc-100/70 dark:hover:bg-white/[0.05]"
+                              }`}
+                            >
+                              <div className="flex items-center space-x-2.5 min-w-0">
+                                <div className="flex -space-x-1 shrink-0">
+                                  {p.previewColors.map((color, i) => (
+                                    <span
+                                      key={i}
+                                      className="w-3.5 h-3.5 rounded-full border border-white/50 shadow-2xs"
+                                      style={{ backgroundColor: color }}
+                                    />
+                                  ))}
+                                </div>
+                                <div className="min-w-0">
+                                  <div className="text-xs font-bold text-zinc-900 dark:text-white truncate">
+                                    {p.name}
+                                  </div>
+                                  <div className="text-[9.5px] text-zinc-500 dark:text-zinc-400 truncate">
+                                    {p.tagline}
+                                  </div>
+                                </div>
+                              </div>
+                              {isSelected && (
+                                <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0 ml-1.5" />
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      {/* Cloud Arrow Notch pointing down to button */}
+                      <div className="absolute -bottom-1.5 right-8 w-3 h-3 rotate-45 bg-white/95 dark:bg-zinc-900/95 border-r border-b border-black/10 dark:border-white/15" />
+                    </div>
+                  </>
                 )}
-              </button>
+              </div>
 
               {/* Logout */}
               <button
