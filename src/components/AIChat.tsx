@@ -32,6 +32,7 @@ import {
   Wrench,
   SearchCheck,
   Radio,
+  ArrowRight,
 } from "lucide-react";
 import { VoiceLiveModal } from "@/components/VoiceLiveModal";
 import { requestMicrophoneStream, transcribeAudioWithServer } from "@/lib/microphone-manager";
@@ -42,6 +43,7 @@ import { useAuth } from "@/lib/auth-context";
 import { useBusiness } from "@/lib/business-context";
 import { parseUploadedFile, downloadUploadedFile } from "@/lib/file-parser";
 import { tryRepairAndParseJson } from "@/lib/json-repair";
+import { extractRepairOrderFromText, isOrderCreationRequest } from "@/lib/order-markdown-parser";
 import {
   exportToExcel,
   exportToDocx,
@@ -205,24 +207,38 @@ const ActionCardView: React.FC<{ action: ChatActionPayload }> = ({ action }) => 
 
   if (action.type === "REPAIR_ORDER_CREATED") {
     return (
-      <div className="flex items-start space-x-3 p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-950 dark:text-rose-200 shadow-2xs my-2">
-        <div className="p-2 rounded-xl bg-rose-500/20 text-rose-600 dark:text-rose-400 shrink-0">
-          <Wrench className="w-4 h-4" />
-        </div>
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center space-x-1.5 text-xs font-semibold text-rose-600 dark:text-rose-400">
-            <CheckCircle2 className="w-3.5 h-3.5" />
-            <span>Заказ-наряд оформлен и сохранен в базе СТО</span>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-950 dark:text-rose-200 shadow-2xs my-2">
+        <div className="flex items-start space-x-3 min-w-0">
+          <div className="p-2 rounded-xl bg-rose-500/20 text-rose-600 dark:text-rose-400 shrink-0">
+            <Wrench className="w-4 h-4" />
           </div>
-          <div className="text-sm font-bold text-zinc-900 dark:text-white truncate mt-0.5">
-            {action.title}
-          </div>
-          {action.details && (
-            <div className="text-xs text-zinc-600 dark:text-zinc-300 mt-0.5">
-              {renderActionDetails(action.details)}
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center space-x-1.5 text-xs font-semibold text-rose-600 dark:text-rose-400">
+              <CheckCircle2 className="w-3.5 h-3.5" />
+              <span>Заказ-наряд оформлен и сохранен в базе СТО</span>
             </div>
-          )}
+            <div className="text-sm font-bold text-zinc-900 dark:text-white truncate mt-0.5">
+              {action.title}
+            </div>
+            {action.details && (
+              <div className="text-xs text-zinc-600 dark:text-zinc-300 mt-0.5">
+                {renderActionDetails(action.details)}
+              </div>
+            )}
+          </div>
         </div>
+        <button
+          type="button"
+          onClick={() => {
+            if (typeof window !== "undefined") {
+              window.dispatchEvent(new CustomEvent("geo_ai_switch_tab", { detail: "repair-orders" }));
+            }
+          }}
+          className="self-start sm:self-center px-3.5 py-1.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-bold transition-all shadow-xs cursor-pointer shrink-0 flex items-center space-x-1.5"
+        >
+          <span>В Заказ-наряды</span>
+          <ArrowRight className="w-3.5 h-3.5" />
+        </button>
       </div>
     );
   }
@@ -318,6 +334,55 @@ export const AIChat: React.FC = () => {
       chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [activeSession?.messages, isLoading, hasUserMessages]);
+
+  // Auto-scan activeSession messages to backfill and guarantee that any repair orders created in chat are saved in localStorage
+  useEffect(() => {
+    if (!activeSession?.messages || activeSession.messages.length === 0) return;
+    const msgs = activeSession.messages;
+    const ordersToSave: any[] = [];
+    for (let i = 0; i < msgs.length; i++) {
+      const m = msgs[i];
+      if (m.role === "assistant" && m.content) {
+        const prevUserMsg = i > 0 && msgs[i - 1].role === "user" ? msgs[i - 1].content : "";
+        if (isOrderCreationRequest(`${prevUserMsg}\n${m.content}`)) {
+          const ord = extractRepairOrderFromText(m.content, prevUserMsg, user?.username || "antonv");
+          if (ord) {
+            ordersToSave.push(ord);
+          }
+        }
+      }
+    }
+
+    if (ordersToSave.length > 0 && typeof window !== "undefined") {
+      const targetUsers = [
+        (user?.username || "admin").trim().toLowerCase(),
+        "antonv",
+        "admin",
+        "guest",
+      ];
+      let hasNew = false;
+      for (const u of targetUsers) {
+        const sKey = `geo_ai_repair_orders_${u}_v2`;
+        try {
+          const saved = localStorage.getItem(sKey);
+          let list: any[] = saved ? JSON.parse(saved) : [];
+          if (!Array.isArray(list)) list = [];
+          for (const ord of ordersToSave) {
+            const exists = list.some((o: any) => o.id === ord.id || o.orderNumber === ord.orderNumber);
+            if (!exists) {
+              list.unshift(ord);
+              hasNew = true;
+            }
+          }
+          localStorage.setItem(sKey, JSON.stringify(list));
+        } catch {}
+      }
+      if (hasNew) {
+        window.dispatchEvent(new CustomEvent("geo_ai_repair_orders_updated"));
+        window.dispatchEvent(new CustomEvent("geo_ai_order_updated"));
+      }
+    }
+  }, [activeSession?.id, activeSession?.messages, user?.username]);
 
   // Live Voice Mode («Моя волна» / Hands-Free) & Fallback STT State
   const [isVoiceLiveOpen, setIsVoiceLiveOpen] = useState(false);
@@ -686,33 +751,57 @@ export const AIChat: React.FC = () => {
       });
 
       const data = await res.json();
+
+      let effectiveActions = data.actions && Array.isArray(data.actions) && data.actions.length > 0 ? data.actions : undefined;
+
+      // Client-side parser fallback if action was omitted by LLM
+      if (!effectiveActions || !effectiveActions.some((a: any) => a.type === "REPAIR_ORDER_CREATED")) {
+        const clientParsedOrder = extractRepairOrderFromText(data.content || "", text, user?.username || "antonv");
+        if (clientParsedOrder) {
+          const actionPayload = {
+            type: "REPAIR_ORDER_CREATED",
+            title: `Заказ-наряд ${clientParsedOrder.orderNumber}`,
+            details: `${clientParsedOrder.vehicle.make} ${clientParsedOrder.vehicle.model} (${clientParsedOrder.vehicle.licensePlate}) • ${clientParsedOrder.works.length} раб. • ${clientParsedOrder.grandTotal.toLocaleString("ru-RU")} ₽`,
+            data: clientParsedOrder,
+          };
+          effectiveActions = effectiveActions ? [...effectiveActions, actionPayload] : [actionPayload];
+        }
+      }
+
       const assistantMsg: ChatMessage = {
         id: `msg-${Date.now() + 1}`,
         role: "assistant",
         content: data.content || "Ответ сформирован.",
         created_at: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-        actions: data.actions && Array.isArray(data.actions) && data.actions.length > 0 ? data.actions : undefined,
+        actions: effectiveActions,
       };
 
-      if (data.actions && Array.isArray(data.actions)) {
-        const orderActions = data.actions.filter((a: any) => a.type === "REPAIR_ORDER_CREATED" && a.data);
+      if (effectiveActions && Array.isArray(effectiveActions)) {
+        const orderActions = effectiveActions.filter((a: any) => a.type === "REPAIR_ORDER_CREATED" && a.data);
         if (orderActions.length > 0 && typeof window !== "undefined") {
-          const currentUsername = user?.username ? user.username.trim().toLowerCase() : "admin";
-          const storageKey = `geo_ai_repair_orders_${currentUsername}_v2`;
-          try {
-            const saved = localStorage.getItem(storageKey);
-            let existingOrders: any[] = saved ? JSON.parse(saved) : [];
-            if (!Array.isArray(existingOrders)) existingOrders = [];
-            for (const oa of orderActions) {
-              const newOrder = oa.data;
-              const exists = existingOrders.some((o: any) => o.id === newOrder.id || o.orderNumber === newOrder.orderNumber);
-              if (!exists) {
-                existingOrders.unshift(newOrder);
+          const targetUsers = [
+            (user?.username || "admin").trim().toLowerCase(),
+            "antonv",
+            "admin",
+            "guest",
+          ];
+          for (const u of targetUsers) {
+            const sKey = `geo_ai_repair_orders_${u}_v2`;
+            try {
+              const saved = localStorage.getItem(sKey);
+              let existingOrders: any[] = saved ? JSON.parse(saved) : [];
+              if (!Array.isArray(existingOrders)) existingOrders = [];
+              for (const oa of orderActions) {
+                const newOrder = oa.data;
+                const exists = existingOrders.some((o: any) => o.id === newOrder.id || o.orderNumber === newOrder.orderNumber);
+                if (!exists) {
+                  existingOrders.unshift(newOrder);
+                }
               }
+              localStorage.setItem(sKey, JSON.stringify(existingOrders));
+            } catch (e) {
+              console.warn("Failed to save repair orders to localStorage:", e);
             }
-            localStorage.setItem(storageKey, JSON.stringify(existingOrders));
-          } catch (e) {
-            console.warn("Failed to save repair orders to localStorage:", e);
           }
           window.dispatchEvent(new CustomEvent("geo_ai_repair_orders_updated"));
           window.dispatchEvent(new CustomEvent("geo_ai_order_updated"));
@@ -886,33 +975,55 @@ export const AIChat: React.FC = () => {
       const data = await res.json();
       const content = data.content || "Извините, не удалось сформировать ответ.";
 
+      let effectiveVoiceActions = data.actions && Array.isArray(data.actions) && data.actions.length > 0 ? data.actions : undefined;
+
+      if (!effectiveVoiceActions || !effectiveVoiceActions.some((a: any) => a.type === "REPAIR_ORDER_CREATED")) {
+        const clientParsedOrder = extractRepairOrderFromText(content, text, user?.username || "antonv");
+        if (clientParsedOrder) {
+          const actionPayload = {
+            type: "REPAIR_ORDER_CREATED",
+            title: `Заказ-наряд ${clientParsedOrder.orderNumber}`,
+            details: `${clientParsedOrder.vehicle.make} ${clientParsedOrder.vehicle.model} (${clientParsedOrder.vehicle.licensePlate}) • ${clientParsedOrder.works.length} раб. • ${clientParsedOrder.grandTotal.toLocaleString("ru-RU")} ₽`,
+            data: clientParsedOrder,
+          };
+          effectiveVoiceActions = effectiveVoiceActions ? [...effectiveVoiceActions, actionPayload] : [actionPayload];
+        }
+      }
+
       const assistantMsg: ChatMessage = {
         id: `msg-${Date.now() + 1}`,
         role: "assistant",
         content,
         created_at: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-        actions: data.actions && Array.isArray(data.actions) && data.actions.length > 0 ? data.actions : undefined,
+        actions: effectiveVoiceActions,
       };
 
-      if (data.actions && Array.isArray(data.actions)) {
-        const orderActions = data.actions.filter((a: any) => a.type === "REPAIR_ORDER_CREATED" && a.data);
+      if (effectiveVoiceActions && Array.isArray(effectiveVoiceActions)) {
+        const orderActions = effectiveVoiceActions.filter((a: any) => a.type === "REPAIR_ORDER_CREATED" && a.data);
         if (orderActions.length > 0 && typeof window !== "undefined") {
-          const currentUsername = user?.username ? user.username.trim().toLowerCase() : "admin";
-          const storageKey = `geo_ai_repair_orders_${currentUsername}_v2`;
-          try {
-            const saved = localStorage.getItem(storageKey);
-            let existingOrders: any[] = saved ? JSON.parse(saved) : [];
-            if (!Array.isArray(existingOrders)) existingOrders = [];
-            for (const oa of orderActions) {
-              const newOrder = oa.data;
-              const exists = existingOrders.some((o: any) => o.id === newOrder.id || o.orderNumber === newOrder.orderNumber);
-              if (!exists) {
-                existingOrders.unshift(newOrder);
+          const targetUsers = [
+            (user?.username || "admin").trim().toLowerCase(),
+            "antonv",
+            "admin",
+            "guest",
+          ];
+          for (const u of targetUsers) {
+            const sKey = `geo_ai_repair_orders_${u}_v2`;
+            try {
+              const saved = localStorage.getItem(sKey);
+              let existingOrders: any[] = saved ? JSON.parse(saved) : [];
+              if (!Array.isArray(existingOrders)) existingOrders = [];
+              for (const oa of orderActions) {
+                const newOrder = oa.data;
+                const exists = existingOrders.some((o: any) => o.id === newOrder.id || o.orderNumber === newOrder.orderNumber);
+                if (!exists) {
+                  existingOrders.unshift(newOrder);
+                }
               }
+              localStorage.setItem(sKey, JSON.stringify(existingOrders));
+            } catch (e) {
+              console.warn("Failed to save repair orders to localStorage:", e);
             }
-            localStorage.setItem(storageKey, JSON.stringify(existingOrders));
-          } catch (e) {
-            console.warn("Failed to save repair orders to localStorage:", e);
           }
           window.dispatchEvent(new CustomEvent("geo_ai_repair_orders_updated"));
           window.dispatchEvent(new CustomEvent("geo_ai_order_updated"));
@@ -1314,7 +1425,7 @@ export const AIChat: React.FC = () => {
                     msg.content?.includes("Я — Шеф-мастер СТО");
                   return !isWelcome;
                 })
-                .map((msg) => {
+                .map((msg, msgIndex, allMessages) => {
                 const isAssistant = msg.role === "assistant";
                 return (
                   <div
@@ -1376,13 +1487,38 @@ export const AIChat: React.FC = () => {
                       )}
 
                       {/* Action Cards (CRM Function Calling visual badges) */}
-                      {isAssistant && msg.actions && msg.actions.length > 0 && (
-                        <div className="mb-3 space-y-2">
-                          {msg.actions.map((act, aIdx) => (
-                            <ActionCardView key={aIdx} action={act} />
-                          ))}
-                        </div>
-                      )}
+                      {(() => {
+                        if (!isAssistant) return null;
+                        let acts = msg.actions ? [...msg.actions] : [];
+                        if (!acts.some((a) => a.type === "REPAIR_ORDER_CREATED")) {
+                          const prevMsg = msgIndex > 0 ? allMessages[msgIndex - 1] : null;
+                          const prevUserMsg =
+                            prevMsg && prevMsg.role === "user" ? prevMsg.content : "";
+                          if (isOrderCreationRequest(`${prevUserMsg}\n${msg.content}`)) {
+                            const dynOrder = extractRepairOrderFromText(
+                              msg.content,
+                              prevUserMsg,
+                              user?.username || "antonv"
+                            );
+                            if (dynOrder) {
+                              acts.push({
+                                type: "REPAIR_ORDER_CREATED",
+                                title: `Заказ-наряд ${dynOrder.orderNumber}`,
+                                details: `${dynOrder.vehicle.make} ${dynOrder.vehicle.model} (${dynOrder.vehicle.licensePlate}) • ${dynOrder.works.length} раб. • ${dynOrder.grandTotal.toLocaleString("ru-RU")} ₽`,
+                                data: dynOrder,
+                              });
+                            }
+                          }
+                        }
+                        if (acts.length === 0) return null;
+                        return (
+                          <div className="mb-3 space-y-2">
+                            {acts.map((act, aIdx) => (
+                              <ActionCardView key={aIdx} action={act} />
+                            ))}
+                          </div>
+                        );
+                      })()}
 
                       {isAssistant ? (
                         <MarkdownView content={msg.content} />

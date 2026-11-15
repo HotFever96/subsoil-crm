@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { callOpenRouter, MessageContent } from "@/lib/openrouter";
 import { ChatActionPayload } from "@/lib/supabase";
 import { normalizeRepairOrder } from "@/lib/auto-service-data";
+import { extractRepairOrderFromText } from "@/lib/order-markdown-parser";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://hrdchbltqfakgxxkjroy.supabase.co";
 const SUPABASE_KEY =
@@ -827,57 +828,26 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Heuristic fallback for Chaika Service: if user asked to create order or assistant declared it created, but block wasn't emitted
-    if (isChaika && !detectedActions.some((a) => a.type === "repair_order_create" || a.type === "create_repair_order")) {
-      const lastUserMsg = Array.isArray(messages) && messages.length > 0 ? messages[messages.length - 1].content.toLowerCase() : "";
-      const assistantLower = rawAssistantContent.toLowerCase();
-      const userAskedCreate =
-        (lastUserMsg.includes("заказ-наряд") || lastUserMsg.includes("зн") || lastUserMsg.includes("наряд")) &&
-        (lastUserMsg.includes("создай") || lastUserMsg.includes("оформи") || lastUserMsg.includes("открой") || lastUserMsg.includes("сделай"));
-      const assistantClaimedCreated =
-        assistantLower.includes("оформлен") || assistantLower.includes("создан") || assistantLower.includes("заказ-наряд №") || assistantLower.includes("предварительный заказ-наряд");
-
-      if (userAskedCreate || assistantClaimedCreated) {
-        // Extract vehicle info from text or use realistic defaults
-        let make = "Lada";
-        let model = "Largus";
-        let plate = "А609МА797";
-        if (assistantLower.includes("ларгус") || lastUserMsg.includes("ларгус")) {
-          make = "Lada";
-          model = "Largus";
-        } else if (assistantLower.includes("газель") || lastUserMsg.includes("газель")) {
-          make = "ГАЗ";
-          model = "ГАЗель NEXT";
-          plate = "А123ВС777";
-        } else if (assistantLower.includes("tiguan") || lastUserMsg.includes("tiguan") || assistantLower.includes("тигуан") || lastUserMsg.includes("тигуан")) {
-          make = "Volkswagen";
-          model = "Tiguan";
-          plate = "А123ВС89";
-        }
-
-        const plateMatch = (lastUserMsg + " " + rawAssistantContent).match(/[А-ЯA-Z]\d{3}[А-ЯA-Z]{2}\s?\d{2,3}/);
-        if (plateMatch) {
-          plate = plateMatch[0].replace(/\s/g, "").toUpperCase();
-        }
-
+    // Intelligent order parsing: if user requested order or assistant outputted repair order text/tables
+    if (!detectedActions.some((a) => a.type === "repair_order_create" || a.type === "create_repair_order")) {
+      const lastUserMsg = Array.isArray(messages) && messages.length > 0 ? messages[messages.length - 1].content : userMessage || "";
+      const parsedOrder = extractRepairOrderFromText(rawAssistantContent, lastUserMsg, currentUsername || "admin");
+      if (parsedOrder) {
         detectedActions.push({
           type: "repair_order_create",
           payload: {
-            vehicleMake: make,
-            vehicleModel: model,
-            vehiclePlate: plate,
-            customerComplaint: lastUserMsg || "Комплексное техническое обслуживание и ремонт ходовой части",
-            works: [
-              { name: "С/У замена ремня ГРМ, обводных роликов, помпы", laborHours: 3.2, ratePerHour: 2500, total: 8000 },
-              { name: "С/У замена сальника коленвала (задний)", laborHours: 3.2, ratePerHour: 2500, total: 8000 },
-              { name: "С/У замена задних тормозных колодок", laborHours: 1.2, ratePerHour: 2500, total: 3000 },
-              { name: "Диагностика ходовой части и тормозной системы", laborHours: 0.5, ratePerHour: 2500, total: 1250 },
-            ],
-            parts: [
-              { name: "Ремень ГРМ комплект с роликами", oem: "2108-1006040", qty: 1, unit: "компл", salePrice: 7650, total: 7650 },
-              { name: "Сальник коленвала задний", oem: "2108-1005160", qty: 1, unit: "шт", salePrice: 1200, total: 1200 },
-              { name: "Колодки тормозные барабанные задние", oem: "2192-3502090", qty: 2, unit: "компл", salePrice: 2973, total: 5946 },
-            ],
+            orderNumber: parsedOrder.orderNumber,
+            vehicleMake: parsedOrder.vehicle.make,
+            vehicleModel: parsedOrder.vehicle.model,
+            vehiclePlate: parsedOrder.vehicle.licensePlate,
+            vehicleVin: parsedOrder.vehicle.vin,
+            vehicleYear: parsedOrder.vehicle.year,
+            mileage: parsedOrder.vehicle.mileage,
+            clientName: parsedOrder.client.name,
+            clientPhone: parsedOrder.client.phone,
+            customerComplaint: parsedOrder.vehicle.complaints,
+            works: parsedOrder.works,
+            parts: parsedOrder.parts,
           },
         });
       }

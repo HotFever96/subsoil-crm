@@ -68,6 +68,7 @@ import { PartSearchResult } from "@/lib/parts-procurement-types";
 import { VehicleInspectionSchematic } from "./VehicleInspectionSchematic";
 import { exportAutoServiceDocx } from "@/lib/auto-service-docx";
 import { OcrScannerModal, ScannedVehicleData } from "./OcrScannerModal";
+import { extractRepairOrderFromText, isOrderCreationRequest } from "@/lib/order-markdown-parser";
 
 const DEFAULT_INSPECTION_DATA: VehicleInspectionData = {
   vehicleBodyType: "car",
@@ -154,7 +155,52 @@ export const RepairOrdersModule: React.FC = () => {
 
   const stoReq = getStoRequisites(currentUsername);
 
-  // Load orders for current user and purge legacy test mock data
+  // Helper to scan all chat history for any repair orders created or discussed with AI
+  const scanChatSessionsForOrders = (uname: string): RepairOrder[] => {
+    if (typeof window === "undefined") return [];
+    const results: RepairOrder[] = [];
+    const usersToScan = Array.from(
+      new Set([(uname || "admin").trim().toLowerCase(), "antonv", "admin", "guest"])
+    ).filter(Boolean);
+
+    const seenKeys = new Set<string>();
+
+    for (const u of usersToScan) {
+      try {
+        const chatKey = `geo_ai_chat_sessions_${u}_v5`;
+        const raw = localStorage.getItem(chatKey);
+        if (!raw) continue;
+        const sessions = JSON.parse(raw);
+        if (!Array.isArray(sessions)) continue;
+
+        for (const sess of sessions) {
+          if (!Array.isArray(sess?.messages)) continue;
+          for (let i = 0; i < sess.messages.length; i++) {
+            const msg = sess.messages[i];
+            if (msg.role === "assistant" && msg.content) {
+              const prevUser =
+                i > 0 && sess.messages[i - 1].role === "user" ? sess.messages[i - 1].content : "";
+              if (isOrderCreationRequest(`${prevUser}\n${msg.content}`)) {
+                const order = extractRepairOrderFromText(msg.content, prevUser, uname || "antonv");
+                if (order) {
+                  const uniqueKey = order.orderNumber || `${order.vehicle.make}-${order.vehicle.licensePlate}`;
+                  if (!seenKeys.has(uniqueKey)) {
+                    seenKeys.add(uniqueKey);
+                    results.push(order);
+                  }
+                }
+              }
+            }
+          }
+        }
+      } catch (e) {
+        console.warn("Failed scanning chat sessions for repair orders:", e);
+      }
+    }
+    return results;
+  };
+
+  // Load orders for current user and merge across all local storage keys, chat history, and Supabase
   useEffect(() => {
     if (!currentUsername) {
       setOrders([]);
@@ -166,35 +212,67 @@ export const RepairOrdersModule: React.FC = () => {
       localStorage.removeItem(`geo_ai_repair_orders_${currentUsername}_v1`);
     } catch {}
 
-    let loaded = getInitialOrders(currentUsername).map((o) => normalizeRepairOrder(o, currentUsername));
-    try {
-      const saved = localStorage.getItem(storageKey);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) {
-          // Filter out any legacy mock entries and normalize
-          const cleaned = parsed
-            .filter(
-              (o: any) =>
-                o?.orderNumber !== "ЗН-СЕВ-0012" &&
-                o?.orderNumber !== "ЗН-2026-0042" &&
-                o?.orderNumber !== "ЗН-2026-0041" &&
-                o?.orderNumber !== "ЗН-2026-0043" &&
-                !o?.client?.name?.includes("Николаев") &&
-                !o?.client?.name?.includes("ывыфвфы")
-            )
-            .map((o: any) => normalizeRepairOrder(o, currentUsername));
-          loaded = cleaned;
-        }
-      } else {
-        localStorage.setItem(storageKey, JSON.stringify(loaded));
-      }
-    } catch (e) {
-      console.warn("Error loading repair orders from localStorage:", e);
-    }
-    setOrders(loaded);
+    const orderMap = new Map<string, RepairOrder>();
 
-    // Sync from Supabase
+    // 1. Initial base orders
+    getInitialOrders(currentUsername)
+      .map((o) => normalizeRepairOrder(o, currentUsername))
+      .forEach((o) => {
+        const k = o.orderNumber || o.id;
+        if (k) orderMap.set(k, o);
+      });
+
+    // 2. Saved orders from localStorage (all user variants to ensure nothing is lost)
+    const userKeys = [
+      storageKey,
+      "geo_ai_repair_orders_antonv_v2",
+      "geo_ai_repair_orders_admin_v2",
+      "geo_ai_repair_orders_guest_v2",
+    ];
+    for (const key of userKeys) {
+      try {
+        const saved = localStorage.getItem(key);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed)) {
+            parsed
+              .filter(
+                (o: any) =>
+                  o?.orderNumber !== "ЗН-СЕВ-0012" &&
+                  o?.orderNumber !== "ЗН-2026-0042" &&
+                  o?.orderNumber !== "ЗН-2026-0041" &&
+                  o?.orderNumber !== "ЗН-2026-0043" &&
+                  !o?.client?.name?.includes("Николаев") &&
+                  !o?.client?.name?.includes("ывыфвфы")
+              )
+              .map((o: any) => normalizeRepairOrder(o, currentUsername))
+              .forEach((o: RepairOrder) => {
+                const k = o.orderNumber || o.id;
+                if (k) orderMap.set(k, o);
+              });
+          }
+        }
+      } catch (e) {
+        console.warn("Error loading repair orders from localStorage:", e);
+      }
+    }
+
+    // 3. Scan chat sessions for any orders generated in AI chats (e.g. Peugeot 308)
+    const chatOrders = scanChatSessionsForOrders(currentUsername);
+    chatOrders.forEach((o) => {
+      const k = o.orderNumber || o.id;
+      if (k && !orderMap.has(k)) {
+        orderMap.set(k, o);
+      }
+    });
+
+    const combinedLoaded = Array.from(orderMap.values());
+    setOrders(combinedLoaded);
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(combinedLoaded));
+    } catch {}
+
+    // 4. Sync from Supabase - MERGE instead of overwrite!
     fetch("/api/sync", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -214,10 +292,35 @@ export const RepairOrdersModule: React.FC = () => {
                 !o?.client?.name?.includes("ывыфвфы")
             )
             .map((o: any) => normalizeRepairOrder(o, currentUsername));
-          setOrders(cleanedRemote);
-          try {
-            localStorage.setItem(storageKey, JSON.stringify(cleanedRemote));
-          } catch {}
+
+          setOrders((prev) => {
+            const map = new Map<string, RepairOrder>();
+            cleanedRemote.forEach((o: RepairOrder) => {
+              const k = o.orderNumber || o.id;
+              if (k) map.set(k, o);
+            });
+            prev.forEach((o: RepairOrder) => {
+              const k = o.orderNumber || o.id;
+              if (k && !map.has(k)) {
+                map.set(k, o);
+                // Sync local order to Supabase so it persists in cloud
+                fetch("/api/sync", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    action: "save_repair_order",
+                    payload: { order: o },
+                    username: currentUsername,
+                  }),
+                }).catch(() => {});
+              }
+            });
+            const merged = Array.from(map.values());
+            try {
+              localStorage.setItem(storageKey, JSON.stringify(merged));
+            } catch {}
+            return merged;
+          });
         }
       })
       .catch(() => {});
@@ -225,12 +328,27 @@ export const RepairOrdersModule: React.FC = () => {
     const handleExternalOrderUpdate = () => {
       try {
         const saved = localStorage.getItem(storageKey);
+        let currentList: RepairOrder[] = [];
         if (saved) {
           const parsed = JSON.parse(saved);
           if (Array.isArray(parsed)) {
-            setOrders(parsed.map((o: any) => normalizeRepairOrder(o, currentUsername)));
+            currentList = parsed.map((o: any) => normalizeRepairOrder(o, currentUsername));
           }
         }
+        // Also scan chat orders
+        const found = scanChatSessionsForOrders(currentUsername);
+        const map = new Map<string, RepairOrder>();
+        currentList.forEach((o) => {
+          const k = o.orderNumber || o.id;
+          if (k) map.set(k, o);
+        });
+        found.forEach((o) => {
+          const k = o.orderNumber || o.id;
+          if (k && !map.has(k)) map.set(k, o);
+        });
+        const merged = Array.from(map.values());
+        setOrders(merged);
+        localStorage.setItem(storageKey, JSON.stringify(merged));
       } catch {}
     };
 

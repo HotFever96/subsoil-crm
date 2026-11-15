@@ -35,6 +35,16 @@ export default function Home() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isStoSettingsOpen, setIsStoSettingsOpen] = useState(false);
 
+  React.useEffect(() => {
+    const handleSwitchTab = (e: any) => {
+      if (e.detail && typeof e.detail === "string") {
+        setCurrentTab(e.detail as NavTab);
+      }
+    };
+    window.addEventListener("geo_ai_switch_tab", handleSwitchTab);
+    return () => window.removeEventListener("geo_ai_switch_tab", handleSwitchTab);
+  }, []);
+
   const currentUsername = user?.username ? user.username.trim().toLowerCase() : "";
   const mailStorageKey = `geo_ai_mails_${currentUsername || "guest"}_v4`;
 
