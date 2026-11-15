@@ -80,7 +80,7 @@ const ActionCardView: React.FC<{ action: ChatActionPayload }> = ({ action }) => 
           </div>
           {action.details && (
             <div className="text-xs text-zinc-600 dark:text-zinc-300 mt-0.5">
-              📅 {renderActionDetails(action.details)}
+              {renderActionDetails(action.details)}
             </div>
           )}
         </div>
@@ -104,7 +104,7 @@ const ActionCardView: React.FC<{ action: ChatActionPayload }> = ({ action }) => 
           </div>
           {action.details && (
             <div className="text-xs text-zinc-600 dark:text-zinc-300 mt-0.5">
-              🕒 {renderActionDetails(action.details)}
+              {renderActionDetails(action.details)}
             </div>
           )}
         </div>
@@ -171,7 +171,7 @@ const ActionCardView: React.FC<{ action: ChatActionPayload }> = ({ action }) => 
           </div>
           {action.details && (
             <div className="text-xs text-zinc-600 dark:text-zinc-300 mt-0.5 whitespace-pre-wrap">
-              📌 {renderActionDetails(action.details)}
+              {renderActionDetails(action.details)}
             </div>
           )}
         </div>
@@ -195,7 +195,7 @@ const ActionCardView: React.FC<{ action: ChatActionPayload }> = ({ action }) => 
           </div>
           {action.details && (
             <div className="text-xs text-zinc-600 dark:text-zinc-300 mt-0.5">
-              🏗️ {renderActionDetails(action.details)}
+              {renderActionDetails(action.details)}
             </div>
           )}
         </div>
@@ -219,7 +219,7 @@ const ActionCardView: React.FC<{ action: ChatActionPayload }> = ({ action }) => 
           </div>
           {action.details && (
             <div className="text-xs text-zinc-600 dark:text-zinc-300 mt-0.5">
-              🔧 {renderActionDetails(action.details)}
+              {renderActionDetails(action.details)}
             </div>
           )}
         </div>
@@ -252,7 +252,7 @@ const ActionCardView: React.FC<{ action: ChatActionPayload }> = ({ action }) => 
         </div>
         {action.details && (
           <div className="text-xs text-zinc-600 dark:text-zinc-300 mt-2">
-            📦 {renderActionDetails(action.details)}
+            {renderActionDetails(action.details)}
           </div>
         )}
         {Array.isArray(qData?.quotes) && qData.quotes.length > 0 && (
@@ -695,9 +695,27 @@ export const AIChat: React.FC = () => {
       };
 
       if (data.actions && Array.isArray(data.actions)) {
-        const hasOrderCreated = data.actions.some((a: any) => a.type === "REPAIR_ORDER_CREATED");
-        if (hasOrderCreated && typeof window !== "undefined") {
+        const orderActions = data.actions.filter((a: any) => a.type === "REPAIR_ORDER_CREATED" && a.data);
+        if (orderActions.length > 0 && typeof window !== "undefined") {
+          const currentUsername = user?.username ? user.username.trim().toLowerCase() : "admin";
+          const storageKey = `geo_ai_repair_orders_${currentUsername}_v2`;
+          try {
+            const saved = localStorage.getItem(storageKey);
+            let existingOrders: any[] = saved ? JSON.parse(saved) : [];
+            if (!Array.isArray(existingOrders)) existingOrders = [];
+            for (const oa of orderActions) {
+              const newOrder = oa.data;
+              const exists = existingOrders.some((o: any) => o.id === newOrder.id || o.orderNumber === newOrder.orderNumber);
+              if (!exists) {
+                existingOrders.unshift(newOrder);
+              }
+            }
+            localStorage.setItem(storageKey, JSON.stringify(existingOrders));
+          } catch (e) {
+            console.warn("Failed to save repair orders to localStorage:", e);
+          }
           window.dispatchEvent(new CustomEvent("geo_ai_repair_orders_updated"));
+          window.dispatchEvent(new CustomEvent("geo_ai_order_updated"));
         }
       }
 
@@ -877,9 +895,27 @@ export const AIChat: React.FC = () => {
       };
 
       if (data.actions && Array.isArray(data.actions)) {
-        const hasOrderCreated = data.actions.some((a: any) => a.type === "REPAIR_ORDER_CREATED");
-        if (hasOrderCreated && typeof window !== "undefined") {
+        const orderActions = data.actions.filter((a: any) => a.type === "REPAIR_ORDER_CREATED" && a.data);
+        if (orderActions.length > 0 && typeof window !== "undefined") {
+          const currentUsername = user?.username ? user.username.trim().toLowerCase() : "admin";
+          const storageKey = `geo_ai_repair_orders_${currentUsername}_v2`;
+          try {
+            const saved = localStorage.getItem(storageKey);
+            let existingOrders: any[] = saved ? JSON.parse(saved) : [];
+            if (!Array.isArray(existingOrders)) existingOrders = [];
+            for (const oa of orderActions) {
+              const newOrder = oa.data;
+              const exists = existingOrders.some((o: any) => o.id === newOrder.id || o.orderNumber === newOrder.orderNumber);
+              if (!exists) {
+                existingOrders.unshift(newOrder);
+              }
+            }
+            localStorage.setItem(storageKey, JSON.stringify(existingOrders));
+          } catch (e) {
+            console.warn("Failed to save repair orders to localStorage:", e);
+          }
           window.dispatchEvent(new CustomEvent("geo_ai_repair_orders_updated"));
+          window.dispatchEvent(new CustomEvent("geo_ai_order_updated"));
         }
       }
 
@@ -996,10 +1032,10 @@ export const AIChat: React.FC = () => {
             Полноценное распознавание PDF, таблиц Excel, документов Word, картинок и текстовых файлов
           </p>
           <div className="flex flex-wrap justify-center gap-2 text-[11px]">
-            <span className="px-2.5 py-1 rounded-lg bg-rose-500/15 text-rose-600 dark:text-rose-400 font-medium">📄 PDF</span>
-            <span className="px-2.5 py-1 rounded-lg bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-medium">📊 Excel (.xlsx, .csv)</span>
-            <span className="px-2.5 py-1 rounded-lg bg-sky-500/15 text-sky-600 dark:text-sky-400 font-medium">📑 Word (.docx)</span>
-            <span className="px-2.5 py-1 rounded-lg bg-purple-500/15 text-purple-600 dark:text-purple-400 font-medium">🖼️ Картинки</span>
+            <span className="px-2.5 py-1 rounded-lg bg-rose-500/15 text-rose-600 dark:text-rose-400 font-medium">PDF</span>
+            <span className="px-2.5 py-1 rounded-lg bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-medium">Excel (.xlsx, .csv)</span>
+            <span className="px-2.5 py-1 rounded-lg bg-sky-500/15 text-sky-600 dark:text-sky-400 font-medium">Word (.docx)</span>
+            <span className="px-2.5 py-1 rounded-lg bg-purple-500/15 text-purple-600 dark:text-purple-400 font-medium">Изображения (PNG, JPG)</span>
           </div>
         </div>
       )}

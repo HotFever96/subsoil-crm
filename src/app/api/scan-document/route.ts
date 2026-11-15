@@ -7,9 +7,11 @@ export async function POST(req: NextRequest) {
 
     const contentType = req.headers.get("content-type") || "";
 
+    let clientApiKey = "";
     if (contentType.includes("multipart/form-data")) {
       const formData = await req.formData();
       const file = formData.get("file") as File | null;
+      clientApiKey = String(formData.get("apiKey") || "");
       if (!file) {
         return NextResponse.json({ success: false, error: "Файл не загружен" }, { status: 400 });
       }
@@ -20,7 +22,10 @@ export async function POST(req: NextRequest) {
     } else {
       const body = await req.json();
       base64Image = body.image || "";
+      clientApiKey = String(body.apiKey || "");
     }
+
+    const apiKey = (clientApiKey && clientApiKey.trim()) || req.headers.get("x-api-key") || process.env.OPENROUTER_API_KEY || "";
 
     if (!base64Image || !base64Image.startsWith("data:image")) {
       return NextResponse.json(
@@ -104,7 +109,7 @@ export async function POST(req: NextRequest) {
     let rawAiResponse = "";
 
     try {
-      const aiResult = await callOpenRouter(openRouterPayload);
+      const aiResult = await callOpenRouter(openRouterPayload, apiKey);
       if (aiResult && aiResult.ok) {
         const json = await aiResult.json();
         rawAiResponse = json.choices?.[0]?.message?.content || "";

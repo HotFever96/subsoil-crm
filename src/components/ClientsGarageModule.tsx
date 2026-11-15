@@ -60,10 +60,14 @@ export const ClientsGarageModule: React.FC = () => {
     if (clean.length !== 10 && clean.length !== 12) return;
     setIsSearchingInn(true);
     try {
+      const storedKey = typeof window !== "undefined"
+        ? localStorage.getItem("geonedra_openrouter_key") || localStorage.getItem("geo_ai_openrouter_api_key") || ""
+        : "";
+
       const res = await fetch("/api/company-by-inn", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ inn: clean }),
+        body: JSON.stringify({ inn: clean, apiKey: storedKey }),
       });
       const json = await res.json();
       if (json.success && json.company) {

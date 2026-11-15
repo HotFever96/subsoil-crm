@@ -199,10 +199,14 @@ export const OcrScannerModal: React.FC<OcrScannerModalProps> = ({
     setScannedResult(null);
 
     try {
+      const storedKey = typeof window !== "undefined"
+        ? localStorage.getItem("geonedra_openrouter_key") || localStorage.getItem("geo_ai_openrouter_api_key") || ""
+        : "";
+
       const res = await fetch("/api/scan-document", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image: base64Image }),
+        body: JSON.stringify({ image: base64Image, apiKey: storedKey }),
       });
 
       const json = await res.json();
@@ -391,8 +395,9 @@ export const OcrScannerModal: React.FC<OcrScannerModalProps> = ({
                   Поддерживаются фото СТС, ПТС, фото переда автомобиля с госномером или одометра (JPG, PNG, WebP)
                 </div>
               </div>
-              <div className="px-3.5 py-1.5 rounded-full bg-white/10 text-[11px] font-semibold text-zinc-200">
-                📸 Камера смартфона / Галерея
+              <div className="flex items-center space-x-1.5 px-3.5 py-1.5 rounded-full bg-white/10 text-[11px] font-semibold text-zinc-200">
+                <Camera className="w-3.5 h-3.5" />
+                <span>Камера смартфона / Галерея</span>
               </div>
             </div>
           )}
