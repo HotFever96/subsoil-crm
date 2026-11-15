@@ -39,6 +39,11 @@ export interface OrderClient {
   inn?: string;
   email?: string;
   address?: string;
+  payerName?: string;           // Плательщик (Юрлицо, например: АО «МУС Энергетики»)
+  payerInn?: string;            // ИНН плательщика
+  payerKpp?: string;            // КПП плательщика
+  payerOgrn?: string;           // ОГРН / ОГРНИП плательщика
+  payerAddress?: string;        // Юридический адрес плательщика
 }
 
 export interface OrderVehicle {
@@ -71,6 +76,9 @@ export interface RepairOrder {
   totalParts: number;      // Сумма по запчастям
   grandTotal: number;      // ИТОГО К ОПЛАТЕ = totalWorks + totalParts
   paidAmount?: number;     // Фактически оплачено
+  paymentStatus?: "unpaid" | "partial" | "paid"; // Статус оплаты
+  paymentMethod?: "sbp" | "cash" | "card" | "invoice"; // Способ оплаты
+  paidAt?: string;         // Дата и время оплаты
   warrantyDaysWorks?: number; // Срок гарантии на работы (по умолчанию 30 дней)
   warrantyDaysParts?: number; // Срок гарантии на запчасти (по умолчанию 14 дней)
   masterName?: string;     // Мастер-приемщик

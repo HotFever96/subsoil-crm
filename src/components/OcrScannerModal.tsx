@@ -111,24 +111,48 @@ export const OcrScannerModal: React.FC<OcrScannerModalProps> = ({
 
   if (!isOpen) return null;
 
-  // Capture frame from active video element
+  // Capture frame from active video element with high resolution & contrast boost
   const handleSnapPhoto = () => {
     if (!videoRef.current) return;
     const video = videoRef.current;
+    const vWidth = video.videoWidth || 1920;
+    const vHeight = video.videoHeight || 1080;
+
+    // Maintain high resolution (min 1600px on long edge)
+    const scale = Math.max(1, 1600 / Math.max(vWidth, vHeight));
+    const targetWidth = Math.round(vWidth * scale);
+    const targetHeight = Math.round(vHeight * scale);
+
     const canvas = document.createElement("canvas");
-    canvas.width = video.videoWidth || 1280;
-    canvas.height = video.videoHeight || 720;
+    canvas.width = targetWidth;
+    canvas.height = targetHeight;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    const dataUrl = canvas.toDataURL("image/jpeg", 0.92);
+
+    // Subtle contrast boost to enhance fine text on documents
+    try {
+      const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const d = imgData.data;
+      const factor = (259 * (18 + 255)) / (255 * (259 - 18));
+      for (let i = 0; i < d.length; i += 4) {
+        d[i] = factor * (d[i] - 128) + 128;
+        d[i + 1] = factor * (d[i + 1] - 128) + 128;
+        d[i + 2] = factor * (d[i + 2] - 128) + 128;
+      }
+      ctx.putImageData(imgData, 0, 0);
+    } catch {}
+
+    const dataUrl = canvas.toDataURL("image/jpeg", 0.95);
     setPreviewImage(dataUrl);
     stopCamera();
     processImageForOcr(dataUrl);
   };
 
-  // Process chosen file from file input or drag-and-drop
+  // Process chosen file from file input or drag-and-drop preserving high resolution
   const handleFileChosen = (file: File) => {
     if (!file || !file.type.startsWith("image/")) {
       setErrorMessage("Пожалуйста, выберите файл изображения (JPG, PNG, WebP)");
@@ -137,11 +161,33 @@ export const OcrScannerModal: React.FC<OcrScannerModalProps> = ({
 
     const reader = new FileReader();
     reader.onload = (e) => {
-      const dataUrl = e.target?.result as string;
-      if (dataUrl) {
-        setPreviewImage(dataUrl);
-        processImageForOcr(dataUrl);
-      }
+      const rawDataUrl = e.target?.result as string;
+      if (!rawDataUrl) return;
+
+      const img = new Image();
+      img.onload = () => {
+        const origW = img.naturalWidth || img.width;
+        const origH = img.naturalHeight || img.height;
+        const maxDim = Math.max(origW, origH);
+        // Do not downscale below 1600px unless smaller; cap at 2560px for API limits
+        const targetScale = maxDim > 2560 ? 2560 / maxDim : 1;
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.round(origW * targetScale);
+        canvas.height = Math.round(origH * targetScale);
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = "high";
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          const processedUrl = canvas.toDataURL("image/jpeg", 0.94);
+          setPreviewImage(processedUrl);
+          processImageForOcr(processedUrl);
+        } else {
+          setPreviewImage(rawDataUrl);
+          processImageForOcr(rawDataUrl);
+        }
+      };
+      img.src = rawDataUrl;
     };
     reader.readAsDataURL(file);
   };

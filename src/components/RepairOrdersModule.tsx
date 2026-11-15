@@ -35,7 +35,13 @@ import {
   Phone,
   ChevronDown,
   Star,
+  CreditCard,
+  ExternalLink,
+  Copy,
+  Building2,
+  Check,
 } from "lucide-react";
+import QRCode from "qrcode";
 import {
   RepairOrder,
   OrderStatus,
@@ -108,6 +114,20 @@ export const RepairOrdersModule: React.FC = () => {
   const [clientName, setClientName] = useState("");
   const [clientPhone, setClientPhone] = useState("");
   const [clientInn, setClientInn] = useState("");
+  const [payerName, setPayerName] = useState("");
+  const [payerInn, setPayerInn] = useState("");
+  const [payerKpp, setPayerKpp] = useState("");
+  const [payerOgrn, setPayerOgrn] = useState("");
+  const [payerAddress, setPayerAddress] = useState("");
+  const [isSearchingInn, setIsSearchingInn] = useState(false);
+  const [innFoundInfo, setInnFoundInfo] = useState<string | null>(null);
+
+  // UDMPAY / SBP Payment Modal
+  const [isUdmpayModalOpen, setIsUdmpayModalOpen] = useState(false);
+  const [udmpayOrder, setUdmpayOrder] = useState<RepairOrder | null>(null);
+  const [udmpayQrUrl, setUdmpayQrUrl] = useState<string>("");
+  const [copySuccess, setCopySuccess] = useState(false);
+  const [markPaidSuccess, setMarkPaidSuccess] = useState(false);
   const [vehicleMake, setVehicleMake] = useState("");
   const [vehicleModel, setVehicleModel] = useState("");
   const [licensePlate, setLicensePlate] = useState("");
@@ -229,11 +249,120 @@ export const RepairOrdersModule: React.FC = () => {
     } catch {}
   };
 
+  const saveSingleOrder = (ord: RepairOrder) => {
+    const safe = normalizeRepairOrder(ord, currentUsername);
+    const updated = orders.some((o) => o.id === safe.id)
+      ? orders.map((o) => (o.id === safe.id ? safe : o))
+      : [safe, ...orders];
+    saveOrders(updated);
+    if (currentUsername) {
+      fetch("/api/sync", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "save_repair_order",
+          username: currentUsername,
+          payload: { order: safe },
+        }),
+      }).catch(() => {});
+    }
+  };
+
+  const handleLookupInn = async (innToSearch: string) => {
+    const clean = innToSearch.replace(/\D/g, "");
+    if (clean.length !== 10 && clean.length !== 12) return;
+    setIsSearchingInn(true);
+    try {
+      const res = await fetch("/api/company-by-inn", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ inn: clean }),
+      });
+      const json = await res.json();
+      if (json.success && json.company) {
+        const c = json.company;
+        setPayerName(c.name || c.shortName || "");
+        setPayerInn(c.inn);
+        setPayerKpp(c.kpp || "");
+        setPayerOgrn(c.ogrn || "");
+        setPayerAddress(c.address || "");
+        setClientInn(c.inn);
+        if (!clientName || clientName === "Частный клиент" || clientName === "Клиент") {
+          setClientName(c.name || c.shortName || "");
+        }
+        setInnFoundInfo(`Найдено: ${c.name} (ОГРН ${c.ogrn || "—"})`);
+        setTimeout(() => setInnFoundInfo(null), 5000);
+      }
+    } catch (err) {
+      console.warn("INN search error:", err);
+    } finally {
+      setIsSearchingInn(false);
+    }
+  };
+
+  const openUdmpayModal = async (order: RepairOrder) => {
+    setUdmpayOrder(order);
+    setIsUdmpayModalOpen(true);
+    setMarkPaidSuccess(false);
+    try {
+      const qr = await QRCode.toDataURL("https://modul.udmpay.ru/13115", {
+        margin: 1,
+        width: 260,
+        color: { dark: "#000000", light: "#ffffff" },
+      });
+      setUdmpayQrUrl(qr);
+    } catch (e) {
+      console.warn("QR gen error:", e);
+    }
+  };
+
+  const handleMarkAsPaidSbp = (ord: RepairOrder) => {
+    const updated: RepairOrder = {
+      ...ord,
+      paymentStatus: "paid",
+      paidAmount: ord.grandTotal,
+      paidAt: new Date().toISOString(),
+      paymentMethod: "sbp",
+    };
+    saveSingleOrder(updated);
+    setUdmpayOrder(updated);
+    setMarkPaidSuccess(true);
+    setTimeout(() => {
+      setIsUdmpayModalOpen(false);
+      setMarkPaidSuccess(false);
+    }, 1200);
+  };
+
+  const handleCopyAmount = () => {
+    if (!udmpayOrder) return;
+    navigator.clipboard.writeText(String(udmpayOrder.grandTotal));
+    setCopySuccess(true);
+    setTimeout(() => setCopySuccess(false), 2000);
+  };
+
+  const handleSendClientPaymentLink = () => {
+    if (!udmpayOrder) return;
+    const text = `Здравствуйте, ${udmpayOrder.client?.name || "клиент"}! Заказ-наряд № ${udmpayOrder.orderNumber} на ${udmpayOrder.vehicle?.make} ${udmpayOrder.vehicle?.model} (${udmpayOrder.vehicle?.licensePlate}) готов. Сумма к оплате: ${udmpayOrder.grandTotal.toLocaleString("ru-RU")} ₽. Оплата через СБП без комиссии: https://modul.udmpay.ru/13115 СТО «Чайка-Сервис»`;
+    if (udmpayOrder.client?.phone) {
+      const cleanPhone = udmpayOrder.client.phone.replace(/\D/g, "");
+      window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(text)}`, "_blank");
+    } else {
+      navigator.clipboard.writeText(text);
+      alert("Ссылка на оплату и сообщение скопированы в буфер обмена!");
+    }
+  };
+
   const openNewOrderModal = () => {
     setEditingOrder(null);
     setClientName("");
     setClientPhone("");
     setClientInn("");
+    setPayerName("");
+    setPayerInn("");
+    setPayerKpp("");
+    setPayerOgrn("");
+    setPayerAddress("");
+    setInnFoundInfo(null);
     setVehicleMake("");
     setVehicleModel("");
     setLicensePlate("");
@@ -261,6 +390,12 @@ export const RepairOrdersModule: React.FC = () => {
     setClientName(safe.client?.name || "");
     setClientPhone(safe.client?.phone || "");
     setClientInn(safe.client?.inn || "");
+    setPayerName(safe.client?.payerName || "");
+    setPayerInn(safe.client?.payerInn || safe.client?.inn || "");
+    setPayerKpp(safe.client?.payerKpp || "");
+    setPayerOgrn(safe.client?.payerOgrn || "");
+    setPayerAddress(safe.client?.payerAddress || "");
+    setInnFoundInfo(null);
     setVehicleMake(safe.vehicle?.make || "");
     setVehicleModel(safe.vehicle?.model || "");
     setLicensePlate(safe.vehicle?.licensePlate || "");
@@ -446,10 +581,15 @@ export const RepairOrdersModule: React.FC = () => {
       status: finalStatus,
       createdAt: editingOrder ? editingOrder.createdAt : new Date().toISOString().slice(0, 10),
       client: {
-        type: clientInn.trim() ? "legal" : "individual",
+        type: (clientInn.trim() || payerInn.trim()) ? "legal" : "individual",
         name: clientName.trim() || "Клиент",
         phone: clientPhone.trim(),
-        inn: clientInn.trim() || undefined,
+        inn: (payerInn.trim() || clientInn.trim()) || undefined,
+        payerName: payerName.trim() || undefined,
+        payerInn: payerInn.trim() || undefined,
+        payerKpp: payerKpp.trim() || undefined,
+        payerOgrn: payerOgrn.trim() || undefined,
+        payerAddress: payerAddress.trim() || undefined,
       },
       vehicle: {
         make: vehicleMake.trim() || "ТС",
@@ -627,10 +767,15 @@ export const RepairOrdersModule: React.FC = () => {
     status: orderStatus,
     createdAt: editingOrder?.createdAt || new Date().toISOString().slice(0, 10),
     client: {
-      type: clientInn ? "legal" : "individual",
+      type: (clientInn || payerInn) ? "legal" : "individual",
       name: clientName || "Клиент",
       phone: clientPhone,
-      inn: clientInn,
+      inn: payerInn || clientInn,
+      payerName: payerName || undefined,
+      payerInn: payerInn || undefined,
+      payerKpp: payerKpp || undefined,
+      payerOgrn: payerOgrn || undefined,
+      payerAddress: payerAddress || undefined,
     },
     vehicle: {
       make: vehicleMake || "ТС",
@@ -860,7 +1005,7 @@ export const RepairOrdersModule: React.FC = () => {
                     <th className="py-3 px-4 text-right">Работы</th>
                     <th className="py-3 px-4 text-right">Запчасти</th>
                     <th className="py-3 px-4 text-right">ИТОГО</th>
-                    <th className="py-3 px-4 text-center">Документы А4</th>
+                    <th className="py-3 px-4 text-center">Документы и Оплата</th>
                     <th className="py-3 px-4 text-right">Действия</th>
                   </tr>
                 </thead>
@@ -927,20 +1072,36 @@ export const RepairOrdersModule: React.FC = () => {
                           {formatCurrency(ord.grandTotal)}
                         </td>
 
-                        {/* Quick Document Modal Trigger */}
+                        {/* Quick Document & SBP Payment Triggers */}
                         <td className="py-3 px-4 text-center" onClick={(e) => e.stopPropagation()}>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setActiveDocOrder(ord);
-                              setActiveDocType("work_order");
-                            }}
-                            className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 text-xs font-semibold transition-colors cursor-pointer border border-red-500/20"
-                            title="Открыть печатные формы А4"
-                          >
-                            <Printer className="w-3.5 h-3.5" />
-                            <span>Печать А4</span>
-                          </button>
+                          <div className="flex items-center justify-center space-x-1.5">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setActiveDocOrder(ord);
+                                setActiveDocType("work_order");
+                              }}
+                              className="inline-flex items-center space-x-1 px-2.5 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 text-xs font-semibold transition-colors cursor-pointer border border-red-500/20"
+                              title="Открыть печатные формы А4"
+                            >
+                              <Printer className="w-3.5 h-3.5" />
+                              <span>Печать А4</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => openUdmpayModal(ord)}
+                              className={`inline-flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer border ${
+                                ord.paymentStatus === "paid"
+                                  ? "bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border-emerald-500/25"
+                                  : "bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 border-rose-500/25 shadow-2xs"
+                              }`}
+                              title="Оплата через СБП / UDMPAY"
+                            >
+                              <CreditCard className="w-3.5 h-3.5" />
+                              <span>{ord.paymentStatus === "paid" ? "Оплачено" : "СБП / UDMPAY"}</span>
+                            </button>
+                          </div>
                         </td>
 
                         {/* Actions */}
@@ -1249,14 +1410,62 @@ export const RepairOrdersModule: React.FC = () => {
                               </button>
                             )}
                           </div>
-                          <input
-                            type="text"
-                            value={clientInn}
-                            onChange={(e) => setClientInn(e.target.value)}
-                            placeholder="ИНН (для юрлиц)"
-                            className="w-full px-3 py-1.5 rounded-xl border border-white/[0.08] bg-zinc-950 text-xs text-white font-mono placeholder:text-zinc-500 focus:outline-none focus:border-red-500"
-                          />
+                          <div className="relative flex items-center">
+                            <input
+                              type="text"
+                              value={payerInn || clientInn}
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                setPayerInn(val);
+                                setClientInn(val);
+                                const clean = val.replace(/\D/g, "");
+                                if (clean.length === 10 || clean.length === 12) {
+                                  handleLookupInn(clean);
+                                }
+                              }}
+                              placeholder="ИНН (10 или 12 цифр)"
+                              className="w-full pl-3 pr-16 py-1.5 rounded-xl border border-white/[0.08] bg-zinc-950 text-xs text-white font-mono placeholder:text-zinc-500 focus:outline-none focus:border-red-500"
+                            />
+                            <button
+                              type="button"
+                              disabled={isSearchingInn}
+                              onClick={() => handleLookupInn(payerInn || clientInn)}
+                              className="absolute right-1 px-2 py-0.5 rounded-lg bg-red-600/20 hover:bg-red-600/30 text-red-400 text-[10px] font-semibold border border-red-500/30 flex items-center space-x-1 cursor-pointer disabled:opacity-50"
+                              title="Найти юрлицо по ИНН в ЕГРЮЛ"
+                            >
+                              <Building2 className="w-3 h-3" />
+                              <span>{isSearchingInn ? "..." : "ИНН"}</span>
+                            </button>
+                          </div>
                         </div>
+
+                        {innFoundInfo && (
+                          <div className="text-[10px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-1 rounded-lg flex items-center space-x-1.5 animate-in fade-in">
+                            <CheckCircle2 className="w-3 h-3 shrink-0" />
+                            <span className="truncate">{innFoundInfo}</span>
+                          </div>
+                        )}
+
+                        {payerName && (
+                          <div className="space-y-1 bg-zinc-950/70 p-2 rounded-xl border border-white/5 text-[11px]">
+                            <div className="flex items-center justify-between text-zinc-400 text-[10px]">
+                              <span className="font-semibold text-zinc-300">Плательщик (Юрлицо):</span>
+                              {payerOgrn && <span className="font-mono">ОГРН {payerOgrn}</span>}
+                            </div>
+                            <input
+                              type="text"
+                              value={payerName}
+                              onChange={(e) => setPayerName(e.target.value)}
+                              placeholder="Наименование юрлица (АО «МУС Энергетики»)"
+                              className="w-full px-2 py-1 rounded-lg border border-white/[0.06] bg-zinc-900 text-xs text-white font-medium focus:outline-none focus:border-red-500"
+                            />
+                            {payerAddress && (
+                              <div className="text-[10px] text-zinc-400 truncate" title={payerAddress}>
+                                📍 {payerAddress}
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
 
                       {/* Right Card: Транспортное средство */}
@@ -2238,6 +2447,108 @@ export const RepairOrdersModule: React.FC = () => {
               >
                 <PhoneCall className="w-3.5 h-3.5" />
                 <span>Отправить задачу</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* UDMPAY / SBP PAYMENT MODAL */}
+      {isUdmpayModalOpen && udmpayOrder && (
+        <div className="fixed inset-0 z-70 bg-black/75 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in">
+          <div className="bg-zinc-950 border border-white/10 rounded-3xl w-full max-w-md p-6 shadow-2xl flex flex-col items-center text-center space-y-4">
+            {/* Header */}
+            <div className="w-full flex items-center justify-between pb-3 border-b border-white/10">
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-pink-600 to-rose-600 text-white flex items-center justify-center shadow-lg shadow-pink-600/30">
+                  <CreditCard className="w-4 h-4" />
+                </div>
+                <div className="text-left">
+                  <h3 className="text-sm font-bold text-white">Касса СБП / UDMPAY</h3>
+                  <p className="text-[10px] text-zinc-400">Быстрая оплата по QR-коду и терминалу</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsUdmpayModalOpen(false)}
+                className="text-zinc-400 hover:text-white p-1 rounded-lg hover:bg-white/10 cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Order Brief */}
+            <div className="w-full bg-zinc-900/70 p-3 rounded-2xl border border-white/5 text-left text-xs space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-white">{udmpayOrder.orderNumber}</span>
+                <span className="font-mono text-zinc-400 text-[11px]">{udmpayOrder.vehicle?.licensePlate}</span>
+              </div>
+              <div className="text-zinc-300 truncate">
+                {udmpayOrder.vehicle?.make} {udmpayOrder.vehicle?.model} • {udmpayOrder.client?.name}
+              </div>
+            </div>
+
+            {/* Amount Box */}
+            <div className="w-full bg-gradient-to-br from-pink-500/10 via-rose-500/5 to-transparent p-4 rounded-2xl border border-pink-500/20 flex flex-col items-center">
+              <span className="text-[11px] text-zinc-400 font-medium">Сумма к оплате:</span>
+              <div className="text-2xl font-black text-white tracking-tight mt-0.5">
+                {formatCurrency(udmpayOrder.grandTotal)}
+              </div>
+              <button
+                type="button"
+                onClick={handleCopyAmount}
+                className="mt-2 inline-flex items-center space-x-1 px-3 py-1 rounded-full bg-white/10 hover:bg-white/15 text-zinc-200 text-[11px] font-semibold transition-colors cursor-pointer"
+              >
+                {copySuccess ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                <span>{copySuccess ? "Скопировано!" : "Скопировать сумму"}</span>
+              </button>
+            </div>
+
+            {/* QR Code */}
+            <div className="p-3 bg-white rounded-2xl shadow-xl flex flex-col items-center">
+              {udmpayQrUrl ? (
+                <img src={udmpayQrUrl} alt="QR UDMPAY" className="w-44 h-44 object-contain" />
+              ) : (
+                <div className="w-44 h-44 flex items-center justify-center text-xs text-zinc-500">
+                  Генерация QR...
+                </div>
+              )}
+              <div className="text-[11px] font-bold text-zinc-900 mt-1">Оплата через СБП</div>
+              <div className="text-[9.5px] text-zinc-500">Наведите камеру смартфона</div>
+            </div>
+
+            {/* Actions */}
+            <div className="w-full space-y-2 pt-1">
+              <button
+                type="button"
+                onClick={() => window.open("https://modul.udmpay.ru/13115", "_blank")}
+                className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-pink-600 via-rose-600 to-red-600 hover:from-pink-500 hover:to-red-500 text-white font-bold text-xs flex items-center justify-center space-x-2 shadow-lg shadow-pink-600/30 cursor-pointer transition-all"
+              >
+                <ExternalLink className="w-4 h-4" />
+                <span>Открыть терминал UDMPAY</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleSendClientPaymentLink}
+                className="w-full py-2 px-4 rounded-xl bg-white/10 hover:bg-white/15 text-white font-semibold text-xs flex items-center justify-center space-x-2 cursor-pointer transition-colors"
+              >
+                <Phone className="w-3.5 h-3.5" />
+                <span>Отправить ссылку клиенту (WhatsApp)</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleMarkAsPaidSbp(udmpayOrder)}
+                disabled={udmpayOrder.paymentStatus === "paid" || markPaidSuccess}
+                className={`w-full py-2 px-4 rounded-xl font-bold text-xs flex items-center justify-center space-x-2 transition-all cursor-pointer ${
+                  udmpayOrder.paymentStatus === "paid" || markPaidSuccess
+                    ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                    : "bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-700/20"
+                }`}
+              >
+                <CheckCircle2 className="w-4 h-4" />
+                <span>{udmpayOrder.paymentStatus === "paid" || markPaidSuccess ? "Заказ оплачен ✓" : "Отметить как Оплачено (СБП)"}</span>
               </button>
             </div>
           </div>

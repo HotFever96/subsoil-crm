@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import QRCode from "qrcode";
 import {
   Printer,
   FileDown,
@@ -14,13 +15,13 @@ import {
   Receipt,
   FileCheck,
   Stamp,
-  Sliders,
+  CreditCard,
+  ExternalLink,
 } from "lucide-react";
 import { RepairOrder, ServiceDocumentType } from "@/lib/auto-service-types";
-import { SERVICE_COMPANY_REQUISITES, formatCurrency, getStoRequisites, numberToWordsRu } from "@/lib/auto-service-data";
+import { formatCurrency, getStoRequisites, numberToWordsRu } from "@/lib/auto-service-data";
 import { exportAutoServiceDocx } from "@/lib/auto-service-docx";
 import { VehicleInspectionSchematic } from "./VehicleInspectionSchematic";
-import { generateDefaultStampDataUrl, generateDefaultSignatureDataUrl } from "@/lib/canvas-image-processor";
 
 interface ServiceDocumentModalProps {
   order: RepairOrder;
@@ -28,6 +29,28 @@ interface ServiceDocumentModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSaveToArchive?: (docName: string, docType: ServiceDocumentType) => void;
+}
+
+function formatAcceptedDateTime(dateStr?: string, timeStr?: string): string {
+  if (!dateStr) return "09.11.2026 09:35";
+  try {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
+    const day = String(d.getDate()).padStart(2, "0");
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const year = d.getFullYear();
+    const time = timeStr || `${String(d.getHours() || 9).padStart(2, "0")}:${String(d.getMinutes() || 35).padStart(2, "0")}`;
+    return `${day}.${month}.${year} ${time}`;
+  } catch {
+    return dateStr;
+  }
+}
+
+function formatDocRub(amount: number): string {
+  return Number(amount || 0).toLocaleString("ru-RU", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 }
 
 export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
@@ -42,12 +65,37 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
   const [archiveSaved, setArchiveSaved] = useState(false);
   const [isFacsimile, setIsFacsimile] = useState(true);
   const [isScanMode, setIsScanMode] = useState(false);
+  const [sbpQrUrl, setSbpQrUrl] = useState<string>("");
+
+  useEffect(() => {
+    let isMounted = true;
+    QRCode.toDataURL("https://modul.udmpay.ru/13115", {
+      margin: 1,
+      width: 220,
+      color: { dark: "#000000", light: "#ffffff" },
+    })
+      .then((url) => {
+        if (isMounted) setSbpQrUrl(url);
+      })
+      .catch((err) => console.warn("UDMPAY QR error:", err));
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   if (!isOpen) return null;
 
   const req = getStoRequisites(order.username);
-  const stampImg = req.stampUrl || generateDefaultStampDataUrl();
-  const sigImg = req.signatureUrl || generateDefaultSignatureDataUrl();
+  const stampImg = "/facsimile/chaika_stamp.png";
+  const sigImg = "/facsimile/anton_signature.png";
+
+  const isPaid = order.paymentStatus === "paid";
+  const paidAmount = isPaid ? order.grandTotal : Number(order.paidAmount || 0);
+  const debtAmount = Math.max(0, order.grandTotal - paidAmount);
+
+  // Total items/quantity of parts
+  const totalPartsQuantity = order.parts.reduce((sum, p) => sum + (Number(p.qty) || 1), 0);
 
   const handlePrint = () => {
     window.print();
@@ -70,7 +118,6 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
       onSaveToArchive(docName, docType);
     }
 
-    // Direct save to user archive localStorage
     if (typeof window !== "undefined") {
       const username = order.username || "admin";
       const archKey = `geo_ai_archive_${username}_v1`;
@@ -104,32 +151,37 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
   };
 
   const tabs: Array<{ id: ServiceDocumentType; label: string; icon: any }> = [
-    { id: "work_order", label: "1. Заказ-наряд", icon: FileText },
-    { id: "acceptance_act", label: "2. Акт приема ТС (Осмотр)", icon: Car },
-    { id: "completion_act", label: "3. Акт выполненных работ", icon: FileCheck },
-    { id: "payment_receipt", label: "4. Квитанция / Чек об оплате", icon: Receipt },
+    { id: "work_order", label: "1. Предварительный ЗН", icon: FileText },
+    { id: "completion_act", label: "2. Заказ-наряд (Акт)", icon: FileCheck },
+    { id: "acceptance_act", label: "3. Акт приема ТС (Осмотр)", icon: Car },
+    { id: "payment_receipt", label: "4. Квитанция / Чек СБП", icon: Receipt },
     { id: "invoice", label: "5. Счет на оплату", icon: FileText },
     { id: "defect_sheet", label: "6. Дефектовка", icon: AlertCircle },
   ];
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto print:p-0 print:bg-white print:static">
-      <div className="w-full max-w-4xl bg-white/95 dark:bg-zinc-950/90 backdrop-blur-2xl border border-black/[0.08] dark:border-white/10 rounded-3xl shadow-2xl flex flex-col max-h-[92vh] print:max-h-none print:border-none print:shadow-none print:rounded-none overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-2 sm:p-5 overflow-y-auto print:p-0 print:bg-white print:static">
+      <div className="w-full max-w-4xl bg-white dark:bg-zinc-950 border border-black/10 dark:border-white/10 rounded-2xl shadow-2xl flex flex-col max-h-[94vh] print:max-h-none print:border-none print:shadow-none print:rounded-none overflow-hidden">
         {/* Top Header Bar (Hidden on print) */}
-        <div className="px-6 py-4 border-b border-zinc-200 dark:border-white/[0.08] flex items-center justify-between shrink-0 bg-zinc-50 dark:bg-zinc-900/60 print:hidden">
+        <div className="px-5 py-3.5 border-b border-zinc-200 dark:border-white/[0.08] flex items-center justify-between shrink-0 bg-zinc-50 dark:bg-zinc-900/70 print:hidden">
           <div className="flex items-center space-x-3 min-w-0">
-            <div className="w-9 h-9 rounded-xl bg-red-500/15 border border-red-500/25 text-red-600 dark:text-red-400 flex items-center justify-center shrink-0">
+            <div className="w-8 h-8 rounded-lg bg-red-600/10 border border-red-600/20 text-red-600 dark:text-red-400 flex items-center justify-center shrink-0">
               <Wrench className="w-4 h-4" />
             </div>
             <div className="min-w-0">
               <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100 truncate flex items-center space-x-2">
                 <span>{order.orderNumber}</span>
-                <span className="text-xs px-2 py-0.5 rounded-full bg-red-500/10 text-red-600 dark:text-red-400 font-semibold">
+                <span className="text-xs px-2 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 font-mono font-bold">
                   {order.vehicle.licensePlate}
                 </span>
+                {isPaid && (
+                  <span className="text-xs px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-semibold">
+                    Оплачен
+                  </span>
+                )}
               </h3>
               <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate">
-                {order.client.name} • {order.vehicle.make} {order.vehicle.model}
+                {order.client.payerName || order.client.name} • {order.vehicle.make} {order.vehicle.model}
               </p>
             </div>
           </div>
@@ -186,7 +238,7 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
         </div>
 
         {/* Document Type Selector Tabs (Hidden on print) */}
-        <div className="px-6 py-2.5 border-b border-zinc-200 dark:border-white/[0.06] bg-white dark:bg-zinc-950/70 flex items-center justify-between overflow-x-auto shrink-0 print:hidden gap-3">
+        <div className="px-5 py-2.5 border-b border-zinc-200 dark:border-white/[0.06] bg-white dark:bg-zinc-950/70 flex items-center justify-between overflow-x-auto shrink-0 print:hidden gap-3">
           <div className="flex items-center space-x-1.5 overflow-x-auto">
             {tabs.map((tab) => {
               const Icon = tab.icon;
@@ -222,7 +274,7 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
               title="Наложить печать и подпись (Факсимиле)"
             >
               <Stamp className="w-3.5 h-3.5" />
-              <span>Факсимиле</span>
+              <span>Печать и подпись</span>
             </button>
 
             <button
@@ -242,295 +294,219 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
         </div>
 
         {/* Scrollable Printable A4 Canvas */}
-        <div className="flex-1 overflow-y-auto p-6 sm:p-10 bg-zinc-100 dark:bg-[#070b10] print:bg-white print:p-0">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-8 bg-zinc-200/70 dark:bg-black/60 print:bg-white print:p-0">
           <div
             id="printable-service-doc"
-            className={`max-w-3xl mx-auto text-zinc-900 p-8 sm:p-12 shadow-md print:shadow-none print:p-0 rounded-xl print:rounded-none font-sans text-xs leading-relaxed transition-all ${
+            className={`max-w-[760px] mx-auto text-black p-6 sm:p-10 shadow-lg print:shadow-none print:p-0 rounded-lg print:rounded-none font-sans text-[11px] leading-tight transition-all select-text ${
               isScanMode
-                ? "bg-[#faf9f5] border border-stone-300 filter contrast-[1.03] brightness-[0.99] sepia-[0.03]"
-                : "bg-white"
+                ? "bg-[#faf8f2] border border-stone-300 filter contrast-[1.04] brightness-[0.98] sepia-[0.04]"
+                : "bg-white border border-zinc-300 print:border-none"
             }`}
           >
-            {/* Header with Brand Logo & Requisites */}
-            {docType === "invoice" ? (
-              /* Classical Bank Upper Box for Invoice (Счет на оплату) */
-              <div className="mb-5 space-y-3">
-                <div className="flex items-center justify-between border-b pb-2">
-                  <div className="flex items-center space-x-3">
-                    <img
-                      src="/logo-chaika-white.png"
-                      alt="Чайка-Сервис"
-                      className="h-9 w-auto object-contain filter invert shrink-0"
-                    />
-                    <div>
-                      <span className="font-extrabold text-sm uppercase text-red-600">{req.brandName}</span>
-                      <p className="text-[11px] text-zinc-500">{req.name}</p>
+            {/* Header: Exact replica of Photo 1 */}
+            <div className="flex items-start justify-between gap-3 pb-3 border-b border-black">
+              {/* Left: Chaika Brand Logo */}
+              <div className="flex flex-col items-start w-1/4">
+                <img
+                  src="/logo-chaika-white.png"
+                  alt="Чайка СТО"
+                  className="h-10 w-auto object-contain filter invert shrink-0"
+                />
+                <span className="text-[8.5px] uppercase tracking-wider text-black font-semibold mt-0.5">
+                  Станция технического обслуживания
+                </span>
+              </div>
+
+              {/* Center: Requisites */}
+              <div className="flex-1 text-center text-[10px] leading-snug px-2">
+                <div className="font-bold text-black">
+                  ИП Водоватовский Антон Игоревич, ИНН 263112957774
+                </div>
+                <div className="text-zinc-800">
+                  629800, Россия, Ямало-Ненецкий АО, г. Ноябрьск
+                </div>
+              </div>
+
+              {/* Right: Date accepted + SBP UDMPAY QR Code */}
+              <div className="flex flex-col items-end w-1/3 text-right">
+                <div className="text-[10px] text-zinc-800 font-semibold mb-1">
+                  Принят: {formatAcceptedDateTime(order.createdAt, order.scheduledTime)}
+                </div>
+                {sbpQrUrl && (
+                  <div className="flex items-center space-x-1.5 border border-zinc-300 rounded p-1 bg-white">
+                    <img src={sbpQrUrl} alt="QR СБП UDMPAY" className="w-14 h-14 object-contain" />
+                    <div className="text-left text-[8px] leading-tight text-zinc-800">
+                      <div className="font-black text-rose-600">СБП / UDMPAY</div>
+                      <div>Оплата онлайн</div>
+                      <div className="text-zinc-500">Наведите камеру</div>
                     </div>
-                  </div>
-                  <div className="text-right text-[11px] text-zinc-500">
-                    Образец заполнения платежного поручения
-                  </div>
-                </div>
-
-                <table className="w-full border-collapse border border-black text-xs">
-                  <tbody>
-                    <tr>
-                      <td colSpan={2} rowSpan={2} className="border border-black p-2 align-top">
-                        <div className="text-[10px] text-zinc-500">Банк получателя:</div>
-                        <div className="font-semibold">{req.bankName}</div>
-                      </td>
-                      <td className="border border-black p-1.5 w-20 text-[10px] text-zinc-500">БИК</td>
-                      <td className="border border-black p-1.5 font-mono font-semibold">{req.bik}</td>
-                    </tr>
-                    <tr>
-                      <td className="border border-black p-1.5 text-[10px] text-zinc-500">Сч. №</td>
-                      <td className="border border-black p-1.5 font-mono font-semibold">{req.ks}</td>
-                    </tr>
-                    <tr>
-                      <td className="border border-black p-1.5 text-[10px] text-zinc-500 w-32">
-                        ИНН {req.inn}
-                      </td>
-                      <td className="border border-black p-1.5 text-[10px] text-zinc-500">
-                        {req.kpp ? `КПП ${req.kpp}` : "КПП —"}
-                      </td>
-                      <td rowSpan={2} className="border border-black p-1.5 text-[10px] text-zinc-500 align-top">
-                        Сч. №
-                      </td>
-                      <td rowSpan={2} className="border border-black p-1.5 font-mono font-semibold align-top">
-                        {req.rs}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colSpan={2} className="border border-black p-2 align-top">
-                        <div className="text-[10px] text-zinc-500">Получатель:</div>
-                        <div className="font-bold">{req.name}</div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            ) : (
-              /* Standard Header for Work Order, Acceptance, Act, Receipt */
-              <div className="border-b-2 border-red-600 pb-3 mb-4 flex justify-between items-start gap-4">
-                <div className="flex items-start space-x-3.5">
-                  <img
-                    src="/logo-chaika-white.png"
-                    alt="Чайка-Сервис"
-                    className="h-10 w-auto max-w-[160px] object-contain filter invert shrink-0"
-                  />
-                  <div>
-                    <h1 className="text-base font-extrabold text-red-600 uppercase tracking-wide">
-                      {req.brandName}
-                    </h1>
-                    <p className="font-bold text-xs text-zinc-900">{req.name}</p>
-                    <p className="text-[11px] text-zinc-600">{req.address}</p>
-                    <p className="text-[11px] text-zinc-600">Тел: {req.phone} • Email: {req.email}</p>
-                  </div>
-                </div>
-                <div className="text-right text-[11px] text-zinc-600 space-y-0.5 shrink-0">
-                  <p>ИНН: <span className="font-bold text-zinc-900">{req.inn}</span> {req.kpp ? `/ КПП: ${req.kpp}` : ""}</p>
-                  <p>ОГРНИП: <span className="font-mono">{req.ogrn}</span></p>
-                  <p>Р/с: <span className="font-mono">{req.rs}</span></p>
-                  <p>{req.bankName} (БИК: {req.bik})</p>
-                </div>
-              </div>
-            )}
-
-            {/* Document Title Header */}
-            <div className="text-center my-3 pb-2 border-b border-zinc-200">
-              <h2 className="text-base font-extrabold uppercase tracking-wider text-zinc-900">
-                {docType === "work_order" && `ДОГОВОР-ЗАКАЗ-НАРЯД № ${order.orderNumber}`}
-                {docType === "acceptance_act" && `АКТ ПРИЕМА-ПЕРЕДАЧИ ТС К ЗАКАЗ-НАРЯДУ № ${order.orderNumber}`}
-                {docType === "completion_act" && `АКТ ВЫПОЛНЕННЫХ РАБОТ № ${order.orderNumber}`}
-                {docType === "payment_receipt" && `КВИТАНЦИЯ К ЗАКАЗ-НАРЯДУ № ${order.orderNumber} (ЧЕК ОБ ОПЛАТЕ)`}
-                {docType === "invoice" && `СЧЕТ НА ОПЛАТУ № ${order.orderNumber}`}
-                {docType === "defect_sheet" && `ДЕФЕКТОВОЧНАЯ ВЕДОМОСТЬ № ${order.orderNumber}`}
-              </h2>
-              <p className="text-xs text-zinc-600 font-medium mt-0.5">от {order.createdAt} г.</p>
-            </div>
-
-            {/* Parties Info */}
-            {docType === "invoice" ? (
-              <div className="space-y-1.5 text-xs mb-4">
-                <div>
-                  <span className="font-bold">Поставщик (Исполнитель): </span>
-                  <span>{req.name}, ИНН {req.inn}, {req.address}, тел.: {req.phone}</span>
-                </div>
-                <div>
-                  <span className="font-bold">Покупатель (Заказчик): </span>
-                  <span>{order.client.name}, {order.client.inn ? `ИНН ${order.client.inn}, ` : ""}тел.: {order.client.phone}</span>
-                </div>
-                <div>
-                  <span className="font-bold">Основание: </span>
-                  <span>Заказ-наряд № {order.orderNumber} на ремонт ТС {order.vehicle.make} {order.vehicle.model} ({order.vehicle.licensePlate})</span>
-                </div>
-              </div>
-            ) : (
-              <div className="grid grid-cols-2 gap-3 p-3 rounded-lg bg-zinc-50 border border-zinc-200 text-xs mb-4">
-                <div>
-                  <span className="text-[10px] uppercase font-bold text-zinc-400">Заказчик (Плательщик):</span>
-                  <p className="font-bold text-zinc-900">{order.client.name}</p>
-                  <p className="text-zinc-600">Тел: {order.client.phone || "—"}</p>
-                  {order.client.inn && <p className="text-zinc-600">ИНН: {order.client.inn}</p>}
-                  {order.client.address && <p className="text-zinc-600">Адрес: {order.client.address}</p>}
-                </div>
-
-                <div>
-                  <span className="text-[10px] uppercase font-bold text-zinc-400">Транспортное средство:</span>
-                  <p className="font-bold text-zinc-900">
-                    {order.vehicle.make} {order.vehicle.model} ({order.vehicle.year} г.)
-                  </p>
-                  <p className="text-zinc-700">
-                    Госномер: <strong className="font-mono font-bold text-zinc-950">{order.vehicle.licensePlate}</strong>
-                  </p>
-                  {order.vehicle.vin && <p className="text-zinc-600 text-[11px] font-mono">VIN: {order.vehicle.vin}</p>}
-                  <p className="text-zinc-600">Пробег: {order.vehicle.mileage ? order.vehicle.mileage.toLocaleString() : "—"} км</p>
-                </div>
-
-                {order.vehicle.complaints && (
-                  <div className="col-span-2 pt-2 border-t border-zinc-200">
-                    <span className="text-[10px] uppercase font-bold text-zinc-400">Причина обращения / Жалобы:</span>
-                    <p className="text-zinc-800 italic">{order.vehicle.complaints}</p>
                   </div>
                 )}
               </div>
-            )}
+            </div>
 
-            {/* DOCUMENT BODY ACCORDING TO DOCTYPE */}
+            {/* Document Title Header */}
+            <div className="my-3">
+              <h1 className="text-base font-extrabold uppercase tracking-tight text-black">
+                {docType === "work_order" && `Предварительный заказ-наряд № ${order.orderNumber}`}
+                {docType === "completion_act" && `Заказ-наряд № ${order.orderNumber}`}
+                {docType === "acceptance_act" && `Акт приема-передачи ТС № ${order.orderNumber}`}
+                {docType === "payment_receipt" && `Квитанция к заказ-наряду № ${order.orderNumber}`}
+                {docType === "invoice" && `Счет на оплату № ${order.orderNumber}`}
+                {docType === "defect_sheet" && `Дефектовочная ведомость № ${order.orderNumber}`}
+              </h1>
+            </div>
 
-            {/* 1. PAYMENT RECEIPT SPECIFIC BODY */}
-            {docType === "payment_receipt" && (
-              <div className="space-y-4 mb-5">
-                <div className="p-4 rounded-xl border-2 border-emerald-600 bg-emerald-50/40 space-y-3">
-                  <div className="flex items-center justify-between border-b border-emerald-200 pb-2">
-                    <span className="font-bold text-xs text-emerald-900 uppercase">Платежная информация</span>
-                    <span className="px-2.5 py-0.5 rounded-full bg-emerald-600 text-white font-mono font-bold text-xs tracking-wider">
-                      ОПЛАЧЕНО ПОЛНОСТЬЮ
-                    </span>
-                  </div>
-
-                  <table className="w-full text-xs">
-                    <tbody>
-                      <tr className="border-b border-emerald-100">
-                        <td className="py-1 text-zinc-600 w-44">Основание платежа:</td>
-                        <td className="py-1 font-semibold text-zinc-900">Оплата по заказ-наряду № {order.orderNumber} от {order.createdAt} г.</td>
-                      </tr>
-                      <tr className="border-b border-emerald-100">
-                        <td className="py-1 text-zinc-600">Плательщик:</td>
-                        <td className="py-1 font-semibold text-zinc-900">{order.client.name}</td>
-                      </tr>
-                      <tr className="border-b border-emerald-100">
-                        <td className="py-1 text-zinc-600">Способ оплаты:</td>
-                        <td className="py-1 font-semibold text-zinc-900">Безналичный расчет / Банковская карта / СБП</td>
-                      </tr>
-                      <tr className="border-b border-emerald-100">
-                        <td className="py-1 text-zinc-600">Налоговый режим:</td>
-                        <td className="py-1 font-medium text-zinc-700">УСН (Доходы), Патент. НДС не облагается (пп. 37 п. 3 ст. 149 НК РФ)</td>
-                      </tr>
-                      <tr>
-                        <td className="py-1.5 font-bold text-zinc-900 text-sm">Сумма к оплате:</td>
-                        <td className="py-1.5 font-extrabold text-emerald-700 text-base">{formatCurrency(order.grandTotal)}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-
-                  <div className="pt-2 border-t border-emerald-200 text-xs">
-                    <span className="font-bold text-zinc-900">Сумма прописью: </span>
-                    <span className="italic font-medium text-zinc-800">{numberToWordsRu(order.grandTotal)}</span>
-                  </div>
+            {/* 2-Column Metadata Grid (Identical to Photo 1) */}
+            <div className="grid grid-cols-12 gap-x-4 gap-y-1 mb-4 text-[11px] leading-snug">
+              {/* Left Column (col-span-8) */}
+              <div className="col-span-8 space-y-1">
+                <div className="grid grid-cols-12">
+                  <span className="col-span-3 font-semibold text-zinc-800">Заказчик:</span>
+                  <span className="col-span-9 font-bold text-black">{order.client.name}</span>
                 </div>
-
-                <div className="text-[11px] text-zinc-500">
-                  Настоящая квитанция подтверждает факт поступления денежных средств в кассу / на расчетный счет предприятия в полном объеме.
+                <div className="grid grid-cols-12">
+                  <span className="col-span-3 font-semibold text-zinc-800">Адрес, тел.:</span>
+                  <span className="col-span-9 text-zinc-900">
+                    {[order.client.address, order.client.phone].filter(Boolean).join(", ") || "—"}
+                  </span>
+                </div>
+                <div className="grid grid-cols-12">
+                  <span className="col-span-3 font-semibold text-zinc-800">Модель:</span>
+                  <span className="col-span-9 font-bold text-black">
+                    {order.vehicle.make} {order.vehicle.model}
+                  </span>
+                </div>
+                <div className="grid grid-cols-12">
+                  <span className="col-span-3 font-semibold text-zinc-800">VIN-номер:</span>
+                  <span className="col-span-9 font-mono font-bold text-black">
+                    {order.vehicle.vin || "—"}
+                  </span>
+                </div>
+                <div className="grid grid-cols-12">
+                  <span className="col-span-3 font-semibold text-zinc-800">Гос.номер:</span>
+                  <span className="col-span-9 font-mono font-extrabold text-black">
+                    {order.vehicle.licensePlate}
+                  </span>
+                </div>
+                <div className="grid grid-cols-12">
+                  <span className="col-span-3 font-semibold text-zinc-800">Плательщик:</span>
+                  <span className="col-span-9 font-bold text-black">
+                    {order.client.payerName ||
+                      (order.client.type === "legal" ? order.client.name : order.client.name)}
+                    {order.client.payerInn ? ` (ИНН ${order.client.payerInn})` : ""}
+                  </span>
                 </div>
               </div>
-            )}
 
-            {/* 2. ACCEPTANCE ACT SPECIFIC BODY (Schematic) */}
+              {/* Right Column (col-span-4) */}
+              <div className="col-span-4 space-y-1 pl-2 border-l border-zinc-200">
+                <div className="grid grid-cols-12">
+                  <span className="col-span-7 font-semibold text-zinc-800">Год выпуска:</span>
+                  <span className="col-span-5 font-bold text-black">{order.vehicle.year || "—"}</span>
+                </div>
+                <div className="grid grid-cols-12">
+                  <span className="col-span-7 font-semibold text-zinc-800">Цвет:</span>
+                  <span className="col-span-5 text-zinc-900">{order.vehicle.color || "—"}</span>
+                </div>
+                <div className="grid grid-cols-12">
+                  <span className="col-span-7 font-semibold text-zinc-800">Пробег:</span>
+                  <span className="col-span-5 font-bold text-black">
+                    {order.vehicle.mileage ? `${order.vehicle.mileage.toLocaleString()} км` : "—"}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* ACCEPTANCE ACT BODY (Schematic view) */}
             {docType === "acceptance_act" && (
-              <div className="mb-5 p-3 rounded-lg border border-zinc-300 bg-white">
+              <div className="mb-4 p-2 border border-black bg-white">
                 <VehicleInspectionSchematic inspection={order.inspection} readOnly={true} isPrint={true} />
               </div>
             )}
 
-            {/* 3. DEFECT SHEET SPECIFIC BODY */}
+            {/* DEFECT SHEET BODY */}
             {docType === "defect_sheet" && (
-              <div className="space-y-4 mb-5">
-                <div className="font-bold text-zinc-900 text-xs">Ведомость выявленных дефектов узлов и агрегатов:</div>
-                <table className="w-full text-left border-collapse border border-black text-xs">
+              <div className="space-y-3 mb-4">
+                <div className="font-bold text-black text-[11px]">Ведомость выявленных дефектов узлов и агрегатов:</div>
+                <table className="w-full text-left border-collapse border border-black text-[10px]">
                   <thead>
-                    <tr className="bg-zinc-100 text-zinc-800">
-                      <th className="p-1.5 border border-black w-8 text-center">№</th>
-                      <th className="p-1.5 border border-black w-32">Узел / Система</th>
-                      <th className="p-1.5 border border-black">Описание неисправности / Износ</th>
-                      <th className="p-1.5 border border-black w-36">Рекомендуемые работы</th>
-                      <th className="p-1.5 border border-black w-24 text-center">Статус</th>
+                    <tr className="bg-zinc-100 text-black">
+                      <th className="p-1 border border-black w-7 text-center">№</th>
+                      <th className="p-1 border border-black w-32">Узел / Система</th>
+                      <th className="p-1 border border-black">Описание неисправности</th>
+                      <th className="p-1 border border-black w-36">Рекомендуемые работы</th>
+                      <th className="p-1 border border-black w-20 text-center">Статус</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td className="p-1.5 border border-black text-center">1</td>
-                      <td className="p-1.5 border border-black font-semibold">Передняя подвеска</td>
-                      <td className="p-1.5 border border-black">{order.vehicle.complaints || "Люфт поворотного кулака, повреждение пыльника"}</td>
-                      <td className="p-1.5 border border-black">Замена кулака в сборе, сход-развал</td>
-                      <td className="p-1.5 border border-black text-center font-bold text-red-600">Критично</td>
+                      <td className="p-1 border border-black text-center">1</td>
+                      <td className="p-1 border border-black font-semibold">Ходовая часть / ДВС</td>
+                      <td className="p-1 border border-black">{order.vehicle.complaints || "Люфт и износ деталей"}</td>
+                      <td className="p-1 border border-black">Ремонт / замена в рамках ЗН</td>
+                      <td className="p-1 border border-black text-center font-bold text-red-600">Критично</td>
                     </tr>
                     {order.works.map((w, idx) => (
                       <tr key={idx + 2}>
-                        <td className="p-1.5 border border-black text-center">{idx + 2}</td>
-                        <td className="p-1.5 border border-black font-semibold">Ходовая часть / ТО</td>
-                        <td className="p-1.5 border border-black">{w.name}</td>
-                        <td className="p-1.5 border border-black">Устранение в рамках ЗН</td>
-                        <td className="p-1.5 border border-black text-center text-zinc-700">В работе</td>
+                        <td className="p-1 border border-black text-center">{idx + 2}</td>
+                        <td className="p-1 border border-black">Агрегатный участок</td>
+                        <td className="p-1 border border-black">{w.name}</td>
+                        <td className="p-1 border border-black">Выполнено</td>
+                        <td className="p-1 border border-black text-center text-zinc-800">Норма</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
-
-                <div className="p-3 bg-zinc-50 border border-zinc-300 rounded-lg text-xs space-y-1">
-                  <span className="font-bold text-zinc-900">Заключение технического эксперта СТО: </span>
-                  <p className="italic text-zinc-800">
-                    {order.recommendations || "Эксплуатация ТС до устранения неисправностей рулевого управления и подвески не рекомендуется согласно ПДД РФ. Требуется обязательная регулировка углов установки колес."}
-                  </p>
-                </div>
               </div>
             )}
 
-            {/* 4. WORKS TABLE (For work_order, completion_act, invoice) */}
+            {/* TABLE 1: Выполненные работы (Exact columns from Photo 1) */}
             {(docType === "work_order" || docType === "completion_act" || docType === "invoice") && (
-              <div className="mb-4">
-                <h3 className="font-bold text-zinc-900 mb-1.5 flex justify-between text-xs">
-                  <span>1. Выполненные работы / услуги:</span>
-                  <span className="text-zinc-500 font-normal">Ставка: {req.defaultRatePerHour} ₽/Н·Ч</span>
-                </h3>
-                <table className="w-full text-left border-collapse border border-black text-xs">
+              <div className="mb-3">
+                <div className="font-bold text-center text-[11px] mb-1 text-black">Выполненные работы</div>
+                <table className="w-full text-left border-collapse border border-black text-[10px] leading-tight">
                   <thead>
-                    <tr className="bg-zinc-100 text-zinc-800">
-                      <th className="p-1.5 border border-black w-8 text-center">№</th>
-                      <th className="p-1.5 border border-black">Наименование работы</th>
-                      <th className="p-1.5 border border-black w-24">Исполнитель</th>
-                      <th className="p-1.5 border border-black w-14 text-center">Н/Ч</th>
-                      <th className="p-1.5 border border-black w-20 text-right">Ставка</th>
-                      <th className="p-1.5 border border-black w-24 text-right">Сумма</th>
+                    <tr className="bg-zinc-100 text-black">
+                      <th className="p-1 border border-black w-6 text-center">№</th>
+                      <th className="p-1 border border-black w-16 text-center">Код работы</th>
+                      <th className="p-1 border border-black">Наименование</th>
+                      <th className="p-1 border border-black w-9 text-center">Крат</th>
+                      <th className="p-1 border border-black w-14 text-right">Цена</th>
+                      <th className="p-1 border border-black w-10 text-center">Врем</th>
+                      <th className="p-1 border border-black w-16 text-right">Стоим.</th>
+                      <th className="p-1 border border-black w-18 text-right">Сумма</th>
                     </tr>
                   </thead>
                   <tbody>
                     {order.works.map((w, idx) => (
                       <tr key={w.id || idx}>
-                        <td className="p-1.5 border border-black text-center">{idx + 1}</td>
-                        <td className="p-1.5 border border-black font-medium">{w.name}</td>
-                        <td className="p-1.5 border border-black text-zinc-600">{w.mechanic || "Водоватовский А.И."}</td>
-                        <td className="p-1.5 border border-black text-center font-bold">{w.laborHours}</td>
-                        <td className="p-1.5 border border-black text-right">{w.ratePerHour} ₽</td>
-                        <td className="p-1.5 border border-black text-right font-semibold">{w.total.toLocaleString()} ₽</td>
+                        <td className="p-1 border border-black text-center">{idx + 1}</td>
+                        <td className="p-1 border border-black text-center font-mono text-[9px] text-zinc-600">
+                          {idx + 101}
+                        </td>
+                        <td className="p-1 border border-black font-medium">{w.name}</td>
+                        <td className="p-1 border border-black text-center">1</td>
+                        <td className="p-1 border border-black text-right">
+                          {formatDocRub(w.ratePerHour || 2500)}
+                        </td>
+                        <td className="p-1 border border-black text-center font-bold">
+                          {w.laborHours}
+                        </td>
+                        <td className="p-1 border border-black text-right">
+                          {formatDocRub(w.total)}
+                        </td>
+                        <td className="p-1 border border-black text-right font-bold">
+                          {formatDocRub(w.total)}
+                        </td>
                       </tr>
                     ))}
-                    <tr className="bg-zinc-50 font-bold">
-                      <td colSpan={5} className="p-1.5 border border-black text-right">
-                        Итого по работам:
+                    <tr className="font-bold bg-zinc-50">
+                      <td colSpan={7} className="p-1 border border-black text-right">
+                        Итого:
                       </td>
-                      <td className="p-1.5 border border-black text-right font-bold text-zinc-950">
-                        {order.totalWorks.toLocaleString()} ₽
+                      <td className="p-1 border border-black text-right font-extrabold text-black">
+                        {formatDocRub(order.totalWorks)}
                       </td>
                     </tr>
                   </tbody>
@@ -538,38 +514,50 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
               </div>
             )}
 
-            {/* 5. PARTS TABLE (For work_order, completion_act, invoice) */}
+            {/* TABLE 2: Запасные части и материалы (Exact columns from Photo 1) */}
             {(docType === "work_order" || docType === "completion_act" || docType === "invoice") && order.parts.length > 0 && (
-              <div className="mb-4">
-                <h3 className="font-bold text-zinc-900 mb-1.5 text-xs">2. Запасные части и материалы:</h3>
-                <table className="w-full text-left border-collapse border border-black text-xs">
+              <div className="mb-3">
+                <div className="font-bold text-center text-[11px] mb-1 text-black">Запасные части и материалы</div>
+                <table className="w-full text-left border-collapse border border-black text-[10px] leading-tight">
                   <thead>
-                    <tr className="bg-zinc-100 text-zinc-800">
-                      <th className="p-1.5 border border-black w-8 text-center">№</th>
-                      <th className="p-1.5 border border-black w-28">Артикул OEM</th>
-                      <th className="p-1.5 border border-black">Наименование детали</th>
-                      <th className="p-1.5 border border-black w-16 text-center">Кол-во</th>
-                      <th className="p-1.5 border border-black w-20 text-right">Цена</th>
-                      <th className="p-1.5 border border-black w-24 text-right">Сумма</th>
+                    <tr className="bg-zinc-100 text-black">
+                      <th className="p-1 border border-black w-6 text-center">№</th>
+                      <th className="p-1 border border-black w-24">Номер</th>
+                      <th className="p-1 border border-black">Наименование</th>
+                      <th className="p-1 border border-black w-20 text-center">Количество</th>
+                      <th className="p-1 border border-black w-18 text-right">Цена</th>
+                      <th className="p-1 border border-black w-20 text-right">Сумма</th>
                     </tr>
                   </thead>
                   <tbody>
                     {order.parts.map((p, idx) => (
                       <tr key={p.id || idx}>
-                        <td className="p-1.5 border border-black text-center">{idx + 1}</td>
-                        <td className="p-1.5 border border-black font-mono text-[11px] text-zinc-600">{p.oem || "—"}</td>
-                        <td className="p-1.5 border border-black font-medium">{p.name}</td>
-                        <td className="p-1.5 border border-black text-center">{p.qty} {p.unit}</td>
-                        <td className="p-1.5 border border-black text-right">{p.salePrice.toLocaleString()} ₽</td>
-                        <td className="p-1.5 border border-black text-right font-semibold">{p.total.toLocaleString()} ₽</td>
+                        <td className="p-1 border border-black text-center">{idx + 1}</td>
+                        <td className="p-1 border border-black font-mono text-[9px] text-zinc-700">
+                          {p.oem || "—"}
+                        </td>
+                        <td className="p-1 border border-black font-medium">{p.name}</td>
+                        <td className="p-1 border border-black text-center">
+                          {p.qty} {p.unit || "шт"}
+                        </td>
+                        <td className="p-1 border border-black text-right">
+                          {formatDocRub(p.salePrice)}
+                        </td>
+                        <td className="p-1 border border-black text-right font-bold">
+                          {formatDocRub(p.total)}
+                        </td>
                       </tr>
                     ))}
-                    <tr className="bg-zinc-50 font-bold">
-                      <td colSpan={5} className="p-1.5 border border-black text-right">
-                        Итого по запчастям:
+                    <tr className="font-bold bg-zinc-50">
+                      <td colSpan={3} className="p-1 border border-black text-right">
+                        Итого:
                       </td>
-                      <td className="p-1.5 border border-black text-right font-bold text-zinc-950">
-                        {order.totalParts.toLocaleString()} ₽
+                      <td className="p-1 border border-black text-center font-bold">
+                        {totalPartsQuantity}
+                      </td>
+                      <td className="p-1 border border-black text-right" />
+                      <td className="p-1 border border-black text-right font-extrabold text-black">
+                        {formatDocRub(order.totalParts)}
                       </td>
                     </tr>
                   </tbody>
@@ -577,94 +565,84 @@ export const ServiceDocumentModal: React.FC<ServiceDocumentModalProps> = ({
               </div>
             )}
 
-            {/* Total Due & Sum in Words */}
-            <div className="p-3 bg-zinc-50 border border-zinc-300 rounded-lg space-y-1.5 mb-4">
-              <div className="flex justify-between items-center">
-                <span className="font-extrabold text-sm text-zinc-900">
-                  {docType === "invoice" ? "ВСЕГО К ОПЛАТЕ:" : "ИТОГО К ОПЛАТЕ:"}
-                </span>
-                <span className="font-black text-base text-red-600">
-                  {formatCurrency(order.grandTotal)}
+            {/* Total Document Sum & Debt (Exact replica of Photo 1) */}
+            <div className="my-3 space-y-1">
+              <div className="flex items-baseline space-x-2">
+                <span className="font-bold text-xs text-black">Сумма документа:</span>
+                <span className="font-extrabold text-sm text-black">
+                  {formatDocRub(order.grandTotal)} (Без НДС)
                 </span>
               </div>
-              <div className="text-[11px] text-zinc-600 border-t border-zinc-200 pt-1.5">
-                <span className="font-bold text-zinc-900">Сумма прописью: </span>
-                <span className="italic font-medium text-zinc-800">{numberToWordsRu(order.grandTotal)}</span>
-              </div>
-              <div className="text-[10px] text-zinc-500">
-                НДС не облагается (в соответствии с пп. 37 п. 3 ст. 149 НК РФ, УСН / Патент).
+              <div className="flex items-baseline space-x-2">
+                <span className="font-bold text-xs text-black">Задолженность:</span>
+                <span className={`font-extrabold text-sm ${debtAmount > 0 ? "text-black" : "text-emerald-700"}`}>
+                  {formatDocRub(debtAmount)}
+                </span>
+                {isPaid && (
+                  <span className="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-300">
+                    Оплачено через СБП
+                  </span>
+                )}
               </div>
             </div>
 
-            {/* Recommendations / Legal terms */}
-            {docType === "completion_act" && (
-              <div className="text-[11px] text-zinc-600 mb-4 p-2 bg-zinc-50 border border-zinc-200 rounded">
-                Вышеперечисленные работы (услуги) выполнены полностью и в срок. Заказчик претензий по объему, качеству и срокам оказания услуг не имеет.
-              </div>
-            )}
+            {/* Exact Warranty & Disclaimer Text from Photo 1 */}
+            <div className="text-[9.5px] leading-tight text-zinc-900 my-3.5 space-y-1 border-t border-zinc-300 pt-2">
+              <p>
+                Исполнитель несет гарантийные обязательства при условии соблюдения потребителем правил эксплуатации и рекомендаций исполнителя по использованию результатов работы (услуги).
+              </p>
+              <p>
+                С объемом работ и первоначальной стоимостью согласен. Согласен на выполнение сопутствующих работ, стоимость которых не превышает 10% от первоначальной стоимости по заказ-наряду с учетом стоимости запчастей и материалов.
+              </p>
+            </div>
 
-            {order.recommendations && docType !== "defect_sheet" && (
-              <div className="mb-3 text-xs text-zinc-700">
-                <strong>Рекомендации клиенту:</strong> {order.recommendations}
-              </div>
-            )}
-
-            {/* Warranty Terms */}
-            {docType === "work_order" && (
-              <div className="text-[11px] text-zinc-500 mb-6 border-t border-zinc-200 pt-2 leading-relaxed">
-                <p>
-                  Гарантийные обязательства: на работы по слесарному ремонту — {order.warrantyDaysWorks || 30} дней или 1 000 км пробега, на установленные оригинальные запасные части — {order.warrantyDaysParts || 14} дней. Претензии по комплектности и внешнему виду принимаются исключительно в момент получения автомобиля.
-                </p>
-              </div>
-            )}
-
-            {/* Signature Blocks */}
-            <div className="grid grid-cols-2 gap-8 text-xs pt-4 border-t-2 border-zinc-300">
-              <div>
-                <p className="font-bold text-zinc-900">
-                  {docType === "invoice" ? "Предприниматель / Руководитель:" : "Исполнитель / Мастер-приемщик:"}
-                </p>
-                <p className="text-zinc-600 mb-6">{req.director} / {req.masterReceiver}</p>
-
-                <div className="relative inline-block">
-                  {isFacsimile && (
-                    <>
-                      {sigImg && (
-                        <img
-                          src={sigImg}
-                          alt="Подпись"
-                          className="absolute -top-7 left-2 w-32 h-12 object-contain pointer-events-none select-none z-10"
-                          style={{ mixBlendMode: "multiply" }}
-                        />
-                      )}
-                      {stampImg && (
-                        <img
-                          src={stampImg}
-                          alt="Оттиск печати"
-                          className="absolute -top-10 left-20 w-28 h-28 object-contain pointer-events-none select-none z-20"
-                          style={{
-                            transform: "rotate(-2.5deg)",
-                            mixBlendMode: "multiply",
-                            opacity: 0.94,
-                          }}
-                        />
-                      )}
-                    </>
-                  )}
-                  <div className="border-b border-black w-48 mb-1" />
+            {/* Signature Rows with Authentic Facsimile Overlay */}
+            <div className="pt-3 mt-4 flex items-end justify-between text-[11px]">
+              {/* Left: Customer */}
+              <div className="w-[45%]">
+                <div className="flex items-baseline">
+                  <span className="font-semibold text-black">Заказчик:</span>
+                  <div className="flex-1 border-b border-black ml-2 mb-0.5 h-3" />
                 </div>
-                <p className="text-[10px] text-zinc-500">Подпись / М.П.</p>
               </div>
 
-              <div>
-                <p className="font-bold text-zinc-900">
-                  {docType === "payment_receipt" ? "Плательщик:" : "Заказчик (представитель):"}
-                </p>
-                <p className="text-zinc-600 mb-6">{order.client.name}</p>
-                <div className="border-b border-black w-48 mb-1" />
-                <p className="text-[10px] text-zinc-500">
-                  {docType === "payment_receipt" ? "Оплату произвел" : "С объемом и стоимостью работ согласен"}
-                </p>
+              {/* Right: Master Receiver Anton Vodovatovskiy */}
+              <div className="w-[52%] relative">
+                <div className="flex items-baseline">
+                  <span className="font-semibold text-black whitespace-nowrap">
+                    Мастер-приемщик: Водоватовский Антон
+                  </span>
+                  <div className="flex-1 border-b border-black ml-2 mb-0.5 h-3" />
+                </div>
+
+                {/* Facsimile Overlay */}
+                {isFacsimile && (
+                  <>
+                    {/* Authentic Blue Round Chaika Stamp */}
+                    <img
+                      src={stampImg}
+                      alt="Печать СТО Чайка"
+                      className="absolute -top-10 right-2 w-32 h-32 object-contain pointer-events-none select-none z-20"
+                      style={{
+                        transform: "rotate(-3deg)",
+                        mixBlendMode: "multiply",
+                        opacity: 0.92,
+                      }}
+                    />
+
+                    {/* Authentic Blue Ink Pen Signature */}
+                    <img
+                      src={sigImg}
+                      alt="Подпись мастера"
+                      className="absolute -top-6 right-10 w-28 h-16 object-contain pointer-events-none select-none z-30"
+                      style={{
+                        transform: "rotate(-2deg)",
+                        mixBlendMode: "multiply",
+                        opacity: 0.95,
+                      }}
+                    />
+                  </>
+                )}
               </div>
             </div>
           </div>

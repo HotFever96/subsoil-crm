@@ -694,6 +694,13 @@ export const AIChat: React.FC = () => {
         actions: data.actions && Array.isArray(data.actions) && data.actions.length > 0 ? data.actions : undefined,
       };
 
+      if (data.actions && Array.isArray(data.actions)) {
+        const hasOrderCreated = data.actions.some((a: any) => a.type === "REPAIR_ORDER_CREATED");
+        if (hasOrderCreated && typeof window !== "undefined") {
+          window.dispatchEvent(new CustomEvent("geo_ai_repair_orders_updated"));
+        }
+      }
+
       setSessionMessages(activeSession.id, [...updatedMessages, assistantMsg]);
 
       // Auto-archive generated files from assistant response
@@ -868,6 +875,13 @@ export const AIChat: React.FC = () => {
         created_at: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
         actions: data.actions && Array.isArray(data.actions) && data.actions.length > 0 ? data.actions : undefined,
       };
+
+      if (data.actions && Array.isArray(data.actions)) {
+        const hasOrderCreated = data.actions.some((a: any) => a.type === "REPAIR_ORDER_CREATED");
+        if (hasOrderCreated && typeof window !== "undefined") {
+          window.dispatchEvent(new CustomEvent("geo_ai_repair_orders_updated"));
+        }
+      }
 
       setSessionMessages(activeSession.id, [...updatedMessages, assistantMsg]);
 

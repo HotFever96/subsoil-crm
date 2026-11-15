@@ -1,20 +1,9 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/lib/theme-context";
 import { AuthProvider } from "@/lib/auth-context";
 import { ChatProvider } from "@/lib/chat-context";
 import { BusinessProvider } from "@/lib/business-context";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin", "cyrillic"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin", "cyrillic"],
-});
 
 export const metadata: Metadata = {
   title: "Geo AI & Чайка-Сервис | Интеллектуальная CRM-платформа",
@@ -27,8 +16,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ru" className={`${geistSans.variable} ${geistMono.variable} h-full`}>
-      <body className="min-h-screen selection:bg-sky-500/20 selection:text-sky-500">
+    <html lang="ru" className="h-full">
+      <body className="min-h-screen selection:bg-sky-500/20 selection:text-sky-500 font-sans">
         <BusinessProvider>
           <ThemeProvider>
             <AuthProvider>

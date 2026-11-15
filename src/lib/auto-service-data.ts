@@ -43,6 +43,8 @@ export const SERVICE_COMPANY_REQUISITES: StoCompanyRequisites = {
   employees: [],
   facsimileDefaultEnabled: true,
   scanModeDefaultEnabled: false,
+  stampUrl: "/facsimile/chaika_stamp.png",
+  signatureUrl: "/facsimile/anton_signature.png",
 };
 
 export function getStoRequisites(username?: string): StoCompanyRequisites {
@@ -57,6 +59,8 @@ export function getStoRequisites(username?: string): StoCompanyRequisites {
           ...parsed,
           mechanics: Array.isArray(parsed.mechanics) ? parsed.mechanics : [],
           employees: Array.isArray(parsed.employees) ? parsed.employees : [],
+          stampUrl: parsed.stampUrl && !parsed.stampUrl.startsWith("data:image/svg") ? parsed.stampUrl : "/facsimile/chaika_stamp.png",
+          signatureUrl: parsed.signatureUrl && !parsed.signatureUrl.startsWith("data:image/svg") ? parsed.signatureUrl : "/facsimile/anton_signature.png",
         };
       }
     }
@@ -277,6 +281,11 @@ export function normalizeRepairOrder(raw: any, username?: string): RepairOrder {
     inn: rawClient.inn ? String(rawClient.inn) : undefined,
     email: rawClient.email ? String(rawClient.email) : undefined,
     address: rawClient.address ? String(rawClient.address) : undefined,
+    payerName: rawClient.payerName ? String(rawClient.payerName) : undefined,
+    payerInn: rawClient.payerInn ? String(rawClient.payerInn) : undefined,
+    payerKpp: rawClient.payerKpp ? String(rawClient.payerKpp) : undefined,
+    payerOgrn: rawClient.payerOgrn ? String(rawClient.payerOgrn) : undefined,
+    payerAddress: rawClient.payerAddress ? String(rawClient.payerAddress) : undefined,
   };
 
   const inspection = raw.inspection && typeof raw.inspection === "object"
@@ -321,7 +330,14 @@ export function normalizeRepairOrder(raw: any, username?: string): RepairOrder {
     totalWorks: Number(raw.totalWorks ?? raw.worksTotal) || totals.totalWorks,
     totalParts: Number(raw.totalParts ?? raw.partsTotal) || totals.totalParts,
     grandTotal: Number(raw.grandTotal ?? raw.totalAmount) || totals.grandTotal,
-    paidAmount: Number(raw.paidAmount ?? raw.grandTotal ?? raw.totalAmount) || totals.grandTotal,
+    paymentStatus: (raw.paymentStatus as any) || (raw.status === "closed" ? "paid" : "unpaid"),
+    paymentMethod: raw.paymentMethod ? String(raw.paymentMethod) as any : undefined,
+    paidAt: raw.paidAt ? String(raw.paidAt) : undefined,
+    paidAmount: typeof raw.paidAmount === "number"
+      ? raw.paidAmount
+      : (raw.paymentStatus === "paid" || raw.status === "closed"
+        ? (Number(raw.grandTotal ?? raw.totalAmount) || totals.grandTotal)
+        : 0),
     warrantyDaysWorks: Number(raw.warrantyDaysWorks) || 30,
     warrantyDaysParts: Number(raw.warrantyDaysParts) || 14,
     masterName: String(raw.masterName || "Водоватовский А.И."),

@@ -18,6 +18,7 @@ import {
   Trash2,
   CheckCircle2,
   X,
+  Building2,
 } from "lucide-react";
 import { ClientVehicleRecord, RepairOrder } from "@/lib/auto-service-types";
 import { formatCurrency } from "@/lib/auto-service-data";
@@ -52,6 +53,30 @@ export const ClientsGarageModule: React.FC = () => {
   const [clientName, setClientName] = useState("");
   const [clientPhone, setClientPhone] = useState("");
   const [clientInn, setClientInn] = useState("");
+  const [isSearchingInn, setIsSearchingInn] = useState(false);
+
+  const handleLookupInnForClient = async (innToSearch: string) => {
+    const clean = innToSearch.replace(/\D/g, "");
+    if (clean.length !== 10 && clean.length !== 12) return;
+    setIsSearchingInn(true);
+    try {
+      const res = await fetch("/api/company-by-inn", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ inn: clean }),
+      });
+      const json = await res.json();
+      if (json.success && json.company) {
+        setClientName(json.company.name || json.company.shortName || "");
+        setClientType("legal");
+        showToast(`Организация найдена: ${json.company.name}`);
+      }
+    } catch (e) {
+      console.warn("INN lookup error:", e);
+    } finally {
+      setIsSearchingInn(false);
+    }
+  };
 
   // Optional first car when creating client
   const [carMake, setCarMake] = useState("");
@@ -733,13 +758,31 @@ export const ClientsGarageModule: React.FC = () => {
 
               <div>
                 <label className="text-zinc-500 font-semibold">ИНН (для юрлиц)</label>
-                <input
-                  type="text"
-                  value={clientInn}
-                  onChange={(e) => setClientInn(e.target.value)}
-                  placeholder="7700000000"
-                  className="mt-1 w-full px-3 py-2 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-zinc-900 dark:text-white placeholder:text-zinc-500 font-mono"
-                />
+                <div className="relative flex items-center mt-1">
+                  <input
+                    type="text"
+                    value={clientInn}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setClientInn(val);
+                      const clean = val.replace(/\D/g, "");
+                      if (clean.length === 10 || clean.length === 12) {
+                        handleLookupInnForClient(clean);
+                      }
+                    }}
+                    placeholder="10 или 12 цифр"
+                    className="w-full pl-3 pr-16 py-2 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-zinc-900/80 text-zinc-900 dark:text-white placeholder:text-zinc-500 font-mono"
+                  />
+                  <button
+                    type="button"
+                    disabled={isSearchingInn}
+                    onClick={() => handleLookupInnForClient(clientInn)}
+                    className="absolute right-1 px-2 py-1 rounded-xl bg-red-600/10 hover:bg-red-600/20 text-red-600 dark:text-red-400 text-xs font-semibold border border-red-500/20 flex items-center space-x-1 cursor-pointer disabled:opacity-50"
+                  >
+                    <Building2 className="w-3 h-3" />
+                    <span>{isSearchingInn ? "..." : "ИНН"}</span>
+                  </button>
+                </div>
               </div>
             </div>
 

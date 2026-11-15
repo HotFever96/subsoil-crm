@@ -14,6 +14,20 @@ interface VoiceLiveModalProps {
 
 type VoiceState = "idle" | "listening" | "thinking" | "speaking";
 
+function cleanSpokenText(raw: string): string {
+  if (!raw) return "";
+  const s = raw
+    .replace(/\*.*?\*/g, "")
+    .replace(/\[.*?\]/g, "")
+    .replace(/\(.*?\)/g, "")
+    .replace(/субтитры\s*(делал|сделал|подготовил).*$/i, "")
+    .trim();
+  if (!/[a-zA-Zа-яА-Я0-9]/.test(s) || s.length < 2) {
+    return "";
+  }
+  return s;
+}
+
 export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
   isOpen,
   onClose,
@@ -145,6 +159,11 @@ export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
     setVoiceState("speaking");
     isSpeakingRef.current = true;
 
+    // Defensively disable mic tracks to avoid acoustic loopback and echo
+    if (activeStreamRef.current) {
+      activeStreamRef.current.getAudioTracks().forEach((track) => (track.enabled = false));
+    }
+
     try {
       const res = await fetch("/api/tts", {
         method: "POST",
@@ -190,6 +209,13 @@ export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
   };
 
   const resumeListening = () => {
+    isSpeakingRef.current = false;
+
+    // Re-enable microphone tracks
+    if (activeStreamRef.current) {
+      activeStreamRef.current.getAudioTracks().forEach((track) => (track.enabled = true));
+    }
+
     if (!isOpen || isMuted) {
       setVoiceState("idle");
       return;
@@ -202,7 +228,11 @@ export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
 
   // Process user speech when silence is detected
   const handleUserSpoke = async (spokenText: string) => {
-    if (!spokenText.trim() || isSpeakingRef.current) return;
+    const cleaned = cleanSpokenText(spokenText);
+    if (!cleaned || isSpeakingRef.current) {
+      if (!isSpeakingRef.current) resumeListening();
+      return;
+    }
 
     try {
       recognitionRef.current?.stop();
@@ -212,10 +242,10 @@ export const VoiceLiveModal: React.FC<VoiceLiveModalProps> = ({
     } catch {}
 
     setVoiceState("thinking");
-    setTranscript(spokenText);
+    setTranscript(cleaned);
 
     try {
-      const reply = await onSendMessage(spokenText, { voiceMode: true });
+      const reply = await onSendMessage(cleaned, { voiceMode: true });
       // Strip markdown/action blocks for vocalization
       const vocalText = reply
         .replace(/```[\s\S]*?```/g, "")
