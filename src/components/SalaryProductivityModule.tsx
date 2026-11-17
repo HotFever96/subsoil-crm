@@ -104,6 +104,18 @@ export const SalaryProductivityModule: React.FC<SalaryProductivityModuleProps> =
     } catch {}
     setLocalOrders(loadedOrders);
 
+    if (loadedOrders.length === 0) {
+      fetch("/api/autodealer-clients")
+        .then((r) => r.json())
+        .then((data) => {
+          if (data.success && Array.isArray(data.orders) && data.orders.length > 0) {
+            const normalized = data.orders.map((o: any) => normalizeRepairOrder(o, currentUsername));
+            setLocalOrders(normalized);
+          }
+        })
+        .catch(() => {});
+    }
+
     // Sync from Supabase
     if (currentUsername) {
       fetch("/api/sync", {

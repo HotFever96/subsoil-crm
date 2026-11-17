@@ -191,7 +191,9 @@ export interface VehicleInspectionData {
 }
 
 export type EmployeeRole =
-  | "mechanic"              // Автослесарь
+  | "director"              // Директор / Руководитель
+  | "manager"               // Управляющий / Мастер-приемщик
+  | "mechanic"              // Автослесарь / Мастер-исполнитель
   | "engine_specialist"      // Моторист-агрегатчик
   | "electrician"          // Автоэлектрик-диагност
   | "master_receiver"      // Мастер-приемщик

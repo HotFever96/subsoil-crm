@@ -554,6 +554,8 @@ export const StoSettingsModal: React.FC<StoSettingsModalProps> = ({
                       onChange={(e) => {
                         const r = e.target.value as EmployeeRole;
                         const roleTitles: Record<EmployeeRole, string> = {
+                          director: "Директор / Руководитель",
+                          manager: "Управляющий / Мастер-приемщик",
                           mechanic: "Автослесарь-универсал",
                           engine_specialist: "Моторист-агрегатчик",
                           electrician: "Автоэлектрик-диагност",
@@ -565,11 +567,13 @@ export const StoSettingsModal: React.FC<StoSettingsModalProps> = ({
                       }}
                       className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900"
                     >
+                      <option value="director">Директор / Руководитель</option>
+                      <option value="manager">Управляющий / Мастер-приемщик</option>
+                      <option value="master_receiver">Мастер-приемщик</option>
                       <option value="mechanic">Автослесарь-универсал</option>
                       <option value="engine_specialist">Моторист-агрегатчик</option>
                       <option value="electrician">Автоэлектрик-диагност</option>
                       <option value="suspension_specialist">Слесарь по ходовой части</option>
-                      <option value="master_receiver">Мастер-приемщик</option>
                       <option value="diagnostician">Диагност</option>
                     </select>
                   </div>

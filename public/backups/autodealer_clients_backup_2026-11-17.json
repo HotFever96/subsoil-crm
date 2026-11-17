@@ -17,7 +17,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-3594326",
@@ -40,7 +41,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-1965925",
@@ -51,7 +53,8 @@
     "note": "",
     "vehicles": [],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6660700",
@@ -71,7 +74,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2234085",
@@ -91,7 +95,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7518598",
@@ -110,8 +115,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 7000,
+    "username": "antonv"
   },
   {
     "id": "ad-7043583",
@@ -122,7 +128,8 @@
     "note": "",
     "vehicles": [],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-5131497",
@@ -133,7 +140,8 @@
     "note": "",
     "vehicles": [],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7022049",
@@ -144,7 +152,8 @@
     "note": "",
     "vehicles": [],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7781493",
@@ -163,8 +172,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 16625,
+    "username": "antonv"
   },
   {
     "id": "ad-5107487",
@@ -184,7 +194,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-5949072",
@@ -207,7 +218,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6980078",
@@ -230,7 +242,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-4684217",
@@ -250,7 +263,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2565272",
@@ -264,7 +278,8 @@
     "note": "",
     "vehicles": [],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-3181214",
@@ -287,7 +302,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6725649",
@@ -306,8 +322,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 11957,
+    "username": "antonv"
   },
   {
     "id": "ad-6660947",
@@ -346,7 +363,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7660975",
@@ -369,7 +387,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2931498",
@@ -389,7 +408,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8640192",
@@ -412,7 +432,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7436710",
@@ -431,28 +452,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
-  },
-  {
-    "id": "ad-9098758",
-    "name": "Александров Александр",
-    "type": "individual",
-    "phone": "",
-    "address": "",
-    "note": "",
-    "vehicles": [
-      {
-        "make": "Ford",
-        "model": "Transit",
-        "licensePlate": "C039KH89",
-        "vin": "",
-        "year": 2018,
-        "mileage": 0
-      }
-    ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 4,
+    "totalSpent": 40620,
+    "username": "antonv"
   },
   {
     "id": "ad-7321122",
@@ -471,8 +473,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 2,
+    "totalSpent": 34250,
+    "username": "antonv"
   },
   {
     "id": "ad-8692761",
@@ -491,8 +494,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 14000,
+    "username": "antonv"
   },
   {
     "id": "ad-8626764",
@@ -511,8 +515,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 2,
+    "totalSpent": 35150,
+    "username": "antonv"
   },
   {
     "id": "ad-6438514",
@@ -532,7 +537,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7528038",
@@ -551,8 +557,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 25000,
+    "username": "antonv"
   },
   {
     "id": "ad-4308434",
@@ -572,7 +579,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-4311041",
@@ -594,7 +602,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7842039",
@@ -613,8 +622,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 49500,
+    "username": "antonv"
   },
   {
     "id": "ad-4329207",
@@ -634,7 +644,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-3119633",
@@ -657,7 +668,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8431139",
@@ -680,7 +692,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-5171611",
@@ -699,8 +712,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 3500,
+    "username": "antonv"
   },
   {
     "id": "ad-7810627",
@@ -723,7 +737,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2634246",
@@ -743,7 +758,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-3098855",
@@ -763,7 +779,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-3518644",
@@ -783,7 +800,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8445680",
@@ -805,8 +823,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 2,
+    "totalSpent": 140842,
+    "username": "antonv"
   },
   {
     "id": "ad-2607009",
@@ -837,7 +856,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6196174",
@@ -856,8 +876,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 2000,
+    "username": "antonv"
   },
   {
     "id": "ad-5142531",
@@ -877,7 +898,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6284115",
@@ -897,7 +919,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-4831111",
@@ -908,7 +931,8 @@
     "note": "",
     "vehicles": [],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6223449",
@@ -931,7 +955,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2914169",
@@ -951,7 +976,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7759977",
@@ -970,8 +996,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 3700,
+    "username": "antonv"
   },
   {
     "id": "ad-9040209",
@@ -990,8 +1017,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 8700,
+    "username": "antonv"
   },
   {
     "id": "ad-1964043",
@@ -1014,7 +1042,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6275323",
@@ -1045,7 +1074,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2483347",
@@ -1068,7 +1098,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6665705",
@@ -1087,8 +1118,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 34500,
+    "username": "antonv"
   },
   {
     "id": "ad-7853332",
@@ -1107,8 +1139,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 2,
+    "totalSpent": 148100,
+    "username": "antonv"
   },
   {
     "id": "ad-7844341",
@@ -1131,7 +1164,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8158555",
@@ -1150,8 +1184,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 2000,
+    "username": "antonv"
   },
   {
     "id": "ad-4157675",
@@ -1171,7 +1206,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8085588",
@@ -1190,8 +1226,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 24510,
+    "username": "antonv"
   },
   {
     "id": "ad-6352766",
@@ -1230,7 +1267,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-4194866",
@@ -1250,7 +1288,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6319095",
@@ -1270,7 +1309,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2759148",
@@ -1290,7 +1330,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-4307367",
@@ -1312,7 +1353,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-5565249",
@@ -1342,7 +1384,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-4351320",
@@ -1362,7 +1405,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-4228079",
@@ -1393,7 +1437,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8952001",
@@ -1412,8 +1457,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 4000,
+    "username": "antonv"
   },
   {
     "id": "ad-9091998",
@@ -1432,8 +1478,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 17000,
+    "username": "antonv"
   },
   {
     "id": "ad-7854812",
@@ -1452,8 +1499,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 42200,
+    "username": "antonv"
   },
   {
     "id": "ad-6971455",
@@ -1476,7 +1524,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-9111441",
@@ -1487,7 +1536,8 @@
     "note": "",
     "vehicles": [],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6280214",
@@ -1507,7 +1557,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-3009309",
@@ -1527,7 +1578,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2957968",
@@ -1606,7 +1658,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8023559",
@@ -1625,8 +1678,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 9500,
+    "username": "antonv"
   },
   {
     "id": "ad-6639272",
@@ -1645,8 +1699,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 4,
+    "totalSpent": 154844,
+    "username": "antonv"
   },
   {
     "id": "ad-8941179",
@@ -1665,8 +1720,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 2000,
+    "username": "antonv"
   },
   {
     "id": "ad-7386177",
@@ -1685,8 +1741,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 3,
+    "totalSpent": 108150,
+    "username": "antonv"
   },
   {
     "id": "ad-2541430",
@@ -1709,7 +1766,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-3389972",
@@ -1748,7 +1806,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2034358",
@@ -1784,7 +1843,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-3435381",
@@ -1804,7 +1864,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2720245",
@@ -1824,7 +1885,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-3863985",
@@ -1844,27 +1906,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
-  },
-  {
-    "id": "ad-8710830",
-    "name": "Водоватовский Антон",
-    "type": "individual",
-    "phone": "",
-    "address": "",
-    "note": "",
-    "vehicles": [
-      {
-        "make": "КамАЗ",
-        "model": "43118",
-        "licensePlate": "",
-        "vin": "",
-        "year": 2018,
-        "mileage": 0
-      }
-    ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-1475798",
@@ -1884,7 +1927,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-1463110",
@@ -1895,7 +1939,8 @@
     "note": "",
     "vehicles": [],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2482882",
@@ -1915,7 +1960,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2052365",
@@ -1946,7 +1992,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2662596",
@@ -1966,7 +2013,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7419688",
@@ -1985,8 +2033,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 3,
+    "totalSpent": 303800,
+    "username": "antonv"
   },
   {
     "id": "ad-7149535",
@@ -2008,7 +2057,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2662666",
@@ -2028,7 +2078,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7629680",
@@ -2051,7 +2102,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-5249141",
@@ -2071,7 +2123,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7477206",
@@ -2090,8 +2143,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 160548,
+    "username": "antonv"
   },
   {
     "id": "ad-7462780",
@@ -2110,8 +2164,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 6500,
+    "username": "antonv"
   },
   {
     "id": "ad-6776174",
@@ -2130,8 +2185,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 2,
+    "totalSpent": 28480,
+    "username": "antonv"
   },
   {
     "id": "ad-2072593",
@@ -2154,7 +2210,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7930635",
@@ -2167,7 +2224,8 @@
     "note": "",
     "vehicles": [],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8940354",
@@ -2190,7 +2248,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2949656",
@@ -2213,7 +2272,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6196717",
@@ -2236,7 +2296,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2519235",
@@ -2256,7 +2317,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-3947851",
@@ -2276,7 +2338,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7799972",
@@ -2295,8 +2358,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 3000,
+    "username": "antonv"
   },
   {
     "id": "ad-6040253",
@@ -2316,7 +2380,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6355717",
@@ -2339,7 +2404,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-5120062",
@@ -2352,7 +2418,8 @@
     "note": "",
     "vehicles": [],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2565350",
@@ -2366,7 +2433,8 @@
     "note": "",
     "vehicles": [],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-4283331",
@@ -2389,7 +2457,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2643241",
@@ -2412,7 +2481,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8093199",
@@ -2431,8 +2501,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 9080,
+    "username": "antonv"
   },
   {
     "id": "ad-6058700",
@@ -2454,7 +2525,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2520178",
@@ -2474,7 +2546,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-1994053",
@@ -2494,7 +2567,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2943769",
@@ -2514,7 +2588,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2672907",
@@ -2534,7 +2609,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-4530487",
@@ -2554,7 +2630,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-9087951",
@@ -2573,8 +2650,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 3000,
+    "username": "antonv"
   },
   {
     "id": "ad-2750459",
@@ -2594,7 +2672,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8607282",
@@ -2613,8 +2692,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 2,
+    "totalSpent": 69650,
+    "username": "antonv"
   },
   {
     "id": "ad-2445286",
@@ -2634,7 +2714,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7520971",
@@ -2653,8 +2734,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 15000,
+    "username": "antonv"
   },
   {
     "id": "ad-3376959",
@@ -2741,7 +2823,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6434634",
@@ -2796,7 +2879,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-3970203",
@@ -2827,7 +2911,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6981754",
@@ -2846,8 +2931,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 12600,
+    "username": "antonv"
   },
   {
     "id": "ad-7593568",
@@ -2866,8 +2952,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 21200,
+    "username": "antonv"
   },
   {
     "id": "ad-7104715",
@@ -2886,8 +2973,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 12240,
+    "username": "antonv"
   },
   {
     "id": "ad-7157162",
@@ -2910,7 +2998,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7994904",
@@ -2929,8 +3018,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 2960,
+    "username": "antonv"
   },
   {
     "id": "ad-2751081",
@@ -2950,7 +3040,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-3035084",
@@ -2970,7 +3061,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7046290",
@@ -2989,8 +3081,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 34500,
+    "username": "antonv"
   },
   {
     "id": "ad-7140721",
@@ -3009,8 +3102,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 4000,
+    "username": "antonv"
   },
   {
     "id": "ad-9093683",
@@ -3029,8 +3123,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 14600,
+    "username": "antonv"
   },
   {
     "id": "ad-8049838",
@@ -3049,8 +3144,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 2000,
+    "username": "antonv"
   },
   {
     "id": "ad-7401626",
@@ -3069,8 +3165,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 142339,
+    "username": "antonv"
   },
   {
     "id": "ad-2763848",
@@ -3090,7 +3187,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8994486",
@@ -3109,8 +3207,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 13700,
+    "username": "antonv"
   },
   {
     "id": "ad-5504310",
@@ -3130,7 +3229,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-5160290",
@@ -3150,7 +3250,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8259502",
@@ -3170,7 +3271,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-4843272",
@@ -3181,7 +3283,8 @@
     "note": "",
     "vehicles": [],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6430722",
@@ -3200,8 +3303,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 4000,
+    "username": "antonv"
   },
   {
     "id": "ad-6224319",
@@ -3232,7 +3336,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-3599584",
@@ -3252,7 +3357,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8382634",
@@ -3279,8 +3385,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 3,
+    "totalSpent": 326661,
+    "username": "antonv"
   },
   {
     "id": "ad-8831097",
@@ -3299,8 +3406,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 6000,
+    "username": "antonv"
   },
   {
     "id": "ad-8158583",
@@ -3319,8 +3427,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 6500,
+    "username": "antonv"
   },
   {
     "id": "ad-7331314",
@@ -3339,8 +3448,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 1500,
+    "username": "antonv"
   },
   {
     "id": "ad-7960401",
@@ -3359,28 +3469,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
-  },
-  {
-    "id": "ad-7839108",
-    "name": "Иванова Иванка",
-    "type": "individual",
-    "phone": "",
-    "address": "",
-    "note": "",
-    "vehicles": [
-      {
-        "make": "Nissan",
-        "model": "Cefiro",
-        "licensePlate": "",
-        "vin": "",
-        "year": 2018,
-        "mileage": 0
-      }
-    ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 6500,
+    "username": "antonv"
   },
   {
     "id": "ad-7804949",
@@ -3399,8 +3490,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 2,
+    "totalSpent": 7500,
+    "username": "antonv"
   },
   {
     "id": "ad-7988003",
@@ -3419,8 +3511,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 6900,
+    "username": "antonv"
   },
   {
     "id": "ad-7753984",
@@ -3439,8 +3532,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 9100,
+    "username": "antonv"
   },
   {
     "id": "ad-7114372",
@@ -3459,8 +3553,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 4100,
+    "username": "antonv"
   },
   {
     "id": "ad-7924822",
@@ -3479,8 +3574,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 6000,
+    "username": "antonv"
   },
   {
     "id": "ad-7804401",
@@ -3499,8 +3595,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 8300,
+    "username": "antonv"
   },
   {
     "id": "ad-6927954",
@@ -3519,8 +3616,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 2500,
+    "username": "antonv"
   },
   {
     "id": "ad-2783538",
@@ -3540,7 +3638,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7781477",
@@ -3559,8 +3658,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 14700,
+    "username": "antonv"
   },
   {
     "id": "ad-7809050",
@@ -3579,48 +3679,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
-  },
-  {
-    "id": "ad-8136962",
-    "name": "Иванов Евгений",
-    "type": "individual",
-    "phone": "",
-    "address": "",
-    "note": "",
-    "vehicles": [
-      {
-        "make": "Renault",
-        "model": "Megane",
-        "licensePlate": "",
-        "vin": "",
-        "year": 2018,
-        "mileage": 0
-      }
-    ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
-  },
-  {
-    "id": "ad-5235611",
-    "name": "Иванов Евгений",
-    "type": "individual",
-    "phone": "",
-    "address": "",
-    "note": "",
-    "vehicles": [
-      {
-        "make": "Opel",
-        "model": "Insignia",
-        "licensePlate": "E992MA89",
-        "vin": "W0LGT6EE6B1119244",
-        "year": 2018,
-        "mileage": 0
-      }
-    ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 1500,
+    "username": "antonv"
   },
   {
     "id": "ad-5145719",
@@ -3639,28 +3700,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
-  },
-  {
-    "id": "ad-7960391",
-    "name": "Иванов Егор",
-    "type": "individual",
-    "phone": "",
-    "address": "",
-    "note": "",
-    "vehicles": [
-      {
-        "make": "Kia",
-        "model": "Picanto",
-        "licensePlate": "",
-        "vin": "",
-        "year": 2018,
-        "mileage": 0
-      }
-    ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 8900,
+    "username": "antonv"
   },
   {
     "id": "ad-7902225",
@@ -3679,108 +3721,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
-  },
-  {
-    "id": "ad-7606385",
-    "name": "Иванов иван",
-    "type": "individual",
-    "phone": "",
-    "address": "",
-    "note": "",
-    "vehicles": [
-      {
-        "make": "ВАЗ",
-        "model": "Нива",
-        "licensePlate": "",
-        "vin": "",
-        "year": 2018,
-        "mileage": 0
-      }
-    ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
-  },
-  {
-    "id": "ad-7386165",
-    "name": "Иванов иван",
-    "type": "individual",
-    "phone": "",
-    "address": "",
-    "note": "",
-    "vehicles": [
-      {
-        "make": "Hyundai",
-        "model": "Santa Fe",
-        "licensePlate": "",
-        "vin": "",
-        "year": 2018,
-        "mileage": 0
-      }
-    ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
-  },
-  {
-    "id": "ad-7561410",
-    "name": "Иванов Иван",
-    "type": "individual",
-    "phone": "",
-    "address": "",
-    "note": "",
-    "vehicles": [
-      {
-        "make": "ВАЗ (Lada)",
-        "model": "2114",
-        "licensePlate": "",
-        "vin": "",
-        "year": 2018,
-        "mileage": 0
-      }
-    ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
-  },
-  {
-    "id": "ad-7538082",
-    "name": "Иванов Иван",
-    "type": "individual",
-    "phone": "",
-    "address": "",
-    "note": "",
-    "vehicles": [
-      {
-        "make": "Lada Niva",
-        "model": "212300-80",
-        "licensePlate": "",
-        "vin": "",
-        "year": 2018,
-        "mileage": 0
-      }
-    ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
-  },
-  {
-    "id": "ad-6998149",
-    "name": "Иванов Иван",
-    "type": "individual",
-    "phone": "",
-    "address": "",
-    "note": "",
-    "vehicles": [
-      {
-        "make": "ГАЗ",
-        "model": "Газель",
-        "licensePlate": "",
-        "vin": "",
-        "year": 2018,
-        "mileage": 0
-      }
-    ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 2,
+    "totalSpent": 5000,
+    "username": "antonv"
   },
   {
     "id": "ad-6985376",
@@ -3799,8 +3742,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 6,
+    "totalSpent": 12000,
+    "username": "antonv"
   },
   {
     "id": "ad-7968590",
@@ -3819,8 +3763,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 3000,
+    "username": "antonv"
   },
   {
     "id": "ad-8148383",
@@ -3839,8 +3784,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 3000,
+    "username": "antonv"
   },
   {
     "id": "ad-7800017",
@@ -3859,8 +3805,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 1500,
+    "username": "antonv"
   },
   {
     "id": "ad-6928505",
@@ -3879,28 +3826,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
-  },
-  {
-    "id": "ad-7753943",
-    "name": "Иванов петр",
-    "type": "individual",
-    "phone": "",
-    "address": "",
-    "note": "",
-    "vehicles": [
-      {
-        "make": "Skoda",
-        "model": "Citigo",
-        "licensePlate": "",
-        "vin": "",
-        "year": 2018,
-        "mileage": 0
-      }
-    ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 3000,
+    "username": "antonv"
   },
   {
     "id": "ad-7791449",
@@ -3919,28 +3847,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
-  },
-  {
-    "id": "ad-7818826",
-    "name": "Иванов Питр",
-    "type": "individual",
-    "phone": "",
-    "address": "",
-    "note": "",
-    "vehicles": [
-      {
-        "make": "Volvo",
-        "model": "740",
-        "licensePlate": "",
-        "vin": "",
-        "year": 2018,
-        "mileage": 0
-      }
-    ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 2,
+    "totalSpent": 25000,
+    "username": "antonv"
   },
   {
     "id": "ad-7931339",
@@ -3959,8 +3868,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 2,
+    "totalSpent": 14180,
+    "username": "antonv"
   },
   {
     "id": "ad-7988015",
@@ -3979,8 +3889,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 4000,
+    "username": "antonv"
   },
   {
     "id": "ad-7701914",
@@ -3999,8 +3910,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 1500,
+    "username": "antonv"
   },
   {
     "id": "ad-6675173",
@@ -4043,28 +3955,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
-  },
-  {
-    "id": "ad-7818764",
-    "name": "Иванов Сидр",
-    "type": "individual",
-    "phone": "",
-    "address": "",
-    "note": "",
-    "vehicles": [
-      {
-        "make": "ВАЗ (Lada)",
-        "model": "Priora",
-        "licensePlate": "",
-        "vin": "",
-        "year": 2018,
-        "mileage": 0
-      }
-    ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 7,
+    "totalSpent": 151086,
+    "username": "antonv"
   },
   {
     "id": "ad-7913759",
@@ -4083,8 +3976,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 2,
+    "totalSpent": 8700,
+    "username": "antonv"
   },
   {
     "id": "ad-7290276",
@@ -4103,8 +3997,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 15000,
+    "username": "antonv"
   },
   {
     "id": "ad-7931314",
@@ -4123,8 +4018,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 6000,
+    "username": "antonv"
   },
   {
     "id": "ad-6927973",
@@ -4143,8 +4039,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 4000,
+    "username": "antonv"
   },
   {
     "id": "ad-8383346",
@@ -4163,8 +4060,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 5900,
+    "username": "antonv"
   },
   {
     "id": "ad-7839097",
@@ -4183,8 +4081,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 7700,
+    "username": "antonv"
   },
   {
     "id": "ad-6688900",
@@ -4203,8 +4102,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 20000,
+    "username": "antonv"
   },
   {
     "id": "ad-2491245",
@@ -4224,7 +4124,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-5362364",
@@ -4263,7 +4164,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7392702",
@@ -4282,8 +4184,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 5,
+    "totalSpent": 60270,
+    "username": "antonv"
   },
   {
     "id": "ad-4910674",
@@ -4354,7 +4257,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-1991682",
@@ -4367,7 +4271,8 @@
     "note": "",
     "vehicles": [],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-3390023",
@@ -4389,7 +4294,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2593766",
@@ -4409,7 +4315,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-3435435",
@@ -4439,7 +4346,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2572997",
@@ -4452,7 +4360,8 @@
     "note": "",
     "vehicles": [],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2588298",
@@ -4474,7 +4383,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-3156563",
@@ -4496,7 +4406,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-3590267",
@@ -4518,7 +4429,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8817066",
@@ -4537,8 +4449,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 12000,
+    "username": "antonv"
   },
   {
     "id": "ad-7172335",
@@ -4561,7 +4474,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6928638",
@@ -4584,7 +4498,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2908868",
@@ -4607,18 +4522,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
-  },
-  {
-    "id": "ad-8970179",
-    "name": "Казыев Сергей Наилович",
-    "type": "individual",
-    "phone": "+7 (912) 910-99-01",
-    "address": "",
-    "note": "",
-    "vehicles": [],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8826953",
@@ -4629,7 +4534,8 @@
     "note": "",
     "vehicles": [],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6269366",
@@ -4649,7 +4555,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6900298",
@@ -4668,19 +4575,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
-  },
-  {
-    "id": "ad-7184097",
-    "name": "Касьянов Андрей Юрьевич",
-    "type": "individual",
-    "phone": "",
-    "address": "",
-    "note": "",
-    "vehicles": [],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 3300,
+    "username": "antonv"
   },
   {
     "id": "ad-7176214",
@@ -4707,8 +4604,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 17500,
+    "username": "antonv"
   },
   {
     "id": "ad-8218374",
@@ -4727,8 +4625,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 4000,
+    "username": "antonv"
   },
   {
     "id": "ad-5441426",
@@ -4756,7 +4655,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7779375",
@@ -4775,8 +4675,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 8400,
+    "username": "antonv"
   },
   {
     "id": "ad-8716633",
@@ -4795,8 +4696,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 2,
+    "totalSpent": 26200,
+    "username": "antonv"
   },
   {
     "id": "ad-5054518",
@@ -4816,7 +4718,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6499059",
@@ -4836,7 +4739,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-5160595",
@@ -4856,7 +4760,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-5082144",
@@ -4876,7 +4781,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7709931",
@@ -4895,8 +4801,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 59504,
+    "username": "antonv"
   },
   {
     "id": "ad-7806627",
@@ -4915,8 +4822,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 1500,
+    "username": "antonv"
   },
   {
     "id": "ad-5137876",
@@ -4936,7 +4844,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7852701",
@@ -4955,8 +4864,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 40100,
+    "username": "antonv"
   },
   {
     "id": "ad-8035114",
@@ -4975,8 +4885,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 12700,
+    "username": "antonv"
   },
   {
     "id": "ad-1967358",
@@ -5031,7 +4942,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2754152",
@@ -5051,7 +4963,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-3164974",
@@ -5071,7 +4984,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-9111434",
@@ -5090,8 +5004,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 17000,
+    "username": "antonv"
   },
   {
     "id": "ad-4367170",
@@ -5111,7 +5026,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2764934",
@@ -5122,7 +5038,8 @@
     "note": "",
     "vehicles": [],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2319382",
@@ -5142,7 +5059,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2946488",
@@ -5165,7 +5083,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-4893002",
@@ -5185,7 +5104,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8576525",
@@ -5204,8 +5124,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 74500,
+    "username": "antonv"
   },
   {
     "id": "ad-8631841",
@@ -5236,27 +5157,29 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
-    "id": "ad-6619377",
-    "name": "ООО КУБАНЬТРАНССЕРВИС",
+    "id": "ad-2245043",
+    "name": "ООО Кубаньтранссервис",
     "type": "legal",
     "phone": "",
     "address": "",
     "note": "",
     "vehicles": [
       {
-        "make": "УАЗ",
-        "model": "Patriot",
-        "licensePlate": "B553XT89",
-        "vin": "XTT316300N1008104",
-        "year": 2018,
+        "make": "Ford",
+        "model": "Transit",
+        "licensePlate": "B627XP89",
+        "vin": "X2FXXXESGXMA73303",
+        "year": 2021,
         "mileage": 0
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2555092",
@@ -5267,7 +5190,8 @@
     "note": "",
     "vehicles": [],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2970229",
@@ -5286,8 +5210,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 50300,
+    "username": "antonv"
   },
   {
     "id": "ad-5069771",
@@ -5310,7 +5235,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2724984",
@@ -5330,7 +5256,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7818868",
@@ -5349,8 +5276,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 2,
+    "totalSpent": 27900,
+    "username": "antonv"
   },
   {
     "id": "ad-8770878",
@@ -5369,8 +5297,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 2,
+    "totalSpent": 11400,
+    "username": "antonv"
   },
   {
     "id": "ad-5066916",
@@ -5390,7 +5319,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7429337",
@@ -5413,7 +5343,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6061969",
@@ -5451,7 +5382,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2006212",
@@ -5474,7 +5406,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-5121381",
@@ -5494,7 +5427,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8063580",
@@ -5513,8 +5447,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 9300,
+    "username": "antonv"
   },
   {
     "id": "ad-8696872",
@@ -5533,8 +5468,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 4000,
+    "username": "antonv"
   },
   {
     "id": "ad-7987937",
@@ -5553,8 +5489,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 5450,
+    "username": "antonv"
   },
   {
     "id": "ad-7290223",
@@ -5573,8 +5510,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 7000,
+    "username": "antonv"
   },
   {
     "id": "ad-2973777",
@@ -5594,7 +5532,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6985398",
@@ -5613,8 +5552,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 3000,
+    "username": "antonv"
   },
   {
     "id": "ad-8000776",
@@ -5633,28 +5573,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
-  },
-  {
-    "id": "ad-7913659",
-    "name": "Мамедов мамед",
-    "type": "individual",
-    "phone": "",
-    "address": "",
-    "note": "",
-    "vehicles": [
-      {
-        "make": "ВАЗ (Lada)",
-        "model": "Priora",
-        "licensePlate": "",
-        "vin": "",
-        "year": 2018,
-        "mileage": 0
-      }
-    ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 5240,
+    "username": "antonv"
   },
   {
     "id": "ad-8994132",
@@ -5673,8 +5594,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 2,
+    "totalSpent": 7500,
+    "username": "antonv"
   },
   {
     "id": "ad-8000801",
@@ -5693,8 +5615,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 1500,
+    "username": "antonv"
   },
   {
     "id": "ad-8808987",
@@ -5713,8 +5636,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 2000,
+    "username": "antonv"
   },
   {
     "id": "ad-7065825",
@@ -5736,27 +5660,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
-  },
-  {
-    "id": "ad-6636224",
-    "name": "Матыяшкевич Сергей Иванович",
-    "type": "individual",
-    "phone": "",
-    "address": "",
-    "note": "",
-    "vehicles": [
-      {
-        "make": "438921",
-        "model": "438921",
-        "licensePlate": "X980OC96",
-        "vin": "Z9G6438921C000205",
-        "year": 2012,
-        "mileage": 0
-      }
-    ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6498816",
@@ -5775,8 +5680,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 4900,
+    "username": "antonv"
   },
   {
     "id": "ad-8944947",
@@ -5799,7 +5705,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-4684133",
@@ -5822,7 +5729,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6182851",
@@ -5845,7 +5753,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-3716716",
@@ -5865,7 +5774,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2763983",
@@ -5876,7 +5786,8 @@
     "note": "",
     "vehicles": [],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7043572",
@@ -5887,7 +5798,8 @@
     "note": "",
     "vehicles": [],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7932154",
@@ -5906,8 +5818,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 3000,
+    "username": "antonv"
   },
   {
     "id": "ad-3517738",
@@ -5930,7 +5843,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-5933179",
@@ -5953,7 +5867,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-9092194",
@@ -5976,7 +5891,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-5986351",
@@ -5996,7 +5912,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2071901",
@@ -6019,7 +5936,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7929913",
@@ -6042,7 +5960,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-5451440",
@@ -6062,7 +5981,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6011116",
@@ -6085,7 +6005,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-3029966",
@@ -6105,7 +6026,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7776208",
@@ -6124,8 +6046,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 3,
+    "totalSpent": 24900,
+    "username": "antonv"
   },
   {
     "id": "ad-8940284",
@@ -6144,8 +6067,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 4000,
+    "username": "antonv"
   },
   {
     "id": "ad-4399487",
@@ -6165,7 +6089,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6739861",
@@ -6212,7 +6137,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2876618",
@@ -6232,7 +6158,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-1463212",
@@ -6254,7 +6181,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2675535",
@@ -6277,7 +6205,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-3054127",
@@ -6300,7 +6229,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-3554415",
@@ -6331,7 +6261,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7634533",
@@ -6354,7 +6285,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-3150877",
@@ -6393,7 +6325,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-4894599",
@@ -6416,7 +6349,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-4893742",
@@ -6436,7 +6370,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6677635",
@@ -6459,7 +6394,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6715400",
@@ -6478,8 +6414,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 5,
+    "totalSpent": 347282,
+    "username": "antonv"
   },
   {
     "id": "ad-6661478",
@@ -6510,7 +6447,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7467370",
@@ -6529,8 +6467,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 6000,
+    "username": "antonv"
   },
   {
     "id": "ad-2338167",
@@ -6550,7 +6489,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2073662",
@@ -6580,7 +6520,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7042753",
@@ -6599,8 +6540,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 29040,
+    "username": "antonv"
   },
   {
     "id": "ad-6927983",
@@ -6611,27 +6553,8 @@
     "note": "",
     "vehicles": [],
     "totalOrdersCount": 0,
-    "totalSpent": 0
-  },
-  {
-    "id": "ad-2245043",
-    "name": "ООО Кубаньтранссервис",
-    "type": "legal",
-    "phone": "",
-    "address": "",
-    "note": "",
-    "vehicles": [
-      {
-        "make": "Ford",
-        "model": "Transit",
-        "licensePlate": "B627XP89",
-        "vin": "X2FXXXESGXMA73303",
-        "year": 2021,
-        "mileage": 0
-      }
-    ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2967104",
@@ -6651,7 +6574,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7047284",
@@ -6662,7 +6586,8 @@
     "note": "",
     "vehicles": [],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2969610",
@@ -6682,7 +6607,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2514126",
@@ -6702,7 +6628,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8059731",
@@ -6721,8 +6648,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 16000,
+    "username": "antonv"
   },
   {
     "id": "ad-7234722",
@@ -6749,8 +6677,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 2,
+    "totalSpent": 31900,
+    "username": "antonv"
   },
   {
     "id": "ad-2679346",
@@ -6787,8 +6716,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 4,
+    "totalSpent": 371782,
+    "username": "antonv"
   },
   {
     "id": "ad-2906898",
@@ -6808,7 +6738,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6212924",
@@ -6831,7 +6762,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6293193",
@@ -6851,7 +6783,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8876802",
@@ -6870,8 +6803,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 5000,
+    "username": "antonv"
   },
   {
     "id": "ad-7309673",
@@ -6890,8 +6824,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 29400,
+    "username": "antonv"
   },
   {
     "id": "ad-8160804",
@@ -6910,8 +6845,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 8500,
+    "username": "antonv"
   },
   {
     "id": "ad-7401501",
@@ -6930,8 +6866,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 10000,
+    "username": "antonv"
   },
   {
     "id": "ad-9001283",
@@ -6942,7 +6879,8 @@
     "note": "",
     "vehicles": [],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2058637",
@@ -6965,7 +6903,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2005793",
@@ -6988,7 +6927,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8951848",
@@ -7007,8 +6947,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 1500,
+    "username": "antonv"
   },
   {
     "id": "ad-7906639",
@@ -7027,8 +6968,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 2800,
+    "username": "antonv"
   },
   {
     "id": "ad-8175338",
@@ -7047,8 +6989,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 5000,
+    "username": "antonv"
   },
   {
     "id": "ad-5110690",
@@ -7068,27 +7011,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
-  },
-  {
-    "id": "ad-7968585",
-    "name": "Петров иван",
-    "type": "individual",
-    "phone": "",
-    "address": "",
-    "note": "",
-    "vehicles": [
-      {
-        "make": "Mitsubishi",
-        "model": "Lancer",
-        "licensePlate": "",
-        "vin": "",
-        "year": 2018,
-        "mileage": 0
-      }
-    ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7744896",
@@ -7107,8 +7031,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 2,
+    "totalSpent": 10000,
+    "username": "antonv"
   },
   {
     "id": "ad-8148433",
@@ -7127,8 +7052,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 1000,
+    "username": "antonv"
   },
   {
     "id": "ad-7931921",
@@ -7147,8 +7073,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 2500,
+    "username": "antonv"
   },
   {
     "id": "ad-8174317",
@@ -7167,28 +7094,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
-  },
-  {
-    "id": "ad-8716574",
-    "name": "Петров петя",
-    "type": "individual",
-    "phone": "",
-    "address": "",
-    "note": "",
-    "vehicles": [
-      {
-        "make": "Nissan",
-        "model": "X-Trail",
-        "licensePlate": "",
-        "vin": "",
-        "year": 2018,
-        "mileage": 0
-      }
-    ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 7000,
+    "username": "antonv"
   },
   {
     "id": "ad-7538109",
@@ -7207,68 +7115,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
-  },
-  {
-    "id": "ad-7752348",
-    "name": "Петров сергей",
-    "type": "individual",
-    "phone": "",
-    "address": "",
-    "note": "",
-    "vehicles": [
-      {
-        "make": "Kia",
-        "model": "Sportage",
-        "licensePlate": "",
-        "vin": "",
-        "year": 2018,
-        "mileage": 0
-      }
-    ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
-  },
-  {
-    "id": "ad-8122647",
-    "name": "Петров Сергей",
-    "type": "individual",
-    "phone": "",
-    "address": "",
-    "note": "",
-    "vehicles": [
-      {
-        "make": "Foton",
-        "model": "Alpha",
-        "licensePlate": "",
-        "vin": "",
-        "year": 2018,
-        "mileage": 0
-      }
-    ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
-  },
-  {
-    "id": "ad-8053208",
-    "name": "Петров Сергей",
-    "type": "individual",
-    "phone": "",
-    "address": "",
-    "note": "",
-    "vehicles": [
-      {
-        "make": "УАЗ",
-        "model": "2206",
-        "licensePlate": "",
-        "vin": "",
-        "year": 2018,
-        "mileage": 0
-      }
-    ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 2,
+    "totalSpent": 5500,
+    "username": "antonv"
   },
   {
     "id": "ad-7990930",
@@ -7287,8 +7136,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 4,
+    "totalSpent": 22400,
+    "username": "antonv"
   },
   {
     "id": "ad-8151245",
@@ -7307,8 +7157,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 6000,
+    "username": "antonv"
   },
   {
     "id": "ad-7821913",
@@ -7327,8 +7178,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 1000,
+    "username": "antonv"
   },
   {
     "id": "ad-5716212",
@@ -7348,7 +7200,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6741007",
@@ -7379,7 +7232,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-5144844",
@@ -7390,7 +7244,8 @@
     "note": "",
     "vehicles": [],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8057852",
@@ -7413,7 +7268,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7926496",
@@ -7444,7 +7300,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-5053998",
@@ -7467,7 +7324,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8250691",
@@ -7487,7 +7345,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7742340",
@@ -7506,8 +7365,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 16700,
+    "username": "antonv"
   },
   {
     "id": "ad-2709484",
@@ -7530,7 +7390,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-1958430",
@@ -7553,7 +7414,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7528315",
@@ -7572,8 +7434,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 6000,
+    "username": "antonv"
   },
   {
     "id": "ad-5948265",
@@ -7593,7 +7456,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-3156272",
@@ -7624,7 +7488,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7840011",
@@ -7643,8 +7508,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 52800,
+    "username": "antonv"
   },
   {
     "id": "ad-7867151",
@@ -7663,8 +7529,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 30720,
+    "username": "antonv"
   },
   {
     "id": "ad-5499332",
@@ -7684,7 +7551,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-9097644",
@@ -7703,8 +7571,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 13050,
+    "username": "antonv"
   },
   {
     "id": "ad-2487873",
@@ -7724,7 +7593,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2681265",
@@ -7744,7 +7614,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7201203",
@@ -7763,8 +7634,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 1500,
+    "username": "antonv"
   },
   {
     "id": "ad-7632459",
@@ -7783,8 +7655,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 54000,
+    "username": "antonv"
   },
   {
     "id": "ad-7849667",
@@ -7807,7 +7680,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2621946",
@@ -7827,7 +7701,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-4887095",
@@ -7847,7 +7722,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7538206",
@@ -7866,8 +7742,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 3000,
+    "username": "antonv"
   },
   {
     "id": "ad-2911982",
@@ -7898,7 +7775,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8839414",
@@ -7917,8 +7795,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 13000,
+    "username": "antonv"
   },
   {
     "id": "ad-2764961",
@@ -7929,7 +7808,8 @@
     "note": "",
     "vehicles": [],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7511207",
@@ -7943,7 +7823,8 @@
     "note": "",
     "vehicles": [],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-4888320",
@@ -7963,7 +7844,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7317468",
@@ -7982,8 +7864,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 3,
+    "totalSpent": 35250,
+    "username": "antonv"
   },
   {
     "id": "ad-2621939",
@@ -7994,7 +7877,8 @@
     "note": "",
     "vehicles": [],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8940318",
@@ -8013,8 +7897,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 8500,
+    "username": "antonv"
   },
   {
     "id": "ad-9047250",
@@ -8042,7 +7927,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-3105609",
@@ -8062,18 +7948,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
-  },
-  {
-    "id": "ad-5120166",
-    "name": "Самвелян Нарек",
-    "type": "individual",
-    "phone": "",
-    "address": "",
-    "note": "",
-    "vehicles": [],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-5120132",
@@ -8093,7 +7969,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7820151",
@@ -8116,7 +7993,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6228946",
@@ -8139,7 +8017,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-9045962",
@@ -8150,7 +8029,8 @@
     "note": "",
     "vehicles": [],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8406004",
@@ -8169,8 +8049,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 1500,
+    "username": "antonv"
   },
   {
     "id": "ad-8235688",
@@ -8190,7 +8071,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2907148",
@@ -8210,7 +8092,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2057016",
@@ -8233,7 +8116,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8047360",
@@ -8252,8 +8136,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 3220,
+    "username": "antonv"
   },
   {
     "id": "ad-8047318",
@@ -8272,8 +8157,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 12700,
+    "username": "antonv"
   },
   {
     "id": "ad-8054013",
@@ -8292,28 +8178,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
-  },
-  {
-    "id": "ad-9005644",
-    "name": "Сергеев Сергей",
-    "type": "individual",
-    "phone": "",
-    "address": "",
-    "note": "",
-    "vehicles": [
-      {
-        "make": "ГАЗ",
-        "model": "Газель",
-        "licensePlate": "",
-        "vin": "",
-        "year": 2018,
-        "mileage": 0
-      }
-    ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 3700,
+    "username": "antonv"
   },
   {
     "id": "ad-8047388",
@@ -8332,8 +8199,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 2,
+    "totalSpent": 98600,
+    "username": "antonv"
   },
   {
     "id": "ad-8729583",
@@ -8352,28 +8220,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
-  },
-  {
-    "id": "ad-6691299",
-    "name": "Сергиенко Андрей Александрович",
-    "type": "individual",
-    "phone": "",
-    "address": "",
-    "note": "",
-    "vehicles": [
-      {
-        "make": "Renault",
-        "model": "Captur",
-        "licensePlate": "Y105BH55",
-        "vin": "X7LASRBA656520092",
-        "year": 2018,
-        "mileage": 0
-      }
-    ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 5300,
+    "username": "antonv"
   },
   {
     "id": "ad-6691237",
@@ -8383,8 +8232,9 @@
     "address": "",
     "note": "",
     "vehicles": [],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 9000,
+    "username": "antonv"
   },
   {
     "id": "ad-5279666",
@@ -8407,7 +8257,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7804300",
@@ -8426,8 +8277,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 21280,
+    "username": "antonv"
   },
   {
     "id": "ad-7538124",
@@ -8446,8 +8298,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 3000,
+    "username": "antonv"
   },
   {
     "id": "ad-8158548",
@@ -8466,8 +8319,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 3500,
+    "username": "antonv"
   },
   {
     "id": "ad-5271711",
@@ -8487,7 +8341,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2070962",
@@ -8509,7 +8364,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-3774150",
@@ -8564,7 +8420,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7810288",
@@ -8603,7 +8460,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7504188",
@@ -8634,7 +8492,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8059127",
@@ -8657,7 +8516,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8390153",
@@ -8679,7 +8539,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8887164",
@@ -8698,8 +8559,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 18000,
+    "username": "antonv"
   },
   {
     "id": "ad-2376665",
@@ -8710,7 +8572,8 @@
     "note": "",
     "vehicles": [],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6665588",
@@ -8765,7 +8628,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-5719375",
@@ -8788,27 +8652,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
-  },
-  {
-    "id": "ad-2680752",
-    "name": "Смоляков Николай",
-    "type": "individual",
-    "phone": "",
-    "address": "",
-    "note": "",
-    "vehicles": [
-      {
-        "make": "Chery",
-        "model": "Tiggo",
-        "licensePlate": "B501PX89",
-        "vin": "LVVDD14B9ED044012",
-        "year": 2018,
-        "mileage": 0
-      }
-    ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2677833",
@@ -8819,7 +8664,8 @@
     "note": "",
     "vehicles": [],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2939927",
@@ -8914,7 +8760,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2736182",
@@ -8934,7 +8781,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8905973",
@@ -8953,8 +8801,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 2,
+    "totalSpent": 25500,
+    "username": "antonv"
   },
   {
     "id": "ad-8985989",
@@ -8976,7 +8825,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7612184",
@@ -8990,7 +8840,8 @@
     "note": "",
     "vehicles": [],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8591983",
@@ -9013,7 +8864,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-4398703",
@@ -9036,7 +8888,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8639413",
@@ -9055,8 +8908,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 11000,
+    "username": "antonv"
   },
   {
     "id": "ad-7174177",
@@ -9079,7 +8933,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7047340",
@@ -9102,7 +8957,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8313882",
@@ -9133,7 +8989,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6681586",
@@ -9152,8 +9009,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 94000,
+    "username": "antonv"
   },
   {
     "id": "ad-9000921",
@@ -9176,7 +9034,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2067680",
@@ -9199,7 +9058,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7696664",
@@ -9230,7 +9090,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-1463111",
@@ -9241,7 +9102,8 @@
     "note": "",
     "vehicles": [],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8745689",
@@ -9264,7 +9126,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-3123914",
@@ -9295,7 +9158,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-9018684",
@@ -9318,7 +9182,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-9043862",
@@ -9341,7 +9206,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-5694166",
@@ -9364,7 +9230,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6222120",
@@ -9395,7 +9262,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8603885",
@@ -9414,8 +9282,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 1000,
+    "username": "antonv"
   },
   {
     "id": "ad-4408946",
@@ -9446,7 +9315,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7951539",
@@ -9469,7 +9339,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7107769",
@@ -9500,7 +9371,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2664201",
@@ -9520,18 +9392,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
-  },
-  {
-    "id": "ad-2432644",
-    "name": "Тимаков Денис Дмитриевич",
-    "type": "individual",
-    "phone": "",
-    "address": "",
-    "note": "",
-    "vehicles": [],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-1991710",
@@ -9542,7 +9404,8 @@
     "note": "",
     "vehicles": [],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6792213",
@@ -9561,8 +9424,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 15500,
+    "username": "antonv"
   },
   {
     "id": "ad-4741119",
@@ -9585,7 +9449,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2648510",
@@ -9608,7 +9473,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-1989696",
@@ -9628,7 +9494,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-5449550",
@@ -9648,27 +9515,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
-  },
-  {
-    "id": "ad-5152677",
-    "name": "ООО ТРАНС АРКТИК",
-    "type": "legal",
-    "phone": "",
-    "address": "",
-    "note": "",
-    "vehicles": [
-      {
-        "make": "УАЗ",
-        "model": "Pickup",
-        "licensePlate": "H691HB797",
-        "vin": "XTT236320P1009074",
-        "year": 2022,
-        "mileage": 0
-      }
-    ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-5152375",
@@ -9688,7 +9536,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-9011478",
@@ -9711,7 +9560,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2034202",
@@ -9731,7 +9581,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-1965871",
@@ -9762,7 +9613,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-3286806",
@@ -9785,7 +9637,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2907011",
@@ -9805,7 +9658,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7752305",
@@ -9828,7 +9682,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-3785630",
@@ -9859,7 +9714,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2675866",
@@ -9879,7 +9735,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-5542898",
@@ -9899,7 +9756,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2026767",
@@ -9919,7 +9777,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6442337",
@@ -9942,7 +9801,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2733067",
@@ -9965,7 +9825,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8626893",
@@ -9976,7 +9837,8 @@
     "note": "",
     "vehicles": [],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-4275497",
@@ -9996,7 +9858,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2679753",
@@ -10016,7 +9879,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-5982756",
@@ -10039,7 +9903,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2947534",
@@ -10070,7 +9935,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7973308",
@@ -10093,7 +9959,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-3282398",
@@ -10148,7 +10015,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2037780",
@@ -10179,7 +10047,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2555085",
@@ -10199,7 +10068,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-5829593",
@@ -10230,7 +10100,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2243151",
@@ -10250,7 +10121,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6798795",
@@ -10271,8 +10143,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 10100,
+    "username": "antonv"
   },
   {
     "id": "ad-5906425",
@@ -10292,7 +10165,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2661229",
@@ -10312,7 +10186,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-4324759",
@@ -10334,7 +10209,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8669908",
@@ -10361,8 +10237,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 190300,
+    "username": "antonv"
   },
   {
     "id": "ad-3688890",
@@ -10382,7 +10259,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-4530248",
@@ -10402,7 +10280,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7576589",
@@ -10421,8 +10300,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 2,
+    "totalSpent": 6680,
+    "username": "antonv"
   },
   {
     "id": "ad-2440037",
@@ -10517,7 +10397,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-5105109",
@@ -10537,7 +10418,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7184182",
@@ -10556,8 +10438,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 14000,
+    "username": "antonv"
   },
   {
     "id": "ad-4396962",
@@ -10577,7 +10460,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2557925",
@@ -10709,7 +10593,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2488488",
@@ -10729,7 +10614,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2428170",
@@ -10740,7 +10626,8 @@
     "note": "",
     "vehicles": [],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-7782914",
@@ -10759,8 +10646,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 16000,
+    "username": "antonv"
   },
   {
     "id": "ad-7084594",
@@ -10779,8 +10667,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 5500,
+    "username": "antonv"
   },
   {
     "id": "ad-6177000",
@@ -10800,7 +10689,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8553804",
@@ -10835,8 +10725,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 7,
+    "totalSpent": 307962,
+    "username": "antonv"
   },
   {
     "id": "ad-5530424",
@@ -10866,7 +10757,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2971566",
@@ -10886,7 +10778,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-4364262",
@@ -10906,7 +10799,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6165530",
@@ -10926,7 +10820,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-9004597",
@@ -10945,8 +10840,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 25240,
+    "username": "antonv"
   },
   {
     "id": "ad-5513930",
@@ -10969,7 +10865,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6208188",
@@ -10992,7 +10889,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-3070282",
@@ -11015,7 +10913,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-5144490",
@@ -11026,7 +10925,8 @@
     "note": "",
     "vehicles": [],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6635360",
@@ -11040,7 +10940,8 @@
     "note": "",
     "vehicles": [],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8394607",
@@ -11071,7 +10972,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2573025",
@@ -11094,7 +10996,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-9104610",
@@ -11117,7 +11020,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2223497",
@@ -11148,7 +11052,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-4645252",
@@ -11171,7 +11076,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-8497267",
@@ -11190,8 +11096,9 @@
         "mileage": 0
       }
     ],
-    "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalOrdersCount": 1,
+    "totalSpent": 11400,
+    "username": "antonv"
   },
   {
     "id": "ad-1989793",
@@ -11246,7 +11153,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-5010400",
@@ -11269,7 +11177,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2917290",
@@ -11300,7 +11209,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2909948",
@@ -11323,7 +11233,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-2909878",
@@ -11346,7 +11257,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-6428444",
@@ -11366,7 +11278,8 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   },
   {
     "id": "ad-5052723",
@@ -11386,6 +11299,7 @@
       }
     ],
     "totalOrdersCount": 0,
-    "totalSpent": 0
+    "totalSpent": 0,
+    "username": "antonv"
   }
 ]

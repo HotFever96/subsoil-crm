@@ -16,7 +16,24 @@ import {
   PaymentScheme,
 } from "./auto-service-types";
 
-export const DEFAULT_EMPLOYEES: ServiceEmployee[] = [];
+export const DEFAULT_EMPLOYEES: ServiceEmployee[] = [
+  { id: "emp-1", name: "Водоватовский Антон Игоревич", role: "director", roleTitle: "Директор, Главный бухгалтер", phone: "+7 (900) 400-09-07", paymentScheme: "combined", laborPercent: 0, normHourRate: 0, baseSalary: 100000, partsPercent: 0, isActive: true },
+  { id: "emp-2", name: "Абдулин Рустам", role: "mechanic", roleTitle: "Мастер-исполнитель", phone: "", paymentScheme: "percent_labor", laborPercent: 40, normHourRate: 900, baseSalary: 0, partsPercent: 3, isActive: true },
+  { id: "emp-3", name: "Абдуллин Раиф Мавлетович", role: "mechanic", roleTitle: "Мастер-исполнитель", phone: "+7 (922) 062-89-81", paymentScheme: "percent_labor", laborPercent: 40, normHourRate: 900, baseSalary: 0, partsPercent: 3, isActive: true },
+  { id: "emp-4", name: "Абдуллин Рамиз Раифович", role: "mechanic", roleTitle: "Мастер-исполнитель", phone: "", paymentScheme: "percent_labor", laborPercent: 40, normHourRate: 900, baseSalary: 0, partsPercent: 3, isActive: true },
+  { id: "emp-5", name: "Арсенюк Максим", role: "manager", roleTitle: "Мастер-приемщик", phone: "+7 (919) 554-14-40", paymentScheme: "combined", laborPercent: 10, normHourRate: 0, baseSalary: 50000, partsPercent: 5, isActive: true },
+  { id: "emp-6", name: "Зарипов Руслан Ф.", role: "mechanic", roleTitle: "Мастер-исполнитель", phone: "", paymentScheme: "percent_labor", laborPercent: 40, normHourRate: 900, baseSalary: 0, partsPercent: 3, isActive: true },
+  { id: "emp-7", name: "Казыев Сергей Наилович", role: "mechanic", roleTitle: "Мастер-исполнитель", phone: "+7 (912) 910-99-01", paymentScheme: "percent_labor", laborPercent: 40, normHourRate: 900, baseSalary: 0, partsPercent: 3, isActive: true },
+  { id: "emp-8", name: "Кофеев Эдуард", role: "mechanic", roleTitle: "Мастер-исполнитель", phone: "", paymentScheme: "percent_labor", laborPercent: 40, normHourRate: 900, baseSalary: 0, partsPercent: 3, isActive: true },
+  { id: "emp-9", name: "Кудин Денис Владимирович", role: "mechanic", roleTitle: "Мастер-исполнитель", phone: "+7 (961) 983-29-39", paymentScheme: "percent_labor", laborPercent: 40, normHourRate: 900, baseSalary: 0, partsPercent: 3, isActive: true },
+  { id: "emp-10", name: "Механошин Дмитрий Викторович", role: "mechanic", roleTitle: "Мастер-исполнитель", phone: "", paymentScheme: "percent_labor", laborPercent: 40, normHourRate: 900, baseSalary: 0, partsPercent: 3, isActive: true },
+  { id: "emp-11", name: "Порошин Александр Васильевич", role: "mechanic", roleTitle: "Мастер-исполнитель", phone: "+7 (964) 203-32-96", paymentScheme: "percent_labor", laborPercent: 40, normHourRate: 900, baseSalary: 0, partsPercent: 3, isActive: true },
+  { id: "emp-12", name: "Скрипник Сергей Леонидович", role: "mechanic", roleTitle: "Мастер-исполнитель", phone: "", paymentScheme: "percent_labor", laborPercent: 40, normHourRate: 900, baseSalary: 0, partsPercent: 3, isActive: true },
+  { id: "emp-13", name: "Тимаков Денис Дмитриевич", role: "mechanic", roleTitle: "Мастер-исполнитель", phone: "", paymentScheme: "percent_labor", laborPercent: 40, normHourRate: 900, baseSalary: 0, partsPercent: 3, isActive: true },
+  { id: "emp-14", name: "Урман Дмитрий Андреевич", role: "mechanic", roleTitle: "Мастер-исполнитель", phone: "", paymentScheme: "percent_labor", laborPercent: 40, normHourRate: 900, baseSalary: 0, partsPercent: 3, isActive: true },
+  { id: "emp-15", name: "Черный Александр", role: "mechanic", roleTitle: "Мастер-исполнитель", phone: "", paymentScheme: "percent_labor", laborPercent: 40, normHourRate: 900, baseSalary: 0, partsPercent: 3, isActive: true },
+  { id: "emp-16", name: "Эльмурзаев Азамат Ярашевич", role: "mechanic", roleTitle: "Мастер-исполнитель", phone: "", paymentScheme: "percent_labor", laborPercent: 40, normHourRate: 900, baseSalary: 0, partsPercent: 3, isActive: true },
+];
 
 export const SERVICE_COMPANY_REQUISITES: StoCompanyRequisites = {
   name: "ИП Водоватовский Антон Игоревич",
@@ -35,12 +52,27 @@ export const SERVICE_COMPANY_REQUISITES: StoCompanyRequisites = {
   bik: "046577964",
   rs: "40802810038310009505",
   ks: "30101810100000000964",
-  defaultRatePerHour: 2500, // Рублей за 1 нормо-час
-  masterReceiver: "Водоватовский А.И.",
+  defaultRatePerHour: 2850, // Базовая ставка нормо-часа АвтоДилер Онлайн
+  masterReceiver: "Арсенюк Максим",
   director: "Водоватовский Антон Игоревич",
   directorBasis: "Свидетельства серии 26 № 003664718",
-  mechanics: [],
-  employees: [],
+  mechanics: [
+    "Абдулин Рустам",
+    "Абдуллин Раиф Мавлетович",
+    "Абдуллин Рамиз Раифович",
+    "Зарипов Руслан Ф.",
+    "Казыев Сергей Наилович",
+    "Кофеев Эдуард",
+    "Кудин Денис Владимирович",
+    "Механошин Дмитрий Викторович",
+    "Порошин Александр Васильевич",
+    "Скрипник Сергей Леонидович",
+    "Тимаков Денис Дмитриевич",
+    "Урман Дмитрий Андреевич",
+    "Черный Александр",
+    "Эльмурзаев Азамат Ярашевич",
+  ],
+  employees: DEFAULT_EMPLOYEES,
   facsimileDefaultEnabled: true,
   scanModeDefaultEnabled: false,
   stampUrl: "/facsimile/chaika_stamp.png",
@@ -57,8 +89,8 @@ export function getStoRequisites(username?: string): StoCompanyRequisites {
         return {
           ...SERVICE_COMPANY_REQUISITES,
           ...parsed,
-          mechanics: Array.isArray(parsed.mechanics) ? parsed.mechanics : [],
-          employees: Array.isArray(parsed.employees) ? parsed.employees : [],
+          mechanics: Array.isArray(parsed.mechanics) && parsed.mechanics.length > 0 ? parsed.mechanics : SERVICE_COMPANY_REQUISITES.mechanics,
+          employees: Array.isArray(parsed.employees) && parsed.employees.length > 0 ? parsed.employees : SERVICE_COMPANY_REQUISITES.employees,
           stampUrl: parsed.stampUrl && !parsed.stampUrl.startsWith("data:image/svg") ? parsed.stampUrl : "/facsimile/chaika_stamp.png",
           signatureUrl: parsed.signatureUrl && !parsed.signatureUrl.startsWith("data:image/svg") ? parsed.signatureUrl : "/facsimile/anton_signature.png",
         };

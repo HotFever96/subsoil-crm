@@ -17,6 +17,10 @@ import {
   FileText,
   FileCheck,
   Building2,
+  Database,
+  FileSpreadsheet,
+  Download,
+  RefreshCw,
 } from "lucide-react";
 import { WarehousePart, WarehouseInvoiceItem, WarehouseInvoice } from "@/lib/auto-service-types";
 import { getInitialWarehouse, formatCurrency } from "@/lib/auto-service-data";
@@ -33,6 +37,40 @@ export const WarehouseModule: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [onlyDeficit, setOnlyDeficit] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // AutoDealer Sync State
+  const [isAutoDealerModalOpen, setIsAutoDealerModalOpen] = useState(false);
+  const [isLoadingAutoDealer, setIsLoadingAutoDealer] = useState(false);
+
+  const handleSyncAutoDealer = async () => {
+    setIsLoadingAutoDealer(true);
+    try {
+      const res = await fetch("/api/autodealer-clients");
+      const json = await res.json();
+      if (json.success && Array.isArray(json.warehouse)) {
+        setParts(json.warehouse);
+        const userKeys = [
+          storageKey,
+          "geo_ai_warehouse_antonv_v2",
+          "geo_ai_warehouse_admin_v2",
+          "geo_ai_warehouse_guest_v2",
+        ];
+        for (const k of userKeys) {
+          try {
+            localStorage.setItem(k, JSON.stringify(json.warehouse));
+          } catch {}
+        }
+        window.dispatchEvent(new CustomEvent("geo_ai_warehouse_updated"));
+        showToast(`Успешно синхронизировано ${json.warehouse.length} складских позиций`);
+      }
+    } catch (e) {
+      console.warn("Failed to sync AutoDealer warehouse:", e);
+      showToast("Ошибка при синхронизации склада");
+    } finally {
+      setIsLoadingAutoDealer(false);
+      setIsAutoDealerModalOpen(false);
+    }
+  };
 
   // Single Item Modal (Create or Edit)
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -80,13 +118,34 @@ export const WarehouseModule: React.FC = () => {
       const saved = localStorage.getItem(storageKey);
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) {
+        if (Array.isArray(parsed) && parsed.length > 0) {
           setParts(parsed);
           return;
         }
       }
-      setParts([]);
-      localStorage.setItem(storageKey, JSON.stringify([]));
+      // Auto-seed from AutoDealer backup if local storage is empty
+      setIsLoadingAutoDealer(true);
+      fetch("/api/autodealer-clients")
+        .then((r) => r.json())
+        .then((data) => {
+          if (data.success && Array.isArray(data.warehouse) && data.warehouse.length > 0) {
+            setParts(data.warehouse);
+            const userKeys = [
+              storageKey,
+              "geo_ai_warehouse_antonv_v2",
+              "geo_ai_warehouse_admin_v2",
+              "geo_ai_warehouse_guest_v2",
+            ];
+            for (const k of userKeys) {
+              try {
+                localStorage.setItem(k, JSON.stringify(data.warehouse));
+              } catch {}
+            }
+            window.dispatchEvent(new CustomEvent("geo_ai_warehouse_updated"));
+          }
+        })
+        .catch((e) => console.warn("Failed to auto-load AutoDealer warehouse parts:", e))
+        .finally(() => setIsLoadingAutoDealer(false));
     } catch {
       setParts([]);
     }
@@ -379,6 +438,16 @@ export const WarehouseModule: React.FC = () => {
           >
             <AlertTriangle className="w-3.5 h-3.5 text-amber-500" />
             <span>Только дефицит ({deficitCount})</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setIsAutoDealerModalOpen(true)}
+            className="flex items-center space-x-1.5 px-3.5 py-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-xs font-semibold shadow-xs transition-all cursor-pointer"
+            title="Просмотр и выгрузка склада АвтоДилер Онлайн"
+          >
+            <Database className="w-3.5 h-3.5 text-emerald-500" />
+            <span>База АвтоДилер: {parts.length} поз.</span>
           </button>
 
           <button
@@ -885,6 +954,79 @@ export const WarehouseModule: React.FC = () => {
                   </button>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* AutoDealer Backup & Sync Modal */}
+      {isAutoDealerModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-in fade-in duration-200">
+          <div className="w-full max-w-lg rounded-3xl bg-zinc-900 border border-white/10 shadow-2xl p-6 text-white space-y-5">
+            <div className="flex items-start justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 flex items-center justify-center">
+                  <Database className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-white">Складская база АвтоДилер Онлайн</h3>
+                  <p className="text-xs text-zinc-400">Остатки на складе и номенклатурный справочник товаров</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsAutoDealerModalOpen(false)}
+                className="p-1.5 rounded-full hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-white/[0.04] border border-white/[0.08] space-y-3">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-zinc-400">Остатков на складе:</span>
+                <span className="font-semibold text-emerald-400 flex items-center space-x-1.5">
+                  <CheckCircle2 className="w-4 h-4" />
+                  <span>944 позиции в наличии</span>
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-zinc-400">Справочник номенклатуры:</span>
+                <span className="font-bold text-white">3 415 товаров с кроссами и ценами</span>
+              </div>
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-zinc-400">Файл остатков:</span>
+                <span className="font-mono text-zinc-300">autodealer_warehouse_stock_2026-11-17.xlsx</span>
+              </div>
+            </div>
+
+            <div className="space-y-2.5">
+              <a
+                href="/backups/autodealer_warehouse_stock_2026-11-17.xlsx"
+                download="autodealer_warehouse_stock_2026-11-17.xlsx"
+                className="w-full flex items-center justify-center space-x-2 px-4 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-md active:scale-98 cursor-pointer"
+              >
+                <FileSpreadsheet className="w-4 h-4" />
+                <span>Скачать остатки на складе (Excel .xlsx, 51 КБ)</span>
+              </a>
+
+              <a
+                href="/backups/autodealer_nomenclature_2026-11-17.xlsx"
+                download="autodealer_nomenclature_2026-11-17.xlsx"
+                className="w-full flex items-center justify-center space-x-2 px-4 py-3 rounded-2xl bg-white/[0.08] hover:bg-white/[0.14] border border-white/10 text-white text-xs font-semibold transition-all active:scale-98 cursor-pointer"
+              >
+                <Download className="w-4 h-4" />
+                <span>Скачать номенклатуру 3 415 товаров (Excel .xlsx, 332 КБ)</span>
+              </a>
+
+              <button
+                type="button"
+                disabled={isLoadingAutoDealer}
+                onClick={handleSyncAutoDealer}
+                className="w-full flex items-center justify-center space-x-2 px-4 py-3 rounded-2xl bg-white/[0.08] hover:bg-white/[0.14] border border-white/10 text-white text-xs font-semibold transition-all active:scale-98 cursor-pointer"
+              >
+                <RefreshCw className={`w-4 h-4 ${isLoadingAutoDealer ? "animate-spin" : ""}`} />
+                <span>Синхронизировать / Восстановить склад из АвтоДилер</span>
+              </button>
             </div>
           </div>
         </div>

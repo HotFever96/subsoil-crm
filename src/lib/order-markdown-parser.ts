@@ -154,7 +154,7 @@ export function extractRepairOrderFromText(
   }
 
   // 6. Client
-  let clientName = "Петров Пётр Петрович";
+  let clientName = "Клиент автосервиса";
   const clientTableMatch = assistantText.match(/\|\s*Клиент\s*\|\s*([^|\n]+)\|/i);
   if (clientTableMatch) {
     clientName = clientTableMatch[1].trim();

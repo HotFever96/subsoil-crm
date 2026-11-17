@@ -253,6 +253,9 @@ export const ClientsGarageModule: React.FC = () => {
     const c = mergedClientsMap.get(key)!;
     c.orders.push(ord);
     c.totalSpent += ord.grandTotal || 0;
+    if (ord.client?.phone && !c.phone) {
+      c.phone = ord.client.phone;
+    }
 
     if (ord.vehicle?.licensePlate) {
       const vExists = c.vehicles.some((v) => v.licensePlate === ord.vehicle.licensePlate);
@@ -316,8 +319,8 @@ export const ClientsGarageModule: React.FC = () => {
   };
 
   const handleSaveClient = () => {
-    if (!clientName.trim() || !clientPhone.trim()) {
-      alert("Укажите имя клиента и номер телефона");
+    if (!clientName.trim()) {
+      alert("Укажите имя клиента или наименование организации");
       return;
     }
 
@@ -602,9 +605,19 @@ export const ClientsGarageModule: React.FC = () => {
                     </div>
 
                     <div className="text-xs text-zinc-500 dark:text-zinc-400 mt-1.5 flex flex-wrap items-center gap-3">
-                      <span className="flex items-center space-x-1">
+                      <span className="flex items-center space-x-1.5">
                         <Phone className="w-3.5 h-3.5 text-zinc-400" />
-                        <span>{activeClient.phone || "—"}</span>
+                        {activeClient.phone ? (
+                          <span className="font-semibold text-zinc-900 dark:text-zinc-100">{activeClient.phone}</span>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => handleOpenEditClientModal(activeClient)}
+                            className="text-xs text-rose-500 hover:text-rose-400 font-semibold underline underline-offset-2 flex items-center space-x-1 cursor-pointer"
+                          >
+                            <span>+ Указать телефон</span>
+                          </button>
+                        )}
                       </span>
                       {activeClient.inn && (
                         <span>• ИНН: <strong className="font-mono">{activeClient.inn}</strong></span>
@@ -1065,6 +1078,9 @@ export const ClientsGarageModule: React.FC = () => {
                 <span className="text-zinc-400">Файл резервной копии:</span>
                 <span className="font-mono text-zinc-300">autodealer_clients_backup_2026-11-17.xlsx</span>
               </div>
+              <p className="text-[11px] text-zinc-400 leading-relaxed border-t border-white/[0.06] pt-2">
+                В базе АвтоДилер Онлайн контакты были заведены у 52 клиентов (у остальных номера не указывались при открытии документов). В нашей CRM вы можете добавить телефон в 1 клик в карточке контрагента.
+              </p>
             </div>
 
             <div className="space-y-2.5">
