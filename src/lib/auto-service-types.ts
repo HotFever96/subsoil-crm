@@ -151,7 +151,7 @@ export interface ClientVehicleRecord {
   }>;
   totalOrdersCount: number;
   totalSpent: number;
-  username: string;
+  username?: string;
 }
 
 export type ServiceDocumentType =
