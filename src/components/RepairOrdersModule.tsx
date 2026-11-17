@@ -323,8 +323,8 @@ export const RepairOrdersModule: React.FC = () => {
       localStorage.setItem(storageKey, JSON.stringify(combinedLoaded));
     } catch {}
 
-    // Auto-seed from AutoDealer backup if local storage is empty
-    if (combinedLoaded.length === 0) {
+    // Auto-seed from AutoDealer backup if local storage is empty or has outdated partial cache (< 500)
+    if (combinedLoaded.length < 500) {
       setIsLoadingAutoDealer(true);
       fetch("/api/autodealer-clients")
         .then((r) => r.json())
@@ -2540,7 +2540,7 @@ export const RepairOrdersModule: React.FC = () => {
                 <span className="text-zinc-400">Статус заказ-нарядов:</span>
                 <span className="font-semibold text-emerald-400 flex items-center space-x-1.5">
                   <CheckCircle2 className="w-4 h-4" />
-                  <span>412 реальных заказ-нарядов</span>
+                  <span>779 реальных заказ-нарядов (2023–2026 гг.)</span>
                 </span>
               </div>
               <div className="flex items-center justify-between text-xs">
@@ -2560,7 +2560,7 @@ export const RepairOrdersModule: React.FC = () => {
                 className="w-full flex items-center justify-center space-x-2 px-4 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-md active:scale-98 cursor-pointer"
               >
                 <FileSpreadsheet className="w-4 h-4" />
-                <span>Скачать реестр заказ-нарядов (Excel .xlsx, 65 КБ)</span>
+                <span>Скачать реестр заказ-нарядов (Excel .xlsx, 779 ЗН)</span>
               </a>
 
               <button
@@ -2570,7 +2570,7 @@ export const RepairOrdersModule: React.FC = () => {
                 className="w-full flex items-center justify-center space-x-2 px-4 py-3 rounded-2xl bg-white/[0.08] hover:bg-white/[0.14] border border-white/10 text-white text-xs font-semibold transition-all active:scale-98 cursor-pointer"
               >
                 <RefreshCw className={`w-4 h-4 ${isLoadingAutoDealer ? "animate-spin" : ""}`} />
-                <span>Синхронизировать / Перезагрузить 412 ЗН</span>
+                <span>Синхронизировать / Перезагрузить 779 ЗН</span>
               </button>
             </div>
           </div>

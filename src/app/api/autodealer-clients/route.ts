@@ -7,6 +7,7 @@ import { ClientVehicleRecord, RepairOrder, WarehousePart, ServiceEmployee } from
 const BACKUP_DIR = path.join(process.cwd(), "public", "backups");
 const CLIENTS_JSON = path.join(BACKUP_DIR, "autodealer_clients_backup_2026-11-17.json");
 const ORDERS_JSON = path.join(BACKUP_DIR, "autodealer_repair_orders_2026-11-17.json");
+const INVOICES_JSON = path.join(BACKUP_DIR, "autodealer_invoices_2026-11-17.json");
 const WAREHOUSE_JSON = path.join(BACKUP_DIR, "autodealer_warehouse_stock_2026-11-17.json");
 const EMPLOYEES_JSON = path.join(BACKUP_DIR, "autodealer_employees_2026-11-17.json");
 
@@ -14,6 +15,7 @@ export async function GET() {
   try {
     let clients: ClientVehicleRecord[] = [];
     let orders: RepairOrder[] = [];
+    let invoices: any[] = [];
     let warehouse: WarehousePart[] = [];
     let employees: ServiceEmployee[] = [];
 
@@ -22,6 +24,9 @@ export async function GET() {
     }
     if (fs.existsSync(ORDERS_JSON)) {
       orders = JSON.parse(fs.readFileSync(ORDERS_JSON, "utf8"));
+    }
+    if (fs.existsSync(INVOICES_JSON)) {
+      invoices = JSON.parse(fs.readFileSync(INVOICES_JSON, "utf8"));
     }
     if (fs.existsSync(WAREHOUSE_JSON)) {
       warehouse = JSON.parse(fs.readFileSync(WAREHOUSE_JSON, "utf8"));
@@ -34,7 +39,8 @@ export async function GET() {
 
     const backupFiles = [
       { name: "База клиентов и автомобилей (.xlsx)", filename: "autodealer_clients_backup_2026-11-17.xlsx", url: "/backups/autodealer_clients_backup_2026-11-17.xlsx", size: "291 КБ" },
-      { name: "Реестр заказ-нарядов (.xlsx)", filename: "autodealer_repair_orders_2026-11-17.xlsx", url: "/backups/autodealer_repair_orders_2026-11-17.xlsx", size: "65 КБ" },
+      { name: "Реестр заказ-нарядов (.xlsx)", filename: "autodealer_repair_orders_2026-11-17.xlsx", url: "/backups/autodealer_repair_orders_2026-11-17.xlsx", size: "128 КБ" },
+      { name: "Реестр счетов на оплату (.xlsx)", filename: "autodealer_invoices_2026-11-17.xlsx", url: "/backups/autodealer_invoices_2026-11-17.xlsx", size: "48 КБ" },
       { name: "Остатки на складе (.xlsx)", filename: "autodealer_warehouse_stock_2026-11-17.xlsx", url: "/backups/autodealer_warehouse_stock_2026-11-17.xlsx", size: "51 КБ" },
       { name: "Справочник номенклатуры (.xlsx)", filename: "autodealer_nomenclature_2026-11-17.xlsx", url: "/backups/autodealer_nomenclature_2026-11-17.xlsx", size: "332 КБ" },
       { name: "Прайс-лист работ и услуг (.xlsx)", filename: "autodealer_works_catalog_2026-11-17.xlsx", url: "/backups/autodealer_works_catalog_2026-11-17.xlsx", size: "73 КБ" },
@@ -45,10 +51,12 @@ export async function GET() {
       count: clients.length,
       vehiclesCount: totalVehicles,
       ordersCount: orders.length,
+      invoicesCount: invoices.length,
       warehouseCount: warehouse.length,
       employeesCount: employees.length,
       clients,
       orders,
+      invoices,
       warehouse,
       employees,
       backupFiles,

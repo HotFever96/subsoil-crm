@@ -26,6 +26,9 @@ import {
   Building,
   Wrench,
   Trash2,
+  Database,
+  RefreshCw,
+  FileSpreadsheet,
 } from "lucide-react";
 import {
   CustomerInvoice,
@@ -69,6 +72,8 @@ export const CustomerInvoicesModule: React.FC = () => {
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string>("");
   const [isArchiveSaved, setIsArchiveSaved] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [isAutoDealerModalOpen, setIsAutoDealerModalOpen] = useState(false);
+  const [isLoadingAutoDealer, setIsLoadingAutoDealer] = useState(false);
 
   // Manual create form
   const [formClientName, setFormClientName] = useState("");
@@ -86,6 +91,25 @@ export const CustomerInvoicesModule: React.FC = () => {
     setTimeout(() => setToastMessage(null), 3000);
   };
 
+  const handleSyncAutoDealer = async () => {
+    setIsLoadingAutoDealer(true);
+    try {
+      const res = await fetch("/api/autodealer-clients");
+      const json = await res.json();
+      if (json.success && Array.isArray(json.invoices) && json.invoices.length > 0) {
+        setInvoices(json.invoices);
+        saveCustomerInvoices(json.invoices, currentUsername);
+        showToast(`Синхронизировано ${json.invoices.length} счетов из АвтоДилер Онлайн`);
+      }
+    } catch (e) {
+      console.warn("Failed to sync AutoDealer invoices:", e);
+      showToast("Ошибка при синхронизации счетов");
+    } finally {
+      setIsLoadingAutoDealer(false);
+      setIsAutoDealerModalOpen(false);
+    }
+  };
+
   // Load data
   useEffect(() => {
     const loadedReq = getStoRequisites(currentUsername);
@@ -93,6 +117,21 @@ export const CustomerInvoicesModule: React.FC = () => {
 
     const loadedInvoices = loadCustomerInvoices(currentUsername);
     setInvoices(loadedInvoices);
+
+    // Auto-seed invoices if local storage has 0 or partial cache (< 100)
+    if (loadedInvoices.length < 100) {
+      setIsLoadingAutoDealer(true);
+      fetch("/api/autodealer-clients")
+        .then((r) => r.json())
+        .then((data) => {
+          if (data.success && Array.isArray(data.invoices) && data.invoices.length > 0) {
+            setInvoices(data.invoices);
+            saveCustomerInvoices(data.invoices, currentUsername);
+          }
+        })
+        .catch((e) => console.warn("Failed to load AutoDealer customer invoices:", e))
+        .finally(() => setIsLoadingAutoDealer(false));
+    }
 
     // Load repair orders
     const ordKey = `geo_ai_repair_orders_${currentUsername || "guest"}_v2`;
@@ -412,6 +451,16 @@ export const CustomerInvoicesModule: React.FC = () => {
         </div>
 
         <div className="flex items-center space-x-2.5">
+          <button
+            type="button"
+            onClick={() => setIsAutoDealerModalOpen(true)}
+            className="apple-tap flex items-center space-x-1.5 px-3 py-2 rounded-full border border-sky-500/20 bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 text-xs font-semibold transition-all cursor-pointer"
+            title="База счетов АвтоДилер Онлайн"
+          >
+            <Download className="w-3.5 h-3.5" />
+            <span>База АвтоДилер: 613 счетов</span>
+          </button>
+
           {invoices.length > 0 && (
             <button
               type="button"
@@ -1161,6 +1210,70 @@ export const CustomerInvoicesModule: React.FC = () => {
                   </div>
                 )}
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* AutoDealer Invoices Backup & Sync Modal */}
+      {isAutoDealerModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-in fade-in duration-200">
+          <div className="w-full max-w-lg rounded-3xl bg-zinc-900 border border-white/10 shadow-2xl p-6 text-white space-y-5">
+            <div className="flex items-start justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-2xl bg-sky-500/20 border border-sky-500/30 text-sky-400 flex items-center justify-center">
+                  <Database className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-white">Реестр счетов на оплату АвтоДилер</h3>
+                  <p className="text-xs text-zinc-400">Счета на оплату клиентам за 2024–2026 гг. из АвтоДилер Онлайн</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsAutoDealerModalOpen(false)}
+                className="p-1.5 rounded-full hover:bg-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-white/[0.04] border border-white/[0.08] space-y-3">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-zinc-400">Всего выгружено счетов:</span>
+                <span className="font-semibold text-emerald-400 flex items-center space-x-1.5">
+                  <CheckCircle2 className="w-4 h-4" />
+                  <span>613 счетов (СЧ-1 ... СЧ-252)</span>
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-zinc-400">Период:</span>
+                <span className="font-bold text-zinc-300">04.03.2024 — 16.11.2026</span>
+              </div>
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-zinc-400">Файл отчета:</span>
+                <span className="font-mono text-zinc-300">autodealer_invoices_2026-11-17.xlsx</span>
+              </div>
+            </div>
+
+            <div className="space-y-2.5">
+              <a
+                href="/backups/autodealer_invoices_2026-11-17.xlsx"
+                download="autodealer_invoices_2026-11-17.xlsx"
+                className="w-full flex items-center justify-center space-x-2 px-4 py-3 rounded-2xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold transition-all shadow-md active:scale-98 cursor-pointer"
+              >
+                <FileSpreadsheet className="w-4 h-4" />
+                <span>Скачать реестр счетов (Excel .xlsx, 613 счетов)</span>
+              </a>
+
+              <button
+                type="button"
+                disabled={isLoadingAutoDealer}
+                onClick={handleSyncAutoDealer}
+                className="w-full flex items-center justify-center space-x-2 px-4 py-3 rounded-2xl bg-white/[0.08] hover:bg-white/[0.14] border border-white/10 text-white text-xs font-semibold transition-all active:scale-98 cursor-pointer"
+              >
+                <RefreshCw className={`w-4 h-4 ${isLoadingAutoDealer ? "animate-spin" : ""}`} />
+                <span>Синхронизировать / Перезагрузить 613 счетов</span>
+              </button>
             </div>
           </div>
         </div>
