@@ -44,6 +44,7 @@ import {
   FileSpreadsheet,
   Download,
   RefreshCw,
+  ArrowUpDown,
 } from "lucide-react";
 import QRCode from "qrcode";
 import {
@@ -100,6 +101,9 @@ export const RepairOrdersModule: React.FC = () => {
   const [viewMode, setViewMode] = useState<"table" | "kanban">("table");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
+  const [sortBy, setSortBy] = useState<
+    "date_desc" | "date_asc" | "number_desc" | "number_asc" | "amount_desc" | "amount_asc" | "client_asc" | "client_desc"
+  >("date_desc");
 
   // Document modal state for standalone printing from table
   const [activeDocOrder, setActiveDocOrder] = useState<RepairOrder | null>(null);
@@ -996,18 +1000,75 @@ export const RepairOrdersModule: React.FC = () => {
     setTimeout(() => setArchiveSavedToast(false), 2000);
   };
 
-  const filteredOrders = orders.map((o) => normalizeRepairOrder(o, currentUsername)).filter((o) => {
-    if (selectedStatus !== "all" && o.status !== selectedStatus) return false;
-    if (!searchQuery.trim()) return true;
-    const q = searchQuery.toLowerCase();
-    return (
-      (o.orderNumber || "").toLowerCase().includes(q) ||
-      (o.client?.name || "").toLowerCase().includes(q) ||
-      (o.vehicle?.licensePlate || "").toLowerCase().includes(q) ||
-      (o.vehicle?.vin || "").toLowerCase().includes(q) ||
-      `${o.vehicle?.make || ""} ${o.vehicle?.model || ""}`.toLowerCase().includes(q)
-    );
-  });
+  const parseOrderDate = (d?: string): number => {
+    if (!d) return 0;
+    if (d.includes("-")) {
+      const t = new Date(d).getTime();
+      if (!isNaN(t)) return t;
+    }
+    if (d.includes(".")) {
+      const p = d.split(".");
+      if (p.length === 3) {
+        const t = new Date(`${p[2]}-${p[1].padStart(2, "0")}-${p[0].padStart(2, "0")}`).getTime();
+        if (!isNaN(t)) return t;
+      }
+    }
+    return 0;
+  };
+
+  const parseOrderNum = (num?: string): number => {
+    if (!num) return 0;
+    const digits = num.match(/\d+/g);
+    if (!digits || digits.length === 0) return 0;
+    return parseInt(digits[digits.length - 1], 10) || 0;
+  };
+
+  const sortComparator = (a: RepairOrder, b: RepairOrder) => {
+    switch (sortBy) {
+      case "date_desc": {
+        const da = parseOrderDate(a.createdAt);
+        const db = parseOrderDate(b.createdAt);
+        if (db !== da) return db - da;
+        return parseOrderNum(b.orderNumber) - parseOrderNum(a.orderNumber);
+      }
+      case "date_asc": {
+        const da = parseOrderDate(a.createdAt);
+        const db = parseOrderDate(b.createdAt);
+        if (da !== db) return da - db;
+        return parseOrderNum(a.orderNumber) - parseOrderNum(b.orderNumber);
+      }
+      case "number_desc":
+        return parseOrderNum(b.orderNumber) - parseOrderNum(a.orderNumber);
+      case "number_asc":
+        return parseOrderNum(a.orderNumber) - parseOrderNum(b.orderNumber);
+      case "amount_desc":
+        return (Number(b.grandTotal) || 0) - (Number(a.grandTotal) || 0);
+      case "amount_asc":
+        return (Number(a.grandTotal) || 0) - (Number(b.grandTotal) || 0);
+      case "client_asc":
+        return (a.client?.name || "").localeCompare(b.client?.name || "", "ru");
+      case "client_desc":
+        return (b.client?.name || "").localeCompare(a.client?.name || "", "ru");
+      default:
+        return 0;
+    }
+  };
+
+  const filteredOrders = orders
+    .map((o) => normalizeRepairOrder(o, currentUsername))
+    .filter((o) => {
+      if (selectedStatus !== "all" && o.status !== selectedStatus) return false;
+      if (!searchQuery.trim()) return true;
+      const q = searchQuery.toLowerCase();
+      return (
+        (o.orderNumber || "").toLowerCase().includes(q) ||
+        (o.client?.name || "").toLowerCase().includes(q) ||
+        (o.vehicle?.licensePlate || "").toLowerCase().includes(q) ||
+        (o.vehicle?.vin || "").toLowerCase().includes(q) ||
+        `${o.vehicle?.make || ""} ${o.vehicle?.model || ""}`.toLowerCase().includes(q)
+      );
+    })
+    .sort(sortComparator);
 
   const statuses: OrderStatus[] = [
     "lead_ai",
@@ -1137,16 +1198,39 @@ export const RepairOrdersModule: React.FC = () => {
           })}
         </div>
 
-        {/* Search Input */}
-        <div className="relative min-w-[280px]">
-          <Search className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-          <input
-            type="text"
-            placeholder="Поиск по номеру, госномеру, VIN, клиенту..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-8 py-2 rounded-full bg-white/60 dark:bg-white/[0.05] border border-white/[0.09] backdrop-blur-2xl text-xs text-zinc-900 dark:text-white placeholder:text-zinc-400 focus:outline-hidden focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-all"
-          />
+        {/* Search & Sort Controls */}
+        <div className="flex items-center space-x-2.5 shrink-0">
+          {/* Sort Dropdown */}
+          <div className="relative flex items-center bg-white/60 dark:bg-white/[0.05] border border-white/[0.09] rounded-full px-3 py-1.5 backdrop-blur-2xl">
+            <ArrowUpDown className="w-3.5 h-3.5 text-zinc-400 mr-2 shrink-0 pointer-events-none" />
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as any)}
+              className="bg-transparent text-xs font-semibold text-zinc-800 dark:text-zinc-200 focus:outline-hidden cursor-pointer pr-1"
+              title="Сортировка заказ-нарядов"
+            >
+              <option value="date_desc" className="bg-zinc-900 text-white">Новые сверху (по дате)</option>
+              <option value="date_asc" className="bg-zinc-900 text-white">Старые сверху (по дате)</option>
+              <option value="number_desc" className="bg-zinc-900 text-white">По номеру ЗН (убывание)</option>
+              <option value="number_asc" className="bg-zinc-900 text-white">По номеру ЗН (возрастание)</option>
+              <option value="amount_desc" className="bg-zinc-900 text-white">По сумме: дорогие</option>
+              <option value="amount_asc" className="bg-zinc-900 text-white">По сумме: бюджетные</option>
+              <option value="client_asc" className="bg-zinc-900 text-white">Клиент (А → Я)</option>
+              <option value="client_desc" className="bg-zinc-900 text-white">Клиент (Я → А)</option>
+            </select>
+          </div>
+
+          {/* Search Input */}
+          <div className="relative min-w-[240px]">
+            <Search className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <input
+              type="text"
+              placeholder="Поиск по номеру, госномеру, VIN, клиенту..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-8 py-2 rounded-full bg-white/60 dark:bg-white/[0.05] border border-white/[0.09] backdrop-blur-2xl text-xs text-zinc-900 dark:text-white placeholder:text-zinc-400 focus:outline-hidden focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-all"
+            />
+          </div>
         </div>
       </div>
 

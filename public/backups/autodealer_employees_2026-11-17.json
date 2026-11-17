@@ -206,5 +206,18 @@
     "baseSalary": 0,
     "partsPercent": 3,
     "isActive": true
+  },
+  {
+    "id": "emp-17",
+    "name": "Рукожопмелкий Евгений",
+    "role": "mechanic",
+    "roleTitle": "Мастер-исполнитель",
+    "phone": "",
+    "paymentScheme": "percent_labor",
+    "laborPercent": 40,
+    "normHourRate": 900,
+    "baseSalary": 0,
+    "partsPercent": 3,
+    "isActive": true
   }
 ]

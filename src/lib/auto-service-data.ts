@@ -33,6 +33,7 @@ export const DEFAULT_EMPLOYEES: ServiceEmployee[] = [
   { id: "emp-14", name: "Урман Дмитрий Андреевич", role: "mechanic", roleTitle: "Мастер-исполнитель", phone: "", paymentScheme: "percent_labor", laborPercent: 40, normHourRate: 900, baseSalary: 0, partsPercent: 3, isActive: true },
   { id: "emp-15", name: "Черный Александр", role: "mechanic", roleTitle: "Мастер-исполнитель", phone: "", paymentScheme: "percent_labor", laborPercent: 40, normHourRate: 900, baseSalary: 0, partsPercent: 3, isActive: true },
   { id: "emp-16", name: "Эльмурзаев Азамат Ярашевич", role: "mechanic", roleTitle: "Мастер-исполнитель", phone: "", paymentScheme: "percent_labor", laborPercent: 40, normHourRate: 900, baseSalary: 0, partsPercent: 3, isActive: true },
+  { id: "emp-17", name: "Рукожопмелкий Евгений", role: "mechanic", roleTitle: "Мастер-исполнитель", phone: "", paymentScheme: "percent_labor", laborPercent: 40, normHourRate: 900, baseSalary: 0, partsPercent: 3, isActive: true },
 ];
 
 export const SERVICE_COMPANY_REQUISITES: StoCompanyRequisites = {
@@ -66,6 +67,7 @@ export const SERVICE_COMPANY_REQUISITES: StoCompanyRequisites = {
     "Кудин Денис Владимирович",
     "Механошин Дмитрий Викторович",
     "Порошин Александр Васильевич",
+    "Рукожопмелкий Евгений",
     "Скрипник Сергей Леонидович",
     "Тимаков Денис Дмитриевич",
     "Урман Дмитрий Андреевич",
